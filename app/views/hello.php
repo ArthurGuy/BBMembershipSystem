@@ -1,5 +1,5 @@
 
 
 	<div class="welcome">
-		<h1>Welcome to the BBMMS</h1>
+		<h1>Welcome to the BBMS</h1>
 	</div>

@@ -3880,8 +3880,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   float: left;
   height: 50px;
   padding: 15px 15px;
-  font-size: 18px;
+  font-size: 19px;
+    font-weight: 800;
   line-height: 20px;
+}
+.navbar-logo {
+    padding: 5px;
+    height: 50px;
+    margin-left: -10px;
+    margin-right: 5px;
 }
 .navbar-brand:hover,
 .navbar-brand:focus {
