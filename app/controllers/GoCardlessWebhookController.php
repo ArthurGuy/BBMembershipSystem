@@ -35,40 +35,21 @@ class GoCardlessWebhookController extends \BaseController {
                 }
                 elseif ($webhook_array['action'] == 'paid')
                 {
-                    //Bills have been paid, update the local status
+                    //We don't need to do anything for paid bills, a pending bill is treated as good so nothing new happens as this stage
+
+                    //Update the status of the local record
                     foreach ($webhook_array['bills'] as $bill)
                     {
-                        if ($bill['source_type'] == 'subscription')
+                        $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $bill['id'])->first();
+                        if ($existingPayment)
                         {
-                            $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $bill['id'])->first();
-                            if ($existingPayment)
-                            {
-                                $existingPayment->status = $bill['status'];
-                                $existingPayment->save();
-                            }
-                            else
-                            {
-                                $payment = new Payment([
-                                    'reason'            => 'subscription',
-                                    'source'            => 'gocardless',
-                                    'source_id'         => $bill['id'],
-                                    'amount'            => $bill['amount'],
-                                    'fee'               => $bill['amount'] - $bill['amount_minus_fees'],
-                                    'amount_minus_fee'  => $bill['amount_minus_fees'],
-                                    'status'            => $bill['status']
-                                ]);
-                                $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
-                                if ($user)
-                                {
-                                    $user->payments()->save($payment);
-                                }
-                                else
-                                {
-                                    Log::warning("Gocardless Payment Created, can't identify owner. Bill ID:".$bill['id']);
-                                }
-                            }
+                            $existingPayment->status = $bill['status'];
+                            $existingPayment->save();
                         }
-
+                        else
+                        {
+                            //Existing payment cant be found - payments we care about start in the system so this is alright
+                        }
                     }
                 }
                 else
@@ -76,39 +57,61 @@ class GoCardlessWebhookController extends \BaseController {
 
                     foreach ($webhook_array['bills'] as $bill)
                     {
-
-
-                        if (($bill['status'] == 'failed') || ($bill['status'] == 'cancelled'))
+                        $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $bill['id'])->first();
+                        if ($existingPayment)
                         {
-                            //Payment failed or cancelled
-                            //Roll back the payment date field
-                            //last_subscription_payment
-                            //Email the user, perhaps after a day in case they are canceling and restarting a payment
+                            //Start by updating the local record
+                            $existingPayment->status = $bill['status'];
+                            $existingPayment->save();
+                            if (($bill['status'] == 'failed') || ($bill['status'] == 'cancelled'))
+                            {
+                                //Payment failed or cancelled - either way we don't have the money!
+
+                                if ($existingPayment->reason == 'subscription')
+                                {
+                                    //If the payment is a subscription payment then we need to take action and warn the user
+                                    $user = $existingPayment->user();
+                                    $user->status = 'payment-warning';
+                                    $user->save();
+                                }
+                                elseif ($existingPayment->reason == 'induction')
+                                {
+                                    //We still need to collect the payment from the user
+                                }
+                                elseif ($existingPayment->reason == 'box-deposit')
+                                {
+
+                                }
+                                elseif ($existingPayment->reason == 'key-deposit')
+                                {
+
+                                }
+                                //Email the user, perhaps after a day in case they are canceling and restarting a payment
 
 
-                        }
-                        elseif ($bill['status'] == 'refunded')
-                        {
-                            //Payment refunded
-                            //Update the payment record and possible the user record
-                        }
-                        elseif ($bill['status'] == 'withdrawn')
-                        {
-                            //Money taken out - not our concern
-                        }
 
+                                //Roll back the payment date field
+                                //last_subscription_payment
+
+
+
+                            }
+                            elseif ($bill['status'] == 'refunded')
+                            {
+                                //Payment refunded
+                                //Update the payment record and possible the user record
+                            }
+                            elseif ($bill['status'] == 'withdrawn')
+                            {
+                                //Money taken out - not our concern
+                            }
+                        }
                     }
                 }
             }
             elseif ($webhook_array['resource_type'] == 'pre_authorization')
             {
-                foreach($webhook_array['pre_authorizations'] as $preAuth)
-                {
-                    if ($preAuth['status'] == 'cancelled')
-                    {
-                        //Preauths aren't used
-                    }
-                }
+                //Preauths aren't used
             }
             elseif ($webhook_array['resource_type'] == 'subscription')
             {
