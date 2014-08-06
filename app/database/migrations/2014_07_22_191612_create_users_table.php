@@ -35,6 +35,7 @@ class CreateUsersTable extends Migration {
             $table->string('payment_method', 20);   //gocardless,standing-order,cash,paypal,other
             $table->integer('payment_day');
             $table->double('monthly_subscription',10,2);
+            $table->string('subscription_id', 128);
             $table->date('last_subscription_payment');
             $table->rememberToken();
             $table->timestamps();
