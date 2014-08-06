@@ -2,6 +2,8 @@
 
 class GoCardlessHelper {
 
+    private $account_details;
+
     public function __construct()
     {
         $this->setup();
@@ -9,7 +11,7 @@ class GoCardlessHelper {
 
     public function setup()
     {
-        $account_details = array(
+        $this->account_details = array(
             'app_id'        => $_ENV['GOCARDLESS_APP_ID'],
             'app_secret'    => $_ENV['GOCARDLESS_APP_SECRET'],
             'merchant_id'   => $_ENV['GOCARDLESS_MERCHANT_ID'],
@@ -21,7 +23,7 @@ class GoCardlessHelper {
         {
             \GoCardless::$environment = 'production';
         }
-        \GoCardless::set_account_details($account_details);
+        \GoCardless::set_account_details($this->account_details);
     }
 
     public function newSubUrl($payment_details)
@@ -47,5 +49,15 @@ class GoCardlessHelper {
     public function newBillUrl($payment_details)
     {
         return \GoCardless::new_bill_url($payment_details);
+    }
+
+    public function getSubscriptionFirstBill($id)
+    {
+        $bills = \GoCardless_Merchant::find($this->account_details['merchant_id'])->bills(array('source_id' => $id));
+        if (count($bills) > 0)
+        {
+            return $bills[0];
+        }
+        return false;
     }
 } 

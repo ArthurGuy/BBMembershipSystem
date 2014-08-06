@@ -70,23 +70,40 @@ class SubscriptionController extends \BaseController {
         }
         catch (\Exception $e)
         {
-            return Redirect::route('account.show', $user->id)->withErrors($e->getMessage()['error']);
+            return Redirect::route('account.show', $user->id)->withErrors($e->getMessage());
         }
 
         if (strtolower($confirmed_resource->status) =='active')
         {
+            if (isset($confirmed_resource->sub_resource_uris['bills']))
+            {
+                $bill = $this->goCardless->getSubscriptionFirstBill($confirmed_resource->id);
+                if ($bill)
+                {
+                    $payment = new Payment([
+                        'reason'            => 'subscription',
+                        'source'            => 'gocardless',
+                        'source_id'         => $bill->id,
+                        'amount'            => $bill->amount,
+                        'fee'               => $bill->gocardless_fees,
+                        'amount_minus_fee'  => $bill->amount_minus_fees,
+                        'status'            => $bill->status
+                    ]);
+                    $user = User::findOrFail($userId);
+                    $user->payments()->save($payment);
+                    $user->last_subscription_payment = Carbon::now();
+                    $user->save();
+                }
+            }
             $user->payment_method = 'gocardless';
             $user->payment_day = Carbon::parse($confirmed_resource->next_interval_start)->day;
             $user->status = 'active';
             $user->active = true;
             $user->subscription_id = $confirmed_resource->id;
-            //$user->last_subscription_payment = Carbon::now(); //this is updated by the webhook controller
             $user->save();
 
-            return Redirect::route('account.show', $user->id)->withSuccess("Your subscription has been setup");
+            return Redirect::route('account.show', $user->id)->withSuccess("Your subscription has been setup, thank you");
         }
-
-        //print_r($confirmed_resource);
 
         return Redirect::route('account.show', $user->id)->withErrors("Something went wrong, you can try again or get in contact");
     }

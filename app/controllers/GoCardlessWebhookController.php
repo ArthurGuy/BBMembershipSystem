@@ -28,39 +28,14 @@ class GoCardlessWebhookController extends \BaseController {
 
             if ($webhook_array['resource_type'] == 'bill')
             {
-                //We have new bills/payments, log them
                 if ($webhook_array['action'] == 'created')
                 {
-                    foreach ($webhook_array['bills'] as $bill)
-                    {
-                        if ($bill['source_type'] == 'subscription')
-                        {
-                            $payment = new Payment([
-                                'reason'            => 'subscription',
-                                'source'            => 'gocardless',
-                                'source_id'         => $bill['id'],
-                                'amount'            => $bill['amount'],
-                                'fee'               => $bill['amount'] - $bill['amount_minus_fees'],
-                                'amount_minus_fee'  => $bill['amount_minus_fees'],
-                                'status'            => $bill['status']
-                            ]);
-                            $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
-                            if ($user)
-                            {
-                                $user->payments()->save($payment);
-                                $user->last_subscription_payment = Carbon::now();
-                                $user->save();
-                            }
-                            else
-                            {
-                                Log::warning("Gocardless Payment Created, can't identify owner. Bill ID:".$bill['id']);
-                            }
-                        }
-
-                    }
+                    //We have new bills/payments, don't do anything.
+                    // The local records are created by the process that started it
                 }
                 elseif ($webhook_array['action'] == 'paid')
                 {
+                    //Bills have been paid, update the local status
                     foreach ($webhook_array['bills'] as $bill)
                     {
                         if ($bill['source_type'] == 'subscription')
