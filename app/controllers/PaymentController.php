@@ -31,11 +31,11 @@ class PaymentController extends \BaseController {
             }
             elseif ($reason == 'induction')
             {
-                $name   = strtoupper("BBINDUCTION".$user->id.":".Input::get('induction_key'));
-                $description = strtoupper(Input::get('induction_key')) . " Induction Fee";
-                $ref    = Input::get('induction_key');
+                $name           = strtoupper("BBINDUCTION".$user->id.":".Input::get('induction_key'));
+                $description    = strtoupper(Input::get('induction_key')) . " Induction Fee";
+                $ref            = Input::get('induction_key');
                 ($item = Induction::inductionList($ref)) || App::abort(404);
-                $amount = $item->cost;
+                $amount         = $item->cost;
             }
             else
             {
@@ -138,9 +138,60 @@ class PaymentController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store($userId)
 	{
-		//
+        $user = User::findWithPermission($userId);
+        $reason = Input::get('reason');
+
+        if ($reason == 'subscription')
+        {
+            $payment = new Payment([
+                'reason'            => $reason,
+                'source'            => Input::get('source'),
+                'source_id'         => '',
+                'amount'            => $user->monthly_subscription,
+                'amount_minus_fee'  => $user->monthly_subscription,
+                'status'            => 'paid'
+            ]);
+            $user->payments()->save($payment);
+
+            $user->status = 'active';
+            $user->active = true;
+            $user->payment_method = Input::get('source');
+            $user->save();
+        }
+        elseif ($reason == 'induction')
+        {
+            if (Input::get('source') == 'manual')
+            {
+                $ref = Input::get('induction_key');
+                ($item = Induction::inductionList($ref)) || App::abort(404);
+                $payment = new Payment([
+                    'reason'            => $reason,
+                    'source'            => 'manual',
+                    'source_id'         => '',
+                    'amount'            => $item->cost,
+                    'amount_minus_fee'  => $item->cost,
+                    'status'            => 'paid'
+                ]);
+                $payment = $user->payments()->save($payment);
+                Induction::create([
+                    'user_id' => $user->id,
+                    'key' => $ref,
+                    'paid' => true,
+                    'payment_id' => $payment->id
+                ]);
+            }
+            else
+            {
+                throw new \BB\Exceptions\NotImplementedException();
+            }
+        }
+        else
+        {
+            throw new \BB\Exceptions\NotImplementedException();
+        }
+        return Redirect::route('account.show', $user->id)->withSuccess("Your payment has been recorded");
 	}
 
 

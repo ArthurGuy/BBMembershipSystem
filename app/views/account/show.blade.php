@@ -19,7 +19,20 @@
                         Thank you for joining Build Brighton, to continue you need to setup a direct debit to pay the monthly subscription<br />
                         <small>If you want to change your monthly amount please <a href="{{ route('account.edit', $user->id) }}">edit your details</a></small>
                     </p>
-                    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+                    <p>
+                        <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+                    </p>
+                    @if (Auth::user()->isAdmin())
+                        {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
+                        <p>
+                            <span class="label label-danger pull-right">Admin</span>
+                            Add a manual payment to this account and activate it
+                        </p>
+                        {{ Form::hidden('reason', 'subscription') }}
+                        {{ Form::select('source', ['other'=>'Other', 'paypal'=>'PayPal', 'cash'=>'Cash'], null, ['class'=>'form-control']) }}
+                        {{ Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) }}
+                        {{ Form::close() }}
+                    @endif
                 </div>
             </div>
         </div>
@@ -110,6 +123,11 @@
                     <th>Cost</th>
                     <th>Trained</th>
                     <th>Status</th>
+                    <th>
+                        @if (Auth::user()->isAdmin())
+                        <span class="label label-danger">Admin</span>
+                        @endif
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -134,6 +152,16 @@
                             {{ Form::close() }}
                         @elseif ($item->userInduction && $item->userInduction->paid)
                             Paid
+                        @endif
+                    </td>
+                    <td>
+                        @if (Auth::user()->isAdmin() && (!$item->userInduction || ($item->userInduction && !$item->userInduction->paid)))
+                            {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id])) }}
+                            {{ Form::hidden('induction_key', $itemKey) }}
+                            {{ Form::hidden('reason', 'induction') }}
+                            {{ Form::hidden('source', 'manual') }}
+                            {{ Form::submit('Mark Paid', array('class'=>'btn btn-default btn-xs')) }}
+                            {{ Form::close() }}
                         @endif
                     </td>
                 </tr>
