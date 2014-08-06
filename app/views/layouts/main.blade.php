@@ -56,15 +56,7 @@
 
                 <li>
                     <span class="navbar-text">
-                        @if (Auth::user()->status == 'active')
-                        <span class="label label-success">Active</span>
-                        @elseif (Auth::user()->status == 'pending')
-                        <span class="label label-warning">Pending</span>
-                        @elseif (Auth::user()->status == 'leaving')
-                        <span class="label label-danger">Leaving</span>
-                        @elseif (Auth::user()->status == 'expired')
-                        <span class="label label-default">Expired</span>
-                        @endif
+                        {{ User::statusLabel(Auth::user()->status) }}
                     </span>
                 </li>
 

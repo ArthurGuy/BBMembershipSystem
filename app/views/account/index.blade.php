@@ -18,7 +18,7 @@
             <td>{{ $user->active }}</td>
             <td><a href="{{ route('account.show', $user->id) }}">{{ $user->given_name }} {{ $user->family_name }}</a></td>
             <td>{{ $user->email }}</td>
-            <td>{{ $user->status }}</td>
+            <td>{{ User::statusLabel($user->status) }}</td>
             <td>
                 @if ($user->last_subscription_payment->year > 0)
                     {{ $user->last_subscription_payment->toFormattedDateString() }}

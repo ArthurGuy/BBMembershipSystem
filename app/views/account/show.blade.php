@@ -29,17 +29,7 @@
     <div class="col-xs-12 col-md-6 col-lg-4 pull-right">
         <div class="panel panel-info">
             <div class="panel-body">
-                Status:
-                @if ($user->status == 'active')
-                <span class="label label-success">Active</span>
-                @elseif ($user->status == 'pending')
-                <span class="label label-warning">Pending</span>
-                @elseif ($user->status == 'leaving')
-                <span class="label label-danger">Leaving</span>
-                @elseif ($user->status == 'expired')
-                <span class="label label-default">Expired</span>
-                @endif
-                <br />
+                Status:{{ User::statusLabel($user->status) }}<br />
                 Payment Method: {{ $user->payment_method }}<br />
                 Monthly Payment: &pound;{{ round($user->monthly_subscription) }}<br />
                 @if ($user->last_subscription_payment->year > 0)

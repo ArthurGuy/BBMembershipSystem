@@ -38,7 +38,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     protected $attributes = [
         'type' => 'member',
-        'status' => 'pending',
+        'status' => 'setting-up',
         'active' => 0,
         'key_holder' => 0,
         'trusted' => ''
@@ -50,6 +50,46 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return array('created_at', 'updated_at', 'last_subscription_payment');
     }
 
+
+    public static function statuses()
+    {
+        return [
+            'setting-up'        => 'Setting Up',
+            'active'            => 'Active',
+            'payment-warning'   => 'Payment Warning',
+            'leaving'           => 'Leaving',
+            'on-hold'           => 'On Hold',
+            'left'              => 'Left'
+        ];
+    }
+
+    public static function statusLabel($status)
+    {
+        if ($status == 'setting-up')
+        {
+            return '<span class="label label-warning">Setting Up</span>';
+        }
+        elseif ($status == 'active')
+        {
+            return '<span class="label label-success">Active</span>';
+        }
+        elseif ($status == 'payment-warning')
+        {
+            return '<span class="label label-danger">Payment Warning</span>';
+        }
+        elseif ($status == 'leaving')
+        {
+            return '<span class="label label-default">Leaving</span>';
+        }
+        elseif ($status == 'on-hold')
+        {
+            return '<span class="label label-default">On Hold</span>';
+        }
+        elseif ($status == 'left')
+        {
+            return '<span class="label label-default">Left</span>';
+        }
+    }
 
 
     public function payments()
