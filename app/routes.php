@@ -25,6 +25,9 @@ Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscri
 Route::get('account/{account}/subscription/store', ['as' => 'account.subscription.store', 'uses' => 'SubscriptionController@store']);
 Route::resource('account.subscription', 'SubscriptionController', ['except' => ['store', 'update', 'edit', 'show', 'index']]);
 Route::post('gocardless/webhook', ['uses' => 'GoCardlessWebhookController@receive']);
+//Route::resource('account.payment', 'PaymentController', ['except' => ['update', 'edit', 'show', 'index']]);
+Route::post('account/{account}/payment/create', ['as'=>'account.payment.create', 'uses' => 'PaymentController@create']);
+Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
 
 
 # Inductions
