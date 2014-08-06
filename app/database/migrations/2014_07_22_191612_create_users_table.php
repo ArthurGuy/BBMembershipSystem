@@ -29,8 +29,8 @@ class CreateUsersTable extends Migration {
             $table->string('emergency_contact', 250);
             $table->string('notes');
             $table->boolean('active');
-            $table->string('status', 20); //pending, active, expired, leaving
-            $table->string('trusted', 20); //yes, applied
+            $table->string('status', 20);
+            $table->boolean('trusted');
             $table->boolean('key_holder');
             $table->string('payment_method', 20);   //gocardless,standing-order,cash,paypal,other
             $table->integer('payment_day');
