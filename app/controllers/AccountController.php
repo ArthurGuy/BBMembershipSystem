@@ -12,14 +12,25 @@ class AccountController extends \BaseController {
     private $updateUserForm;
 
 
-    function __construct(\BB\Forms\Register $registerForm, \BB\Forms\UpdateUser $updateUserForm)
+    function __construct(\BB\Forms\Register $registerForm, \BB\Forms\UpdateUser $updateUserForm, \BB\Forms\UpdateSubscription $updateSubscriptionAdminForm, \BB\Helpers\GoCardlessHelper $goCardless)
     {
         $this->registerForm = $registerForm;
         $this->updateUserForm = $updateUserForm;
+        $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
+        $this->goCardless = $goCardless;
 
         $this->beforeFilter('auth', array('except' => ['create', 'store']));
         $this->beforeFilter('auth.admin', array('only' => ['index']));
         $this->beforeFilter('guest', array('only' => ['create', 'store']));
+
+        $paymentMethods = [
+            'gocardless'    => 'GoCardless',
+            'paypal'        => 'PayPal',
+            'bank-transfer' => 'Manual Bank Transfer',
+            'other'         => 'Other'
+        ];
+        View::share('paymentMethods', $paymentMethods);
+        View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
     }
 
 	/**
@@ -144,6 +155,36 @@ class AccountController extends \BaseController {
 
         return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
 	}
+
+
+    public function alterSubscription($id)
+    {
+        $user = User::findWithPermission($id);
+        $input = Input::all();
+
+        try
+        {
+            $this->updateSubscriptionAdminForm->validate($input, $user->id);
+        }
+        catch (\BB\Exceptions\FormValidationException $e)
+        {
+            return Redirect::back()->withInput()->withErrors($e->getErrors());
+        }
+
+        if (($user->payment_method == 'gocardless') && ($input['payment_method'] != 'gocardless'))
+        {
+            //Changing away from GoCardless
+            $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
+            if ($subscription->status == 'cancelled')
+            {
+                $user->cancelSubscription();
+            }
+        }
+
+        $user->updateSubscription($input['payment_method'], $input['payment_day']);
+
+        return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
+    }
 
 
 	/**

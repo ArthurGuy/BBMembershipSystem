@@ -103,6 +103,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     }
 
 
+    public function updateSubscription($paymentMethod, $paymentDay)
+    {
+        $this->attributes['payment_method'] = $paymentMethod;
+        $this->attributes['payment_day'] = $paymentDay;
+
+        $this->save();
+    }
+
+
 
     public function setPasswordAttribute($password)
     {

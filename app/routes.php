@@ -17,6 +17,7 @@ Route::resource('session', 'SessionController', ['only' => ['create', 'store', '
 
 Route::resource('account', 'AccountController');
 Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
+Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'before'=>'auth.admin']);
 
 
 # Subscription/Payments

@@ -6,22 +6,24 @@
 </div>
 
 
-@if ($user->status == 'pending')
-<div class="row">
-    <div class="col-xs-12 col-md-6 col-md-offset-3 pull-left">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">Continue setting up your account</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    Thank you for joining Build Brighton, to continue you need to setup a direct debit to pay the monthly subscription
-                </p>
-                <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+@if ($user->status == 'setting-up')
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3 pull-left">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Continue setting up your account</h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Thank you for joining Build Brighton, to continue you need to setup a direct debit to pay the monthly subscription<br />
+                        <small>If you want to change your monthly amount please <a href="{{ route('account.edit', $user->id) }}">edit your details</a></small>
+                    </p>
+                    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 @else
 
@@ -38,7 +40,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="col-xs-12 col-lg-8">
         <div class="panel panel-default">
@@ -82,6 +83,8 @@
             </table>
         </div>
     </div>
+
+
 </div>
 
 <div class="row">
@@ -136,4 +139,45 @@
 @endif
 
 
+@endif
+
+
+@if (Auth::user()->isAdmin())
+<div class="col-xs-12 col-md-6 col-lg-4">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Update Subscription<span class="label label-danger pull-right">Admin</span></h3>
+        </div>
+        <div class="panel-body">
+            {{ Form::model($user, array('method'=>'PUT', 'route' => ['account.alter-subscription', $user->id])) }}
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group {{ $errors->has('payment_method') ? 'has-error has-feedback' : '' }}">
+                        {{ Form::label('payment_method', 'Payment Method') }}
+                        {{ Form::select('payment_method', [''=>'']+$paymentMethods, null, ['class'=>'form-control']) }}
+                        {{ $errors->first('payment_method', '<span class="help-block">:message</span>') }}
+                        @if ($user->payment_method == 'gocardless')
+                        <span class="help-block">Changing away from GoCardless will cancel the direct debit</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group {{ $errors->has('payment_day') ? 'has-error has-feedback' : '' }}">
+                        {{ Form::label('payment_day', 'Payment Day') }}
+                        {{ Form::select('payment_day', [''=>'']+$paymentDays, null, ['class'=>'form-control']) }}
+                        {{ $errors->first('payment_day', '<span class="help-block">:message</span>') }}
+                    </div>
+                </div>
+            </div>
+
+            {{ Form::submit('Update', array('class'=>'btn btn-danger')) }}
+
+            {{ Form::close() }}
+        </div>
+    </div>
+</div>
 @endif
