@@ -1,0 +1,71 @@
+
+.page-header {
+    margin-top: 0;
+}
+
+
+/* Logo in the navbar - http://bootsnipp.com/snippets/featured/navbar-with-logo */
+.navbar .brand-logo{
+    padding: 0 10px;
+}
+.brand-logo img{
+    margin-top: 5px
+}
+.brand-name-short {
+    display: none;
+}
+@media (max-width:768px) {
+    .brand-name-short {
+        display: block;
+    }
+    .brand-name-full {
+        display: none;
+    }
+}
+
+
+
+/* Login Form */
+.login-container{
+    position: relative;
+    width: 360px;
+    margin: 80px auto;
+    padding: 20px 40px 40px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+.login-container .login-logo {
+    transform: rotate(0deg);
+    margin-bottom: 20px;
+}
+.login-container .form-group {
+    margin-bottom: 0;
+}
+.login-container input.form-control{
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    height:40px;
+    background: #fafafa;
+    transition:0.2s ease-in-out;
+}
+
+.login-container input:focus{
+    outline: 0;
+    background: #eee;
+}
+
+.login-container input[name="email"]{
+    border-radius: 5px 5px 0 0;
+}
+
+.login-container input[name="password"]{
+    border-radius: 0 0 5px 5px;
+    border-top: 0;
+}
+
+.login-container input[type="submit"]{
+    margin-top:15px;
+    padding: 10px 20px;
+}

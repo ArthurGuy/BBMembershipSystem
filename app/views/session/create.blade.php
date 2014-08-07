@@ -1,37 +1,38 @@
-<div class="row">
-    <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-        <div class="page-header">
+
+
+<div class="login-container">
+    {{ Form::open(array('route' => 'session.store', 'class'=>'form-horizontal')) }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <!--<img class="login-logo" src="/img/logo.png" height="70" />-->
             <h1>Login</h1>
         </div>
     </div>
-</div>
 
-{{ Form::open(array('route' => 'session.store')) }}
-
-<div class="row">
-    <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-        <div class="form-group {{ $errors->has('email') ? 'has-error has-feedback' : '' }}">
-            {{ Form::label('email', 'Email') }}
-            {{ Form::text('email', null, ['class'=>'form-control']) }}
-            {{ $errors->first('email', '<span class="help-block">:message</span>') }}
+    @if ($errors->has('email') || $errors->has('password'))
+        <div class="alert alert-danger">
+            {{ $errors->first('email') }}
+            {{ $errors->first('password') }}
         </div>
-    </div>
-</div>
+    @endif
 
-<div class="row">
-    <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-        <div class="form-group {{ $errors->has('password') ? 'has-error has-feedback' : '' }}">
-            {{ Form::label('password', 'Password') }}
-            {{ Form::password('password', ['class'=>'form-control']) }}
-            {{ $errors->first('password', '<span class="help-block">:message</span>') }}
-        </div>
-    </div>
-</div>
+    <div class="row">
+            <div class="form-group {{ $errors->has('email') ? 'has-error has-feedback' : '' }}">
+                <div class="col-xs-12">
+                    {{ Form::text('email', null, ['class'=>'form-control', 'placeholder'=>'Email']) }}
+                    {{ $errors->first('email', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') }}
+                </div>
+            </div>
+            <div class="form-group {{ $errors->has('password') ? 'has-error has-feedback' : '' }}">
+                <div class="col-xs-12">
+                    {{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Password']) }}
+                    {{ $errors->first('password', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') }}
+                </div>
+            </div>
 
-<div class="row">
-    <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-        {{ Form::submit('Login', array('class'=>'btn btn-primary')) }}
+            {{ Form::submit('Login', array('class'=>'btn btn-primary btn-block')) }}
     </div>
-</div>
 
-{{ Form::close() }}
+    {{ Form::close() }}
+</div>
