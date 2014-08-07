@@ -52,6 +52,7 @@ class AccountController extends \BaseController {
 	 */
 	public function create()
 	{
+        View::share('body_class', 'register_login');
         $this->layout->content = View::make('account.create');
 	}
 

@@ -9,6 +9,7 @@ class SessionController extends \BaseController {
     function __construct(\BB\Forms\Login $loginForm)
     {
         $this->loginForm = $loginForm;
+        View::share('body_class', 'register_login');
     }
 
 
