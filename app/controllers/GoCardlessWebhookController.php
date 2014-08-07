@@ -30,8 +30,37 @@ class GoCardlessWebhookController extends \BaseController {
             {
                 if ($webhook_array['action'] == 'created')
                 {
-                    //We have new bills/payments, don't do anything.
-                    // The local records are created by the process that started it
+                    //We have new bills/payment
+                    foreach ($webhook_array['bills'] as $bill)
+                    {
+                        if ($bill['source_type'] == 'subscription')
+                        {
+                            //This is a monthly subscription payment
+                            //We will also receive this for the initial sub payment which we have recorded seperatly
+                            $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $bill['id'])->first();
+                            if (!$existingPayment)
+                            {
+                                //Locate the user through their subscription id
+                                $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
+                                if ($user)
+                                {
+                                    //Record their monthly payment
+                                    $payment = new Payment([
+                                        'reason'            => 'subscription',
+                                        'source'            => 'gocardless',
+                                        'source_id'         => $bill['id'],
+                                        'amount'            => $bill['amount'],
+                                        'amount_minus_fee'  => $bill['amount_minus_fees'],
+                                        'fee'               => ($bill['amount'] - $bill['amount_minus_fees']),
+                                        'status'            => $bill['status']
+                                    ]);
+                                    $user->payments()->save($payment);
+                                    //Extend their monthly subscription
+                                    $user->extendMembership('gocardless', \Carbon\Carbon::now()->addMonth());
+                                }
+                            }
+                        }
+                    }
                 }
                 elseif ($webhook_array['action'] == 'paid')
                 {
