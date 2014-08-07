@@ -112,6 +112,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     }
 
 
+    public function getNameAttribute()
+    {
+        return $this->attributes['given_name'] . ' ' . $this->attributes['family_name'];
+    }
 
     public function setPasswordAttribute($password)
     {
