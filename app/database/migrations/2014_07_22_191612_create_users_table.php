@@ -37,6 +37,7 @@ class CreateUsersTable extends Migration {
             $table->double('monthly_subscription',10,2);
             $table->string('subscription_id', 128);
             $table->date('last_subscription_payment');
+            $table->date('subscription_expires');
             $table->rememberToken();
             $table->timestamps();
 		});

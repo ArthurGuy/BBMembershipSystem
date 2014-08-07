@@ -165,4 +165,18 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
         throw new \BB\Exceptions\AuthenticationException();
     }
+
+
+    public function extendMembership($paymentMethod, DateTime $expiry = null)
+    {
+        if (empty($expiry))
+        {
+            $expiry = \Carbon\Carbon::now()->addMonth();
+        }
+        $this->status = 'active';
+        $this->active = true;
+        $this->payment_method = $paymentMethod;
+        $this->subscription_expires = $expiry;
+        $this->save();
+    }
 }
