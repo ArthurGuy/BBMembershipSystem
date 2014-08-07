@@ -21,6 +21,7 @@ class CreateInductionsTable extends Migration {
             $table->integer('payment_id');
             $table->boolean('active');
             $table->dateTime('trained');
+            $table->integer('trainer_user_id');
 			$table->timestamps();
 		});
 	}
