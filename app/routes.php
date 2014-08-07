@@ -10,6 +10,10 @@ Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index', 'before'
 Route::get('login', ['as' => 'login', 'uses' => 'SessionController@create']);
 Route::get('logout', ['as' => 'logout', 'uses' => 'SessionController@destroy']);
 Route::resource('session', 'SessionController', ['only' => ['create', 'store', 'destroy']]);
+Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 'ReminderController@create']);
+Route::post('password/forgotten', ['as' => 'password-reminder.store', 'uses' => 'ReminderController@store']);
+Route::get('password/reset/{id}', ['uses' => 'ReminderController@getReset']);
+Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'ReminderController@postReset']);
 
 
 # Account

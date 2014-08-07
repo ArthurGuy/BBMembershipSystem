@@ -2,11 +2,11 @@
 
 
     <div class="login-container">
-        {{ Form::open(array('route' => 'session.store', 'class'=>'form-horizontal')) }}
+        {{ Form::open(array('route' => 'password.reset.complete', 'class'=>'form-horizontal')) }}
 
         <div class="row">
             <div class="col-xs-12">
-                <h1>Login</h1>
+                <h1>Set a new Password</h1>
             </div>
         </div>
 
@@ -32,6 +32,7 @@
                     </div>
                 </div>
 
+                {{ Form::hidden('token', $token) }}
                 {{ Form::submit('Go', array('class'=>'btn btn-primary btn-block')) }}
         </div>
         <div class="row bottom-links">
