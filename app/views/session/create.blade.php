@@ -6,15 +6,15 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <!--<img class="login-logo" src="/img/logo.png" height="70" />-->
                 <h1>Login</h1>
             </div>
         </div>
 
-        @if ($errors->has('email') || $errors->has('password'))
+        @if ($errors->count() > 0)
             <div class="alert alert-danger">
-                {{ $errors->first('email') }}
-                {{ $errors->first('password') }}
+                @foreach ($errors->all() as $error)
+                    {{ $error }}<br />
+                @endforeach
             </div>
         @endif
 
