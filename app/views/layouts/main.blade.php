@@ -17,7 +17,7 @@
 
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
 </head>
-<body>
+<body class="{{ $body_class or '' }}">
 
 <nav class="navbar navbar-default " role="navigation">
     <div class="container-fluid">
@@ -42,7 +42,13 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 @if (!Auth::guest() && Auth::user()->isAdmin())
-                    <li class=""><a href="{{ route('account.index') }}">Accounts</a></li>
+
+                <li class="detail-link">
+                    <a href="{{ route('account.index') }}">
+                        Accounts <span class="label label-warning">32</span>
+                    </a>
+                </li>
+
                 @endif
             </ul>
 
@@ -77,18 +83,20 @@
 
 <div class="container-fluid">
 
-    @if($errors->any())
-    <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <ul>
-            @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+    <div class="top-alerts">
+        @if($errors->any())
+        <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <ul>
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+        @if(Session::has('success'))
+        <div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>{{ Session::get('success') }}</div>
+        @endif
     </div>
-    @endif
-    @if(Session::has('success'))
-    <div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>{{ Session::get('success') }}</div>
-    @endif
 
     {{ $content }}
 

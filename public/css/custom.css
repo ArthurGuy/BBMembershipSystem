@@ -34,10 +34,7 @@
     text-align: center;
     background: #fff;
     border: 1px solid #ccc;
-}
-.login-container .login-logo {
-    transform: rotate(0deg);
-    margin-bottom: 20px;
+    opacity: 0.95;
 }
 .login-container .form-group {
     margin-bottom: 0;
@@ -50,22 +47,46 @@
     background: #fafafa;
     transition:0.2s ease-in-out;
 }
-
 .login-container input:focus{
     outline: 0;
     background: #eee;
 }
-
 .login-container input[name="email"]{
     border-radius: 5px 5px 0 0;
 }
-
 .login-container input[name="password"]{
     border-radius: 0 0 5px 5px;
     border-top: 0;
 }
-
 .login-container input[type="submit"]{
     margin-top:15px;
     padding: 10px 20px;
 }
+.login-container .bottom-links {
+    margin-top:20px;
+}
+
+.register-container{
+    position: relative;
+    background: #fff;
+    border: 1px solid #ccc;
+    opacity: 0.95;
+    padding-bottom: 30px;
+    margin-bottom: 20px;
+}
+body.register_login {
+    background: url(/img/rule-zero.jpg) no-repeat center center fixed;
+    background-size: cover;
+}
+body.register_login .top-alerts {
+    display: none;
+}
+
+
+/* Alerts */
+.alert-danger, .alert-success {
+    border: 0;
+    border-left: 3px solid;
+}
+
+
