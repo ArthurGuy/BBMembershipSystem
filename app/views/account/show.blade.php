@@ -15,12 +15,13 @@
                     <h3 class="panel-title">Continue setting up your account</h3>
                 </div>
                 <div class="panel-body">
-                    <p>
-                        Thank you for joining Build Brighton, to continue you need to setup a direct debit to pay the monthly subscription<br />
-                        <small>If you want to change your monthly amount please <a href="{{ route('account.edit', $user->id) }}">edit your details</a></small>
+                    <p class="lead">
+                        Thank you for joining Build Brighton, to continue you need to setup a direct debit to pay the monthly subscription
                     </p>
                     <p>
-                        <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+                        <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a><br />
+                        <br />
+                        <small>If you want to change your monthly amount please <a href="{{ route('account.edit', $user->id) }}">edit your details</a></small><br />
                     </p>
                     @if (Auth::user()->isAdmin())
                         {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
@@ -94,19 +95,35 @@
     <div class="col-xs-12 col-md-6 col-lg-4 pull-right">
         <div class="panel panel-info">
             <div class="panel-body">
-                Access to the space:
-                @if ($user->active)
-                    <label class="label label-success">Granted</label>
-                @else
-                    <label class="label label-danger">Denied</label>
-                @endif
-                <br />
+
                 Status: {{ User::statusLabel($user->status) }}<br />
+
+                @if ($user->active)
+                    Access to the space: <label class="label label-success">Granted</label><br />
+                @else
+                    Access to the space: <label class="label label-danger">Denied</label><br />
+                @endif
+
+                @if ($user->induction_completed)
+                    Induction: Completed<br />
+                @else
+                    Induction: <label class="label label-warning">Pending</label><br />
+                @endif
+
+                @if ($user->trusted)
+                    Trusted Member<br />
+                @endif
+
+                @if ($user->key_holder)
+                    Key Holder: <label class="label label-success">Yes</label><br />
+                @else
+                    Key Holder: <label class="label label-default">Not yet</label><br />
+                @endif
+
+
                 Payment Method: {{ $user->payment_method }}<br />
                 Monthly Payment: &pound;{{ round($user->monthly_subscription) }}<br />
-                @if ($user->last_subscription_payment->year > 0)
-                    Last Payment: {{ $user->last_subscription_payment->toFormattedDateString() }}<br />
-                @endif
+                Subscription Expires: {{ $user->subscription_expires->toFormattedDateString() }}<br />
             </div>
         </div>
     </div>

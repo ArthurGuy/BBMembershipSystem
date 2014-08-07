@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration {
             $table->string('given_name', 100);
             $table->string('family_name', 100);
             $table->string('email')->unique();
+            $table->boolean('email_verified');
             $table->string('secondary_email');
             $table->string('password');
             $table->string('type', 20); //member, admin
@@ -32,6 +33,7 @@ class CreateUsersTable extends Migration {
             $table->string('status', 20);
             $table->boolean('trusted');
             $table->boolean('key_holder');
+            $table->boolean('induction_completed');
             $table->string('payment_method', 20);   //gocardless,standing-order,cash,paypal,other
             $table->integer('payment_day');
             $table->double('monthly_subscription',10,2);

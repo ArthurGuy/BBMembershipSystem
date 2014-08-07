@@ -9,7 +9,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
-            <th>Last Payment</th>
+            <th>Subscription Expires</th>
         </tr>
     </thead>
 @foreach ($users as $user)
@@ -20,10 +20,10 @@
             <td>{{ $user->email }}</td>
             <td>{{ User::statusLabel($user->status) }}</td>
             <td>
-                @if ($user->last_subscription_payment->year > 0)
-                    {{ $user->last_subscription_payment->toFormattedDateString() }}
+                @if ($user->subscription_expires->year > 0)
+                    {{ $user->subscription_expires->toFormattedDateString() }}
                 @else
-                    Never
+                    -
                 @endif
             </td>
         </tr>

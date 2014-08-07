@@ -95,12 +95,11 @@ class SubscriptionController extends \BaseController {
                     $user->save();
                 }
             }
-            $user->payment_method = 'gocardless';
             $user->payment_day = Carbon::parse($confirmed_resource->next_interval_start)->day;
-            $user->status = 'active';
-            $user->active = true;
             $user->subscription_id = $confirmed_resource->id;
             $user->save();
+
+            $user->extendMembership('gocardless', \Carbon\Carbon::now()->addMonth());
 
             return Redirect::route('account.show', $user->id)->withSuccess("Your subscription has been setup, thank you");
         }

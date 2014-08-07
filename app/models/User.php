@@ -32,7 +32,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1',
         'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact',
-        'monthly_subscription', 'last_subscription_payment'
+        'monthly_subscription'
     ];
 
 
@@ -47,7 +47,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'last_subscription_payment');
+        return array('created_at', 'updated_at', 'subscription_expires');
     }
 
 
