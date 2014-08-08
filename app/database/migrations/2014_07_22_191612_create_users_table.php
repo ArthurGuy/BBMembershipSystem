@@ -40,6 +40,8 @@ class CreateUsersTable extends Migration {
             $table->string('subscription_id', 128);
             $table->date('last_subscription_payment');
             $table->date('subscription_expires');
+            $table->boolean('profile_photo');
+            $table->boolean('profile_photo_private');
             $table->rememberToken();
             $table->timestamps();
 		});

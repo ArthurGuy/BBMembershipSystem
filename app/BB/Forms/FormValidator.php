@@ -54,6 +54,11 @@ abstract class FormValidator {
     protected function getValidationRules(array $replacements = [])
     {
         $rules = $this->rules;
+        if (isset($replacements['id']) && $this->updateRules)
+        {
+            //If an id has been passed in this is an update action and use the update rules as well
+            $rules = array_merge($rules, $this->updateRules);
+        }
 
         foreach ($rules as $name => $rule)
         {

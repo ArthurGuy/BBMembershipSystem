@@ -1,6 +1,6 @@
 <?php namespace BB\Forms;
 
-class Register extends FormValidator {
+class User extends FormValidator {
 
     /**
      * Validation rules
@@ -17,8 +17,18 @@ class Register extends FormValidator {
         'address_line_3' => '',
         'address_line_4' => '',
         'address_postcode' => 'required',
-        'monthly_subscription' => 'required|numeric|min:5',
-        'emergency_contact' => 'required'
+        'monthly_subscription' => 'required|integer|min:5',
+        'emergency_contact' => 'required',
+        'profile_photo' => 'required|image',
+        'profile_photo_private' => 'boolean'
+    ];
+
+
+    //During an update these rules will override the ones above
+    protected $updateRules = [
+        'email' => 'required|email|unique:users,email,{id}',
+        'password' => 'min:8',
+        'profile_photo' => 'image',
     ];
 
 } 

@@ -5,19 +5,20 @@ class AccountController extends \BaseController {
 
     protected $layout = 'layouts.main';
 
-    protected $registerForm;
+    protected $userForm;
+
     /**
-     * @var BB\Forms\UpdateUser
+     * @var BB\Helpers\UserImage
      */
-    private $updateUserForm;
+    private $userImage;
 
 
-    function __construct(\BB\Forms\Register $registerForm, \BB\Forms\UpdateUser $updateUserForm, \BB\Forms\UpdateSubscription $updateSubscriptionAdminForm, \BB\Helpers\GoCardlessHelper $goCardless)
+    function __construct(\BB\Forms\User $userForm, \BB\Forms\UpdateSubscription $updateSubscriptionAdminForm, \BB\Helpers\GoCardlessHelper $goCardless, \BB\Helpers\UserImage $userImage)
     {
-        $this->registerForm = $registerForm;
-        $this->updateUserForm = $updateUserForm;
+        $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
         $this->goCardless = $goCardless;
+        $this->userImage = $userImage;
 
         $this->beforeFilter('auth', array('except' => ['create', 'store']));
         $this->beforeFilter('auth.admin', array('only' => ['index']));
@@ -31,6 +32,7 @@ class AccountController extends \BaseController {
         ];
         View::share('paymentMethods', $paymentMethods);
         View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
+
     }
 
 	/**
@@ -64,11 +66,11 @@ class AccountController extends \BaseController {
 	 */
 	public function store()
 	{
-        $input = Input::only('given_name', 'family_name', 'email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact');
+        $input = Input::only('given_name', 'family_name', 'email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'profile_photo', 'profile_photo_private');
 
 		try
         {
-            $this->registerForm->validate($input);
+            $this->userForm->validate($input);
         }
         catch (\BB\Exceptions\FormValidationException $e)
         {
@@ -76,6 +78,18 @@ class AccountController extends \BaseController {
         }
 
         $user = User::create($input);
+
+        try
+        {
+            $this->userImage->uploadPhoto($user->id, Input::file('profile_photo')->getRealPath());
+
+            $user->profilePhoto(true);
+        }
+        catch (\Exception $e)
+        {
+            //fail silently
+        }
+
 
         Auth::login($user);
 
@@ -135,11 +149,11 @@ class AccountController extends \BaseController {
 	public function update($id)
 	{
         $user = User::findWithPermission($id);
-        $input = Input::only('given_name', 'family_name', 'email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact');
+        $input = Input::only('given_name', 'family_name', 'email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'profile_photo', 'profile_photo_private');
 
         try
         {
-            $this->updateUserForm->validate($input, $user->id);
+            $this->userForm->validate($input, $user->id);
         }
         catch (\BB\Exceptions\FormValidationException $e)
         {
@@ -152,7 +166,20 @@ class AccountController extends \BaseController {
         }
         $user->update($input);
 
-        //Auth::login($user);
+        if (Input::file('profile_photo'))
+        {
+            try
+            {
+                $this->userImage->uploadPhoto($user->id, Input::file('profile_photo')->getRealPath());
+
+                $user->profilePhoto(true);
+            }
+            catch (\Exception $e)
+            {
+                //fail silently
+                throw $e;
+            }
+        }
 
         return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
 	}

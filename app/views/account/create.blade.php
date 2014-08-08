@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    {{ Form::open(array('route' => 'account.store', 'class'=>'form-horizontal')) }}
+    {{ Form::open(array('route' => 'account.store', 'class'=>'form-horizontal', 'files'=>true)) }}
     <div class="row">
         <div class="col-xs-12">
             <p>
@@ -49,7 +49,7 @@
     <div class="form-group {{ $errors->has('email') ? 'has-error has-feedback' : '' }}">
         {{ Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('email', null, ['class'=>'form-control']) }}
+            {{ Form::input('email', 'email', null, ['class'=>'form-control']) }}
             {{ $errors->first('email', '<span class="help-block">:message</span>') }}
         </div>
     </div>
@@ -65,7 +65,7 @@
     <div class="form-group {{ $errors->has('monthly_subscription') ? 'has-error has-feedback' : '' }}">
         {{ Form::label('monthly_subscription', 'Monthly Subscription Amount', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20']) }}
+            {{ Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'5', 'step'=>'1']) }}
             {{ $errors->first('monthly_subscription', '<span class="help-block">:message</span>') }}
             <span class="help-block">How much do you want to contribute each month? We operate on a pay-what-you-can basis, most members pay between &pound;10 and &pound;30, the minimum is £5</span>
         </div>
@@ -117,7 +117,32 @@
         <div class="col-sm-9 col-lg-7">
             {{ Form::text('emergency_contact', null, ['class'=>'form-control']) }}
             {{ $errors->first('emergency_contact', '<span class="help-block">:message</span>') }}
-            <span class="help-block">Please give us the name and contact details of someone we can contact if needed</span>
+            <span class="help-block">Please give us the name and contact details of someone we can contact if needed.</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <p class="col-sm-9 col-lg-9 col-sm-offset-1">
+            Build Brighton is a community of people rather than a company and it operates largely on trust.<br />
+            We require a profile photo as it allows the members to help recognise new faces.
+        </p>
+    </div>
+
+    <div class="form-group {{ $errors->has('profile_photo') ? 'has-error has-feedback' : '' }}">
+        {{ Form::label('profile_photo', 'Profile Photo', ['class'=>'col-sm-3 control-label']) }}
+        <div class="col-sm-9 col-lg-7">
+            {{ Form::file('profile_photo', null, ['class'=>'form-control']) }}
+            {{ $errors->first('profile_photo', '<span class="help-block">:message</span>') }}
+            <span class="help-block">This photo will be displayed to members and may be used within the space, it will also be listed publicly on this site but you can turn that off below if you want.</span>
+        </div>
+    </div>
+
+    <div class="form-group {{ $errors->has('profile_photo_private') ? 'has-error has-feedback' : '' }}">
+        <div class="col-sm-9 col-lg-7 col-sm-offset-3">
+            {{ Form::checkbox('profile_photo_private', true, null, ['class'=>'']) }}
+            {{ Form::label('profile_photo_private', 'Make my photo private', ['class'=>'']) }}
+            {{ $errors->first('profile_photo_private', '<span class="help-block">:message</span>') }}
+            <span class="help-block">If you want to block your photo from displaying outside Build Brighton please check this box although we would rather you didn't.</span>
         </div>
     </div>
 

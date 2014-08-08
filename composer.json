@@ -7,7 +7,9 @@
 		"laravel/framework": "4.2.*",
         "gocardless/gocardless": "0.4.2",
         "nesbot/Carbon": "*",
-        "kmd/logviewer": "dev-master"
+        "kmd/logviewer": "dev-master",
+        "aws/aws-sdk-php": "2.4.*",
+        "aws/aws-sdk-php-laravel": "1.*"
 	},
 	"autoload": {
 		"classmap": [
