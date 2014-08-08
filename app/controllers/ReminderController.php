@@ -26,13 +26,17 @@ class ReminderController extends \BaseController {
 	 */
 	public function store()
 	{
-		switch ($response = Password::remind(Input::only('email')))
+        $response = Password::remind(Input::only('email'), function($message)
+        {
+            $message->subject('Reset your password');
+        });
+		switch ($response)
 		{
 			case Password::INVALID_USER:
-				return Redirect::back()->with('error', Lang::get($response));
+				return Redirect::back()->withErrors(Lang::get($response));
 
 			case Password::REMINDER_SENT:
-				return Redirect::back()->with('success', Lang::get($response));
+				return Redirect::back()->withSuccess(Lang::get($response));
 		}
 	}
 
@@ -60,7 +64,13 @@ class ReminderController extends \BaseController {
 			'email', 'password', 'password_confirmation', 'token'
 		);
 
+        //We aren't using a confirm password box so this can be faked
         $credentials['password_confirmation'] = $credentials['password'];
+
+        Password::validator(function($credentials)
+        {
+            return strlen($credentials['password']) >= 8;
+        });
 
 		$response = Password::reset($credentials, function($user, $password)
 		{
@@ -74,7 +84,7 @@ class ReminderController extends \BaseController {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-				return Redirect::back()->with('error', Lang::get($response));
+				return Redirect::back()->withErrors(Lang::get($response));
 
 			case Password::PASSWORD_RESET:
 				return Redirect::to('/login')->withSuccess("Your password has been changed");

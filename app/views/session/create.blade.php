@@ -18,6 +18,10 @@
             </div>
         @endif
 
+        @if(Session::has('success'))
+            <div class="alert alert-success">{{ Session::get('success') }}</div>
+        @endif
+
         <div class="row">
             <div class="form-group {{ $errors->has('email') ? 'has-error has-feedback' : '' }}">
                 <div class="col-xs-12">
