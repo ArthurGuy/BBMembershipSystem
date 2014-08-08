@@ -28,13 +28,12 @@
 /* Login Form */
 .login-container{
     position: relative;
-    width: 360px;
-    margin: 80px auto;
-    padding: 20px 40px 40px;
     text-align: center;
     background: #fff;
     border: 1px solid #ccc;
-    opacity: 0.95;
+    opacity: 0.98;
+    padding-bottom: 30px;
+    margin-bottom: 20px;
 }
 .login-container .form-group {
     margin-bottom: 0;
@@ -70,7 +69,7 @@
     position: relative;
     background: #fff;
     border: 1px solid #ccc;
-    opacity: 0.95;
+    opacity: 0.98;
     padding-bottom: 30px;
     margin-bottom: 20px;
 }
