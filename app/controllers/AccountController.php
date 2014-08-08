@@ -188,15 +188,20 @@ class AccountController extends \BaseController {
     }
 
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+
 	public function destroy($id)
 	{
-		//
+        $user = User::findWithPermission($id);
+
+        //No one will ever leaves the system but we can at least update their status to left.
+        $user->leave();
+
+        if ($user->id == Auth::user()->id)
+        {
+            Auth::logout();
+            return Redirect::home()->withSuccess("We have marked you as having left Build Brighton.");
+        }
+        return Redirect::route('account.show', $user->id)->withSuccess("User marked as having left Build Brighton.");
 	}
 
 

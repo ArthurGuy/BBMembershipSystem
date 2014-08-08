@@ -127,7 +127,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->payment_method = '';
         $this->subscription_id = '';
         $this->payment_day = '';
-        $this->status = 'pending';
+        $this->status = 'payment-warning';
+        $this->active = false;
+        $this->save();
+    }
+
+    public function leave()
+    {
+        $this->status = 'left';
         $this->active = false;
         $this->save();
     }
