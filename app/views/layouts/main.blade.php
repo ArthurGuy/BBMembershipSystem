@@ -49,6 +49,12 @@
                     </a>
                 </li>
 
+                <li class="detail-link">
+                    <a href="{{ route('induction.index') }}">
+                        Inductions/Trainers <span class="label label-warning">32</span>
+                    </a>
+                </li>
+
                 @endif
             </ul>
 

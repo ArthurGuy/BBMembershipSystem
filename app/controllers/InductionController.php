@@ -3,9 +3,10 @@
 class InductionController extends \BaseController {
 
 
-    function __construct(\BB\Helpers\GoCardlessHelper $goCardless)
+    protected $layout = 'layouts.main';
+
+    function __construct()
     {
-        $this->goCardless = $goCardless;
     }
 
 	/**
@@ -15,7 +16,7 @@ class InductionController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+        $this->layout->content = View::make('induction.index')->withInductions(Induction::all());
 	}
 
 

@@ -183,4 +183,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->subscription_expires = $expiry;
         $this->save();
     }
+
+    public static function dropdown()
+    {
+        $userArray = [];
+        $users = self::all();
+        foreach ($users as $user)
+        {
+            $userArray[$user->id] = $user->name;
+        }
+        return $userArray;
+    }
 }

@@ -37,3 +37,4 @@ Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.paymen
 
 # Inductions
 Route::resource('account.induction', 'InductionController', ['before'=>'auth', 'only' => ['index', 'update', 'destroy']]);
+Route::resource('induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['index', 'update', 'destroy']]);

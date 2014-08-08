@@ -103,10 +103,6 @@ class AccountController extends \BaseController {
             {
                 if ($userInduction->key == $key)
                 {
-                    if ($userInduction->trained->year < 0)
-                    {
-                        $userInduction->trained = false;
-                    }
                     $inductions[$key]->userInduction = $userInduction;
                 }
             }

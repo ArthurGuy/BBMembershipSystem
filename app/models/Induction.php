@@ -69,8 +69,18 @@ class Induction extends Eloquent {
         return $items;
     }
 
+    public function getIsTrainedAttribute()
+    {
+        return ($this->trained->year > 0);
+    }
+
 
     public function user()
+    {
+        return $this->belongsTo('User');
+    }
+
+    public function trainerUser()
     {
         return $this->belongsTo('User');
     }
@@ -88,5 +98,23 @@ class Induction extends Eloquent {
     public static function userInductions($userId)
     {
 
+    }
+
+    public static function trainersFor($key)
+    {
+        return self::where('key', $key)->where('is_trainer', 1)->get();
+    }
+
+    public static function trainersForDropdown($key)
+    {
+        $trainers = self::trainersFor($key);
+        $trainersArray = [];
+
+        foreach ($trainers as $trainer)
+        {
+            $trainersArray[$trainer->user->id] = $trainer->user->name;
+        }
+
+        return $trainersArray;
     }
 }
