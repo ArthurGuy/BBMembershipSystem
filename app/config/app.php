@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'Europe/London',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ return array(
 	|
 	*/
 
-	'key' => 'YourSecretKey!!!',
+	'key' => $_ENV['ENCRYPTION_KEY'],
 
 	'cipher' => MCRYPT_RIJNDAEL_128,
 
@@ -189,7 +189,7 @@ return array(
 		'URL'               => 'Illuminate\Support\Facades\URL',
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
-        'AWS' => 'Aws\Laravel\AwsFacade',
+        'AWS'               => 'Aws\Laravel\AwsFacade',
 	),
 
 );

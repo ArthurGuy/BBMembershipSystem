@@ -43,10 +43,10 @@ return array(
 
 		'sqs' => array(
 			'driver' => 'sqs',
-			'key'    => 'your-public-key',
-			'secret' => 'your-secret-key',
+			'key'    => $_ENV['AWS_KEY'],
+			'secret' => $_ENV['AWS_SECRET'],
 			'queue'  => 'your-queue-url',
-			'region' => 'us-east-1',
+			'region' => 'ew-west-1',
 		),
 
 		'iron' => array(

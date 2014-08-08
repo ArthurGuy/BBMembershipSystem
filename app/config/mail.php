@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'bbms@sandbox3012.mailgun.org', 'name' => 'Build Brighton'),
+	'from' => array('address' => 'bbms@sandbox3012.mailgun.org', 'name' => 'Build Brighton Member System'),
 
 	/*
 	|--------------------------------------------------------------------------
