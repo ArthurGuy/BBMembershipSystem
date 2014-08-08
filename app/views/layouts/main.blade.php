@@ -45,13 +45,13 @@
 
                 <li class="detail-link">
                     <a href="{{ route('account.index') }}">
-                        Accounts <span class="label label-warning">32</span>
+                        Members <span class="label label-warning">32</span>
                     </a>
                 </li>
 
                 <li class="detail-link">
                     <a href="{{ route('induction.index') }}">
-                        Inductions/Trainers <span class="label label-warning">32</span>
+                        Equipment Inductions/Trainers <span class="label label-warning">32</span>
                     </a>
                 </li>
 
@@ -79,7 +79,7 @@
                     </span>
                 </li>
 
-                <li><a href="{{ route('account.show', Auth::id()) }}">Your Account</a></li>
+                <li><a href="{{ route('account.show', Auth::id()) }}">Your Membership</a></li>
                 <li><a href="{{ route('logout') }}">Logout</a></li>
                 @endif
             </ul>

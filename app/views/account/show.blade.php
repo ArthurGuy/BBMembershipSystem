@@ -41,6 +41,22 @@
 
 @else
 
+    @if ($user->status == 'left')
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3 pull-left">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">User Left</h3>
+                </div>
+                <div class="panel-body">
+                    To rejoin please email us
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if ($user->status == 'payment-warning')
 
         <div class="row">
@@ -79,7 +95,9 @@
                                 There is a problem with your subscription payment,
                                 this could be because you have cancelled or missed a monthly payment or it may be because bank records haven't been reconciled yet.<br />
                                 If you know you have missed a payment please make this ASAP or ideally change over to a direct debit payment.<br />
-                                If you have concerns or aren't sure please contact a trustee
+                                If you have concerns or aren't sure please contact a trustee.<br />
+                                <br />
+                                <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a><br />
                             </p>
                         @endif
 
@@ -131,7 +149,7 @@
     <div class="col-xs-12 col-lg-8">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Inductions</h3>
+                <h3 class="panel-title">Inductions / Equipment Training</h3>
             </div>
             <table class="table">
                 <thead>
