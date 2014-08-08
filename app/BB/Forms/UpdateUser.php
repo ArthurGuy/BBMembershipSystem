@@ -17,7 +17,8 @@ class UpdateUser extends FormValidator {
         'address_line_3' => '',
         'address_line_4' => '',
         'address_postcode' => 'required',
-        'monthly_subscription' => 'required|numeric'
+        'monthly_subscription' => 'required|numeric|min:5',
+        'emergency_contact' => 'required'
     ];
 
 } 

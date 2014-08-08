@@ -146,6 +146,10 @@ class AccountController extends \BaseController {
             return Redirect::back()->withInput()->withErrors($e->getErrors());
         }
 
+        if (empty($input['password']))
+        {
+            unset($input['password']);
+        }
         $user->update($input);
 
         //Auth::login($user);
