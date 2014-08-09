@@ -32,7 +32,6 @@
 @else
 
     @if ($user->status == 'left')
-
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3 pull-left">
             <div class="panel panel-default">
@@ -48,13 +47,11 @@
     @endif
 
     @if ($user->status == 'payment-warning')
-
         <div class="row">
             <div class="col-xs-12 col-md-6 col-md-offset-3 pull-left">
                 @include('account.partials.payment-problem-panel')
             </div>
         </div>
-
     @endif
 
 

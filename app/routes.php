@@ -25,6 +25,7 @@ Route::get('member-import', function() {
     $import = new AccountImportController();
     $import->fetch();
 });
+Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
 
 
 # Subscription/Payments

@@ -214,6 +214,11 @@ class AccountController extends \BaseController {
         return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
     }
 
+    public function confirmEmail($hash)
+    {
+
+    }
+
 
 
 	public function destroy($id)

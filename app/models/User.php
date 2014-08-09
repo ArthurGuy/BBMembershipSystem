@@ -52,6 +52,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     }
 
 
+    public static function boot()
+    {
+        parent::boot();
+
+        //The welcome email gets fired from this observer
+        self::observe(new \BB\Observer\UserObserver());
+    }
+
+
     public static function statuses()
     {
         return [
@@ -155,7 +164,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function promoteGoCardless()
     {
-        if ($this->payment_method != 'gocardless' &&(($this->status == 'active') || ($this->status == 'payment-warning')))
+        if ($this->payment_method != 'gocardless' && ($this->status == 'active'))
         {
             return true;
         }
