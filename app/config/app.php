@@ -123,6 +123,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Kmd\Logviewer\LogviewerServiceProvider',
         'Aws\Laravel\AwsServiceProvider',
+        'NwLaravel\Dropbox\DropboxServiceProvider',
 	),
 
 	/*
@@ -190,6 +191,7 @@ return array(
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
         'AWS'               => 'Aws\Laravel\AwsFacade',
+        'Dropbox'           => 'NwLaravel\Dropbox\DropboxFacade',
 	),
 
 );
