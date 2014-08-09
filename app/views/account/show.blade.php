@@ -11,7 +11,7 @@
 @if ($user->promoteGoCardless())
 
     <div class="row">
-        <div class="col-xs-12 col-md-6 col-md-offset-3 pull-left">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
             @include('account.partials.switch-to-gocardless-panel')
         </div>
     </div>

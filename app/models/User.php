@@ -155,7 +155,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function promoteGoCardless()
     {
-        if (($this->status == 'active') || ($this->status == 'payment-warning'))
+        if ($this->payment_method != 'gocardless' &&(($this->status == 'active') || ($this->status == 'payment-warning')))
         {
             return true;
         }
