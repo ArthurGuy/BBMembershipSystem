@@ -30,6 +30,8 @@ class CreateUsersTable extends Migration {
             $table->string('emergency_contact', 250);
             $table->string('notes');
             $table->boolean('active');
+            $table->boolean('founder');
+            $table->boolean('director');
             $table->string('status', 20);
             $table->boolean('trusted');
             $table->boolean('key_holder');
@@ -42,6 +44,8 @@ class CreateUsersTable extends Migration {
             $table->date('subscription_expires');
             $table->boolean('profile_photo');
             $table->boolean('profile_photo_private');
+            $table->string('banned_reason');
+            $table->date('banned_date');
             $table->rememberToken();
             $table->timestamps();
 		});
