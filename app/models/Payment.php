@@ -24,7 +24,7 @@ class Payment extends Eloquent {
      * @var array
      */
     protected $fillable = [
-        'source', 'source_id', 'user_id', 'amount', 'fee', 'amount_minus_fee', 'status', 'reason'
+        'source', 'source_id', 'user_id', 'amount', 'fee', 'amount_minus_fee', 'status', 'reason', 'created_at'
     ];
 
 
@@ -36,5 +36,10 @@ class Payment extends Eloquent {
     public function user()
     {
         return $this->belongsTo('User');
+    }
+
+    public function scopeSubscription($query)
+    {
+        return $query->whereReason('subscription');
     }
 }

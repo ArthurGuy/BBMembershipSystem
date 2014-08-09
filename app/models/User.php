@@ -32,7 +32,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1',
         'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact',
-        'monthly_subscription', 'profile_photo_private'
+        'monthly_subscription', 'profile_photo_private',
+        'notes', 'key_holder', 'trusted', 'payment_method', 'payment_day', 'active', 'status', 'created_at', 'founder', 'banned_date', 'induction_complete'
     ];
 
 
@@ -47,7 +48,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'subscription_expires');
+        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date');
     }
 
 
