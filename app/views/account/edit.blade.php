@@ -45,7 +45,10 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('monthly_subscription') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('monthly_subscription', 'Monthly Subscription Amount') }}
-            {{ Form::text('monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20']) }}
+            <div class="input-group">
+                <div class="input-group-addon">&pound;</div>
+                {{ Form::text('monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20']) }}
+            </div>
             {{ $errors->first('monthly_subscription', '<span class="help-block">:message</span>') }}
             <span class="help-block">How much do you want to contribute each month, the average is around £20</span>
         </div>

@@ -65,7 +65,10 @@
     <div class="form-group {{ $errors->has('monthly_subscription') ? 'has-error has-feedback' : '' }}">
         {{ Form::label('monthly_subscription', 'Monthly Subscription Amount', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'5', 'step'=>'1']) }}
+            <div class="input-group">
+                <div class="input-group-addon">&pound;</div>
+                {{ Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'5', 'step'=>'1']) }}
+            </div>
             {{ $errors->first('monthly_subscription', '<span class="help-block">:message</span>') }}
             <span class="help-block">How much do you want to contribute each month? We operate on a pay-what-you-can basis, most members pay between &pound;10 and &pound;30, the minimum is £5</span>
         </div>
@@ -124,7 +127,7 @@
     <div class="row">
         <p class="col-sm-9 col-lg-9 col-sm-offset-1">
             Build Brighton is a community of people rather than a company and it operates largely on trust.<br />
-            We require a profile photo as it allows the members to help recognise new faces.
+            We require a profile photo as it helps members to recognise new faces.
         </p>
     </div>
 
