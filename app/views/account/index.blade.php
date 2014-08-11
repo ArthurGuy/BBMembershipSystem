@@ -2,9 +2,11 @@
     <h1>Members</h1>
 </div>
 
+<?php echo $users->links(); ?>
 <table class="table">
     <thead>
         <tr>
+            <th></th>
             <th>Active</th>
             <th>Name</th>
             <th>Email</th>
@@ -16,6 +18,11 @@
 @foreach ($users as $user)
     <tbody>
         <tr>
+            <td>
+                @if ($user->profile_photo)
+                <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
+                @endif
+            </td>
             <td>
                 @if ($user->active)
                 <span class="glyphicon glyphicon-ok"></span>
@@ -49,3 +56,4 @@
     </tbody>
 @endforeach
 </table>
+<?php echo $users->links(); ?>

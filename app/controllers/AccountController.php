@@ -42,7 +42,7 @@ class AccountController extends \BaseController {
 	 */
 	public function index()
 	{
-        $users = User::all();
+        $users = User::paginate(50);
         $this->layout->content = View::make('account.index')->withUsers($users);
 	}
 
