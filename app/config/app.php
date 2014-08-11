@@ -124,6 +124,7 @@ return array(
         'Kmd\Logviewer\LogviewerServiceProvider',
         'Aws\Laravel\AwsServiceProvider',
         'NwLaravel\Dropbox\DropboxServiceProvider',
+        'Intervention\Image\ImageServiceProvider'
 	),
 
 	/*
@@ -192,6 +193,7 @@ return array(
 		'View'              => 'Illuminate\Support\Facades\View',
         'AWS'               => 'Aws\Laravel\AwsFacade',
         'Dropbox'           => 'NwLaravel\Dropbox\DropboxFacade',
+        'Image'             => 'Intervention\Image\Facades\Image'
 	),
 
 );
