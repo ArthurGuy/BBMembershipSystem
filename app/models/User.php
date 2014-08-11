@@ -48,8 +48,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function getDates()
     {
-
-        $this->attributes['hash'] = str_random(30);
         return array('created_at', 'updated_at', 'subscription_expires', 'banned_date');
     }
 
@@ -73,6 +71,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             'on-hold'           => 'On Hold',
             'left'              => 'Left'
         ];
+    }
+
+    public static function create(array $input)
+    {
+        $input['hash'] = str_random(30);
+        return parent::create($input);
     }
 
     public static function statusLabel($status)
