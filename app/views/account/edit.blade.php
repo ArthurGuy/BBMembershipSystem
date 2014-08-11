@@ -129,13 +129,16 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('profile_photo') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('profile_photo', 'Profile Photo', ['class'=>'control-label']) }}
-            @if ($user->profile_photo)
-                <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" />
-            @endif
             {{ Form::file('profile_photo', null, ['class'=>'form-control']) }}
             {{ $errors->first('profile_photo', '<span class="help-block">:message</span>') }}
             <span class="help-block">This photo will be displayed to members and may be used within the space, it will also be listed publicly on this site but you can turn that off below if you want.</span>
         </div>
+        @if ($user->profile_photo)
+        <div class="form-group">
+            <strong>Existing Image</strong><br />
+            <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" />
+        </div>
+        @endif
     </div>
 </div>
 
