@@ -89,3 +89,7 @@ body.register_login .top-alerts {
 }
 
 
+/* Panel Pagination */
+.panel-footer .pagination {
+    margin: 0;
+}
