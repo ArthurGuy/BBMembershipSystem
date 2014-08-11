@@ -130,7 +130,7 @@
         <div class="form-group {{ $errors->has('profile_photo') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('profile_photo', 'Profile Photo', ['class'=>'control-label']) }}
             @if ($user->profile_photo)
-                <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->id) }}" />
+                <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" />
             @endif
             {{ Form::file('profile_photo', null, ['class'=>'form-control']) }}
             {{ $errors->first('profile_photo', '<span class="help-block">:message</span>') }}

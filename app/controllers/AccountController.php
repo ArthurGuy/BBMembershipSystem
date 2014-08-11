@@ -77,11 +77,14 @@ class AccountController extends \BaseController {
             return Redirect::back()->withInput()->withErrors($e->getErrors());
         }
 
+        if (empty($input['profile_photo_private']))
+            $input['profile_photo_private'] = false;
+
         $user = User::create($input);
 
         try
         {
-            $this->userImage->uploadPhoto($user->id, Input::file('profile_photo')->getRealPath());
+            $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
 
             $user->profilePhoto(true);
         }
@@ -170,7 +173,7 @@ class AccountController extends \BaseController {
         {
             try
             {
-                $this->userImage->uploadPhoto($user->id, Input::file('profile_photo')->getRealPath());
+                $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
 
                 $user->profilePhoto(true);
             }

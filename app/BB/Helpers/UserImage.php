@@ -32,7 +32,14 @@ class UserImage {
         {
             imagepng(imagecreatefromstring($fileContent), storage_path("tmp")."/".$userId.".png");
             $fileContent = file_get_contents(storage_path("tmp")."/".$userId.".png");
+            /*
+             * @TODO:delete this temp file
+             */
         }
+
+        /*
+         * @TODO:Crop the image into the correct ratio
+         */
 
 
 
