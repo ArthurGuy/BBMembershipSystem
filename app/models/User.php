@@ -42,12 +42,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         'status' => 'setting-up',
         'active' => 0,
         'key_holder' => 0,
-        'trusted' => ''
+        'trusted' => '',
     ];
 
 
     public function getDates()
     {
+
+        $this->attributes['hash'] = str_random(30);
         return array('created_at', 'updated_at', 'subscription_expires', 'banned_date');
     }
 
