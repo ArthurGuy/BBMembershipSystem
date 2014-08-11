@@ -235,7 +235,7 @@ class AccountImportController {
                     'key_holder'        => $member['Keys'],
                     'payment_method'    => $paymentMethod,
                     'payment_day'       => $paymentDay,
-                    'monthly_subscription'  => preg_replace("/[^0-9.,]/", "", $member['Normal Payment']),
+                    'monthly_subscription'  => round(preg_replace("/[^0-9.,]/", "", $member['Normal Payment']), 0, PHP_ROUND_HALF_UP),
                     'created_at'        => $joinDate,
                     'founder'           => $founder,
                     'banned_date'       => $bannedDate,
