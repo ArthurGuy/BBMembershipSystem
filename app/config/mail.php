@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'noreply@bbms.buildbrighton.com', 'name' => 'BBMS'),
+	'from' => array('address' => 'noreply@bbms.buildbrighton.com', 'name' => 'Build Brighton Member System'),
 
 	/*
 	|--------------------------------------------------------------------------
