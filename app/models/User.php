@@ -128,6 +128,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     }
 
 
+    # Getters and Setters
+
     public function getNameAttribute()
     {
         return $this->attributes['given_name'] . ' ' . $this->attributes['family_name'];
@@ -136,6 +138,25 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
+    }
+
+
+
+    # Scopes
+
+    public function scopeActive($query)
+    {
+        return $query->whereActive(true);
+    }
+
+
+
+    # Methods
+
+
+    public static function activePublicList()
+    {
+        return self::active()->orderBy('given_name')->get();
     }
 
     public function cancelSubscription()

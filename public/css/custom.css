@@ -93,3 +93,9 @@ body.register_login .top-alerts {
 .panel-footer .pagination {
     margin: 0;
 }
+
+
+/* Public member page */
+.member-grid {
+    text-align: center;
+}
