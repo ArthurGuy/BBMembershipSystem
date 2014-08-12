@@ -2,7 +2,7 @@
 
 use BB\Helpers\PayPalConfig;
 
-class PaypalIPNController {
+class PaypalIPNController extends \BaseController {
 
     public function receiveNotification()
     {
