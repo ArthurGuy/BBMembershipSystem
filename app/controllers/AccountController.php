@@ -90,7 +90,7 @@ class AccountController extends \BaseController {
         }
         catch (\Exception $e)
         {
-            //fail silently
+            Log::error($e);
         }
 
 
@@ -179,8 +179,7 @@ class AccountController extends \BaseController {
             }
             catch (\Exception $e)
             {
-                //fail silently
-                throw $e;
+                Log::error($e);
             }
         }
 
