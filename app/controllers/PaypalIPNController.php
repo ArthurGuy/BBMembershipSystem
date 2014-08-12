@@ -6,7 +6,7 @@ class PaypalIPNController extends \BaseController {
 
     public function receiveNotification()
     {
-        $ipnMessage = new \PayPal\IPN\PPIPNMessage(Input::all(), PayPalConfig::getConfig());
+        $ipnMessage = new \PayPal\IPN\PPIPNMessage('', PayPalConfig::getConfig());
 
         foreach($ipnMessage->getRawData() as $key => $value) {
             \Log::debug("IPN: $key => $value");
