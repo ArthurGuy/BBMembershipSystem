@@ -4,7 +4,7 @@ use Intervention\Image\Facades\Image;
 
 class UserImage {
 
-    protected static $bucket = 'buildbrighton-bbms-dev';
+    protected static $bucket = 'buildbrighton-bbms';
 
     public function __construct()
     {
