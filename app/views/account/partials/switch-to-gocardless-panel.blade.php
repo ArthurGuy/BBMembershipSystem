@@ -9,7 +9,7 @@
                     We would be really grateful if you could switch to a monthly direct debit payment
                 </p>
                 <p>
-                    Dealing with bank transfers and PayPal payments takes up valuable time while Direct Debit payments are quick and fully automated.<br />
+                    Dealing with bank transfers takes up valuable time and PayPal charges us huge fees while Direct Debit payments are quick and fully automated.<br />
                     Switching only takes a minute, just follow the link below to the GoCardless website (our DD provider) and complete the form.<br />
                     <br />
                     <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
