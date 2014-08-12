@@ -3,7 +3,7 @@
 # Home
 
 Route::get('members', array('as' => 'members.index', 'uses' => 'MembersController@index'));
-Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index', 'before'=>'auth'));
+Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
 
 
 # Authentication
