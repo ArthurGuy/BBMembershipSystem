@@ -8,19 +8,15 @@ class PaypalIPNController extends \BaseController {
     {
         $ipnMessage = new \PayPal\IPN\PPIPNMessage('', PayPalConfig::getConfig());
 
-        foreach($ipnMessage->getRawData() as $key => $value) {
-            //\Log::debug("IPN: $key => $value");
-        }
-
         if($ipnMessage->validate()) {
-            \Log::debug("IPN Success");
+            //\Log::debug("IPN Success");
         } else {
             \Log::error("Invalid IPN");
         }
 
         $ipnData = $ipnMessage->getRawData();
 
-        \Log::debug(json_encode($ipnData));
+        //\Log::debug(json_encode($ipnData));
 
         if ($ipnData['txn_type'] == 'subscr_payment')
         {
@@ -47,6 +43,14 @@ class PaypalIPNController extends \BaseController {
             ]);
             $date = new \Carbon\Carbon();
             $user->extendMembership('paypal', $date->addMonth());
+        }
+        elseif ($ipnData['txn_type'] == 'subscr_cancel')
+        {
+            $user = User::where('email', $ipnData['payer_email'])->first();
+            if ($user)
+            {
+                $user->cancelSubscription();
+            }
         }
     }
 } 
