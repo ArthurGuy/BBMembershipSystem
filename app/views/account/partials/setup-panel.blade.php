@@ -11,6 +11,23 @@
             <br />
             <small>If you want to change your monthly amount please <a href="{{ route('account.edit', $user->id) }}">edit your details</a></small><br />
         </p>
+        <p>
+            You can also setup a PaySal subscription, this costs us a lot more so please only do this if you don't have a UK bank account
+            {{ Form::open(['method'=>'post', 'url'=>'https://www.paypal.com/cgi-bin/webscr']) }}
+            {{ Form::submit('Setup a PayPal Subscription', ['class'=>'btn']) }}
+            {{ Form::hidden('cmd', '_xclick-subscriptions') }}
+            {{ Form::hidden('business', 'info@buildbrighton.com') }}
+            {{ Form::hidden('item_name', 'Build Brighton Membership') }}
+            {{ Form::hidden('no_note', '1') }}
+            {{ Form::hidden('bn', 'PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHostedGuest') }}
+            {{ Form::hidden('currency_code', 'GBP') }}
+            {{ Form::hidden('a3', "$user->monthly_subscription" ) }}
+            {{ Form::hidden('p3', '1') }}
+            {{ Form::hidden('t3', 'M') }}
+            {{ Form::hidden('lc', 'GB') }}
+            {{ Form::hidden('hosted_button_i', '3H4YABLMVW6RC') }}
+            {{ Form::close() }}
+        </p>
         @if (Auth::user()->isAdmin())
         {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
         <p>

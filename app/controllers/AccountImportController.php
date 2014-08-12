@@ -1,6 +1,6 @@
 <?php 
 
-class AccountImportController {
+class AccountImportController extends \BaseController {
 
     public function fetch()
     {
