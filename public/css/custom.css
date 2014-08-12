@@ -1,6 +1,18 @@
-
+/* Global */
 .page-header {
     margin-top: 0;
+}
+
+
+
+/* Home page */
+body.home {
+    background: url(/img/rule-zero.jpg) no-repeat center center fixed;
+    background-size: cover;
+}
+body.home .panel {
+    opacity: 0.9;
+    margin-top: 50px;
 }
 
 
