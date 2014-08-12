@@ -21,7 +21,7 @@ class GoCardlessHelper {
         // Initialize GoCardless
         if (\App::environment() == 'production')
         {
-            \GoCardless::$environment = 'production';
+            //\GoCardless::$environment = 'production';
         }
         \GoCardless::set_account_details($this->account_details);
     }
