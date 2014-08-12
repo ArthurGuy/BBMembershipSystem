@@ -76,8 +76,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     public static function create(array $input)
     {
         $user = parent::create($input);
+
+        // Find a better way to doing this
         $user->hash = str_random(30);
         $user->save();
+        
         return $user;
     }
 
