@@ -9,7 +9,7 @@ class PaypalIPNController extends \BaseController {
         $ipnMessage = new \PayPal\IPN\PPIPNMessage('', PayPalConfig::getConfig());
 
         foreach($ipnMessage->getRawData() as $key => $value) {
-            \Log::debug("IPN: $key => $value");
+            //\Log::debug("IPN: $key => $value");
         }
 
         if($ipnMessage->validate()) {
@@ -17,5 +17,7 @@ class PaypalIPNController extends \BaseController {
         } else {
             \Log::error("Invalid IPN");
         }
+
+        \Log::debug(json_encode($ipnMessage->getRawData()));
     }
 } 
