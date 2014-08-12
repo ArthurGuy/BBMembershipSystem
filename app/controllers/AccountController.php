@@ -216,9 +216,15 @@ class AccountController extends \BaseController {
         return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
     }
 
-    public function confirmEmail($hash)
+    public function confirmEmail($id, $hash)
     {
-
+        $user = User::find($id);
+        if ($user && $user->hash == $hash)
+        {
+            $user->emailConfirmed();
+            return Redirect::route('account.show', $user->id)->withSuccess("Email address confirmed");
+        }
+        return Redirect::route('home')->withErrors("Error confirming email address");
     }
 
 

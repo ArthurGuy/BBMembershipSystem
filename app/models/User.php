@@ -181,6 +181,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    public function emailConfirmed()
+    {
+        $this->email_verified = true;
+        $this->save();
+    }
+
     public function profilePhoto($photoAvailable=true)
     {
         $this->profile_photo = $photoAvailable;
