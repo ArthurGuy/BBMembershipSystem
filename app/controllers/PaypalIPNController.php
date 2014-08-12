@@ -18,7 +18,7 @@ class PaypalIPNController extends \BaseController {
 
         //\Log::debug(json_encode($ipnData));
 
-        if ($ipnData['txn_type'] == 'subscr_payment')
+        if (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_payment'))
         {
             if ($ipnData['payment_status'] != 'Completed')
             {
@@ -44,7 +44,7 @@ class PaypalIPNController extends \BaseController {
             $date = new \Carbon\Carbon();
             $user->extendMembership('paypal', $date->addMonth());
         }
-        elseif ($ipnData['txn_type'] == 'subscr_cancel')
+        elseif (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_cancel'))
         {
             $user = User::where('email', $ipnData['payer_email'])->first();
             if ($user)
