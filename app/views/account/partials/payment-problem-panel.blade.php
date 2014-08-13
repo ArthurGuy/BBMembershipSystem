@@ -55,5 +55,17 @@
         </p>
         @endif
 
+        @if (Auth::user()->isAdmin())
+        {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
+        <p>
+            <span class="label label-danger pull-right">Admin</span>
+            Add a manual payment to this account
+        </p>
+        {{ Form::hidden('reason', 'subscription') }}
+        {{ Form::select('source', ['other'=>'Other', 'cash'=>'Cash', 'paypal'=>'PayPal'], null, ['class'=>'form-control']) }}
+        {{ Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) }}
+        {{ Form::close() }}
+        @endif
+
     </div>
 </div>
