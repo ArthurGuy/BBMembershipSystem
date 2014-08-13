@@ -1,5 +1,5 @@
-<div class="row">
-    <div class="page-header col-xs-12 col-sm-10">
+<div class="row page-header">
+    <div class="col-xs-12 col-sm-10">
         <h1>
             @if ($user->profile_photo)
             <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
@@ -9,7 +9,6 @@
     </div>
     <div class="col-xs-12 col-sm-2">
         <p><a href="{{ route('account.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Details</a></p>
-
     </div>
 </div>
 
