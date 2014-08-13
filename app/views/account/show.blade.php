@@ -11,6 +11,48 @@
         <p><a href="{{ route('account.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Details</a></p>
     </div>
 </div>
+<ul class="nav nav-pills">
+    <li>
+        <p class="navbar-text">Status: {{ User::statusLabel($user->status) }}</p>
+    </li>
+    <li>
+        <p class="navbar-text">
+            Access to the space:
+            @if ($user->active)
+            <label class="label label-success">Granted</label><br />
+            @else
+            <label class="label label-danger">No</label><br />
+            @endif
+        </p>
+    </li>
+    <li>
+        <p class="navbar-text">
+            Key Holder:
+            @if ($user->key_holder)
+            <label class="label label-success">Yes</label><br />
+            @else
+            <label class="label label-default">Not yet</label><br />
+            @endif
+        </p>
+    </li>
+    @if (!$user->induction_completed)
+    <li>
+        <p class="navbar-text">Induction: <label class="label label-warning">Pending</label></p>
+    </li>
+    @endif
+    <li>
+        <p class="navbar-text">Payment Method: {{ $user->payment_method }}</p>
+    </li>
+    <li>
+        <p class="navbar-text">Monthly Payment: &pound;{{ round($user->monthly_subscription) }}</p>
+    </li>
+    <li>
+        <p class="navbar-text">Subscription Expires: {{ $user->subscription_expires->toFormattedDateString() }}</p>
+    </li>
+
+
+</ul>
+
 
 
 @if ($user->promoteGoCardless())
