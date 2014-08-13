@@ -37,7 +37,7 @@
                 {{ Form::hidden('induction_key', $itemKey) }}
                 {{ Form::hidden('reason', 'induction') }}
                 {{ Form::hidden('source', 'gocardless') }}
-                {{ Form::submit('Pay Now', array('class'=>'btn btn-primary btn-xs')) }}
+                {{ Form::submit('Pay Now (DD)', array('class'=>'btn btn-primary btn-xs')) }}
                 {{ Form::close() }}
                 @endif
             </td>
