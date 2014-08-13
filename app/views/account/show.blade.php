@@ -13,31 +13,35 @@
 </div>
 <ul class="nav nav-pills">
     <li>
-        <p class="navbar-text">Status: {{ User::statusLabel($user->status) }}</p>
+        <p class="navbar-text">{{ User::statusLabel($user->status) }}</p>
     </li>
     <li>
         <p class="navbar-text">
-            Access to the space:
+
             @if ($user->active)
-            <label class="label label-success">Granted</label><br />
+            <label class="label label-success">Access to the space</label><br />
             @else
-            <label class="label label-danger">No</label><br />
+            <label class="label label-danger">No access to he space</label><br />
             @endif
         </p>
     </li>
     <li>
         <p class="navbar-text">
-            Key Holder:
             @if ($user->key_holder)
-            <label class="label label-success">Yes</label><br />
+            <label class="label label-success">Key Holder</label><br />
             @else
-            <label class="label label-default">Not yet</label><br />
+            <label class="label label-default">Key Holder: not yet</label><br />
             @endif
         </p>
     </li>
+    @if ($user->trusted)
+    <li>
+        <p class="navbar-text"><label class="label label-success">Trusted Member</label></p>
+    </li>
+    @endif
     @if (!$user->induction_completed)
     <li>
-        <p class="navbar-text">Induction: <label class="label label-warning">Pending</label></p>
+        <p class="navbar-text"><label class="label label-warning">Induction Pending</label></p>
     </li>
     @endif
     <li>
@@ -49,8 +53,6 @@
     <li>
         <p class="navbar-text">Subscription Expires: {{ $user->subscription_expires->toFormattedDateString() }}</p>
     </li>
-
-
 </ul>
 
 
@@ -103,17 +105,13 @@
 
 
     <div class="row">
-        <div class="col-xs-12 col-md-6 col-lg-4 pull-right">
-            @include('account.partials.member-status-panel')
-        </div>
-
-        <div class="col-xs-12 col-lg-8">
+        <div class="col-xs-12 col-lg-12">
             @include('account.partials.induction-panel')
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12 col-lg-8 pull-left">
+        <div class="col-xs-12 col-lg-12 pull-left">
             @include('account.partials.payments-panel')
         </div>
     </div>
