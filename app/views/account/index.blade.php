@@ -12,6 +12,8 @@
             <th>Email</th>
             <th>Status</th>
             <th>Induction Complete</th>
+            <th>Payment Method</th>
+            <th>Subscription Amount</th>
             <th>Subscription Expires</th>
         </tr>
     </thead>
@@ -45,6 +47,8 @@
                 <span class="glyphicon glyphicon-remove"></span>
                 @endif
             </td>
+            <td>{{ $user->payment_method }}</td>
+            <td>{{ $user->monthly_subscription }}</td>
             <td>
                 @if ($user->subscription_expires->year > 0)
                     {{ $user->subscription_expires->toFormattedDateString() }}
