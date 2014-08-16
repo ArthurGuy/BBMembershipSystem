@@ -244,5 +244,16 @@ class AccountController extends \BaseController {
         return Redirect::route('account.show', $user->id)->withSuccess("User marked as having left Build Brighton.");
 	}
 
+    public function sendWelcomeEmails()
+    {
+        $users = User::whereActive(true)->get();
+        foreach ($users as $user)
+        {
+            \Mail::send('emails.new-system-intro', ['user'=>$user], function($message) use ($user)
+            {
+                $message->to($user->email, $user->name)->subject('Welcome to the Build Brighton Member System');
+            });
+        }
+    }
 
 }
