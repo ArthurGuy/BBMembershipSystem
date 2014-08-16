@@ -243,7 +243,7 @@ class AccountImportController extends \BaseController {
                     'created_at'        => $joinDate,
                     'founder'           => $founder,
                     'banned_date'       => $bannedDate,
-                    'induction_complete'=> true
+                    'induction_completed'=> true
                 ]);
             }
 
