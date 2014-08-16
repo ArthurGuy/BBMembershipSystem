@@ -161,6 +161,7 @@ class AccountImportController extends \BaseController {
             $active = true;
             $founder = false;
             $banned = false;
+            $honorary = false;
             $joinDate = '';
 
 
@@ -173,7 +174,7 @@ class AccountImportController extends \BaseController {
                 case 'mini-member': $status = 'active'; break;
                 case 'skiff mate': $status = 'active'; break;
                 case 'director': $status = 'active'; break;
-                case 'honorary': $status = 'active'; break;
+                case 'honorary': $status = 'active'; $honorary = true; break;
             }
 
             //These situations override the ones above
@@ -201,6 +202,9 @@ class AccountImportController extends \BaseController {
             //If the user has left they arent active
             if ($status == 'left')
                 $active = false;
+
+            if ($honorary)
+                $status = 'honorary';
 
             $bannedDate = '0000-00-00';
             if ($banned)

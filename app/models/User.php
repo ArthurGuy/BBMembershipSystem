@@ -69,7 +69,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             'payment-warning'   => 'Payment Warning',
             'leaving'           => 'Leaving',
             'on-hold'           => 'On Hold',
-            'left'              => 'Left'
+            'left'              => 'Left',
+            'honorary'          => 'Honorary'
         ];
     }
 
@@ -109,6 +110,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         elseif ($status == 'left')
         {
             return '<span class="label label-default">Left</span>';
+        }
+        elseif ($status == 'honorary')
+        {
+            return '<span class="label label-default">Honorary</span>';
         }
     }
 
