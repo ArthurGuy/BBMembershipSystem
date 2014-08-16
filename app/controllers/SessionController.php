@@ -44,7 +44,7 @@ class SessionController extends \BaseController {
 
         if (Auth::attempt($input, true))
         {
-            return Redirect::intended('/');
+            return Redirect::intended('account/'.Auth::id());
         }
 
         return Redirect::back()->withInput()->withErrors('Invalid login details');
