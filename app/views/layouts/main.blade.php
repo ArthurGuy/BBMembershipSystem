@@ -62,13 +62,13 @@
 
                 <li class="detail-link">
                     <a href="{{ route('account.index') }}">
-                        Members <span class="label label-warning">32</span>
+                        Members (Admin)
                     </a>
                 </li>
 
                 <li class="detail-link">
                     <a href="{{ route('induction.index') }}">
-                        Equipment Inductions/Trainers <span class="label label-warning">32</span>
+                        Equipment Inductions/Trainers
                     </a>
                 </li>
 
