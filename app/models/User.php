@@ -159,6 +159,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $query->whereActive(true);
     }
 
+    public function scopeNotSpecialCase($query)
+    {
+        return $query->where('status', '!=', 'honorary');
+    }
+
 
 
     # Methods

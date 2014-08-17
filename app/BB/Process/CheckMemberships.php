@@ -12,7 +12,7 @@ class CheckMemberships {
         $paypalCutoff = $today->subMonth();
         $otherCutoff = $today->subDays(7);
 
-        $users = \User::active()->get();
+        $users = \User::active()->notSpecialCase()->get();
         foreach ($users as $user)
         {
             echo $user->name;
