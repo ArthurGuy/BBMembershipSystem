@@ -44,6 +44,11 @@ Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.paymen
 Route::resource('account.induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['index', 'update', 'destroy']]);
 Route::resource('induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['index', 'update', 'destroy']]);
 
+
+# Statements
+Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy'], 'before'=>'auth.admin']);
+
+
 #PayPal IPN
 Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 //This route is only to be called once!
