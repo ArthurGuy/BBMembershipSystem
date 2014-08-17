@@ -108,7 +108,7 @@ class Induction extends Eloquent {
     public static function trainersForDropdown($key)
     {
         $trainers = self::trainersFor($key);
-        $trainersArray = [];
+        $trainersArray = [null=>'Unknown'];
 
         foreach ($trainers as $trainer)
         {
