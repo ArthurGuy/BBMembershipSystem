@@ -53,8 +53,9 @@
             </td>
             <td>
                 @if (Auth::user()->isAdmin() && $item->userInduction && !$item->userInduction->is_trained)
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id])) }}
-                {{ Form::select('', Induction::trainersForDropdown($itemKey)) }}
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) }}
+                {{ Form::select('trainer_user_id', Induction::trainersForDropdown($itemKey)) }}
+                {{ Form::hidden('mark_trained', '1') }}
                 {{ Form::submit('Trained By', array('class'=>'btn btn-default btn-xs')) }}
                 {{ Form::close() }}
                 @elseif (Auth::user()->isAdmin() && $item->userInduction && $item->userInduction->is_trained)
