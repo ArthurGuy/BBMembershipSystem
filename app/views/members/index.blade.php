@@ -14,7 +14,7 @@
                         <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
                     @endif
                 @else
-                    <img src="{{ \BB\Helpers\UserImage::gravatar($user->email) }}" width="100" height="100" />
+                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
                 @endif
                 <div class="caption">
                     <strong>{{ $user->name }}</strong>
