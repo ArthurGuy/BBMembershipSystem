@@ -8,6 +8,7 @@ class PaymentController extends \BaseController {
         $this->goCardless = $goCardless;
 
         $this->beforeFilter('auth', array('only' => ['create', 'destroy']));
+        $this->beforeFilter('auth.admin', array('only' => ['store']));
     }
 
 
@@ -156,13 +157,7 @@ class PaymentController extends \BaseController {
             $user->payments()->save($payment);
 
             $user->extendMembership(Input::get('source'), \Carbon\Carbon::now()->addMonth());
-            /*
-            $user->status = 'active';
-            $user->active = true;
-            $user->payment_method = Input::get('source');
-            $user->subscription_expires = \Carbon\Carbon::now()->addMonth();
-            $user->save();
-            */
+
         }
         elseif ($reason == 'induction')
         {
