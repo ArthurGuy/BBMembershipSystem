@@ -16,6 +16,12 @@ abstract class FormValidator {
      */
     protected $validation;
 
+
+    /**
+     * @var
+     */
+    protected $adminOverrideSet;
+
     /**
      *
      * @param Validator $validator
@@ -60,6 +66,11 @@ abstract class FormValidator {
             $rules = array_merge($rules, $this->updateRules);
         }
 
+        if ($this->adminOverrideSet)
+        {
+            $rules = array_merge($rules, $this->adminOverride);
+        }
+
         foreach ($rules as $name => $rule)
         {
             //This should be hard coded but for now it will do
@@ -79,6 +90,15 @@ abstract class FormValidator {
     protected function getValidationErrors()
     {
         return $this->validation->errors();
+    }
+
+    /**
+     * Set the admin override - tones down some validation rules
+     * @param bool $admin
+     */
+    public function setAdminOverride($admin=false)
+    {
+        $this->adminOverrideSet = $admin;
     }
 
 }

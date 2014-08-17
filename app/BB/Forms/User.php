@@ -31,4 +31,11 @@ class User extends FormValidator {
         'profile_photo' => 'image',
     ];
 
+
+    protected $adminOverride = [
+        'password' => 'min:8',
+        'profile_photo' => 'image',
+        'emergency_contact' => '',
+    ];
+
 } 
