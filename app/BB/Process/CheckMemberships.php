@@ -50,10 +50,13 @@ class CheckMemberships {
             if ($expired)
             {
                 $latestSubPayment = $user->payments()->where('reason', 'subscription')->orderBy('created_at', 'desc')->first();
-                $paidUntil = $latestSubPayment->created_at->addMonth();
-                if ($user->subscription_expires->lt($paidUntil))
+                if ($latestSubPayment)
                 {
-                    $user->extendMembership($user->payment_method, $paidUntil);
+                    $paidUntil = $latestSubPayment->created_at->addMonth();
+                    if ($user->subscription_expires->lt($paidUntil))
+                    {
+                        $user->extendMembership($user->payment_method, $paidUntil);
+                    }
                 }
             }
             if ($expired)
