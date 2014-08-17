@@ -131,6 +131,7 @@
             {{ Form::label('profile_photo', 'Profile Photo', ['class'=>'control-label']) }}
             {{ Form::file('profile_photo', null, ['class'=>'form-control']) }}
             {{ $errors->first('profile_photo', '<span class="help-block">:message</span>') }}
+            <span class="help-block">This must be a clear image of your face, its not much use for identification otherwise!</span>
             <span class="help-block">This photo will be displayed to members and may be used within the space, it will also be listed publicly on this site but you can turn that off below if you want.</span>
         </div>
         @if ($user->profile_photo)
