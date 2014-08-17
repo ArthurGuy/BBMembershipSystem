@@ -1,5 +1,10 @@
-<div class="page-header">
-    <h1>Members</h1>
+<div class="row page-header">
+    <div class="col-xs-12 col-sm-10">
+        <h1>Members</h1>
+    </div>
+    <div class="col-xs-12 col-sm-2">
+        <p><a href="{{ route('account.create') }}" class="btn btn-info btn-sm">Create a new member</a></p>
+    </div>
 </div>
 
 <?php echo $users->links(); ?>
