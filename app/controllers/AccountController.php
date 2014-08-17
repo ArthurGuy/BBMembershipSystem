@@ -20,9 +20,12 @@ class AccountController extends \BaseController {
         $this->goCardless = $goCardless;
         $this->userImage = $userImage;
 
+        //This tones down some validation rules for admins
+        $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
+
         $this->beforeFilter('auth', array('except' => ['create', 'store']));
         $this->beforeFilter('auth.admin', array('only' => ['index']));
-        $this->beforeFilter('guest', array('only' => ['create', 'store']));
+        //$this->beforeFilter('guest', array('only' => ['create', 'store']));
 
         $paymentMethods = [
             'gocardless'    => 'GoCardless',
@@ -82,19 +85,25 @@ class AccountController extends \BaseController {
 
         $user = User::create($input);
 
-        try
+        if (Input::file('profile_photo'))
         {
-            $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
+            try
+            {
+                $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
 
-            $user->profilePhoto(true);
+                $user->profilePhoto(true);
+            }
+            catch (\Exception $e)
+            {
+                Log::error($e);
+            }
         }
-        catch (\Exception $e)
+
+        //If this isn't an admin user creating the record log them in
+        if (Auth::guest() || !Auth::user()->isAdmin())
         {
-            Log::error($e);
+            Auth::login($user);
         }
-
-
-        Auth::login($user);
 
         return Redirect::route('account.show', $user->id);
 	}
