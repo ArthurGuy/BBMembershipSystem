@@ -21,8 +21,7 @@ class UserMailer {
     {
         \Mail::send('emails.welcome', ['user'=>$this->user], function($message)
         {
-            //$message->to($this->user->email, $this->user->name)->subject('Welcome to Build Brighton!');
-            $message->to('arthur@assys.net', $this->user->name)->subject('Welcome to Build Brighton!');
+            $message->to($this->user->email, $this->user->name)->subject('Welcome to Build Brighton!');
         });
     }
 
