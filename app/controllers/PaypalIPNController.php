@@ -28,6 +28,10 @@ class PaypalIPNController extends \BaseController {
             $user = User::where('email', $ipnData['payer_email'])->first();
             if (!$user)
             {
+                $user = User::where('secondary_email', $ipnData['payer_email'])->first();
+            }
+            if (!$user)
+            {
                 \Log::error("IPN Received for unknown email ".$ipnData['payer_email']);
                 return;
             }
