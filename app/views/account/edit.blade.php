@@ -47,7 +47,7 @@
             {{ Form::label('monthly_subscription', 'Monthly Subscription Amount') }}
             <div class="input-group">
                 <div class="input-group-addon">&pound;</div>
-                {{ Form::text('monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20']) }}
+                {{ Form::text('monthly_subscription', null, ['class'=>'form-control', 'placeholder'=>'20']) }}
             </div>
             {{ $errors->first('monthly_subscription', '<span class="help-block">:message</span>') }}
             <span class="help-block">How much do you want to contribute each month, the average is around £20</span>
