@@ -53,7 +53,7 @@ class StatementImportController extends \BaseController {
             $date = new \Carbon\Carbon($row[0]);
             echo "<td>".$date.'</td>';
 
-            if (strpos($row[2], 'SUB') !== false)
+            if (strpos(strtoupper($row[2]), 'SUB') !== false)
             {
                 $subPayment = true;
             }
