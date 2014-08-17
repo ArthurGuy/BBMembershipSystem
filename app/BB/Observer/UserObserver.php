@@ -13,7 +13,7 @@ class UserObserver {
         $original = $user->getOriginal();
         if (($original['status'] == 'setting-up') && ($user->status != 'setting-up'))
         {
-            //$this->newUser($user);
+            $this->newUser($user);
         }
     }
 
