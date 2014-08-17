@@ -127,6 +127,8 @@ class StatementImportController extends \BaseController {
                 if ($subPayment)
                 {
                     $user->extendMembership('standing-order', $date->addMonth());
+                    $user->monthly_subscription = $row[4];
+                    $user->save();
                 }
             }
         }
