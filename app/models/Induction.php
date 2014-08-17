@@ -51,16 +51,16 @@ class Induction extends Eloquent {
                 ],
             'welder' => (object)[
                     'name' => 'Welder',
-                    'cost' => '25',
+                    'cost' => '20',
                 ],
             'cnc' => (object)[
                     'name' => 'CNC Router',
                     'cost' => '25'
                 ],
-            '3dprinter' => (object)[
-                    'name' => '3D Printer',
-                    'cost' => '25'
-                ]
+            //'3dprinter' => (object)[
+            //        'name' => '3D Printer',
+            //        'cost' => '0'
+            //    ]
         ];
         if ($key)
         {
