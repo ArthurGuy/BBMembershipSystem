@@ -20,6 +20,7 @@
             <th>Payment Method</th>
             <th>Subscription Amount</th>
             <th>Subscription Expires</th>
+            <th>Payment</th>
         </tr>
     </thead>
 @foreach ($users as $user)
@@ -62,6 +63,13 @@
                 @else
                     -
                 @endif
+            </td>
+            <td>
+                {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
+                {{ Form::hidden('reason', 'subscription') }}
+                {{ Form::select('source', ['other'=>'Other', 'paypal'=>'PayPal', 'cash'=>'Cash'], null, ['class'=>'form-control']) }}
+                {{ Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) }}
+                {{ Form::close() }}
             </td>
         </tr>
     </tbody>
