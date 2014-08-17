@@ -31,15 +31,17 @@ class InductionController extends \BaseController
     {
         $induction = Induction::findOrFail($id);
 
-        $trained = Input::get('mark_trained', false);
-        if ($trained) {
+        if (Input::get('mark_trained', false)) {
             $induction->trained = \Carbon\Carbon::now();
             $induction->trainer_user_id = Input::get('trainer_user_id', false);
             $induction->save();
-            return Redirect::route('account.show', $userId)->withSuccess("Updated");
+        } elseif (Input::get('is_trainer', false)) {
+            $induction->is_trainer = true;
+            $induction->save();
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
+        return Redirect::route('account.show', $userId)->withSuccess("Updated");
     }
 
 
