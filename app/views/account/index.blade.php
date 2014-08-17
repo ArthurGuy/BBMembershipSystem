@@ -23,6 +23,8 @@
             <td>
                 @if ($user->profile_photo)
                 <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
+                @else
+                <img src="{{ \BB\Helpers\UserImage::gravatar($user->email) }}" width="100" height="100" />
                 @endif
             </td>
             <td>

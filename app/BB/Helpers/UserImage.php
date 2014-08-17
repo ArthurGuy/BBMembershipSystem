@@ -61,4 +61,14 @@ class UserImage {
         return "https://s3-eu-west-1.amazonaws.com/".self::$bucket."/".\App::environment().'/user-photo/'.md5($userId).'-thumb.png';
     }
 
+    public static function gravatar($email)
+    {
+        return 'https://www.gravatar.com/avatar/'.md5($email).'?s=200&d=mm';
+    }
+
+    public static function anonymous()
+    {
+        return 'https://www.gravatar.com/avatar/foo?s=200&d=mm&f=y';
+    }
+
 } 

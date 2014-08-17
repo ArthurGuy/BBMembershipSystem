@@ -9,12 +9,12 @@
             <div class="thumbnail">
                 @if ($user->profile_photo)
                     @if ($user->profile_photo_private)
-                        <img src="http://placehold.it/100x100" />
+                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
                     @else
                         <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
                     @endif
                 @else
-                    <img src="http://placehold.it/100x100" />
+                    <img src="{{ \BB\Helpers\UserImage::gravatar($user->email) }}" width="100" height="100" />
                 @endif
                 <div class="caption">
                     <strong>{{ $user->name }}</strong>
