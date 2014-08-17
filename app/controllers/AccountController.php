@@ -83,6 +83,9 @@ class AccountController extends \BaseController {
         if (empty($input['profile_photo_private']))
             $input['profile_photo_private'] = false;
 
+        if (empty($input['password']))
+            unset($input['password']);
+
         $user = User::create($input);
 
         if (Input::file('profile_photo'))
