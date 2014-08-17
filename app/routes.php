@@ -51,5 +51,11 @@ Route::resource('statement-import', 'StatementImportController', ['except' => ['
 
 #PayPal IPN
 Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
+
+Route::get('test', function() {
+   $process = new \BB\Process\CheckMemberships();
+    $process->run();
+});
+
 //This route is only to be called once!
 Route::post('send-welcome', 'AccountController@sendWelcomeEmails');
