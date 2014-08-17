@@ -7,6 +7,10 @@
     </div>
 </div>
 
+<div>
+    Active Members: {{ $numActiveUsers }}
+</div>
+
 <?php echo $users->links(); ?>
 <table class="table">
     <thead>
