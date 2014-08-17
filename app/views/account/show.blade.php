@@ -112,22 +112,23 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-lg-12 pull-left">
-            @include('account.partials.payments-panel')
+
+    @if ($user->status != 'honorary')
+        <div class="row">
+            <div class="col-xs-12 col-lg-12 pull-left">
+                @include('account.partials.payments-panel')
+            </div>
         </div>
-    </div>
 
 
-
-    @if ($user->status != 'left')
-    <div class="row">
-        <div class="col-xs-12 col-lg-4">
-            @include('account.partials.cancel-panel')
+        @if ($user->status != 'left')
+        <div class="row">
+            <div class="col-xs-12 col-lg-4">
+                @include('account.partials.cancel-panel')
+            </div>
         </div>
-    </div>
+        @endif
     @endif
-
 
 @endif
 
