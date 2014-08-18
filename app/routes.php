@@ -58,4 +58,4 @@ Route::get('test', function() {
 });
 
 //This route is only to be called once!
-//Route::get('send-welcome', 'AccountController@sendWelcomeEmails');
+Route::get('send-welcome', 'AccountController@sendWelcomeEmails');

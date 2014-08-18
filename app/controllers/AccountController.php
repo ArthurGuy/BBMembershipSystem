@@ -261,8 +261,8 @@ class AccountController extends \BaseController {
     {
         $users = User::active()->notSpecialCase()->get();
         //$users = User::where('email', 'arthur@arthurguy.co.uk')->get();
-        //echo $users;
-        //exit;
+        echo $users;
+        exit;
         foreach ($users as $user)
         {
             \Mail::send('emails.new-system-intro', ['user'=>$user], function($message) use ($user)
