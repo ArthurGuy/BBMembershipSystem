@@ -259,7 +259,9 @@ class AccountController extends \BaseController {
 
     public function sendWelcomeEmails()
     {
-        $users = User::whereActive(true)->get();
+        //$users = User::active()->get();
+        $users = User::where('email', 'arthur@arthurguy.co.uk')->get();
+        echo $users;
         foreach ($users as $user)
         {
             \Mail::send('emails.new-system-intro', ['user'=>$user], function($message) use ($user)
@@ -267,6 +269,7 @@ class AccountController extends \BaseController {
                 $message->to($user->email, $user->name)->subject('Welcome to the Build Brighton Member System');
             });
         }
+        exit;
     }
 
 }
