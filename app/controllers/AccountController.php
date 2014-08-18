@@ -259,14 +259,15 @@ class AccountController extends \BaseController {
 
     public function sendWelcomeEmails()
     {
-        //$users = User::active()->get();
-        $users = User::where('email', 'arthur@arthurguy.co.uk')->get();
+        $users = User::active()->get();
+        //$users = User::where('email', 'arthur@arthurguy.co.uk')->get();
         echo $users;
+        exit;
         foreach ($users as $user)
         {
             \Mail::send('emails.new-system-intro', ['user'=>$user], function($message) use ($user)
             {
-                $message->to($user->email, $user->name)->subject('Welcome to the Build Brighton Member System');
+                $message->to($user->email, $user->name)->subject('Welcome to the new Build Brighton Member System');
             });
         }
         exit;
