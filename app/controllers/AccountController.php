@@ -257,6 +257,7 @@ class AccountController extends \BaseController {
         return Redirect::route('account.show', $user->id)->withSuccess("User marked as having left Build Brighton.");
 	}
 
+    /*
     public function sendWelcomeEmails()
     {
         $users = User::active()->notSpecialCase()->skip(57)->take(50)->get();
@@ -273,5 +274,6 @@ class AccountController extends \BaseController {
         }
         exit;
     }
+    */
 
 }
