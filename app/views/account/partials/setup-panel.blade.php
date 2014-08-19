@@ -9,6 +9,7 @@
         <p>
             <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a><br />
             <br />
+            The direct debit date will be the day you complete this process<br />
             <small>If you want to change your monthly amount please <a href="{{ route('account.edit', $user->id) }}">edit your details</a></small><br />
         </p>
         <p>
