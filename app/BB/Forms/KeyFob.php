@@ -8,7 +8,7 @@ class KeyFob extends FormValidator {
      * @var array
      */
     protected $rules = [
-        'key_id' => 'required|unique:key_fobs|min:12|max:12',
+        'key_id' => 'required|unique:key_fobs|min:8|max:12',
     ];
 
 } 
