@@ -59,6 +59,13 @@ $framework = $app['path.base'].
 
 require $framework.'/Illuminate/Foundation/start.php';
 
+
+//Disable sessions for requests to the /access-control endpoint
+if (strpos($app['request']->path(), 'access-control/') === 0)
+{
+    $app['config']->set('session.driver', 'array');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
