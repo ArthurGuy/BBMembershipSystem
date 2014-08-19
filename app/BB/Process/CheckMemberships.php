@@ -9,10 +9,10 @@ class CheckMemberships {
 
         $today = new Carbon();
         $standingOrderCutoff = $today->subMonth()->subDays(7);
-        $paypalCutoff = $today->subMonth();
+        $paypalCutoff = $today->subDays(7);
         $otherCutoff = $today->subDays(7);
 
-        $users = \User::active()->notSpecialCase()->get();
+        $users = \User::active()->where('status', '=', 'active')->notSpecialCase()->get();
         foreach ($users as $user)
         {
             echo $user->name;
@@ -56,6 +56,9 @@ class CheckMemberships {
                     if ($user->subscription_expires->lt($paidUntil))
                     {
                         $user->extendMembership($user->payment_method, $paidUntil);
+
+                        //This may not be true but it simplifies things now and tomorrows process will deal with it
+                        $expired = false;
                     }
                 }
             }
