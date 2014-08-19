@@ -68,7 +68,7 @@ class CheckMemberships {
             {
                 echo " - Expired";
                 $user->status = 'payment-warning';
-                //$user->save();
+                $user->save();
             }
 
 
