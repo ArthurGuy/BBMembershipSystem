@@ -28,6 +28,9 @@
             {{ Form::hidden('hosted_button_i', '3H4YABLMVW6RC') }}
             {{ Form::close() }}
         </p>
+        <p>
+            If neither of these options are suitable please get in contact <a href="mailto:trustees@buildbrighton.com">trustees@buildbrighton.com</a>
+        </p>
         @if (Auth::user()->isAdmin())
         {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
         <p>
