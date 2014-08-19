@@ -200,6 +200,16 @@ class AccountController extends \BaseController {
 	}
 
 
+
+    public function adminUpdate($id)
+    {
+        $user = User::findWithPermission($id);
+        $input = Input::only('trusted', 'key_holder', 'induction_completed');
+        $user->update($input);
+        return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
+    }
+
+
     public function alterSubscription($id)
     {
         $user = User::findWithPermission($id);

@@ -22,6 +22,7 @@ Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'Remin
 Route::resource('account', 'AccountController');
 Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
 Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'before'=>'auth.admin']);
+Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'before'=>'auth.admin']);
 Route::get('member-import', function() {
     $import = new AccountImportController();
     $import->fetch();
