@@ -11,9 +11,17 @@ class UserObserver {
     public function saved($user)
     {
         $original = $user->getOriginal();
+
+        //Use status changed from setting-up to something else
         if (($original['status'] == 'setting-up') && ($user->status != 'setting-up'))
         {
             $this->newUser($user);
+        }
+
+        //User status changed to payment warning
+        if (($original['status'] != 'payment-warning') && ($user->status == 'payment-warning'))
+        {
+            $this->paymentWarning($user);
         }
     }
 
@@ -25,5 +33,12 @@ class UserObserver {
     {
         $userMailer = new UserMailer($user);
         $userMailer->sendWelcomeMessage();
+    }
+
+
+    private function paymentWarning($user)
+    {
+        $userMailer = new UserMailer($user);
+        $userMailer->sendPaymentWarningMessage();
     }
 } 
