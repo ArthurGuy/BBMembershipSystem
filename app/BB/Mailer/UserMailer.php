@@ -25,4 +25,14 @@ class UserMailer {
         });
     }
 
+
+
+    public function sendPaymentWarningMessage()
+    {
+        \Mail::send('emails.payment-warning', ['user'=>$this->user], function($message)
+        {
+            $message->to($this->user->email, $this->user->email)->subject('We have detected a payment problem');
+        });
+    }
+
 } 
