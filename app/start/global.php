@@ -53,6 +53,20 @@ App::error(function(Exception $exception, $code)
 	Log::error($exception);
 });
 
+
+App::error(function(\BB\Exceptions\AuthenticationException $exception)
+{
+    $userString = null;
+    if (Auth::guest()) {
+        $userString = "Guest";
+    } else {
+        $userString = Auth::user()->name;
+    }
+    Log::warning("User tried to access something they weren't supposed to. ".$userString);
+
+    return Response::make("Unauthorized", 403);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
