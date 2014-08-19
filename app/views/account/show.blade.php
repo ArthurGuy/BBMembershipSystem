@@ -59,7 +59,7 @@
 
 @if (Auth::user()->isAdmin())
 <div class="row">
-    <div class="col-xs-12 col-md-8">
+    <div class="col-xs-12 col-lg-6">
         {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
         <div class="form-group">
             {{ Form::label('trusted', 'Trusted Member') }}
@@ -75,6 +75,25 @@
         </div>
         {{ Form::submit('Update', array('class'=>'btn btn-primary')) }}
         {{ Form::close() }}
+    </div>
+
+    <div class="col-xs-12 col-lg-6">
+        @if ($user->keyFob())
+            <span class="navbar-text">{{ $user->keyFob()->key_id }}</span>
+            {{ Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $user->keyFob()->id], 'class'=>'navbar-form navbar-left')) }}
+            {{ Form::hidden('user_id', $user->id) }}
+            {{ Form::submit('Mark Lost', array('class'=>'btn btn-primary')) }}
+            {{ Form::close() }}
+        @else
+        {{ Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'navbar-form navbar-left')) }}
+        <div class="form-group">
+            {{ Form::label('trusted', 'Key ID') }}
+            {{ Form::text('key_id', '', ['class'=>'form-control']) }}
+        </div>
+        {{ Form::hidden('user_id', $user->id) }}
+        {{ Form::submit('Add', array('class'=>'btn btn-primary')) }}
+        {{ Form::close() }}
+        @endif
     </div>
 </div>
 @endif

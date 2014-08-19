@@ -51,6 +51,10 @@ Route::resource('induction', 'InductionController', ['before'=>'auth.admin', 'on
 Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy'], 'before'=>'auth.admin']);
 
 
+#KeyFobs
+Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy'], 'before'=>'auth.admin']);
+
+
 #PayPal IPN
 Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 
