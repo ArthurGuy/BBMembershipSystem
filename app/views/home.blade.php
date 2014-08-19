@@ -14,7 +14,7 @@
                     <a href="{{ route('register') }}" class="btn btn-primary">Become a member</a>
                 </p>
                 <p>
-                    For more information on Build Brighton please visit <a href="www.buildbrighton.com">www.buildbrighton.com</a>
+                    For more information on Build Brighton please visit <a href="http://www.buildbrighton.com">www.buildbrighton.com</a>
                 </p>
             </div>
         </div>
