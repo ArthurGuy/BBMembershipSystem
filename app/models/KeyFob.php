@@ -27,9 +27,23 @@ class KeyFob extends Eloquent
 
     public function markLost()
     {
-        $this->lost = true;
+        $this->lost   = true;
         $this->active = false;
         $this->save();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereActive(true);
+    }
+
+    public static function lookup($fobId)
+    {
+        $record = self::where('key_id', '=', $fobId)->active()->first();
+        if (!$record) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException;
+        }
+        return $record;
     }
 
 } 

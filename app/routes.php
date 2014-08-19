@@ -58,6 +58,12 @@ Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'upd
 #PayPal IPN
 Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 
+
+# Access Control
+Route::get('access-control/main-door/{keyId}', ['uses' => 'AccessControlController@mainDoor']);
+
+
+
 Route::get('test', function() {
    $process = new \BB\Process\CheckMemberships();
     $process->run();
