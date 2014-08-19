@@ -110,7 +110,10 @@
                     <h3 class="panel-title">User Left</h3>
                 </div>
                 <div class="panel-body">
-                    To rejoin please email us
+                    <p>To rejoin please click the button below to start the process.</p>
+                    {{ Form::open(array('method'=>'PUT', 'route' => ['account.rejoin', $user->id], 'class'=>'navbar-form navbar-left')) }}
+                    {{ Form::submit('Rejoin', array('class'=>'btn btn-primary')) }}
+                    {{ Form::close() }}
                 </div>
             </div>
         </div>

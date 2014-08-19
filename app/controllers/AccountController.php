@@ -269,6 +269,14 @@ class AccountController extends \BaseController {
         return Redirect::route('account.show', $user->id)->withSuccess("Updated status to leaving Build Brighton.");
 	}
 
+
+    public function rejoin($id)
+    {
+        $user = User::findWithPermission($id);
+        $user->rejoin();
+        return Redirect::route('account.show', $user->id)->withSuccess("Updated status.");
+    }
+
     /*
     public function sendWelcomeEmails()
     {

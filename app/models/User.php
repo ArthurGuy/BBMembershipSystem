@@ -206,6 +206,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    public function rejoin()
+    {
+        $this->status = 'setting-up';
+        $this->save();
+    }
+
     public function emailConfirmed()
     {
         $this->email_verified = true;
