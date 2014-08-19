@@ -126,7 +126,7 @@ class SubscriptionController extends \BaseController {
                 return Redirect::back()->withSuccess("Your subscription has been cancelled");
             }
         }
-        return Redirect::back()->withError("Unable to cancel");
+        return Redirect::back()->withError("Unable to automatically cancel");
 	}
 
 

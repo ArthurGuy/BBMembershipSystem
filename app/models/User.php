@@ -180,7 +180,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->subscription_id = '';
         $this->payment_day = '';
         $this->status = 'payment-warning';
-        $this->active = false;
         $this->save();
     }
 

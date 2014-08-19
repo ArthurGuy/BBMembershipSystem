@@ -12,7 +12,7 @@
         @else
 
         {{ Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) }}
-        {{ Form::submit('Leave Build Brighton ;(', array('class'=>'btn btn-danger')) }}
+        {{ Form::submit('Leave Build Brighton :(', array('class'=>'btn btn-danger')) }}
         {{ Form::close() }}
 
         @endif
