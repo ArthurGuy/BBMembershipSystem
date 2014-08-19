@@ -27,6 +27,11 @@
             @endif
         </p>
     </li>
+    @if ($user->keyFob())
+    <li>
+        <p class="navbar-text"><label class="label label-default">Key Fob ID: {{ $user->keyFob()->key_id }}</label></p>
+    </li>
+    @endif
     <li>
         <p class="navbar-text">
             @if ($user->key_holder)
@@ -36,6 +41,7 @@
             @endif
         </p>
     </li>
+
     @if ($user->trusted)
     <li>
         <p class="navbar-text"><label class="label label-success">Trusted Member</label></p>
