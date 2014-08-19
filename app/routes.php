@@ -60,7 +60,7 @@ Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 
 
 # Access Control
-Route::get('access-control/main-door/{keyId}', ['uses' => 'AccessControlController@mainDoor']);
+Route::post('access-control/main-door', ['uses' => 'AccessControlController@mainDoor']);
 
 
 

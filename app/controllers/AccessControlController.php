@@ -3,8 +3,9 @@
 class AccessControlController extends Controller
 {
 
-    public function mainDoor($keyId)
+    public function mainDoor()
     {
+        $keyId = Input::get('data');
         try {
             $keyFob = KeyFob::lookup($keyId);
         } catch (Exception $e) {
