@@ -121,7 +121,7 @@
         </div>
 
 
-        @if ($user->status != 'left')
+        @if (($user->status != 'left') && ($user->status != 'leaving'))
         <div class="row">
             <div class="col-xs-12 col-lg-4">
                 @include('account.partials.cancel-panel')

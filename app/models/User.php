@@ -183,6 +183,22 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    public function setLeaving()
+    {
+        $today = new \Carbon\Carbon();
+        //If their payment has run out mark them as left immediately otherwise set them as leaving
+        if ($this->subscription_expires->lt($today))
+        {
+            $this->active = false;
+            $this->status = 'left';
+        }
+        else
+        {
+            $this->status = 'leaving';
+        }
+        $this->save();
+    }
+
     public function leave()
     {
         $this->status = 'left';

@@ -247,14 +247,16 @@ class AccountController extends \BaseController {
         $user = User::findWithPermission($id);
 
         //No one will ever leaves the system but we can at least update their status to left.
-        $user->leave();
+        $user->setLeaving();
 
+        /*
         if ($user->id == Auth::user()->id)
         {
             Auth::logout();
             return Redirect::home()->withSuccess("We have marked you as having left Build Brighton.");
         }
-        return Redirect::route('account.show', $user->id)->withSuccess("User marked as having left Build Brighton.");
+        */
+        return Redirect::route('account.show', $user->id)->withSuccess("Updated status to leaving Build Brighton.");
 	}
 
     /*
