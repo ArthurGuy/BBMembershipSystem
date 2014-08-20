@@ -21,11 +21,17 @@ class SubscriptionController extends \BaseController {
 	public function create($userId)
 	{
         $user = User::findWithPermission($userId);
+        $today = new Carbon();
+        $subStartDate = $today;
+        if ($user->subscription_expires->gt($today)) {
+            $subStartDate = $user->subscription_expires;
+        }
         $payment_details = array(
             'amount'            => $user->monthly_subscription,
             'interval_length'   => 1,
             'interval_unit'     => 'month',
             'name'              => 'BBSUB'.$user->id,
+            'start_at'          => $subStartDate->addDay()->toISO8601String(),
             'description'       => 'Build Brighton Monthly Subscription',
             'redirect_uri'      => route('account.subscription.store', $user->id),
             'user'              => [
