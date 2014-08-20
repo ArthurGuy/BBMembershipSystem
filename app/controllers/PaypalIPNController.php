@@ -21,7 +21,7 @@ class PaypalIPNController extends \BaseController
 
         if (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_payment')) {
             if ($ipnData['payment_status'] != 'Completed') {
-                \Log::error("Received different payment status for sub payment. " . $ipnData['payment_status']);
+                \Log::error("PayPal IPN: Received unknown payment status for sub payment: \"" . $ipnData['payment_status']."\" Email: ".$ipnData['payer_email']);
                 return;
             }
             $user = User::where('email', $ipnData['payer_email'])->first();
@@ -29,7 +29,7 @@ class PaypalIPNController extends \BaseController
                 $user = User::where('secondary_email', $ipnData['payer_email'])->first();
             }
             if (!$user) {
-                \Log::error("IPN Received for unknown email " . $ipnData['payer_email']);
+                \Log::error("PayPal IPN Received for unknown email " . $ipnData['payer_email']);
                 return;
             }
             Payment::create(
