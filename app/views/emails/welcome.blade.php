@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 </head>
 <body>
-<h1>Welcome to Build Brighton</h1>
+<h1>Welcome!</h1>
 
 <p>
     Thanks for signing up to be part of Build Brighton.
@@ -19,9 +19,15 @@
     to the space on Thursday and we will make sure someone will be around to show you the ropes.<br />
     <br />
     You should also join the mailing list, this is where most of the communication between members occurs and is where
-    things get decided and you will find out about whats going on.<br />
+    things get decided and you find out about whats going on.<br />
     <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">Mailing list</a> - please use the same
-    email address as you did signing up.
+    email address as you did when signing up.
+</p>
+<p>
+    We have a code of conduct which we expect all members to abide by and a set of rules which govern how things are run,
+    please take a moment and read these.<br />
+    <a href="http://buildbrighton.com/wiki/Rules">Rules</a> and the <a href="http://buildbrighton.com/wiki/Code_of_Conduct">Code of Conduct</a>.<br />
+    If you ever have any concerns about any aspect of Build Brighton please email the <a href="mailto:trustees@buildbrighton.com">trustees</a>.
 </p>
 <p>
     Finally, if you could follow the link below to confirm your email address that would help us ensure we have a accurate details.<br />
