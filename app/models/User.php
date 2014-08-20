@@ -176,7 +176,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public static function activePublicList()
     {
-        return self::active()->orderBy('given_name')->get();
+        return self::active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
     }
 
     public function cancelSubscription()
