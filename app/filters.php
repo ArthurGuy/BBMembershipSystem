@@ -11,9 +11,17 @@
 |
 */
 
+
 App::before(function($request)
 {
-	//
+    //SSL Only
+    if(!Request::secure())
+    {
+        if (strpos(Request::path(), 'access-control/') !== 0)
+        {
+            return Redirect::secure(Request::path());
+        }
+    }
 });
 
 
