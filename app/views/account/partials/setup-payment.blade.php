@@ -10,7 +10,7 @@
         <a href="https://gocardless.com/direct-debit/guarantee/" target="_blank">direct debit guarantee.</a>
     </p>
     <p>
-        You can also setup a PaySal subscription, this costs us a lot more so please only do this if you don't have a UK bank account.<br />
+        You can also setup a PayPal subscription, this costs us a lot more so please only do this if you don't have a UK bank account.<br />
         Your PayPal email address you use <strong>must</strong> be the same one you used when registering, if you don't want to use this one please contact us <strong>before</strong> setting up a subscription.
         {{ Form::open(['method'=>'post', 'url'=>'https://www.paypal.com/cgi-bin/webscr']) }}
         {{ Form::submit('Setup a PayPal Subscription', ['class'=>'btn']) }}
