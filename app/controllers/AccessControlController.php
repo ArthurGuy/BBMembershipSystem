@@ -37,6 +37,27 @@ class AccessControlController extends Controller
         }
     }
 
+
+    public function status()
+    {
+        $keyId = Input::get('data');
+        try {
+            $keyFob = $this->lookupKeyFob($keyId);
+        } catch (Exception $e) {
+
+            return Response::make('Key not found', 404);
+        }
+        $user = $keyFob->user()->first();
+
+        $log = new AccessLog();
+        $log->key_fob_id = $keyFob->id;
+        $log->user_id = $user->id;
+        $log->service = 'status';
+        $log->save();
+        $statusString = $user->status;
+        return Response::make(json_encode(['name'=>$user->name, 'status'=>$statusString]), 200);
+    }
+
     private function lookupKeyFob($keyId)
     {
         try {

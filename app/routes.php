@@ -61,6 +61,7 @@ Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 
 # Access Control
 Route::post('access-control/main-door', ['uses' => 'AccessControlController@mainDoor']);
+Route::post('access-control/status', ['uses' => 'AccessControlController@status']);
 
 
 
