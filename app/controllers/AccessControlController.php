@@ -7,8 +7,9 @@ class AccessControlController extends Controller
     {
         $keyId = Input::get('data');
         try {
-            $keyFob = KeyFob::lookup($keyId);
+            $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
+
             return Response::make('Key not found', 404);
         }
         $user = $keyFob->user()->first();
@@ -35,4 +36,17 @@ class AccessControlController extends Controller
             return Response::make('Not active', 402);    //402 = payment required
         }
     }
+
+    private function lookupKeyFob($keyId)
+    {
+        try {
+            $keyFob = KeyFob::lookup($keyId);
+            return $keyFob;
+        } catch (Exception $e) {
+            $keyId = substr('BB'.$keyId, 0, 12);
+            $keyFob = KeyFob::lookup($keyId);
+            return $keyFob;
+        }
+    }
+
 } 
