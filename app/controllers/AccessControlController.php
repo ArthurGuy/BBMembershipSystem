@@ -45,7 +45,7 @@ class AccessControlController extends Controller
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
 
-            return Response::make('Key not found', 404);
+            return Response::make(json_encode(['valid'=>false]), 200);
         }
         $user = $keyFob->user()->first();
 
@@ -55,7 +55,7 @@ class AccessControlController extends Controller
         $log->service = 'status';
         $log->save();
         $statusString = $user->status;
-        return Response::make(json_encode(['name'=>$user->name, 'status'=>$statusString]), 200);
+        return Response::make(json_encode(['valid'=>true,  'name'=>$user->name, 'status'=>$statusString]), 200);
     }
 
     private function lookupKeyFob($keyId)
