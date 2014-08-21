@@ -22,16 +22,11 @@ class SubscriptionController extends \BaseController {
 	{
         $user = User::findWithPermission($userId);
         $today = new Carbon();
-        $subStartDate = $today;
-        if ($user->subscription_expires->gt($today)) {
-            $subStartDate = $user->subscription_expires;
-        }
         $payment_details = array(
             'amount'            => $user->monthly_subscription,
             'interval_length'   => 1,
             'interval_unit'     => 'month',
             'name'              => 'BBSUB'.$user->id,
-            'start_at'          => $subStartDate->addDay()->toISO8601String(),
             'description'       => 'Build Brighton Monthly Subscription',
             'redirect_uri'      => route('account.subscription.store', $user->id),
             'user'              => [
@@ -44,6 +39,10 @@ class SubscriptionController extends \BaseController {
                 'country_code'      => 'GB'
             ]
         );
+        //If a start date is provided then it isn't immediate
+        if ($user->subscription_expires->gt($today)) {
+            $payment_details['start_at'] = $user->subscription_expires->toISO8601String();
+        }
 
         return Redirect::to($this->goCardless->newSubUrl($payment_details));
 	}
