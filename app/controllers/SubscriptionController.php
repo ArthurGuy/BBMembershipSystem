@@ -104,11 +104,19 @@ class SubscriptionController extends \BaseController {
             $user->subscription_id = $confirmed_resource->id;
             $user->save();
 
-            $user->extendMembership('gocardless', \Carbon\Carbon::now()->addMonth());
+            if ($bill)
+            {
+                //If a bill was created then this is starting immediately and we should alter the expiry date
+                $user->extendMembership('gocardless', \Carbon\Carbon::now()->addMonth());
+            }
+            else
+            {
+                //If no bill was created then this is premptive
+                $user->extendMembership('gocardless', $user->subscription_expires);
+            }
 
             return Redirect::route('account.show', $user->id)->withSuccess("Your subscription has been setup, thank you");
         }
-
         return Redirect::route('account.show', $user->id)->withErrors("Something went wrong, you can try again or get in contact");
     }
 
