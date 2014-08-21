@@ -11,6 +11,7 @@
     Your account has been flagged with a payment warning, if your in the process of setting up a new subscription
     this will be cleared as soon as that's done.<br />
     <br />
+    What to do:<br />
     If your changing payment method please disregard this email.<br />
     If you have paid please email us asap with the details and we will see what went wrong.<br />
     If you have decided to leave it would be great if you could click the leaving button in your account or email us and let us know.
