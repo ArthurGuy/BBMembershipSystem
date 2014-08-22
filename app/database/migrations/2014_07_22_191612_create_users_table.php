@@ -39,7 +39,7 @@ class CreateUsersTable extends Migration {
             $table->boolean('induction_completed');
             $table->string('payment_method', 20);   //gocardless,standing-order,cash,paypal,other
             $table->integer('payment_day');
-            $table->double('monthly_subscription',10,2);
+            $table->integer('monthly_subscription');
             $table->string('subscription_id', 128);
             $table->date('last_subscription_payment');
             $table->date('subscription_expires');
