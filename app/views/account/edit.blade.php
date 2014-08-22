@@ -8,14 +8,14 @@
     <div class="col-xs-12 col-md-4">
         <div class="form-group {{ $errors->has('given_name') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('given_name', 'First Name') }}
-            {{ Form::text('given_name', null, ['class'=>'form-control']) }}
+            {{ Form::text('given_name', null, ['class'=>'form-control', 'x-autocompletetype'=>'given-name']) }}
             {{ $errors->first('given_name', '<span class="help-block">:message</span>') }}
         </div>
     </div>
     <div class="col-xs-12 col-md-4">
         <div class="form-group {{ $errors->has('family_name') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('family_name', 'Family Name') }}
-            {{ Form::text('family_name', null, ['class'=>'form-control']) }}
+            {{ Form::text('family_name', null, ['class'=>'form-control', 'x-autocompletetype'=>'surname']) }}
             {{ $errors->first('family_name', '<span class="help-block">:message</span>') }}
         </div>
     </div>
@@ -25,7 +25,7 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('email') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('email', 'Email') }}
-            {{ Form::text('email', null, ['class'=>'form-control']) }}
+            {{ Form::text('email', null, ['class'=>'form-control', 'x-autocompletetype'=>'email']) }}
             {{ $errors->first('email', '<span class="help-block">:message</span>') }}
         </div>
     </div>
@@ -69,7 +69,7 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('address_line_1') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('address_line_1', 'Address Line 1') }}
-            {{ Form::text('address_line_1', null, ['class'=>'form-control']) }}
+            {{ Form::text('address_line_1', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-1']) }}
             {{ $errors->first('address_line_1', '<span class="help-block">:message</span>') }}
         </div>
     </div>
@@ -79,7 +79,7 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('address_line_2') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('address_line_2', 'Address Line 2') }}
-            {{ Form::text('address_line_2', null, ['class'=>'form-control']) }}
+            {{ Form::text('address_line_2', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-2']) }}
             {{ $errors->first('address_line_2', '<span class="help-block">:message</span>') }}
         </div>
     </div>
@@ -89,7 +89,7 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('address_line_3') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('address_line_3', 'Address Line 3') }}
-            {{ Form::text('address_line_3', null, ['class'=>'form-control']) }}
+            {{ Form::text('address_line_3', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-locality']) }}
             {{ $errors->first('address_line_3', '<span class="help-block">:message</span>') }}
         </div>
     </div>
@@ -100,7 +100,7 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('address_line_4') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('address_line_4', 'Address Line 4') }}
-            {{ Form::text('address_line_4', null, ['class'=>'form-control']) }}
+            {{ Form::text('address_line_4', null, ['class'=>'form-control', 'x-autocompletetype'=>'region']) }}
             {{ $errors->first('address_line_4', '<span class="help-block">:message</span>') }}
         </div>
     </div>
@@ -110,7 +110,7 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('address_postcode') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('address_postcode', 'Post Code') }}
-            {{ Form::text('address_postcode', null, ['class'=>'form-control']) }}
+            {{ Form::text('address_postcode', null, ['class'=>'form-control', 'x-autocompletetype'=>'postal-code']) }}
             {{ $errors->first('address_postcode', '<span class="help-block">:message</span>') }}
         </div>
     </div>
