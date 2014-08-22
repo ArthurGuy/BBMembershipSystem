@@ -11,7 +11,7 @@
     </p>
     <p>
         You can also setup a PayPal subscription, this costs us a lot more so please only do this if you don't have a UK bank account.<br />
-        Your PayPal email address you use <strong>must</strong> be the same one you used when registering, if you don't want to use this one please contact us <strong>before</strong> setting up a subscription.
+        Your PayPal email address <strong>must</strong> be known to us, if its not the one you used when registering please <a href="{{ route('account.edit', $user->id) }}">enter an alternate email address</a>.
         {{ Form::open(['method'=>'post', 'url'=>'https://www.paypal.com/cgi-bin/webscr']) }}
         {{ Form::submit('Setup a PayPal Subscription', ['class'=>'btn']) }}
         {{ Form::hidden('cmd', '_xclick-subscriptions') }}
