@@ -30,6 +30,16 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <div class="form-group {{ $errors->has('secondary_email') ? 'has-error has-feedback' : '' }}">
+            {{ Form::label('secondary_email', 'Alternate Email') }}
+            {{ Form::text('secondary_email', null, ['class'=>'form-control']) }}
+            <span class="help-block">If your paying through PayPal and that account has a different address or your using a different email with google groups please enter it here</span>
+            {{ $errors->first('secondary_email', '<span class="help-block">:message</span>') }}
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
