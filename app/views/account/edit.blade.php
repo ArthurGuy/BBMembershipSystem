@@ -45,7 +45,7 @@
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ $errors->has('password') ? 'has-error has-feedback' : '' }}">
             {{ Form::label('password', 'Password') }}
-            {{ Form::password('password', ['class'=>'form-control']) }}
+            {{ Form::password('password', ['class'=>'form-control', 'autocomplete'=>'off']) }}
             {{ $errors->first('password', '<span class="help-block">:message</span>') }}
         </div>
     </div>
