@@ -16,13 +16,13 @@
     <thead>
         <tr>
             <th></th>
-            <th>Active</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Active</th>
             <th>Status</th>
+            <th>Key Holder</th>
             <th>Induction Complete</th>
             <th>Payment Method</th>
-            <th>Subscription Amount</th>
             <th>Subscription Expires</th>
             <th>Payment</th>
         </tr>
@@ -38,20 +38,27 @@
                 @endif
             </td>
             <td>
-                @if ($user->active)
-                <span class="glyphicon glyphicon-ok"></span>
-                @else
-                <span class="glyphicon glyphicon-remove"></span>
-                @endif
-            </td>
-            <td>
                 <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
                 @if ($user->type == 'admin')
                 <span class="label label-danger">Admin</span>
                 @endif
             </td>
             <td>{{ $user->email }}</td>
+            <td>
+                @if ($user->active)
+                <span class="glyphicon glyphicon-ok"></span>
+                @else
+                <span class="glyphicon glyphicon-remove"></span>
+                @endif
+            </td>
             <td>{{ User::statusLabel($user->status) }}</td>
+            <td>
+                @if($user->key_holder)
+                    Yes
+                @else
+                    No
+                @endif
+            </td>
             <td>
                 @if ($user->induction_completed)
                 <span class="glyphicon glyphicon-ok"></span>
@@ -60,7 +67,6 @@
                 @endif
             </td>
             <td>{{ $user->payment_method }}</td>
-            <td>{{ $user->monthly_subscription }}</td>
             <td>
                 @if ($user->subscription_expires->year > 0)
                     {{ $user->subscription_expires->toFormattedDateString() }}
