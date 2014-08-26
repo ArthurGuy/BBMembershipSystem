@@ -8,7 +8,7 @@
     Hi {{ $user->given_name }},<br />
     We haven't been notified about your latest subscription payment or you have cancelled your direct debit or PayPal
     subscription.<br />
-    Your account has been flagged with a payment warning, if your in the process of setting up a new subscription
+    Your account has been flagged with a payment warning, if you're in the process of setting up a new subscription
     this will be cleared as soon as that's done.<br />
     <br />
     What to do:<br />

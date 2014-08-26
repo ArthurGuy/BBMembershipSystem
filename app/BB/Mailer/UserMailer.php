@@ -35,4 +35,13 @@ class UserMailer {
         });
     }
 
+
+    public function sendLeftMessage()
+    {
+        \Mail::send('emails.user-left', ['user'=>$this->user], function($message)
+        {
+            $message->to($this->user->email, $this->user->email)->subject('Sorry to see you go');
+        });
+    }
+
 } 
