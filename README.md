@@ -23,8 +23,16 @@ New members can join and create accounts, payments are tracked and managed throu
 * Collect deposit payments for door keys
 * Door entry control and tracking
 * Equipment control and usage logging using the training equipment
-* Ducks!
 
+
+
+###Member Statuses
+There are a variety of member statuses which are used for various scenarios.
+* Setting Up - just signed up, no subscription setup, no access to space
+* Active
+* Payment Warning - subscription payment had been cancelled - will move to leaving the next day
+* Leaving - The user has said they are leaving or they were in a payment warning state
+* Left - Leaving users move here once their last payment expires.
 
 
 ###Other Hackspaces
