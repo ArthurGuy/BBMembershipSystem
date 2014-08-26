@@ -169,6 +169,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $query->where('status', '!=', 'honorary');
     }
 
+    public function scopeLeaving($query)
+    {
+        return $query->where('status', '=', 'leaving');
+    }
+
 
 
     # Methods

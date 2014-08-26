@@ -39,6 +39,9 @@ class CheckMembershipStatus extends Command {
 	{
 		$process = new \BB\Process\CheckMemberships();
         $process->run();
+
+        $leavingProcess = new \BB\Process\CheckLeavingUsers();
+        $leavingProcess->run();
 	}
 
 

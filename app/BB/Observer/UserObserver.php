@@ -23,6 +23,12 @@ class UserObserver {
         {
             $this->paymentWarning($user);
         }
+
+        //User left
+        if (($original['status'] != 'left') && ($user->status == 'left'))
+        {
+            $this->userLeft($user);
+        }
     }
 
     /**
@@ -40,5 +46,11 @@ class UserObserver {
     {
         $userMailer = new UserMailer($user);
         $userMailer->sendPaymentWarningMessage();
+    }
+
+    private function userLeft($user)
+    {
+        $userMailer = new UserMailer($user);
+        $userMailer->sendLeftMessage();
     }
 } 
