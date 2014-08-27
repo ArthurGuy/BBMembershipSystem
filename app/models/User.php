@@ -23,6 +23,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
+    protected $auditFields = array('induction_completed', 'trusted', 'key_holder');
+
 
     /**
      * Fillable fields
@@ -58,6 +60,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
         //The welcome email gets fired from this observer
         self::observe(new \BB\Observer\UserObserver());
+
+        self::observe(new \BB\Observer\UserAuditObserver());
     }
 
 
@@ -304,5 +308,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             $userArray[$user->id] = $user->name;
         }
         return $userArray;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAuditFields()
+    {
+        return $this->auditFields;
     }
 }
