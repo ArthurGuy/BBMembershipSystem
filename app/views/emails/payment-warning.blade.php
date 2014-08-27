@@ -12,12 +12,13 @@
     this will be cleared as soon as that's done.<br />
     <br />
     What to do:<br />
-    If your changing payment method please disregard this email.<br />
+    If you're changing payment method please disregard this email and complete the process  if you haven't done it already.<br />
     If you have paid please email us asap with the details and we will see what went wrong.<br />
     If you have decided to leave it would be great if you could click the leaving button in your account or email us and let us know.
 </p>
 <p>
-    Within the next 24 hours your status will be changed to
+    Within the next 24 hours your status will be changed to leaving or left depending on your last subscription payment.
+    This may mean you loose access to the space so please get in contact soon.
 </p>
 <p>
     <a href="{{ URL::route('home') }}">Build Brighton Member System</a><br/>
