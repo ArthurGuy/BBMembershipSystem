@@ -1,7 +1,14 @@
 <?php namespace BB\Process;
 
+use BB\Helpers\MembershipPayments;
 use Carbon\Carbon;
 
+/**
+ * Loop through each member and look at their last subscription payment
+ *   If its over a month ago (plus a grace period) mark them as having a payment warning
+ * Class CheckMemberships
+ * @package BB\Process
+ */
 class CheckMemberships {
 
     public function run()
@@ -49,12 +56,9 @@ class CheckMemberships {
             //Check for payments first
             if ($expired)
             {
-                $latestSubPayment = $user->payments()->where('reason', 'subscription')->orderBy('created_at', 'desc')->first();
-                if ($latestSubPayment)
+                $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
+                if ($paidUntil)
                 {
-                    //echo $latestSubPayment;
-                    $paidUntil = $latestSubPayment->created_at->addMonth();
-                    //echo $paidUntil;
                     if ($user->subscription_expires->gt($paidUntil))
                     {
                         $user->extendMembership($user->payment_method, $paidUntil);
