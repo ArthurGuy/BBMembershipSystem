@@ -5,7 +5,7 @@
 </head>
 <body>
 <p>
-    Hi {{ $user->given_name }},<br />
+    Hi {{ $user['given_name'] }},<br />
     Your last membership payment for Build Brighton has now expired and you have been marked as having left.<br />
     We are sorry to see you go and hope you had a good time while you were here.<br />
     <br />

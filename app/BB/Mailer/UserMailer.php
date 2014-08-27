@@ -19,9 +19,10 @@ class UserMailer {
      */
     public function sendWelcomeMessage()
     {
-        \Mail::send('emails.welcome', ['user'=>$this->user], function($message)
+        $user = $this->user;
+        \Mail::queue('emails.welcome', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($this->user->email, $this->user->name)->subject('Welcome to Build Brighton!');
+            $message->to($user->email, $user->name)->subject('Welcome to Build Brighton!');
         });
     }
 
@@ -29,18 +30,20 @@ class UserMailer {
 
     public function sendPaymentWarningMessage()
     {
-        \Mail::send('emails.payment-warning', ['user'=>$this->user], function($message)
+        $user = $this->user;
+        \Mail::queue('emails.payment-warning', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($this->user->email, $this->user->email)->subject('We have detected a payment problem');
+            $message->to($user->email, $user->email)->subject('We have detected a payment problem');
         });
     }
 
 
     public function sendLeftMessage()
     {
-        \Mail::send('emails.user-left', ['user'=>$this->user], function($message)
+        $user = $this->user;
+        \Mail::queue('emails.user-left', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($this->user->email, $this->user->email)->subject('Sorry to see you go');
+            $message->to($user->email, $user->email)->subject('Sorry to see you go');
         });
     }
 

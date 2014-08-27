@@ -31,7 +31,7 @@
 </p>
 <p>
     Finally, if you could follow the link below to confirm your email address that would help us ensure we have a accurate details.<br />
-    {{ URL::route('account.confirm-email', [$user->id, $user->hash]) }}.<br/>
+    {{ URL::route('account.confirm-email', [$user['id'], $user['hash']]) }}.<br/>
 </p>
 <p>
     Thank you,

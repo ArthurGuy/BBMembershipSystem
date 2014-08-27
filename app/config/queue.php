@@ -15,7 +15,7 @@ return array(
 	|
 	*/
 
-	'default' => 'sync',
+	'default' => 'sqs',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ return array(
 			'key'    => $_ENV['AWS_KEY'],
 			'secret' => $_ENV['AWS_SECRET'],
 			'queue'  => $_ENV['AWS_QUEUE_URL'],
-			'region' => 'ew-west-1',
+			'region' => 'eu-west-1',
 		),
 
 		'iron' => array(
