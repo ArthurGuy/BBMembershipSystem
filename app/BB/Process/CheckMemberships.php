@@ -14,45 +14,19 @@ class CheckMemberships {
     public function run()
     {
 
-        $today = new Carbon();
-        $standingOrderCutoff = $today->subMonth()->subDays(7);
-        $paypalCutoff = $today->subDays(7);
-        $otherCutoff = $today->subDays(7);
-
         $users = \User::active()->where('status', '=', 'active')->notSpecialCase()->get();
         foreach ($users as $user)
         {
             echo $user->name;
             $expired = false;
 
-            if ($user->payment_method == 'gocardless')
+            $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->paument_method);
+            if ($user->subscription_expires->lt($cutOffDate))
             {
+                //echo "- Expired";
+                $expired = true;
+            }
 
-            }
-            elseif ($user->payment_method == 'standing-order')
-            {
-                if ($user->subscription_expires->lt($standingOrderCutoff))
-                {
-                    echo "- S/O Expired";
-                    $expired = true;
-                }
-            }
-            elseif ($user->payment_method == 'paypal')
-            {
-                if ($user->subscription_expires->lt($paypalCutoff))
-                {
-                    echo "- Paypal Expired";
-                    $expired = true;
-                }
-            }
-            else
-            {
-                if ($user->subscription_expires->lt($otherCutoff))
-                {
-                    echo "- Other Expired";
-                    $expired = true;
-                }
-            }
             //Check for payments first
             if ($expired)
             {

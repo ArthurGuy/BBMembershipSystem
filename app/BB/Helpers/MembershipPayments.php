@@ -1,5 +1,7 @@
 <?php namespace BB\Helpers;
 
+use Carbon\Carbon;
+
 class MembershipPayments
 {
 
@@ -21,6 +23,11 @@ class MembershipPayments
         return false;
     }
 
+    /**
+     * Fetch the expiry date based on the users last sub payment
+     * @param $userId
+     * @return bool|\DateTime
+     */
     public static function lastUserPaymentExpires($userId)
     {
         $date = self::lastUserPaymentDate($userId);
@@ -28,5 +35,33 @@ class MembershipPayments
             return $date->addMonth();
         }
         return false;
+    }
+
+    /**
+     * Get the date the users sub payment should be valid to
+     *   This handles the different grace periods for the different payment methods.
+     * @param string    $paymentMethod
+     * @param \DateTime $refDate Defaults to today as the ref point, this can be overridden
+     * @return \DateTime
+     */
+    public static function getSubGracePeriodDate($paymentMethod, \DateTime $refDate = null)
+    {
+        if (is_null($refDate)) {
+            $refDate = new Carbon();
+        }
+        $standingOrderCutoff = $refDate->subMonth()->subDays(7);
+        $paypalCutoff        = $refDate->subDays(7);
+        $goCardlessCutoff    = $refDate->subDays(7);
+        $otherCutoff         = $refDate->subDays(7);
+
+        if ($paymentMethod == 'gocardless') {
+            return $goCardlessCutoff;
+        } elseif ($paymentMethod == 'paypal') {
+            return $paypalCutoff;
+        } elseif ($paymentMethod == 'standing-order') {
+            return $standingOrderCutoff;
+        } else {
+            return $otherCutoff;
+        }
     }
 } 
