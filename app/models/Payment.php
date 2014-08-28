@@ -29,7 +29,8 @@ class Payment extends Eloquent {
 
 
     protected $attributes = [
-        'status' => 'pending'
+        'status' => 'pending',
+        'fee' => 0,
     ];
 
 
