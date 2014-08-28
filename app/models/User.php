@@ -44,7 +44,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         'status' => 'setting-up',
         'active' => 0,
         'key_holder' => 0,
-        'trusted' => '',
+        'trusted' => 0,
     ];
 
 
