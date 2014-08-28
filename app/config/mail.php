@@ -80,7 +80,7 @@ return array(
 	|
 	*/
 
-	'username' => $_ENV['MAILGUN_USERNAME'],
+	'username' => $_SERVER['MAILGUN_USERNAME'],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return array(
 	|
 	*/
 
-	'password' => $_ENV['MAILGUN_PASSWORD'],
+	'password' => $_SERVER['MAILGUN_PASSWORD'],
 
 	/*
 	|--------------------------------------------------------------------------

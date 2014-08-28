@@ -43,9 +43,9 @@ return array(
 
 		'sqs' => array(
 			'driver' => 'sqs',
-			'key'    => $_ENV['AWS_KEY'],
-			'secret' => $_ENV['AWS_SECRET'],
-			'queue'  => $_ENV['AWS_QUEUE_URL'],
+			'key'    => $_SERVER['AWS_KEY'],
+			'secret' => $_SERVER['AWS_SECRET'],
+			'queue'  => $_SERVER['AWS_QUEUE_URL'],
 			'region' => 'eu-west-1',
 		),
 
