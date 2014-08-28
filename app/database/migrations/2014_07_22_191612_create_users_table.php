@@ -15,21 +15,21 @@ class CreateUsersTable extends Migration {
 		Schema::create('users', function(Blueprint $table)
 		{
             $table->increments('id');
-            $table->string('hash', 50);
+            $table->string('hash', 50)->nullable();
             $table->string('given_name', 100);
             $table->string('family_name', 100);
             $table->string('email')->unique();
             $table->boolean('email_verified');
-            $table->string('secondary_email');
-            $table->string('password');
+            $table->string('secondary_email')->nullable();
+            $table->string('password')->nullable();
             $table->string('type', 20); //member, admin
-            $table->string('address_line_1', 100);
-            $table->string('address_line_2', 100);
-            $table->string('address_line_3', 100);
-            $table->string('address_line_4', 100);
-            $table->string('address_postcode', 10);
-            $table->string('emergency_contact', 250);
-            $table->string('notes');
+            $table->string('address_line_1', 100)->nullable();
+            $table->string('address_line_2', 100)->nullable();
+            $table->string('address_line_3', 100)->nullable();
+            $table->string('address_line_4', 100)->nullable();
+            $table->string('address_postcode', 10)->nullable();
+            $table->string('emergency_contact', 250)->nullable();
+            $table->string('notes')->nullable();
             $table->boolean('active');
             $table->boolean('founder');
             $table->boolean('director');
@@ -37,16 +37,16 @@ class CreateUsersTable extends Migration {
             $table->boolean('trusted');
             $table->boolean('key_holder');
             $table->boolean('induction_completed');
-            $table->string('payment_method', 20);   //gocardless,standing-order,cash,paypal,other
+            $table->string('payment_method', 20)->nullable();   //gocardless,standing-order,cash,paypal,other
             $table->integer('payment_day');
-            $table->integer('monthly_subscription');
-            $table->string('subscription_id', 128);
-            $table->date('last_subscription_payment');
-            $table->date('subscription_expires');
+            $table->integer('monthly_subscription')->nullable();
+            $table->string('subscription_id', 128)->nullable();
+            $table->date('last_subscription_payment')->nullable();
+            $table->date('subscription_expires')->nullable();
             $table->boolean('profile_photo');
             $table->boolean('profile_photo_private');
-            $table->string('banned_reason');
-            $table->date('banned_date');
+            $table->string('banned_reason')->nullable();
+            $table->date('banned_date')->nullable();
             $table->rememberToken();
             $table->timestamps();
 		});
