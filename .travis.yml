@@ -15,6 +15,6 @@ notifications:
   webhooks:
     urls:
       - https://forge.laravel.com/servers/6535/sites/13543/deploy/http?token=xQRcFZIu84lgF0M4td5w6fj5vqmyDpCY3KY8SBcT
-    on_success: change
+    on_success: always
     on_failure: never
     on_start: false
