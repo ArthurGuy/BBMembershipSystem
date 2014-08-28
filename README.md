@@ -1,7 +1,9 @@
+[![Build Status](http://img.shields.io/travis/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://travis-ci.org/ArthurGuy/BBMembershipSystem)
+
 BB Membership System
 ====================
 
-A prototype for an automated Build Brighton membership management system
+The Build Brighton membership management system
 
 New members can join and create accounts, payments are tracked and managed through the system and GoCardless
 
