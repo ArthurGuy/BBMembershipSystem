@@ -1,6 +1,6 @@
 <?php 
 
-class RegistrationFormTest extends TestCase {
+class RegistrationFormTestDisabled extends TestCase {
 
 
     public function testRegisterUrl()
