@@ -1,4 +1,5 @@
 [![Build Status](http://img.shields.io/travis/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://travis-ci.org/ArthurGuy/BBMembershipSystem)
+[![Code Climate](http://img.shields.io/codeclimate/github/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://codeclimate.com/github/ArthurGuy/BBMembershipSystem)
 
 BB Membership System
 ====================
