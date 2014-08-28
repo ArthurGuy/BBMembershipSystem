@@ -10,7 +10,6 @@
         "kmd/logviewer": "dev-master",
         "aws/aws-sdk-php": "2.4.*",
         "aws/aws-sdk-php-laravel": "1.*",
-        "naturalweb/nwlaravel-dropbox": "~0.1",
         "nuovo/spreadsheet-reader": "dev-master",
         "intervention/image": "2.*",
         "paypal/merchant-sdk-php":"3.6.*"
