@@ -20,11 +20,11 @@ class CheckMembershipStatus extends Command {
 	 */
 	protected $description = 'Check the membership expiry dates and disable or email users';
 
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
+    /**
+     * Create a new command instance.
+     *
+     * @return \CheckMembershipStatus
+     */
 	public function __construct()
 	{
 		parent::__construct();
@@ -37,8 +37,14 @@ class CheckMembershipStatus extends Command {
 	 */
 	public function fire()
 	{
+        //Users with a status of leaving
         $leavingProcess = new \BB\Process\CheckLeavingUsers();
         $leavingProcess->run();
+
+
+        //Users with a status of payment warning
+        $paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
+        $paymentWarningProcess->run();
 
 
         //This should occur last as it gives people 24 hours with a payment warning
