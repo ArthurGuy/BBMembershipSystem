@@ -72,14 +72,7 @@ class AccountController extends \BaseController {
 	{
         $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'profile_photo', 'profile_photo_private');
 
-		try
-        {
-            $this->userForm->validate($input);
-        }
-        catch (\BB\Exceptions\FormValidationException $e)
-        {
-            return Redirect::back()->withInput()->withErrors($e->getErrors());
-        }
+        $this->userForm->validate($input);
 
         if (empty($input['profile_photo_private']))
             $input['profile_photo_private'] = false;
@@ -167,14 +160,7 @@ class AccountController extends \BaseController {
         $user = User::findWithPermission($id);
         $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'profile_photo', 'profile_photo_private');
 
-        try
-        {
-            $this->userForm->validate($input, $user->id);
-        }
-        catch (\BB\Exceptions\FormValidationException $e)
-        {
-            return Redirect::back()->withInput()->withErrors($e->getErrors());
-        }
+        $this->userForm->validate($input, $user->id);
 
         if (empty($input['password']))
         {
