@@ -1,6 +1,10 @@
 <?php
 
+require __DIR__.'/support/ViewHelpers.php';
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
+
+    use ViewHelpers;
 
     /**
      * Default preparation for each test
