@@ -13,7 +13,7 @@ class AccountController extends \BaseController {
     private $userImage;
 
 
-    function __construct(\BB\Forms\User $userForm, \BB\Forms\UpdateSubscription $updateSubscriptionAdminForm, \BB\Helpers\GoCardlessHelper $goCardless, \BB\Helpers\UserImage $userImage)
+    function __construct(\BB\Validators\User $userForm, \BB\Validators\UpdateSubscription $updateSubscriptionAdminForm, \BB\Helpers\GoCardlessHelper $goCardless, \BB\Helpers\UserImage $userImage)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;

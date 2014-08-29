@@ -1,4 +1,4 @@
-<?php namespace BB\Forms;
+<?php namespace BB\Validators;
 
 use BB\Exceptions\FormValidationException;
 use Illuminate\Validation\Factory as Validator;

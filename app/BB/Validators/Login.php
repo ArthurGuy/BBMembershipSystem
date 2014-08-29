@@ -1,4 +1,4 @@
-<?php namespace BB\Forms;
+<?php namespace BB\Validators;
 
 class Login extends FormValidator {
 

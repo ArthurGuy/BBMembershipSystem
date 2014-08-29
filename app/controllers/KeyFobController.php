@@ -4,11 +4,11 @@ class KeyFobController extends \BaseController {
 
 
     /**
-     * @var BB\Forms\KeyFob
+     * @var BB\Validators\KeyFob
      */
     private $keyFobForm;
 
-    public function __construct(\BB\Forms\KeyFob $keyFobForm)
+    public function __construct(\BB\Validators\KeyFob $keyFobForm)
     {
 
         $this->keyFobForm = $keyFobForm;
