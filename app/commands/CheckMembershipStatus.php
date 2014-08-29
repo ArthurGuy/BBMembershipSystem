@@ -43,8 +43,8 @@ class CheckMembershipStatus extends Command {
 
 
         //Users with a status of payment warning
-        $paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
-        $paymentWarningProcess->run();
+        //$paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
+        //$paymentWarningProcess->run();
 
 
         //This should occur last as it gives people 24 hours with a payment warning
