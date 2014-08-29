@@ -67,6 +67,15 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
     return Response::make("Unauthorized", 403);
 });
 
+
+/**
+ * Catch validation errors and return them back to the previous page/form
+ */
+App::error(function(\BB\Exceptions\FormValidationException $exception)
+{
+    return Redirect::back()->withInput()->withErrors($exception->getErrors());
+});
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
