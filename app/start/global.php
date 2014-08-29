@@ -58,11 +58,11 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
 {
     $userString = null;
     if (Auth::guest()) {
-        $userString = "Guest";
+        $userString = "A guest";
     } else {
         $userString = Auth::user()->name;
     }
-    Log::warning("User tried to access something they weren't supposed to. ".$userString);
+    Log::warning($userString." tried to access something they weren't supposed to.");
 
     return Response::make("Unauthorized", 403);
 });
