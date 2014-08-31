@@ -182,7 +182,8 @@ class AccountController extends \BaseController {
             }
         }
 
-        return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
+        Notification::success("Details Updated");
+        return Redirect::route('account.show', $user->id);
 	}
 
 
@@ -192,7 +193,8 @@ class AccountController extends \BaseController {
         $user = User::findWithPermission($id);
         $input = Input::only('trusted', 'key_holder', 'induction_completed');
         $user->update($input);
-        return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
+        Notification::success("Details Updated");
+        return Redirect::route('account.show', $user->id);
     }
 
 
@@ -201,14 +203,7 @@ class AccountController extends \BaseController {
         $user = User::findWithPermission($id);
         $input = Input::all();
 
-        try
-        {
-            $this->updateSubscriptionAdminForm->validate($input, $user->id);
-        }
-        catch (\BB\Exceptions\FormValidationException $e)
-        {
-            return Redirect::back()->withInput()->withErrors($e->getErrors());
-        }
+        $this->updateSubscriptionAdminForm->validate($input, $user->id);
 
         if (($user->payment_method == 'gocardless') && ($input['payment_method'] != 'gocardless'))
         {
@@ -222,7 +217,8 @@ class AccountController extends \BaseController {
 
         $user->updateSubscription($input['payment_method'], $input['payment_day']);
 
-        return Redirect::route('account.show', $user->id)->withSuccess("Details Updated");
+        Notification::success("Details Updated");
+        return Redirect::route('account.show', $user->id);
     }
 
     public function confirmEmail($id, $hash)
@@ -231,9 +227,11 @@ class AccountController extends \BaseController {
         if ($user && $user->hash == $hash)
         {
             $user->emailConfirmed();
-            return Redirect::route('account.show', $user->id)->withSuccess("Email address confirmed");
+            Notification::success("Email address confirmed, thank you");
+            return Redirect::route('account.show', $user->id);
         }
-        return Redirect::route('home')->withErrors("Error confirming email address");
+        Notification::error("Error confirming email address");
+        return Redirect::route('home');
     }
 
 
@@ -245,14 +243,8 @@ class AccountController extends \BaseController {
         //No one will ever leaves the system but we can at least update their status to left.
         $user->setLeaving();
 
-        /*
-        if ($user->id == Auth::user()->id)
-        {
-            Auth::logout();
-            return Redirect::home()->withSuccess("We have marked you as having left Build Brighton.");
-        }
-        */
-        return Redirect::route('account.show', $user->id)->withSuccess("Updated status to leaving Build Brighton.");
+        Notification::success("Updated status to leaving");
+        return Redirect::route('account.show', $user->id);
 	}
 
 
@@ -260,26 +252,9 @@ class AccountController extends \BaseController {
     {
         $user = User::findWithPermission($id);
         $user->rejoin();
-        return Redirect::route('account.show', $user->id)->withSuccess("Updated status.");
+        Notification::success("Details Updated");
+        return Redirect::route('account.show', $user->id);
     }
 
-    /*
-    public function sendWelcomeEmails()
-    {
-        $users = User::active()->notSpecialCase()->skip(57)->take(50)->get();
-        //$users = User::where('email', 'arthur@arthurguy.co.uk')->get();
-        echo $users;
-        //exit;
-        foreach ($users as $user)
-        {
-            \Mail::send('emails.new-system-intro', ['user'=>$user], function($message) use ($user)
-            {
-                $message->to($user->email, $user->name)->subject('Welcome to the new Build Brighton Member System');
-            });
-            set_time_limit(10);
-        }
-        exit;
-    }
-    */
 
 }

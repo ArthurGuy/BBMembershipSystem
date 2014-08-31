@@ -33,10 +33,12 @@ class ReminderController extends \BaseController {
 		switch ($response)
 		{
 			case Password::INVALID_USER:
-				return Redirect::back()->withErrors(Lang::get($response));
+                Notification::error(Lang::get($response));
+				return Redirect::back();
 
 			case Password::REMINDER_SENT:
-				return Redirect::back()->withSuccess(Lang::get($response));
+                Notification::success(Lang::get($response));
+				return Redirect::back();
 		}
 	}
 
@@ -84,10 +86,12 @@ class ReminderController extends \BaseController {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-				return Redirect::back()->withErrors(Lang::get($response));
+                Notification::error(Lang::get($response));
+				return Redirect::back()->withInput();
 
 			case Password::PASSWORD_RESET:
-				return Redirect::to('/login')->withSuccess("Your password has been changed");
+                Notification::success("Your password has been changed");
+				return Redirect::to('/login');
 		}
 	}
 

@@ -34,17 +34,12 @@ class KeyFobController extends \BaseController {
 	{
         $input = Input::only('user_id', 'key_id');
 
-        try
-        {
-            $this->keyFobForm->validate($input);
-        }
-        catch (\BB\Exceptions\FormValidationException $e)
-        {
-            return Redirect::back()->withInput()->withErrors($e->getErrors());
-        }
+        $this->keyFobForm->validate($input);
 
         KeyFob::create($input);
-        return Redirect::route('account.show', $input['user_id'])->withSuccess("Fob activated");
+
+        Notification::success("Key Fob Activated");
+        return Redirect::route('account.show', $input['user_id']);
 	}
 
 
@@ -70,7 +65,8 @@ class KeyFobController extends \BaseController {
 	{
 		$fob = KeyFob::findOrFail($id);
         $fob->markLost();
-        return Redirect::route('account.show',$fob->user_id)->withSuccess("Fob marked lost");
+        Notification::success("Key Fob marked as lost/broken");
+        return Redirect::route('account.show',$fob->user_id);
 	}
 
 

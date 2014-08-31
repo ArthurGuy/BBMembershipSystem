@@ -41,7 +41,8 @@ class InductionController extends \BaseController
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
-        return Redirect::route('account.show', $userId)->withSuccess("Updated");
+        Notification::success("Updated");
+        return Redirect::route('account.show', $userId);
     }
 
 

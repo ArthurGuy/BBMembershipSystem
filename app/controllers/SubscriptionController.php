@@ -75,7 +75,8 @@ class SubscriptionController extends \BaseController {
         }
         catch (\Exception $e)
         {
-            return Redirect::route('account.show', $user->id)->withErrors($e->getMessage());
+            Notification::error($e->getMessage());
+            return Redirect::route('account.show', $user->id);
         }
 
         if (strtolower($confirmed_resource->status) =='active')
@@ -115,9 +116,11 @@ class SubscriptionController extends \BaseController {
                 $user->extendMembership('gocardless', $user->subscription_expires);
             }
 
-            return Redirect::route('account.show', $user->id)->withSuccess("Your subscription has been setup, thank you");
+            Notification::success("Your subscription has been setup, thank you");
+            return Redirect::route('account.show', $user->id);
         }
-        return Redirect::route('account.show', $user->id)->withErrors("Something went wrong, you can try again or get in contact");
+        Notification::error("Something went wrong, you can try again or get in contact");
+        return Redirect::route('account.show', $user->id);
     }
 
 
@@ -136,10 +139,12 @@ class SubscriptionController extends \BaseController {
             if ($subscription->status == 'cancelled')
             {
                 $user->cancelSubscription();
-                return Redirect::back()->withSuccess("Your subscription has been cancelled");
+                Notification::success("Your subscription has been cancelled");
+                return Redirect::back();
             }
         }
-        return Redirect::back()->withError("Unable to automatically cancel");
+        Notification::error("Sorry, we were unable to cancel your subscription, please get in contact");
+        return Redirect::back();
 	}
 
 

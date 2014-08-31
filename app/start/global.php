@@ -73,7 +73,8 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
  */
 App::error(function(\BB\Exceptions\FormValidationException $exception)
 {
-    return Redirect::back()->withInput()->withErrors($exception->getErrors());
+    Notification::error("Something wasn't right, please check the errors below", $exception->getErrors());
+    return Redirect::back()->withInput();
 });
 
 /*

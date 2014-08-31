@@ -14,25 +14,25 @@
             </div>
         </div>
 
-        @if ($errors->count() > 0)
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    {{ $error }}<br />
-                @endforeach
-            </div>
-        @endif
+        @if (Notification::hasMessage())
+        <div class="alert alert-{{ Notification::getLevel() }} alert-dismissable">
+            {{ Notification::getMessage() }}
 
-        @if(Session::has('success'))
-        <div class="alert alert-success">
-            {{ Session::get('success') }}
+            @if (Notification::hasDetails())
+            <ul>
+                @foreach(Notification::getDetails()->all() as $error)
+                <li style="list-style-type: none;">{{ $error }}</li>
+                @endforeach
+            </ul>
+            @endif
         </div>
         @endif
 
         <div class="row">
-            <div class="form-group {{ $errors->has('email') ? 'has-error has-feedback' : '' }}">
+            <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
                 <div class="col-xs-12">
                     {{ Form::input('email', 'email', null, ['class'=>'form-control', 'placeholder'=>'Email']) }}
-                    {{ $errors->first('email', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') }}
+                    {{ Notification::getErrorDetail('email', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') }}
                 </div>
             </div>
 

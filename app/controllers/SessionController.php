@@ -33,21 +33,15 @@ class SessionController extends \BaseController {
 	{
         $input = Input::only('email', 'password');
 
-        try
-        {
-            $this->loginForm->validate($input);
-        }
-        catch (\BB\Exceptions\FormValidationException $e)
-        {
-            return Redirect::back()->withInput()->withErrors($e->getErrors());
-        }
+        $this->loginForm->validate($input);
 
         if (Auth::attempt($input, true))
         {
             return Redirect::intended('account/'.Auth::id());
         }
 
-        return Redirect::back()->withInput()->withErrors('Invalid login details');
+        Notification::error("Invalid login details");
+        return Redirect::back()->withInput();
 	}
 
 
@@ -60,6 +54,8 @@ class SessionController extends \BaseController {
 	public function destroy($id=null)
 	{
         Auth::logout();
+
+        Notification::success('Logged Out');
 
         return Redirect::home();
 	}

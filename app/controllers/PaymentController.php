@@ -92,7 +92,8 @@ class PaymentController extends \BaseController {
         catch (\Exception $e)
         {
             $errors = $e->getMessage();
-            return Redirect::route('account.show', $user->id)->withErrors($errors);
+            Notification::error($errors);
+            return Redirect::route('account.show', $user->id);
         }
 
         $details = explode(':',Input::get('state'));
@@ -130,7 +131,8 @@ class PaymentController extends \BaseController {
             throw new \BB\Exceptions\NotImplementedException();
         }
 
-        return Redirect::route('account.show', $user->id)->withSuccess("Your payment has been made");
+        Notification::success("Payment made");
+        return Redirect::route('account.show', $user->id);
     }
 
 
@@ -190,7 +192,8 @@ class PaymentController extends \BaseController {
         {
             throw new \BB\Exceptions\NotImplementedException();
         }
-        return Redirect::route('account.show', $user->id)->withSuccess("Your payment has been recorded");
+        Notification::success("Payment recorded");
+        return Redirect::route('account.show', $user->id);
 	}
 
 
