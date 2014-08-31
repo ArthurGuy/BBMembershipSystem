@@ -38,6 +38,13 @@ class PaymentController extends \BaseController {
                 ($item = Induction::inductionList($ref)) || App::abort(404);
                 $amount         = $item->cost;
             }
+            elseif ($reason == 'door-key')
+            {
+                $name           = strtoupper("BBDOORKEY".$user->id);
+                $description    = "Door Key Deposit";
+                $ref            = null;
+                $amount         = 10;
+            }
             else
             {
                 throw new \BB\Exceptions\NotImplementedException();
@@ -126,6 +133,11 @@ class PaymentController extends \BaseController {
                 'payment_id' => $payment->id
             ]);
         }
+        elseif ($reason == 'door-key')
+        {
+            $user->key_deposit_payment_id = $payment->id;
+            $user->save();
+        }
         else
         {
             throw new \BB\Exceptions\NotImplementedException();
@@ -187,6 +199,22 @@ class PaymentController extends \BaseController {
             {
                 throw new \BB\Exceptions\NotImplementedException();
             }
+        }
+        elseif ($reason == 'door-key')
+        {
+            $payment = new Payment([
+                'reason'            => $reason,
+                'source'            => Input::get('source'),
+                'source_id'         => '',
+                'amount'            => 10,
+                'amount_minus_fee'  => 10,
+                'status'            => 'paid'
+            ]);
+            $user->payments()->save($payment);
+
+            $user->key_deposit_payment_id = $payment->id;
+            $user->save();
+
         }
         else
         {

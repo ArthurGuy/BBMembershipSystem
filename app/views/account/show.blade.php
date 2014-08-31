@@ -104,6 +104,41 @@
 </div>
 @endif
 
+@if ($user->trusted && !$user->key_holder)
+<div class="row">
+    <div class="col-xs-12 col-md-6 ">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Door Key</h3>
+            </div>
+            <div class="panel-body">
+                @if (!$user->key_deposit_payment_id)
+                    <p>If you would like a door key you need to pay a £10 deposit, this can be paid by a one off direct debit payment or by cash at the space.</p>
+                    <p>
+                    {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id])) }}
+                    {{ Form::hidden('reason', 'door-key') }}
+                    {{ Form::hidden('source', 'gocardless') }}
+                    {{ Form::submit('Pay Now (DD)', array('class'=>'btn btn-primary btn-xs')) }}
+                        <small>You don't need to be paying via direct debit to use the option</small>
+                    {{ Form::close() }}
+                    </p>
+                    @if (Auth::user()->isAdmin())
+                        {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id], 'class'=>'well')) }}
+                        <span class="label label-danger pull-right">Admin</span>
+                        {{ Form::hidden('reason', 'door-key') }}
+                        {{ Form::hidden('source', 'manual') }}
+                        {{ Form::submit('Mark Paid', array('class'=>'btn btn-default btn-xs')) }}
+                        {{ Form::close() }}
+                    @endif
+                @else
+                    You have paid the key deposit, please let a trustee know and they will issue you will a key.
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 @if ($user->promoteGoCardless())
 
     <div class="row">
