@@ -11,14 +11,24 @@ class AccountController extends \BaseController {
      * @var BB\Helpers\UserImage
      */
     private $userImage;
+    /**
+     * @var BB\Validators\UserDetails
+     */
+    private $userDetailsForm;
 
 
-    function __construct(\BB\Validators\User $userForm, \BB\Validators\UpdateSubscription $updateSubscriptionAdminForm, \BB\Helpers\GoCardlessHelper $goCardless, \BB\Helpers\UserImage $userImage)
+    function __construct(
+        \BB\Validators\UserValidator $userForm,
+        \BB\Validators\UpdateSubscription $updateSubscriptionAdminForm,
+        \BB\Helpers\GoCardlessHelper $goCardless,
+        \BB\Helpers\UserImage $userImage,
+        \BB\Validators\UserDetails $userDetailsForm)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
         $this->goCardless = $goCardless;
         $this->userImage = $userImage;
+        $this->userDetailsForm = $userDetailsForm;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
@@ -35,6 +45,7 @@ class AccountController extends \BaseController {
         ];
         View::share('paymentMethods', $paymentMethods);
         View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
+
 
     }
 
@@ -192,7 +203,20 @@ class AccountController extends \BaseController {
     {
         $user = User::findWithPermission($id);
         $input = Input::only('trusted', 'key_holder', 'induction_completed');
-        $user->update($input);
+
+        //$this->userDetailsForm->validate($input, $user->id);
+
+        if (Input::has('trusted'))
+            $user->trusted = Input::get('trusted');
+
+        if (Input::has('key_holder'))
+            $user->key_holder = Input::get('key_holder');
+
+        if (Input::has('induction_completed'))
+            $user->induction_completed = Input::get('induction_completed');
+
+        //$user->update($input);
+        $user->save();
         Notification::success("Details Updated");
         return Redirect::route('account.show', $user->id);
     }

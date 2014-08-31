@@ -64,26 +64,61 @@
 </ul>
 
 @if (Auth::user()->isAdmin())
-<div class="row">
-    <div class="col-xs-12 col-lg-6">
-        {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
-        <div class="form-group">
-            {{ Form::label('trusted', 'Trusted Member') }}
-            {{ Form::select('trusted', ['0'=>'No', '1'=>'Yes'], $user->trusted, ['class'=>'form-control']) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('key_holder', 'Key Holder') }}
-            {{ Form::select('key_holder', ['0'=>'No', '1'=>'Yes'], $user->key_holder, ['class'=>'form-control']) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('induction_completed', 'Induction Completed') }}
-            {{ Form::select('induction_completed', ['0'=>'No', '1'=>'Yes'], $user->induction_completed, ['class'=>'form-control']) }}
-        </div>
-        {{ Form::submit('Update', array('class'=>'btn btn-primary')) }}
-        {{ Form::close() }}
-    </div>
+<div class="row well">
 
-    <div class="col-xs-12 col-lg-6">
+    <div class="col-xs-6 col-md-6">
+        @if (!$user->trusted)
+        <div class="row">
+            <div class="col-xs-12">
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
+                <div class="form-group">
+                    {{ Form::label('trusted', 'Trusted Member') }}
+                    {{ Form::select('trusted', ['0'=>'No', '1'=>'Yes'], $user->trusted, ['class'=>'form-control']) }}
+                </div>
+                {{ Form::submit('Update', array('class'=>'btn btn-primary')) }}
+                {{ Form::close() }}
+            </div>
+        </div>
+        @endif
+        @if ($user->trusted && $user->key_deposit_payment_id)
+        <div class="row">
+            <div class="col-xs-12">
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
+                <div class="form-group">
+                    {{ Form::label('key_holder', 'Key Holder') }}
+                    {{ Form::select('key_holder', ['0'=>'No', '1'=>'Yes'], $user->key_holder, ['class'=>'form-control']) }}
+                </div>
+                {{ Form::submit('Update', array('class'=>'btn btn-primary')) }}
+                {{ Form::close() }}
+            </div>
+        </div>
+        @elseif ($user->trusted && !$user->key_deposit_payment_id)
+        <div class="row">
+            <div class="col-xs-12">
+                <p>A deposit needs to be paid before a key can be issued</p>
+                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id], 'class'=>'')) }}
+                {{ Form::hidden('reason', 'door-key') }}
+                {{ Form::hidden('source', 'manual') }}
+                {{ Form::submit('Key Deposit Paid', array('class'=>'btn btn-default btn-xs')) }}
+                {{ Form::close() }}
+            </div>
+        </div>
+        @endif
+    </div>
+    @if (!$user->induction_completed)
+        <div class="col-xs-12 col-md-6">
+            {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
+            <div class="form-group">
+                {{ Form::label('induction_completed', 'Induction Completed') }}
+                {{ Form::select('induction_completed', ['0'=>'No', '1'=>'Yes'], $user->induction_completed, ['class'=>'form-control']) }}
+            </div>
+            {{ Form::submit('Update', array('class'=>'btn btn-primary')) }}
+            {{ Form::close() }}
+        </div>
+    @endif
+
+
+    <div class="col-xs-12 col-md-6">
         @if ($user->keyFob())
             <span class="navbar-text">{{ $user->keyFob()->key_id }}</span>
             {{ Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $user->keyFob()->id], 'class'=>'navbar-form navbar-left')) }}
@@ -93,7 +128,7 @@
         @else
         {{ Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'navbar-form navbar-left')) }}
         <div class="form-group">
-            {{ Form::label('trusted', 'Key ID') }}
+            {{ Form::label('trusted', 'Key Fob ID') }}
             {{ Form::text('key_id', '', ['class'=>'form-control']) }}
         </div>
         {{ Form::hidden('user_id', $user->id) }}
@@ -122,14 +157,6 @@
                         <small>You don't need to be paying via direct debit to use the option</small>
                     {{ Form::close() }}
                     </p>
-                    @if (Auth::user()->isAdmin())
-                        {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id], 'class'=>'well')) }}
-                        <span class="label label-danger pull-right">Admin</span>
-                        {{ Form::hidden('reason', 'door-key') }}
-                        {{ Form::hidden('source', 'manual') }}
-                        {{ Form::submit('Mark Paid', array('class'=>'btn btn-default btn-xs')) }}
-                        {{ Form::close() }}
-                    @endif
                 @else
                     You have paid the key deposit, please let a trustee know and they will issue you will a key.
                 @endif
