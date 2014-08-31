@@ -36,6 +36,7 @@ class CreateUsersTable extends Migration {
             $table->string('status', 20);
             $table->boolean('trusted');
             $table->boolean('key_holder');
+            $table->integer('key_deposit_payment_id')->nullable();
             $table->boolean('induction_completed');
             $table->string('payment_method', 20)->nullable();   //gocardless,standing-order,cash,paypal,other
             $table->integer('payment_day');

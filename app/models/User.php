@@ -35,7 +35,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         'given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1',
         'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact',
         'monthly_subscription', 'profile_photo_private',
-        'key_holder', 'trusted', 'induction_completed', 'payment_method', 'active', 'status'
+        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status'
     ];
 
 
