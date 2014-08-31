@@ -123,7 +123,8 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Kmd\Logviewer\LogviewerServiceProvider',
         'Aws\Laravel\AwsServiceProvider',
-        'Intervention\Image\ImageServiceProvider'
+        'Intervention\Image\ImageServiceProvider',
+        'BB\Notifications\NotificationServiceProvider'
 	),
 
 	/*
@@ -191,7 +192,8 @@ return array(
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
         'AWS'               => 'Aws\Laravel\AwsFacade',
-        'Image'             => 'Intervention\Image\Facades\Image'
+        'Image'             => 'Intervention\Image\Facades\Image',
+        'Notification'      => 'BB\Notifications\NotificationFacade'
 	),
 
 );
