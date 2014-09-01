@@ -59,6 +59,11 @@
                     </a>
                 </li>
                 <li class="detail-link">
+                    <a href="{{ route('storage_boxes.index') }}">
+                        Storage Boxes
+                    </a>
+                </li>
+                <li class="detail-link">
                     <a href="{{ route('equipment_training.index') }}">
                         Equipment Training
                     </a>
