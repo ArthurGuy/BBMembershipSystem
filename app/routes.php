@@ -39,19 +39,21 @@ Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.paymen
 
 
 # Inductions
-Route::resource('account.induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['index', 'update', 'destroy']]);
-Route::resource('induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['index', 'update', 'destroy']]);
+Route::get('equipment_training', ['uses'=>'InductionController@index', 'before'=>'auth', 'as'=>'equipment_training.index']);
+Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'before'=>'auth.admin', 'as'=>'equipment_training.update']);
+Route::resource('account.induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['update', 'destroy']]);
+//Route::resource('induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['index', 'update', 'destroy']]);
 
 
 # Statements
 Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy'], 'before'=>'auth.admin']);
 
 
-#KeyFobs
+# KeyFobs
 Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy'], 'before'=>'auth.admin']);
 
 
-#PayPal IPN
+# PayPal IPN
 Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 
 

@@ -58,17 +58,16 @@
                         Members
                     </a>
                 </li>
+                <li class="detail-link">
+                    <a href="{{ route('equipment_training.index') }}">
+                        Equipment Training
+                    </a>
+                </li>
                 @if (!Auth::guest() && Auth::user()->isAdmin())
 
                 <li class="detail-link">
                     <a href="{{ route('account.index') }}">
                         Members (Admin)
-                    </a>
-                </li>
-
-                <li class="detail-link">
-                    <a href="{{ route('induction.index') }}">
-                        Equipment Inductions/Trainers
                     </a>
                 </li>
 
