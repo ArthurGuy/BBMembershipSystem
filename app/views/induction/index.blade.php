@@ -1,12 +1,12 @@
 <div class="page-header">
-    <h1>Inductions / Equipment</h1>
+    <h1>Equipment Training</h1>
 </div>
 
 <table class="table">
     <thead>
         <tr>
             <th>Equipment</th>
-            <th>User</th>
+            <th>Member</th>
             <th>Paid</th>
             <th>Trained</th>
             <th>Trainer</th>
@@ -18,9 +18,21 @@
         <tr>
             <td>{{ $induction->key }}</td>
             <td>{{ $induction->user->name or 'Unknown' }}</td>
-            <td>{{ $induction->paid }}</td>
-            <td>{{ $induction->is_trained }}</td>
-            <td>{{ $induction->is_trainer }}</td>
+            <td>
+                @if($induction->paid)
+                <span class="glyphicon glyphicon-ok"></span>
+                @endif
+            </td>
+            <td>
+                @if($induction->is_trained)
+                <span class="glyphicon glyphicon-ok"></span>
+                @endif
+            </td>
+            <td>
+                @if($induction->is_trainer)
+                <span class="glyphicon glyphicon-ok"></span>
+                @endif
+            </td>
             <td>{{ $induction->trainer_user->name or '' }}</td>
         </tr>
     </tbody>
