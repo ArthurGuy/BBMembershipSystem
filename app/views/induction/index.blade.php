@@ -17,7 +17,7 @@
     <tbody>
         <tr>
             <td>{{ $induction->key }}</td>
-            <td>{{ $induction->user->name }}</td>
+            <td>{{ $induction->user->name or 'Unknown' }}</td>
             <td>{{ $induction->paid }}</td>
             <td>{{ $induction->is_trained }}</td>
             <td>{{ $induction->is_trainer }}</td>
