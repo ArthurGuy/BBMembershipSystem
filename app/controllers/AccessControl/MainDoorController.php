@@ -11,7 +11,9 @@ class MainDoorController extends \AccessControlController {
         $responseArray = [];
         foreach ($keyFobs as $fob)
         {
-            $responseArray[] = $fob->key_id;
+            if ($fob->user()->first()->active) {
+                $responseArray[] = $fob->key_id;
+            }
         }
         return \Response::make(json_encode($responseArray), 200);
     }
