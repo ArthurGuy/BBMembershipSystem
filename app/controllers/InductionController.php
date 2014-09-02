@@ -17,14 +17,31 @@ class InductionController extends \BaseController
      */
     public function index()
     {
-        $this->layout->content = View::make('induction.index')->withInductions(Induction::all());
+        $inductions  = Induction::all();
+        $trainersRaw = Induction::where('is_trainer', true)->get();
+        $inductionList = Induction::inductionList();
+        $trainers = [];
+        foreach ($inductionList as $equipmentKey => $equipment)
+        {
+            $trainers[$equipmentKey] = [];
+        }
+        foreach ($trainersRaw as $trainer) {
+            if (isset($trainer->user->name))
+            {
+                $trainers[$trainer->key][] = $trainer->user->name;
+            }
+        }
+
+        $this->layout->content = View::make('induction.index')->with('inductions', $inductions)->with('trainers', $trainers)->with('inductionList', $inductionList);
     }
 
 
     /**
      * Update the specified resource in storage.
      *
+     * @param      $userId
      * @param  int $id
+     * @throws BB\Exceptions\NotImplementedException
      * @return Response
      */
     public function update($userId, $id)

@@ -2,6 +2,13 @@
     <h1>Equipment Training</h1>
 </div>
 
+<h3>Trainers</h3>
+<p>
+@foreach($inductionList as $equipmentKey => $equipment)
+    <strong>{{ $equipment->name }}: </strong> {{ implode(', ', $trainers[$equipmentKey]) }}<br />
+@endforeach
+</p>
+
 <table class="table">
     <thead>
         <tr>
