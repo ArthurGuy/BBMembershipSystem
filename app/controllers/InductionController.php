@@ -17,7 +17,7 @@ class InductionController extends \BaseController
      */
     public function index()
     {
-        $inductions  = Induction::all();
+        $inductions  = Induction::orderBy('key')->get();
         $trainersRaw = Induction::where('is_trainer', true)->get();
         $inductionList = Induction::inductionList();
         $trainers = [];
