@@ -10,6 +10,6 @@ class MainDoorController extends \AccessControlController {
         {
             $responseArray[] = $fob->key_id;
         }
-        return \Response::make(json_encode(['valid'=>'1', 'tags'=>$responseArray]), 200);
+        return \Response::make(json_encode($responseArray), 200);
     }
 } 
