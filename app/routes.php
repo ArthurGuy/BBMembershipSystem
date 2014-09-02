@@ -60,6 +60,7 @@ Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 # Access Control
 Route::post('access-control/main-door', ['uses' => 'AccessControlController@mainDoor']);
 Route::post('access-control/status', ['uses' => 'AccessControlController@status']);
+Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorController@all']);
 
 # Storage Boxes
 Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'before'=>'auth']);
