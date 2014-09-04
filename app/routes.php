@@ -67,9 +67,6 @@ Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storag
 
 
 Route::get('test', function() {
-   $process = new \BB\Process\CheckMemberships();
+    $process = new \BB\Process\CheckMemberships();
     $process->run();
 });
-
-//This route is only to be called once!
-//Route::get('send-welcome', 'AccountController@sendWelcomeEmails');
