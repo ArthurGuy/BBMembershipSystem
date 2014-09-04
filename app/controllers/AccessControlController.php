@@ -61,10 +61,14 @@ class AccessControlController extends Controller
     public function legacy()
     {
         $keyId = Input::get('data');
+        $keyParts = explode(':', $keyId);
+        if (!is_array($keyParts) || count($keyParts) != 3)
+        {
+            return Response::make("NOTFOUND", 200);
+        }
         try {
-            $keyFob = $this->lookupKeyFob($keyId);
+            $keyFob = $this->lookupKeyFob($keyParts[0]);
         } catch (Exception $e) {
-
             return Response::make("NOTFOUND", 200);
         }
         $user = $keyFob->user()->first();
