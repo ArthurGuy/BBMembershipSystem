@@ -58,6 +58,26 @@ class AccessControlController extends Controller
         return Response::make(json_encode(['valid'=>'1', 'name'=>$user->name, 'status'=>$statusString]), 200);
     }
 
+    public function legacy()
+    {
+        $keyId = Input::get('data');
+        try {
+            $keyFob = $this->lookupKeyFob($keyId);
+        } catch (Exception $e) {
+
+            return Response::make("NOTFOUND", 200);
+        }
+        $user = $keyFob->user()->first();
+
+        $log = new AccessLog();
+        $log->key_fob_id = $keyFob->id;
+        $log->user_id = $user->id;
+        $log->service = 'main-door';
+        $log->save();
+        $statusString = $user->status;
+        return Response::make("OK:8F00:".$user->name, 200);
+    }
+
     private function lookupKeyFob($keyId)
     {
         try {
