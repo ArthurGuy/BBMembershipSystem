@@ -62,24 +62,47 @@ class AccessControlController extends Controller
     {
         $keyId = Input::get('data');
         $keyParts = explode(':', $keyId);
+
+
+        //Verify the key fob code has been extracted
         if (!is_array($keyParts) || count($keyParts) != 3)
         {
             return Response::make("NOTFOUND", 200);
         }
+        $keyId = $keyParts[0];
+
+
+        //Lookup the fob id and the user
         try {
-            $keyFob = $this->lookupKeyFob($keyParts[0]);
+            $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
+            Log::debug("Keyfob code not found ".$keyId);
             return Response::make("NOTFOUND", 200);
         }
         $user = $keyFob->user()->first();
 
+
+        //Log this request
         $log = new AccessLog();
         $log->key_fob_id = $keyFob->id;
         $log->user_id = $user->id;
         $log->service = 'main-door';
-        $log->save();
-        $statusString = $user->status;
-        return Response::make("OK:8F00:".$user->name, 200);
+
+
+        //Return a status based on the users status
+        if ($user->active && $user->key_holder) {
+            $log->response = 200;
+            $log->save();
+            return Response::make("OK:8F00:".$user->name, 200);
+        } elseif ($user->active) {
+            $log->response = 403;
+            $log->save();
+            return Response::make("NOTFOUND", 200);
+        } else {
+            $log->response = 402;
+            $log->save();
+            return Response::make("NOTFOUND", 200);
+        }
     }
 
     private function lookupKeyFob($keyId)
