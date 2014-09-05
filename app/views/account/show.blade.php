@@ -58,9 +58,11 @@
     <li>
         <p class="navbar-text">Monthly Payment: &pound;{{ round($user->monthly_subscription) }}</p>
     </li>
+    @if ($user->subscription_expires)
     <li>
         <p class="navbar-text">Subscription Expires: {{ $user->subscription_expires->toFormattedDateString() }}</p>
     </li>
+    @endif
 </ul>
 
 @if (Auth::user()->isAdmin())
