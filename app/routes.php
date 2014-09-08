@@ -65,7 +65,7 @@ Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorCo
 
 
 # Activity Page
-Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'before'=>'role:admin']);
+Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'before'=>'role:member']);
 
 
 # Storage Boxes
