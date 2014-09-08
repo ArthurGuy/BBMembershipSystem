@@ -39,7 +39,7 @@
             </td>
             <td>
                 <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
-                @if ($user->type == 'admin')
+                @if ($user->hasRole('admin'))
                 <span class="label label-danger">Admin</span>
                 @endif
             </td>
