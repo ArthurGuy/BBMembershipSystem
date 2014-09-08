@@ -63,6 +63,11 @@ Route::post('access-control/status', ['uses' => 'AccessControlController@status'
 Route::post('access-control/legacy', ['uses' => 'AccessControlController@legacy']);
 Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorController@all']);
 
+
+# Activity Page
+Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index']);
+
+
 # Storage Boxes
 Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'before'=>'auth']);
 
