@@ -68,6 +68,11 @@
                         Equipment Training
                     </a>
                 </li>
+                <li class="detail-link">
+                    <a href="{{ route('activity.index') }}">
+                        Activity
+                    </a>
+                </li>
                 @if (!Auth::guest() && Auth::user()->isAdmin())
 
                 <li class="detail-link">

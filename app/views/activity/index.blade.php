@@ -1,6 +1,6 @@
 <div class="page-header">
     <h1>Activity Log</h1>
-    <h3>Door access to the main space - {{ $date->toFormattedDateString() }}</h3>
+    <h3>Door access to the main space - {{ $date->format('l jS \\of F'); }}</h3>
     <ul class="pager">
     @if ($previousDate)
         <li class="previous">{{ link_to_route('activity.index', $previousDate->format('d/m/y'). ' &larr; Previous', ['date'=>$previousDate->format('Y-m-d')]) }}</li>
