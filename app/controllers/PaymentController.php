@@ -7,8 +7,8 @@ class PaymentController extends \BaseController {
     {
         $this->goCardless = $goCardless;
 
-        $this->beforeFilter('auth', array('only' => ['create', 'destroy']));
-        $this->beforeFilter('auth.admin', array('only' => ['store']));
+        $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
+        $this->beforeFilter('role:admin', array('only' => ['store']));
     }
 
 

@@ -60,7 +60,7 @@
                 </li>
                 <li class="detail-link">
                     <a href="{{ route('storage_boxes.index') }}">
-                        Storage Boxes
+                        Member Storage
                     </a>
                 </li>
                 <li class="detail-link">

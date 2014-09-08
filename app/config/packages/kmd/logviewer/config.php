@@ -4,7 +4,7 @@ return array(
 
     'base_url'   => 'logviewer',
     'filters'    => array(
-        'global' => array('auth.admin'),
+        'global' => array('role:admin'),
         'view'   => array(),
         'delete' => array()
     ),

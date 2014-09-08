@@ -33,8 +33,8 @@ class AccountController extends \BaseController {
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
 
-        $this->beforeFilter('auth', array('except' => ['create', 'store']));
-        $this->beforeFilter('auth.admin', array('only' => ['index']));
+        $this->beforeFilter('role:member', array('except' => ['create', 'store']));
+        $this->beforeFilter('role:admin', array('only' => ['index']));
         //$this->beforeFilter('guest', array('only' => ['create', 'store']));
 
         $paymentMethods = [

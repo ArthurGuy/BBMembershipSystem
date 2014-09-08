@@ -9,7 +9,7 @@ class SubscriptionController extends \BaseController {
     {
         $this->goCardless = $goCardless;
 
-        $this->beforeFilter('auth', array('only' => ['create', 'destroy']));
+        $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
     }
 
 

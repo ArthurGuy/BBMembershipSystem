@@ -253,9 +253,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function isAdmin()
     {
-        return ($this->type == 'admin')
-            ? true
-            : false;
+        return Auth::user()->hasRole('admin');
     }
 
     public function promoteGoCardless()
@@ -289,7 +287,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         }
 
         //They are requesting a user that isn't them
-        if (Auth::user()->isAdmin())
+        if (Auth::user()->hasRole('admin'))
         {
             //They are an admin so that's alright
             return $requestedUser;

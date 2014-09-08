@@ -40,7 +40,7 @@ App::after(function($request, $response)
 | integrates HTTP Basic authentication for quick, simple checking.
 |
 */
-
+/*
 Route::filter('auth', function()
 {
 	if (Auth::guest())
@@ -61,6 +61,27 @@ Route::filter('auth.admin', function()
     if (!Auth::user()->isAdmin())
     {
         return Response::make('Unauthorized', 401);
+    }
+});
+*/
+//This is the main auth filter, it handles all authentication based redirection
+Route::filter('role', function($route, $request, $role)
+{
+    if (Auth::guest())
+    {
+        //Guests should be redirected to the login page as we make some links visible
+        if (Request::ajax())
+        {
+            return Response::make('Unauthorized', 401);
+        }
+        else
+        {
+            return Redirect::guest('login');
+        }
+    }
+    elseif (($role != 'member') && !Auth::user()->hasRole($role))
+    {
+        throw new \BB\Exceptions\AuthenticationException();
     }
 });
 
@@ -104,3 +125,4 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+

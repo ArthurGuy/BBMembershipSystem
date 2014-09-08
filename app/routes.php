@@ -21,9 +21,9 @@ Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'Remin
 
 Route::resource('account', 'AccountController');
 Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
-Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'before'=>'auth.admin']);
-Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'before'=>'auth.admin']);
-Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'AccountController@rejoin', 'before'=>'auth']);
+Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'before'=>'role:admin']);
+Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'before'=>'role:admin']);
+Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'AccountController@rejoin', 'before'=>'role:member']);
 Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
 
 
@@ -39,18 +39,18 @@ Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.paymen
 
 
 # Inductions
-Route::get('equipment_training', ['uses'=>'InductionController@index', 'before'=>'auth', 'as'=>'equipment_training.index']);
-Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'before'=>'auth.admin', 'as'=>'equipment_training.update']);
-Route::resource('account.induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['update', 'destroy']]);
-//Route::resource('induction', 'InductionController', ['before'=>'auth.admin', 'only' => ['index', 'update', 'destroy']]);
+Route::get('equipment_training', ['uses'=>'InductionController@index', 'before'=>'role:member', 'as'=>'equipment_training.index']);
+Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'before'=>'role:admin', 'as'=>'equipment_training.update']);
+Route::resource('account.induction', 'InductionController', ['before'=>'role:admin', 'only' => ['update', 'destroy']]);
+//Route::resource('induction', 'InductionController', ['before'=>'role:admin', 'only' => ['index', 'update', 'destroy']]);
 
 
 # Statements
-Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy'], 'before'=>'auth.admin']);
+Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy'], 'before'=>'role:admin']);
 
 
 # KeyFobs
-Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy'], 'before'=>'auth.admin']);
+Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy'], 'before'=>'role:admin']);
 
 
 # PayPal IPN
@@ -65,14 +65,26 @@ Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorCo
 
 
 # Activity Page
-Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'before'=>'auth']);
+Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'before'=>'role:admin']);
 
 
 # Storage Boxes
-Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'before'=>'auth']);
+Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'before'=>'role:member']);
 
 
 Route::get('test', function() {
     $process = new \BB\Process\CheckMemberships();
     $process->run();
 });
+
+
+Route::get(
+    'fix-admin-rolls',
+    function () {
+        $role = Role::create(['name'=>'admin']);
+        $users = User::where('type', 'admin')->get();
+        foreach ($users as $user) {
+            $user->assignRole($role);
+        }
+    }
+);
