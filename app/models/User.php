@@ -41,7 +41,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 
     protected $attributes = [
-        'type'                  => 'member',
         'status'                => 'setting-up',
         'active'                => 0,
         'key_holder'            => 0,

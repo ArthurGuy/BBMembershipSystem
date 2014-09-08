@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration {
             $table->boolean('email_verified');
             $table->string('secondary_email')->nullable();
             $table->string('password')->nullable();
-            $table->string('type', 20); //member, admin
             $table->string('address_line_1', 100)->nullable();
             $table->string('address_line_2', 100)->nullable();
             $table->string('address_line_3', 100)->nullable();
