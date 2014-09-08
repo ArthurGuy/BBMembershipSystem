@@ -1,5 +1,6 @@
 <?php
 
+use BB\Traits\UserRoleTrait;
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
@@ -7,7 +8,7 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
-	use UserTrait, RemindableTrait;
+	use UserTrait, RemindableTrait, UserRoleTrait;
 
 	/**
 	 * The database table used by the model.
