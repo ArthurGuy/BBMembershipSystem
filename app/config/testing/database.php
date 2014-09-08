@@ -14,7 +14,7 @@ return array(
 	|
 	*/
 
-	'default' => 'sqlite',
+	'default' => 'testing',
 
     /*
 	|--------------------------------------------------------------------------
@@ -38,6 +38,23 @@ return array(
             'driver'   => 'sqlite',
             'database' => ':memory:',
             'prefix'   => '',
+        ),
+
+        'testing' => array(
+            'driver' => 'sqlite',
+            'database' => __DIR__.'/../../database/bbms_testing.sqlite',
+            'prefix' => '',
+        ),
+
+        'mysql' => array(
+            'driver'    => 'mysql',
+            'host'      => 'localhost',
+            'database'  => 'bbms_acceptance_testing',
+            'username'  => 'root',
+            'password'  => 'root',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
         ),
     )
 
