@@ -12,10 +12,10 @@ class GoCardlessHelper {
     public function setup()
     {
         $this->account_details = array(
-            'app_id'        => $_ENV['GOCARDLESS_APP_ID'],
-            'app_secret'    => $_ENV['GOCARDLESS_APP_SECRET'],
-            'merchant_id'   => $_ENV['GOCARDLESS_MERCHANT_ID'],
-            'access_token'  => $_ENV['GOCARDLESS_ACCESS_TOKEN'],
+            'app_id'        => $_SERVER['GOCARDLESS_APP_ID'],
+            'app_secret'    => $_SERVER['GOCARDLESS_APP_SECRET'],
+            'merchant_id'   => $_SERVER['GOCARDLESS_MERCHANT_ID'],
+            'access_token'  => $_SERVER['GOCARDLESS_ACCESS_TOKEN'],
         );
 
         // Initialize GoCardless
