@@ -73,18 +73,6 @@ Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storag
 
 
 Route::get('test', function() {
-    $process = new \BB\Process\CheckMemberships();
-    $process->run();
+    //$process = new \BB\Process\CheckMemberships();
+    //$process->run();
 });
-
-
-Route::get(
-    'fix-admin-rolls',
-    function () {
-        $role = Role::create(['name'=>'admin']);
-        $users = User::where('type', 'admin')->get();
-        foreach ($users as $user) {
-            $user->assignRole($role);
-        }
-    }
-);
