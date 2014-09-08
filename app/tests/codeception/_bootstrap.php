@@ -1,6 +1,6 @@
 <?php
 // This is global bootstrap for autoloading
-//putenv('APP_ENV=testing');
+putenv('APP_ENV=testing');
 
 //\App::call('php artisan migrate --env=testing --database=testing');
 
