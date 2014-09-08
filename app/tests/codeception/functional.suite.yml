@@ -6,7 +6,7 @@
 
 class_name: FunctionalTester
 modules:
-    enabled: [Filesystem, FunctionalHelper, Laravel4, Db]
+    enabled: [Filesystem, FunctionalHelper, Laravel4, Db, Mockery]
     config:
         Laravel4:
             cleanup: true

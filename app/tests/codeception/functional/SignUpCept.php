@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+use \Mockery as m;
 
 $I = new FunctionalTester($scenario);
 
@@ -20,6 +22,10 @@ $I->fillField('Address Line 1', 'Street Address');
 $I->fillField('Post Code', 'AB12 3CD');
 $I->fillField('Emergency Contact', 'Contact Details');
 $I->attachFile('Profile Photo', 'test-image.png');
+
+//$userImageService = m::mock('\BB\Helpers\UserImage');
+//$userImageService->shouldReceive('uploadPhoto')->times(1);
+//$this->app->instance('\BB\Helpers\UserImage',$userImageService);
 
 $I->click('Join');
 
