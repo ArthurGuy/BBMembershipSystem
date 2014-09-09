@@ -3,6 +3,15 @@
 class ActivityController extends \BaseController {
 
     protected $layout = 'layouts.main';
+    /**
+     * @var
+     */
+    private $accessLogRepository;
+
+    function __construct(\BB\Repo\AccessLogRepository $accessLogRepository)
+    {
+        $this->accessLogRepository = $accessLogRepository;
+    }
 
 	/**
 	 * Display a listing of the resource.
@@ -12,19 +21,18 @@ class ActivityController extends \BaseController {
 	public function index()
 	{
         $date = Input::get('date', \Carbon\Carbon::now()->format('Y-m-d'));
-        $date = \Carbon\Carbon::createFromFormat('Y-m-d', $date);
+        $date = \Carbon\Carbon::createFromFormat('Y-m-d', $date)->setTime(0, 0, 0);
         $today = \Carbon\Carbon::now()->setTime(0, 0, 0);
-        $startDate = $date->setTime(0, 0, 0);
-        $endDate = $startDate->copy()->addDay();
-        $logEntries = AccessLog::where('created_at', '>', $startDate)->where('created_at', '<', $endDate)->where('service', 'main-door')->where('response', '200')->orderBy('created_at', 'desc')->get();
+
+        $logEntries = $this->accessLogRepository->getForDate($date);
 
         $nextDate = null;
-        if ($startDate->lt($today)) {
-            $nextDate = $startDate->copy()->addDay();
+        if ($date->lt($today)) {
+            $nextDate = $date->copy()->addDay();
         }
-        $previousDate = $startDate->copy()->subDay();
+        $previousDate = $date->copy()->subDay();
 
-        $this->layout->content = View::make('activity.index')->with('logEntries', $logEntries)->with('date', $startDate)->with('nextDate', $nextDate)->with('previousDate', $previousDate);
+        $this->layout->content = View::make('activity.index')->with('logEntries', $logEntries)->with('date', $date)->with('nextDate', $nextDate)->with('previousDate', $previousDate);
 	}
 
 
