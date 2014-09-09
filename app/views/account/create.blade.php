@@ -6,7 +6,7 @@
                 <h1>Join Build Brighton</h1>
                 <p>
                     Build Brighton is a fantastic space and community of like minded people.<br />
-                    If you haven't visited one of our open nights yet then it is highly recommended that you do before signing up.
+                    <strong>If you haven't visited one of our open nights yet then it is highly recommended that you do before signing up.</strong>
                 </p>
             </div>
         </div>
