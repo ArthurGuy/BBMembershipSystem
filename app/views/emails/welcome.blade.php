@@ -7,7 +7,7 @@
 <h1>Welcome!</h1>
 
 <p>
-    Thanks for signing up to be part of Build Brighton.
+    Thanks for signing up to be part of Build Brighton, Brighton's amazing maker space.
 </p>
 <p>
     <h3>Next Steps</h3>
@@ -16,9 +16,9 @@
     wrong through to where the bins get emptied.<br />
     The process for arranging this is still being sorted out so for now please email us at
     <a href="mailto:info@buildbrighton.com">info@buildbrighton.com</a> and let us know if you're going to be coming
-    to the space on Thursday and we will make sure someone will be around to show you the ropes.<br />
+    to the space on Thursday (our open evening) and we will make sure someone will be around to show you the ropes.<br />
     <br />
-    You should also join the mailing list, this is where most of the communication between members occurs and is where
+    We would also like you to join the mailing list, this is where most of the communication between members occurs and is where
     things get decided and you find out about what's going on.<br />
     <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">Mailing list</a> - please use the same
     email address as you did when signing up.
