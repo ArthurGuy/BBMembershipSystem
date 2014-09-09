@@ -16,7 +16,7 @@ class ActivityController extends \BaseController {
         $today = \Carbon\Carbon::now()->setTime(0, 0, 0);
         $startDate = $date->setTime(0, 0, 0);
         $endDate = $startDate->copy()->addDay();
-        $logEntries = AccessLog::where('created_at', '>', $startDate)->where('created_at', '<', $endDate)->where('service', 'main-door')->orderBy('created_at', 'desc')->get();
+        $logEntries = AccessLog::where('created_at', '>', $startDate)->where('created_at', '<', $endDate)->where('service', 'main-door')->where('response', '200')->orderBy('created_at', 'desc')->get();
 
         $nextDate = null;
         if ($startDate->lt($today)) {
