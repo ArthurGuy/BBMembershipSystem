@@ -7,6 +7,7 @@
 <h1>Welcome!</h1>
 
 <p>
+    Hi {{ $user['given_name'] }},<br />
     Thanks for signing up to be part of Build Brighton, Brighton's amazing maker space.
 </p>
 <p>
