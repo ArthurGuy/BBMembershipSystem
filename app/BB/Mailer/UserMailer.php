@@ -22,7 +22,7 @@ class UserMailer {
         $user = $this->user;
         \Mail::queue('emails.welcome', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($user->email, $user->name)->subject('Welcome to Build Brighton!');
+            $message->to($user->email, $user->name)->subject('Welcome to Build Brighton!')->cc('info@buildbrighton.com');
         });
     }
 
@@ -33,7 +33,7 @@ class UserMailer {
         $user = $this->user;
         \Mail::queue('emails.payment-warning', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($user->email, $user->email)->subject('We have detected a payment problem');
+            $message->to($user->email, $user->email)->subject('We have detected a payment problem')->cc('info@buildbrighton.com');
         });
     }
 
@@ -43,7 +43,7 @@ class UserMailer {
         $user = $this->user;
         \Mail::queue('emails.user-left', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($user->email, $user->email)->subject('Sorry to see you go');
+            $message->to($user->email, $user->email)->subject('Sorry to see you go')->cc('info@buildbrighton.com');
         });
     }
 
