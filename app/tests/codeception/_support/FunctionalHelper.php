@@ -7,4 +7,13 @@ namespace Codeception\Module;
 class FunctionalHelper extends \Codeception\Module
 {
 
+    public function createMember()
+    {
+        return \User::create(['given_name' => 'Test', 'family_name' => 'Person', 'email' => 'testperson@example.com']);
+    }
+
+    public function createActivity()
+    {
+
+    }
 }

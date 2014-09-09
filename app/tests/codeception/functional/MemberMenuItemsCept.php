@@ -5,7 +5,7 @@ $I->am('member');
 $I->wantTo('confirm I can see member menu items only');
 
 
-$user = User::create(['given_name' => 'Test', 'family_name' => 'Person', 'email' => 'testperson@example.com']);
+$user = $I->createMember();
 Auth::login($user);
 
 $I->amOnPage('/');
