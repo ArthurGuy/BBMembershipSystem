@@ -280,5 +280,11 @@ class AccountController extends \BaseController {
         return Redirect::route('account.show', $user->id);
     }
 
-
+    public function updateSubscriptionAmount($id)
+    {
+        $user = User::findWithPermission($id);
+        $user->updateSubAmount(Input::get('monthly_subscription'));
+        Notification::success("Details Updated");
+        return Redirect::route('account.show', $user->id);
+    }
 }

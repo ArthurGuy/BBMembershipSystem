@@ -155,6 +155,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    public function updateSubAmount($amount)
+    {
+        $this->attributes['monthly_subscription'] = $amount;
+        $this->save();
+    }
+
 
     # Getters and Setters
 
