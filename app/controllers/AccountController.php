@@ -56,7 +56,7 @@ class AccountController extends \BaseController {
 	 */
 	public function index()
 	{
-        $users = User::orderBy('active', true)->orderBy('status', 'desc')->paginate(100);
+        $users = User::with('roles')->orderBy('active', true)->orderBy('status', 'desc')->paginate(100);
         $numActiveUsers = User::active()->count();
         $this->layout->content = View::make('account.index')->withUsers($users)->with('numActiveUsers', $numActiveUsers);
 	}
