@@ -53,20 +53,6 @@
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('monthly_subscription', 'has-error has-feedback') }}">
-            {{ Form::label('monthly_subscription', 'Monthly Subscription Amount') }}
-            <div class="input-group">
-                <div class="input-group-addon">&pound;</div>
-                {{ Form::text('monthly_subscription', null, ['class'=>'form-control', 'placeholder'=>'20']) }}
-            </div>
-            {{ Notification::getErrorDetail('monthly_subscription') }}
-            <span class="help-block">How much do you want to contribute each month, the average is around £20</span>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address_line_1', 'has-error has-feedback') }}">
             {{ Form::label('address_line_1', 'Address Line 1') }}
             {{ Form::text('address_line_1', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-1']) }}
