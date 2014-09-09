@@ -1,9 +1,17 @@
 
 
-    <p>
+
         <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
-        <small><a href="{{ route('account.edit', $user->id) }}">Change your monthly amount</a></small><br />
-        <br />
+        <small><a href="#" class="show-alter-subscription-amount">Change your monthly amount</a></small>
+        {{ Form::open(array('method'=>'POST', 'class'=>'form-inline hidden alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) }}
+        <div class="input-group">
+            <div class="input-group-addon">&pound;</div>
+            {{ Form::text('monthly_subscription', round($user->monthly_subscription), ['class'=>'form-control']) }}
+        </div>
+        {{ Form::submit('Update', array('class'=>'btn btn-default')) }}
+        {{ Form::close() }}
+        <br /><br />
+    <p>
         The direct debit date will be the day you complete this process<br />
         You can cancel the direct debit at any point through this website, the <a href="https://gocardless.com/security" target="_blank">GoCardless</a>
         website (our payment processor) or your bank giving you full control over the payments. By switching you will also protected by the
@@ -41,3 +49,10 @@
     {{ Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) }}
     {{ Form::close() }}
     @endif
+    <script>
+        $('.show-alter-subscription-amount').click(function(event) {
+            event.preventDefault();
+            $('.alter-subscription-amount-form').removeClass('hidden');
+            $(this).hide();
+        });
+    </script>
