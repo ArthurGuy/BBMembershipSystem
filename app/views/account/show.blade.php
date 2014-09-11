@@ -60,7 +60,7 @@
     </li>
     @if ($user->subscription_expires)
     <li>
-        <p class="navbar-text">Subscription Expires: {{ $user->subscription_expires->toFormattedDateString() }}</p>
+        <p class="navbar-text">Subscription Expires: {{ $user->present()->subscriptionExpiryDate }}</p>
     </li>
     @endif
 </ul>

@@ -67,13 +67,7 @@
                 @endif
             </td>
             <td>{{ $user->present()->paymentMethod }}</td>
-            <td>
-                @if ($user->subscription_expires->year > 0)
-                    {{ $user->subscription_expires->toFormattedDateString() }}
-                @else
-                    -
-                @endif
-            </td>
+            <td>{{ $user->present()->subscriptionExpiryDate }}</td>
             <td>
                 {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
                 {{ Form::hidden('reason', 'subscription') }}
