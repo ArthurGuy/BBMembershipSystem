@@ -12,7 +12,8 @@
         "aws/aws-sdk-php-laravel": "1.*",
         "nuovo/spreadsheet-reader": "dev-master",
         "intervention/image": "2.*",
-        "paypal/merchant-sdk-php":"3.6.*"
+        "paypal/merchant-sdk-php":"3.6.*",
+        "laracasts/presenter": "0.1.*"
 	},
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

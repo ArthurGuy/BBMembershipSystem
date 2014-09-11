@@ -53,7 +53,7 @@
     </li>
     @endif
     <li>
-        <p class="navbar-text">Payment Method: {{ $user->payment_method }}</p>
+        <p class="navbar-text">Payment Method: {{ $user->present()->paymentMethod }}</p>
     </li>
     <li>
         <p class="navbar-text">Monthly Payment: &pound;{{ round($user->monthly_subscription) }}</p>

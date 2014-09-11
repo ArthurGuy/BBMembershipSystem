@@ -66,7 +66,7 @@
                 <span class="glyphicon glyphicon-remove"></span>
                 @endif
             </td>
-            <td>{{ $user->payment_method }}</td>
+            <td>{{ $user->present()->paymentMethod }}</td>
             <td>
                 @if ($user->subscription_expires->year > 0)
                     {{ $user->subscription_expires->toFormattedDateString() }}
