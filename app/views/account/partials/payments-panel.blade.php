@@ -16,10 +16,10 @@
         <tbody>
         @foreach ($payments as $payment)
         <tr>
-            <td>{{ $payment->reason }}</td>
+            <td>{{ $payment->present()->reason }}</td>
             <td>{{ $payment->present()->method }}</td>
             <td>{{ $payment->present()->date }}</td>
-            <td>&pound;{{ $payment->amount }}</td>
+            <td>{{ $payment->present()->amount }}</td>
             <td>{{ $payment->present()->status }}</td>
         </tr>
         @endforeach
