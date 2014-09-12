@@ -17,10 +17,10 @@
         @foreach ($payments as $payment)
         <tr>
             <td>{{ $payment->reason }}</td>
-            <td>{{ $payment->source }}</td>
-            <td>{{ $payment->created_at->toFormattedDateString() }}</td>
+            <td>{{ $payment->present()->method }}</td>
+            <td>{{ $payment->present()->date }}</td>
             <td>&pound;{{ $payment->amount }}</td>
-            <td>{{ $payment->status }}</td>
+            <td>{{ $payment->present()->status }}</td>
         </tr>
         @endforeach
         </tbody>

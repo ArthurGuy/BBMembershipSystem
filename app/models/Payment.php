@@ -1,7 +1,11 @@
 <?php
 
 
+use Laracasts\Presenter\PresentableTrait;
+
 class Payment extends Eloquent {
+
+    use PresentableTrait;
 
 	/**
 	 * The database table used by the model.
@@ -32,6 +36,9 @@ class Payment extends Eloquent {
         'status' => 'pending',
         'fee' => 0,
     ];
+
+
+    protected $presenter = 'BB\Presenters\PaymentPresenter';
 
 
     public function user()
