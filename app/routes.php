@@ -63,7 +63,7 @@ Route::post('access-control/main-door', ['uses' => 'AccessControlController@main
 Route::post('access-control/status', ['uses' => 'AccessControlController@status']);
 Route::post('access-control/legacy', ['uses' => 'AccessControlController@legacy']);
 Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorController@all']);
-
+Route::post('access-control/device', ['uses' => 'AccessControlController@device']);
 
 # Activity Page
 Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'before'=>'role:member']);

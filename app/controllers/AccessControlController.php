@@ -69,6 +69,20 @@ class AccessControlController extends Controller
         return Response::make(json_encode(['valid'=>'1', 'name'=>$user->name, 'status'=>$statusString]), 200);
     }
 
+    public function device()
+    {
+        $keyId = Input::get('data');
+        try {
+            $keyFob = $this->lookupKeyFob($keyId);
+        } catch (Exception $e) {
+
+            return Response::make(json_encode(['valid'=>'0']), 200);
+        }
+        $user = $keyFob->user()->first();
+
+        return Response::make(json_encode(['valid'=>'1', 'name'=>$user->name]), 200);
+    }
+
     public function legacy()
     {
         $keyId = Input::get('data');
