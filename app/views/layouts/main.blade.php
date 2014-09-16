@@ -138,6 +138,9 @@
 
 
 <script src="/js/bootstrap.min.js"></script>
+<script>
+    $('[data-toggle=tooltip]').tooltip({});
+</script>
 
 </body>
 </html>
