@@ -20,6 +20,14 @@ class AccessLog extends Eloquent {
     ];
 
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::observe(new \BB\Observer\AccessLogObserver());
+    }
+
+
     public function user()
     {
         return $this->belongsTo('User');
