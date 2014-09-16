@@ -228,6 +228,21 @@ class PaymentController extends \BaseController {
             $user->save();
 
         }
+        elseif ($reason == 'storage-box')
+        {
+            $payment = new Payment([
+                    'reason'            => $reason,
+                    'source'            => Input::get('source'),
+                    'source_id'         => '',
+                    'amount'            => 5,
+                    'amount_minus_fee'  => 5,
+                    'status'            => 'paid'
+                ]);
+            $user->payments()->save($payment);
+
+            $user->storage_box_payment_id = $payment->id;
+            $user->save();
+        }
         else
         {
             throw new \BB\Exceptions\NotImplementedException();
