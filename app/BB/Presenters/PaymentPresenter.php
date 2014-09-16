@@ -78,8 +78,12 @@ class PaymentPresenter extends Presenter
                 return 'Cash';
                 break;
 
+            case 'other':
+                return 'Other';
+                break;
+
             default;
-                return $this->entity->status;
+                return $this->entity->source;
         }
     }
 
