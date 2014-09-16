@@ -125,7 +125,8 @@ return array(
         'Aws\Laravel\AwsServiceProvider',
         'Intervention\Image\ImageServiceProvider',
         'BB\Notifications\NotificationServiceProvider',
-        'BB\Html\HtmlServiceProvider'
+        'BB\Html\HtmlServiceProvider',
+        'Artdarek\Pusherer\PushererServiceProvider'
 	),
 
 	/*
