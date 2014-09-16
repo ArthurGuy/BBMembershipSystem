@@ -45,6 +45,13 @@ class PaymentController extends \BaseController {
                 $ref            = null;
                 $amount         = 10;
             }
+            elseif ($reason == 'storage-box')
+            {
+                $name           = strtoupper("BBSTORAGEBOX".$user->id);
+                $description    = "Storage Box Deposit";
+                $ref            = null;
+                $amount         = 5;
+            }
             else
             {
                 throw new \BB\Exceptions\NotImplementedException();
@@ -136,6 +143,11 @@ class PaymentController extends \BaseController {
         elseif ($reason == 'door-key')
         {
             $user->key_deposit_payment_id = $payment->id;
+            $user->save();
+        }
+        elseif ($reason == 'storage-box')
+        {
+            $user->storage_box_payment_id = $payment->id;
             $user->save();
         }
         else

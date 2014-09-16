@@ -1,6 +1,7 @@
-<?php 
+<?php
 
-class StorageBox extends Eloquent {
+class StorageBox extends Eloquent
+{
 
     /**
      * The database table used by the model.
@@ -16,13 +17,24 @@ class StorageBox extends Eloquent {
      * @var array
      */
     protected $fillable = [
-        'size', 'active'
+        'size',
+        'active'
     ];
 
 
     public function user()
     {
         return $this->belongsTo('User');
+    }
+
+    /**
+     * Return a box record for the specified user
+     * @param $userId
+     * @return StorageBox|null
+     */
+    public static function findMember($userId)
+    {
+        return self::where('user_id', '=', $userId)->first();
     }
 
 

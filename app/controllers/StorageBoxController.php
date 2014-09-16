@@ -12,7 +12,14 @@ class StorageBoxController extends \BaseController {
 	public function index()
 	{
         $storageBoxes = StorageBox::all();
-        $this->layout->content = View::make('storage_boxes.index')->with('storageBoxes', $storageBoxes);
+        $memberBox = StorageBox::findMember(Auth::user()->id);
+
+        $boxPayment = Auth::user()->getStorageBoxPayment();
+
+        $this->layout->content = View::make('storage_boxes.index')
+            ->with('storageBoxes', $storageBoxes)
+            ->with('memberBox', $memberBox)
+            ->with('boxPayment', $boxPayment);
 	}
 
 
