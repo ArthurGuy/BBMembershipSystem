@@ -35,4 +35,20 @@ class HtmlBuilder extends IlluminateHtmlBuilder
             return '<span class="label label-default">Honorary</span>';
         }
     }
+
+    public function spaceAccessLabel($active) {
+        if ($active) {
+            return '<label class="label label-success">Access to the space</label>';
+        } else {
+            return '<label class="label label-danger">No access to he space</label>';
+        }
+    }
+
+    public function keyHolderLabel($key_holder) {
+        if ($key_holder) {
+            return '<label class="label label-success">Key Holder</label><br />';
+        } else {
+            return '<label class="label label-default">Key Holder: not yet</label>';
+        }
+    }
 } 
