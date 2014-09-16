@@ -33,7 +33,8 @@ class AccessLogObserver
                     'response'   => $accessLog->response,
                     'key_fob_id' => $accessLog->key_fob_id,
                     'user_name'  => $userName,
-                    'user_image' => $userImageUrl
+                    'user_image' => $userImageUrl,
+                    'time'       => $accessLog->created_at->toTimeString()
                 )
             );
         } catch (\Exception $e) {
