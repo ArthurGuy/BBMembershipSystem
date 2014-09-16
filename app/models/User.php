@@ -299,6 +299,17 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $userArray;
     }
 
+    public function getStorageBoxPayment()
+    {
+        if ($this->storage_box_payment_id) {
+            $payment = Payment::find($this->storage_box_payment_id);
+            if ($payment) {
+                return $payment;
+            }
+        }
+        return false;
+    }
+
     /**
      * @return array
      */
