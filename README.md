@@ -20,12 +20,12 @@ New members can join and create accounts, payments are tracked and managed throu
 * Tracking of who trains who
 * Member grid to see who belongs to Build Brighton
 * The ability for members to cancel their subscription and leave Build Brighton (not that they would want to!)
-* Collect deposit payments for door keys
+* Collect deposit payments for door keys and member storage boxes
 * Door entry control and tracking
 
 ###Upcomming Features
-* Handle member storage box assignments and deposit payments
-* Equipment control and usage logging using the training equipment
+* Handle member storage box assignments
+* Equipment control and usage logging
 
 
 
@@ -38,7 +38,7 @@ There are a variety of member statuses which are used for various scenarios.
 * Left - Leaving users move here once their last payment expires.
 
 
-###Other Hackspaces
+###Other Makerspaces
 This system can be used with only minor modifications by other spaces.<br />
 The Build Brighton naming is hardcoded into the pages and pieces of text will need to be altered.<br />
 It has been design to work primarily with GoCardless but the PayPal integration is OK and would be good enough on its own.<br />
@@ -48,7 +48,7 @@ The system also has limited support for scanning and processing payments from ba
 ###Seting It Up
 The system is build on the Laravel framework so familiarity with that would help.
 
-The config options below need to be setup in an .env config file or passed in to php can access them through $_ENV
+The config options below need to be setup in an .env config file or passed in to php can access them through $_SERVER
 
 * AWS_KEY
 * AWS_SECRET
