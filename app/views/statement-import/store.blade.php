@@ -30,7 +30,7 @@
                 @endif
             </td>
             <td>{{ $user->email }}</td>
-            <td>{{ User::statusLabel($user->status) }}</td>
+            <td>{{ HTML::statusLabel($user->status) }}</td>
             <td>
                 @if ($user->induction_completed)
                 <span class="glyphicon glyphicon-ok"></span>

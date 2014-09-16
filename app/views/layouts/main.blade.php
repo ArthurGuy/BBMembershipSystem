@@ -101,7 +101,7 @@
 
                 <li>
                     <span class="navbar-text">
-                        {{ User::statusLabel(Auth::user()->status) }}
+                        {{ HTML::statusLabel(Auth::user()->status) }}
                     </span>
                 </li>
 

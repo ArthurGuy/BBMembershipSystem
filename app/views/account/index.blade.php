@@ -51,7 +51,7 @@
                 <span class="glyphicon glyphicon-remove"></span>
                 @endif
             </td>
-            <td>{{ User::statusLabel($user->status) }}</td>
+            <td>{{ HTML::statusLabel($user->status) }}</td>
             <td>
                 @if($user->key_holder)
                     Yes

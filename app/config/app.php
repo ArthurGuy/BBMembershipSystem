@@ -124,7 +124,8 @@ return array(
         'Kmd\Logviewer\LogviewerServiceProvider',
         'Aws\Laravel\AwsServiceProvider',
         'Intervention\Image\ImageServiceProvider',
-        'BB\Notifications\NotificationServiceProvider'
+        'BB\Notifications\NotificationServiceProvider',
+        'BB\Html\HtmlServiceProvider'
 	),
 
 	/*
