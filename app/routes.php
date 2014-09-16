@@ -67,6 +67,7 @@ Route::post('access-control/device', ['uses' => 'AccessControlController@device'
 
 # Activity Page
 Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'before'=>'role:member']);
+Route::get('activity/realtime', ['uses' => 'ActivityController@realtime', 'as'=>'activity.realtime', 'before'=>'role:member']);
 
 
 # Storage Boxes
