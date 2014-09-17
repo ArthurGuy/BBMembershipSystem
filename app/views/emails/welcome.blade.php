@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 </head>
 <body>
-<h1>Welcome!</h1>
+<h1>Welcome to Build Brighton</h1>
 
 <p>
     Hi {{ $user['given_name'] }},<br />
