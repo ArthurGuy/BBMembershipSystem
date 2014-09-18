@@ -29,4 +29,5 @@ $I->attachFile('Profile Photo', 'test-image.png');
 
 $I->click('Join');
 
-$I->seeCurrentUrlEquals('/account/1');
+//Make sure we are now on an account page with the new id
+$I->seeCurrentUrlMatches('^/account/(\d+)^');
