@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration {
             $table->string('hash', 50)->nullable();
             $table->string('given_name', 100);
             $table->string('family_name', 100);
+            $table->string('import_match_string', 50)->nullable();
             $table->string('email')->unique();
             $table->boolean('email_verified');
             $table->string('secondary_email')->nullable();
