@@ -13,6 +13,11 @@ class ApiHelper extends \Codeception\Module
         return \User::findOrFail(1);
     }
 
+    public function getInactiveKeyholderMember()
+    {
+        return \User::findOrFail(2);
+    }
+
 
     public function getMemberKeyFob($userId)
     {
