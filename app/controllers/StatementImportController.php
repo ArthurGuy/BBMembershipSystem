@@ -112,7 +112,7 @@ class StatementImportController extends \BaseController {
 
             echo "</tr>";
 
-            if ($matchedUser)
+            if (0 && $matchedUser)
             {
                 Payment::create([
                     'created_at' => $date,
