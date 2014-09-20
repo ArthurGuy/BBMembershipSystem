@@ -13,8 +13,8 @@
                     Switching only takes a minute, just follow the link below to the <a href="https://gocardless.com/security" target="_blank">GoCardless</a> website (our payment processor) and complete the simple form.<br />
                     <br />
                     <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
-                    <small><a href="#" class="show-alter-subscription-amount">Change your monthly amount</a></small>
-                    {{ Form::open(array('method'=>'POST', 'class'=>'form-inline hidden alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) }}
+                    <small><a href="#" class="js-show-alter-subscription-amount">Change your monthly amount</a></small>
+                    {{ Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) }}
                     <div class="input-group">
                         <div class="input-group-addon">&pound;</div>
                         {{ Form::text('monthly_subscription', round($user->monthly_subscription), ['class'=>'form-control']) }}
@@ -33,10 +33,3 @@
     </div>
 </div>
 
-<script>
-    $('.show-alter-subscription-amount').click(function(event) {
-        event.preventDefault();
-        $('.alter-subscription-amount-form').removeClass('hidden');
-        $(this).hide();
-    });
-</script>

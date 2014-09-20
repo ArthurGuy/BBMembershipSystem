@@ -10,13 +10,6 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <script type="text/javascript" src="//www.google.com/jsapi"></script>
-
-    <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
-
     @if (App::environment() == 'production')
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -136,11 +129,18 @@
 
 </div>
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
+    <script>
+        $('[data-toggle=tooltip]').tooltip({});
 
-<script src="/js/bootstrap.min.js"></script>
-<script>
-    $('[data-toggle=tooltip]').tooltip({});
-</script>
-
+        $('.js-show-alter-subscription-amount').click(function(event) {
+            event.preventDefault();
+            $('.js-alter-subscription-amount-form').removeClass('hidden');
+            $(this).hide();
+        });
+    </script>
 </body>
 </html>
