@@ -126,7 +126,8 @@ return array(
         'Intervention\Image\ImageServiceProvider',
         'BB\Notifications\NotificationServiceProvider',
         'BB\Html\HtmlServiceProvider',
-        'Artdarek\Pusherer\PushererServiceProvider'
+        'Artdarek\Pusherer\PushererServiceProvider',
+        'Laracasts\Utilities\UtilitiesServiceProvider'
 	),
 
 	/*
