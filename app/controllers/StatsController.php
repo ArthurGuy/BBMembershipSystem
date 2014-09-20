@@ -25,9 +25,9 @@ class StatsController extends \BaseController
     {
         $users         = $this->userRepository->getActive();
         $paymentMethodsNumbers = [
-            'gocardless'     => 10,
-            'paypal'         => 20,
-            'standing-order' => 5
+            'gocardless'     => 0,
+            'paypal'         => 0,
+            'standing-order' => 0
         ];
         foreach ($users as $user) {
             if (isset($paymentMethodsNumbers[$user->payment_method])) {
