@@ -74,6 +74,9 @@ Route::get('activity/realtime', ['uses' => 'ActivityController@realtime', 'as'=>
 Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'before'=>'role:member']);
 
 
+# Stats
+Route::get('stats', ['uses'=>'StatsController@index', 'before'=>'role:member', 'as'=>'stats.index']);
+
 Route::get('test', function() {
     //$process = new \BB\Process\CheckMemberships();
     //$process->run();
