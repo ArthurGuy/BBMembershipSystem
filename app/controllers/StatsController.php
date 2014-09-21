@@ -56,7 +56,7 @@ class StatsController extends \BaseController
         $monthlyAmountsData = [];
         $monthlyAmountsData[] = ['Amount', 'Number of Members'];
         foreach ($monthlyAmounts as $amount => $numUsers) {
-            $monthlyAmountsData[] = [$amount, $numUsers];
+            $monthlyAmountsData[] = ['£'.$amount, $numUsers];
         }
 
 

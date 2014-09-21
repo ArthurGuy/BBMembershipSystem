@@ -27,16 +27,16 @@ google.load("visualization", "1", {packages:["corechart"]});
     google.setOnLoadCallback(drawChart);
     function drawChart() {
 
-      var data = google.visualization.arrayToDataTable(monthlyAmounts);
+        var data = google.visualization.arrayToDataTable(monthlyAmounts);
 
-      var options = {
-        title: 'Monthly Subscription Amounts',
-        hAxis: {title: 'Amount (£)'}
-      };
+        var options = {
+            title: 'Monthly Subscription Amounts',
+            pieHole: 0.4
+        };
 
-      var chart = new google.visualization.ColumnChart(document.getElementById('monthlyAmounts'));
+        var chart = new google.visualization.PieChart(document.getElementById('monthlyAmounts'));
 
-      chart.draw(data, options);
+        chart.draw(data, options);
 
     }
 
