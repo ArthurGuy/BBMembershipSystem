@@ -35,23 +35,34 @@ class StatsController extends \BaseController
             }
         }
         $paymentMethods = [
-        [
-            'Payment Method', 'Number'
-        ],
-        [
-            'Direct Debit', $paymentMethodsNumbers['gocardless']
-        ],
-        [
-            'PayPal', $paymentMethodsNumbers['paypal']
-        ],
-        [
-            'Standing Order', $paymentMethodsNumbers['standing-order']
-        ]
+            [
+                'Payment Method', 'Number'
+            ],
+            [
+                'Direct Debit', $paymentMethodsNumbers['gocardless']
+            ],
+            [
+                'PayPal', $paymentMethodsNumbers['paypal']
+            ],
+            [
+                'Standing Order', $paymentMethodsNumbers['standing-order']
+            ]
         ];
+
+        $monthlyAmounts = array_fill_keys(range(5, 50), 0);
+        foreach ($users as $user) {
+            $monthlyAmounts[$user->monthly_subscription]++;
+        }
+        $monthlyAmountsData = [];
+        $monthlyAmountsData[] = ['Amount', 'Number of Members'];
+        foreach ($monthlyAmounts as $amount => $numUsers) {
+            $monthlyAmountsData[] = [$amount, $numUsers];
+        }
 
 
         JavaScript::put([
-                'paymentMethods' => $paymentMethods
+                'paymentMethods' => $paymentMethods,
+                'monthlyAmounts' => $monthlyAmountsData
         ]);
 
         $this->layout->content = View::make('stats.index');
