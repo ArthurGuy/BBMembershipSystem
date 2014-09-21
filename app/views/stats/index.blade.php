@@ -31,7 +31,9 @@ google.load("visualization", "1", {packages:["corechart"]});
 
         var options = {
             title: 'Monthly Subscription Amounts',
-            pieHole: 0.4
+            pieHole: 0.4,
+            pieSliceText: 'label',
+            legend: 'none'
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('monthlyAmounts'));
