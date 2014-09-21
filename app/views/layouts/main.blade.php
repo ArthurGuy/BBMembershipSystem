@@ -12,6 +12,7 @@
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//www.google.com/jsapi"></script>
 
     @if (App::environment() == 'production')
     <script>
@@ -136,7 +137,6 @@
 @include('partials/page-js')
 
     <script src="/js/lib/bootstrap.min.js"></script>
-    <script src="/js/lib/Chart.min.js"></script>
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
     <script>
         $('[data-toggle=tooltip]').tooltip({});

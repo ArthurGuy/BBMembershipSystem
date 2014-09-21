@@ -34,24 +34,19 @@ class StatsController extends \BaseController
                 $paymentMethodsNumbers[$user->payment_method]++;
             }
         }
-        $paymentMethods = [];
-        $paymentMethods[] = (object)[
-            'value' => $paymentMethodsNumbers['gocardless'],
-            'label' => 'Direct Debit',
-            'colour' => '#F7464A',
-            'highlight' => '#FF5A5E'
-        ];
-        $paymentMethods[] = (object)[
-            'value' => $paymentMethodsNumbers['paypal'],
-            'label' => 'PayPal',
-            'colour' => '#46BFBD',
-            'highlight' => '#5AD3D1'
-        ];
-        $paymentMethods[] = (object)[
-            'value' => $paymentMethodsNumbers['standing-order'],
-            'label' => 'Standing Order',
-            'colour' => '#FDB45C',
-            'highlight' => '#FFC870'
+        $paymentMethods = [
+        [
+            'Payment Method', 'Number'
+        ],
+        [
+            'Direct Debit', $paymentMethodsNumbers['gocardless']
+        ],
+        [
+            'PayPal', $paymentMethodsNumbers['paypal']
+        ],
+        [
+            'Standing Order', $paymentMethodsNumbers['standing-order']
+        ]
         ];
 
 
