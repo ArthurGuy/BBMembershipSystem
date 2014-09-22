@@ -52,12 +52,20 @@ class StatsController extends \BaseController
         ];
 
         //Fetch the users amounts and bucket them
+        $averageMonthlyAmount = 0;
+        $numPayingUsers = 0;
         $monthlyAmounts = array_fill_keys(range(5, 50, 5), 0);
         foreach ($users as $user) {
             if (isset($monthlyAmounts[(int)StatsHelper::roundToNearest($user->monthly_subscription)])) {
                 $monthlyAmounts[(int)StatsHelper::roundToNearest($user->monthly_subscription)]++;
             }
+            if ($user->monthly_subscription > 0) {
+                $averageMonthlyAmount = $averageMonthlyAmount + $user->monthly_subscription;
+                $numPayingUsers++;
+            }
         }
+
+        $averageMonthlyAmount = $averageMonthlyAmount / $numPayingUsers;
 
         //Remove the higher empty amounts
         $i = 50;
@@ -83,7 +91,7 @@ class StatsController extends \BaseController
                 'monthlyAmounts' => $monthlyAmountsData
         ]);
 
-        $this->layout->content = View::make('stats.index');
+        $this->layout->content = View::make('stats.index')->with('averageMonthlyAmount', $averageMonthlyAmount);
     }
 
 

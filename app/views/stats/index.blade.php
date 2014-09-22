@@ -3,8 +3,16 @@
 </div>
 
 <div class="row">
-    <div id="paymentMethods" style="height:500px" class="col-sm-4"></div>
-    <div id="monthlyAmounts" style="height:500px" class="col-sm-4"></div>
+    <div id="paymentMethods" style="height:400px" class="col-sm-12 col-md-6 col-lg-4"></div>
+    <div id="monthlyAmounts" style="height:400px" class="col-sm-12 col-md-6 col-lg-4"></div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <p class="text-center">
+            <br />
+            <br />
+            Average Monthly Amount<br />
+            <strong>&pound;{{ $averageMonthlyAmount }}</strong>
+        </p>
+    </div>
 </div>
 <script>
 google.load("visualization", "1", {packages:["corechart"]});
