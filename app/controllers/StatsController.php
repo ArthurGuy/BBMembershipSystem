@@ -86,12 +86,17 @@ class StatsController extends \BaseController
         }
 
 
+        //Number of Users
+        $numActiveUsers = count($users);
+
         JavaScript::put([
                 'paymentMethods' => $paymentMethods,
                 'monthlyAmounts' => $monthlyAmountsData
         ]);
 
-        $this->layout->content = View::make('stats.index')->with('averageMonthlyAmount', round($averageMonthlyAmount));
+        $this->layout->content = View::make('stats.index')
+            ->with('averageMonthlyAmount', round($averageMonthlyAmount))
+            ->with('numActiveUsers', $numActiveUsers);
     }
 
 

@@ -3,14 +3,25 @@
 </div>
 
 <div class="row">
-    <div id="paymentMethods" style="height:400px" class="col-sm-12 col-md-6 col-lg-4"></div>
-    <div id="monthlyAmounts" style="height:400px" class="col-sm-12 col-md-6 col-lg-4"></div>
     <div class="col-sm-12 col-md-6 col-lg-4">
+        <h3 class="text-center">Payment Methods</h3>
+        <div id="paymentMethods" style="height:400px"></div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <h3 class="text-center">Monthly Subscription Amounts</h3>
+        <div id="monthlyAmounts" style="height:400px"></div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+
+        <h3 class="text-center">Average Monthly Subscription</h3>
         <p class="text-center">
-            <br />
-            <br />
-            Average Monthly Amount<br />
-            <strong>&pound;{{ $averageMonthlyAmount }}</strong>
+            <span class="key-figure">&pound;{{ $averageMonthlyAmount }}</span>
+        </p>
+
+
+        <h3 class="text-center">Active Members</h3>
+        <p class="text-center">
+            <span class="key-figure">{{ $numActiveUsers }}</span>
         </p>
     </div>
 </div>
@@ -23,8 +34,8 @@ google.load("visualization", "1", {packages:["corechart"]});
         var data = google.visualization.arrayToDataTable(paymentMethods);
 
         var options = {
-          title: 'Payment Methods',
-          pieHole: 0.4
+            //title: 'Payment Methods',
+            pieHole: 0.4
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('paymentMethods'));
@@ -38,7 +49,7 @@ google.load("visualization", "1", {packages:["corechart"]});
         var data = google.visualization.arrayToDataTable(monthlyAmounts);
 
         var options = {
-            title: 'Monthly Subscription Amounts',
+            //title: 'Monthly Subscription Amounts',
             legend: { position: 'none' },
             vAxis: {format: '#', gridlines: {}}
         };

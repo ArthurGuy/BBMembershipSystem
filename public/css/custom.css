@@ -111,3 +111,12 @@ body.register_login .top-alerts {
 .member-grid {
     text-align: center;
 }
+
+
+
+/* Stats Page */
+.key-figure {
+    font-size: 2em;
+    font-weight: bold;
+    color: #D9534F;
+}
