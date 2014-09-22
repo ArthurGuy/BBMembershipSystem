@@ -13,10 +13,12 @@ class MembershipPayments
      */
     public static function lastUserPaymentDate($userId)
     {
-        $latestSubPayment = \Payment::where('user_id', $userId)->where('reason', 'subscription')->orderBy(
-            'created_at',
-            'desc'
-        )->first();
+        $latestSubPayment = \Payment::where('user_id', $userId)
+            ->where('reason', 'subscription')
+            ->where('status', 'paid')
+            ->orWhere('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->first();
         if ($latestSubPayment) {
             return $latestSubPayment->created_at;
         }
