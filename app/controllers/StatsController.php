@@ -91,7 +91,7 @@ class StatsController extends \BaseController
                 'monthlyAmounts' => $monthlyAmountsData
         ]);
 
-        $this->layout->content = View::make('stats.index')->with('averageMonthlyAmount', $averageMonthlyAmount);
+        $this->layout->content = View::make('stats.index')->with('averageMonthlyAmount', round($averageMonthlyAmount));
     }
 
 
