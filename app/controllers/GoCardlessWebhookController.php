@@ -101,6 +101,15 @@ class GoCardlessWebhookController extends \BaseController {
                                     //If the payment is a subscription payment then we need to take action and warn the user
                                     $user = $existingPayment->user();
                                     $user->status = 'payment-warning';
+
+                                    //Rollback the users subscription expiry date or set it to today
+                                    $expiryDate = \BB\Helpers\MembershipPayments::lastUserPaymentExpires($user->id);
+                                    if ($expiryDate) {
+                                        $user->subscription_expires = $expiryDate;
+                                    } else {
+                                        $user->subscription_expires = new Carbon();
+                                    }
+
                                     $user->save();
                                 }
                                 elseif ($existingPayment->reason == 'induction')
