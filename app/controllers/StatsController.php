@@ -1,5 +1,7 @@
 <?php
 
+use BB\Helpers\StatsHelper;
+
 class StatsController extends \BaseController
 {
 
@@ -49,14 +51,30 @@ class StatsController extends \BaseController
             ]
         ];
 
-        $monthlyAmounts = array_fill_keys(range(5, 50), 0);
+        //Fetch the users amounts and bucket them
+        $monthlyAmounts = array_fill_keys(range(5, 50, 5), 0);
         foreach ($users as $user) {
-            $monthlyAmounts[$user->monthly_subscription]++;
+            if (isset($monthlyAmounts[(int)StatsHelper::roundToNearest($user->monthly_subscription)])) {
+                $monthlyAmounts[(int)StatsHelper::roundToNearest($user->monthly_subscription)]++;
+            }
         }
+
+        //Remove the higher empty amounts
+        $i = 50;
+        while ($i >= 0) {
+            if (isset($monthlyAmounts[$i]) && empty($monthlyAmounts[$i])) {
+                unset($monthlyAmounts[$i]);
+            } else {
+                break;
+            }
+            $i = $i - 5;
+        }
+
+        //Format the data into the chart format
         $monthlyAmountsData = [];
-        $monthlyAmountsData[] = ['Amount', 'Number of Members'];
+        $monthlyAmountsData[] = ['Amount', 'Number of Members', (object)['role'=> 'annotation' ]];
         foreach ($monthlyAmounts as $amount => $numUsers) {
-            $monthlyAmountsData[] = ['£'.$amount, $numUsers];
+            $monthlyAmountsData[] = ['£'.$amount, $numUsers, $numUsers];
         }
 
 

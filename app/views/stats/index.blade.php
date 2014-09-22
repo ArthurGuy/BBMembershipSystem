@@ -3,8 +3,8 @@
 </div>
 
 <div class="row">
-    <div id="paymentMethods" style="height:400px" class="col-sm-4"></div>
-    <div id="monthlyAmounts" style="height:400px" class="col-sm-4"></div>
+    <div id="paymentMethods" style="height:500px" class="col-sm-4"></div>
+    <div id="monthlyAmounts" style="height:500px" class="col-sm-4"></div>
 </div>
 <script>
 google.load("visualization", "1", {packages:["corechart"]});
@@ -31,13 +31,11 @@ google.load("visualization", "1", {packages:["corechart"]});
 
         var options = {
             title: 'Monthly Subscription Amounts',
-            pieHole: 0.4,
-            pieSliceText: 'label',
-            legend: 'none'
+            legend: { position: 'none' },
+            vAxis: {format: '#', gridlines: {}}
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('monthlyAmounts'));
-
+        var chart = new google.visualization.ColumnChart(document.getElementById('monthlyAmounts'));
         chart.draw(data, options);
 
     }
