@@ -25,4 +25,14 @@ abstract class DBRepository {
     {
         return $this->model->findOrFail($id);
     }
+
+    /**
+     * Return all the records in the repo
+     *
+     * @return mixed
+     */
+    public function getAll()
+    {
+        return $this->model->get();
+    }
 } 

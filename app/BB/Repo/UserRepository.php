@@ -16,4 +16,7 @@ class UserRepository extends DBRepository {
     {
         return $this->model->active()->get();
     }
+
+
+
 } 

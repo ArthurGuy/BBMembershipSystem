@@ -332,7 +332,26 @@ VALUES
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
+# Dump of table profile_data
+# ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `profile_data`;
+
+CREATE TABLE `profile_data` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `twitter` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `facebook` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `google_plus` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `github` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `website` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tagline` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `skills_array` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
