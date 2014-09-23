@@ -14,5 +14,5 @@ modules:
             dsn: 'mysql:host=127.0.0.1;dbname=bbms_acceptance_testing'
             #dsn: 'sqlite:app/database/bbms_testing.sqlite'
             user: 'root'
-            #password: 'root'
+            password: 
             dump: app/database/dump.sql
