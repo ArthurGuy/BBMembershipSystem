@@ -14,7 +14,7 @@ return array(
 	|
 	*/
 
-	'default' => 'testing',
+	'default' => 'mysql',
 
     /*
 	|--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ return array(
 
         'mysql' => array(
             'driver'    => 'mysql',
-            'host'      => 'localhost',
+            'host'      => '127.0.0.1',
             'database'  => 'bbms_acceptance_testing',
             'username'  => 'root',
             'password'  => 'root',

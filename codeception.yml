@@ -11,8 +11,8 @@ settings:
 modules:
     config:
         Db:
-            #dsn: 'mysql:host=localhost;dbname=bbms_acceptance_testing'
-            dsn: 'sqlite:app/database/bbms_testing.sqlite'
-            user: ''
-            password: ''
-            #dump: app/database/dump.sql
+            dsn: 'mysql:host=127.0.0.1;dbname=bbms_acceptance_testing'
+            #dsn: 'sqlite:app/database/bbms_testing.sqlite'
+            user: 'root'
+            password: 'root'
+            dump: app/database/dump.sql

@@ -3,8 +3,7 @@ $I = new FunctionalTester($scenario);
 $I->am('a member');
 $I->wantTo('look at activity on the activity page');
 
-$user = $I->createMember();
-Auth::login($user);
+$I->loginNormalMember();
 
 $I->amOnPage('activity');
 

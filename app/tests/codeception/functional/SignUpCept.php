@@ -16,7 +16,7 @@ $I->seeCurrentUrlEquals('/register');
 
 $I->fillField('First Name', 'Jon');
 $I->fillField('Family Name', 'Doe');
-$I->fillField('Email', 'jondoe@example.com');
+$I->fillField('Email', 'jondoe2@example.com');
 $I->fillField('Password', '12345678');
 $I->fillField('Address Line 1', 'Street Address');
 $I->fillField('Post Code', 'AB12 3CD');
@@ -27,6 +27,7 @@ $I->attachFile('Profile Photo', 'test-image.png');
 //$userImageService->shouldReceive('uploadPhoto')->times(1);
 //$this->app->instance('\BB\Helpers\UserImage',$userImageService);
 
+//$I->haveEnabledFilters();
 $I->click('Join');
 
 //Make sure we are now on an account page with the new id

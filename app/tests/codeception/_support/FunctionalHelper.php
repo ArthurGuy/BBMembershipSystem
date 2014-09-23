@@ -16,4 +16,22 @@ class FunctionalHelper extends \Codeception\Module
     {
 
     }
+
+    public function loginNormalMember()
+    {
+        $user = \User::find(1);
+        \Auth::login($user);
+    }
+
+    public function loginAdminMember()
+    {
+        $user = \User::find(3);
+        \Auth::login($user);
+    }
+
+    public function loginLeftMember()
+    {
+        $user = \User::find(2);
+        \Auth::login($user);
+    }
 }

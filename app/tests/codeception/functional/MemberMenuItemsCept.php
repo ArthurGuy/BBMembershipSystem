@@ -5,9 +5,9 @@ $I->am('member');
 $I->wantTo('confirm I can see member menu items only');
 
 
-$user = $I->createMember();
-Auth::login($user);
+$I->loginNormalMember();
 
+$I->haveEnabledFilters();
 $I->amOnPage('/');
 
 $I->canSeeLink('Your Membership');
