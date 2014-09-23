@@ -48,10 +48,10 @@ return array(
 
         'mysql' => array(
             'driver'    => 'mysql',
-            'host'      => '127.0.0.1',
-            'database'  => 'bbms_acceptance_testing',
-            'username'  => 'root',
-            'password'  => '',
+            'host'      => $_SERVER['DB_HOST'],
+            'database'  => $_SERVER['DB_NAME'],
+            'username'  => $_SERVER['DB_USER'],
+            'password'  => $_SERVER['DB_PASS'],
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
