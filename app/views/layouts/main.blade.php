@@ -35,7 +35,6 @@
 
             <a class="navbar-brand brand-logo" href="{{ route('home') }}"><img class="" src="/img/logo.png" height="40" /></a>
 
-
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
@@ -43,7 +42,6 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand brand-name-full" href="{{ route('home') }}">Build Brighton Member System</a>
             <a class="navbar-brand brand-name-short" href="{{ route('home') }}" title="Build Brighton Member System">BB Member System</a>
         </div>
 
@@ -68,6 +66,11 @@
                 <li class="detail-link">
                     <a href="{{ route('activity.index') }}">
                         Activity
+                    </a>
+                </li>
+                <li class="detail-link">
+                    <a href="{{ route('stats.index') }}">
+                        Stats
                     </a>
                 </li>
                 @if (!Auth::guest() && Auth::user()->isAdmin())
