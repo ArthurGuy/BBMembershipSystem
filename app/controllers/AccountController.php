@@ -15,6 +15,10 @@ class AccountController extends \BaseController {
      * @var BB\Validators\UserDetails
      */
     private $userDetailsForm;
+    /**
+     * @var \BB\Repo\ProfileDataRepository
+     */
+    private $profileRepo;
 
 
     function __construct(
@@ -22,13 +26,15 @@ class AccountController extends \BaseController {
         \BB\Validators\UpdateSubscription $updateSubscriptionAdminForm,
         \BB\Helpers\GoCardlessHelper $goCardless,
         \BB\Helpers\UserImage $userImage,
-        \BB\Validators\UserDetails $userDetailsForm)
+        \BB\Validators\UserDetails $userDetailsForm,
+        \BB\Repo\ProfileDataRepository $profileRepo)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
         $this->goCardless = $goCardless;
         $this->userImage = $userImage;
         $this->userDetailsForm = $userDetailsForm;
+        $this->profileRepo = $profileRepo;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
@@ -45,7 +51,6 @@ class AccountController extends \BaseController {
         ];
         View::share('paymentMethods', $paymentMethods);
         View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
-
 
     }
 
@@ -92,6 +97,8 @@ class AccountController extends \BaseController {
             unset($input['password']);
 
         $user = User::create($input);
+        $this->profileRepo->createProfile($user->id);
+
 
         if (Input::file('profile_photo'))
         {
