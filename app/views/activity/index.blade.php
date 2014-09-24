@@ -21,9 +21,9 @@
         <div class="col-sm-6 col-md-4 col-lg-2">
             <div class="thumbnail">
                 @if ($logEntry->user->profile_photo)
-                <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($logEntry->user->hash) }}" width="100" height="100" />
+                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($logEntry->user->hash) }}" width="120" height="120" class="img-circle" />
                 @else
-                <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
+                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="120" height="120" class="img-circle" />
                 @endif
                 <div class="caption">
                     <strong>{{ $logEntry->user->name }}</strong><br />
