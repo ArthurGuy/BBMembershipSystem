@@ -2,7 +2,6 @@
 
 # Home
 
-Route::get('members', array('as' => 'members.index', 'uses' => 'MembersController@index'));
 Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
 
 
@@ -25,6 +24,11 @@ Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscri
 Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'before'=>'role:admin']);
 Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'AccountController@rejoin', 'before'=>'role:member']);
 Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
+
+
+# Members
+
+Route::resource('members', 'MembersController', ['only'=>['index','show']]);
 
 
 # Subscription/Payments
