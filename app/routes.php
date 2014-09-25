@@ -19,6 +19,8 @@ Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'Remin
 # Account
 
 Route::resource('account', 'AccountController');
+Route::get('account/{account}/profile/edit', ['uses'=>'ProfileController@edit', 'as'=>'account.profile.edit']);
+Route::post('account/{account}/profile', ['uses'=>'ProfileController@update', 'as'=>'account.profile']);
 Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
 Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'before'=>'role:admin']);
 Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'before'=>'role:admin']);
