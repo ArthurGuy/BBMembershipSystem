@@ -1,14 +1,30 @@
 <?php
 
 class MembersController extends \BaseController {
+    
+    /**
+     * @var
+     */
+    private $profileRepo;
 
-    protected $layout = 'layouts.main';
+    /**
+     * @param \BB\Repo\ProfileDataRepository $profileRepo
+     */
+    function __construct(\BB\Repo\ProfileDataRepository $profileRepo)
+    {
+        $this->profileRepo = $profileRepo;
+    }
 
 	public function index()
 	{
         $users = User::activePublicList();
-        $this->layout->content = View::make('members.index')->withUsers($users);
+        return View::make('members.index')->withUsers($users);
 	}
 
-
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        $profileData = $this->profileRepo->getUserProfile($id);
+        return View::make('members.show')->with('user', $user)->with('profileData', $profileData);
+    }
 }
