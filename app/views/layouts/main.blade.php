@@ -132,12 +132,12 @@
         @endif
     </div>
 
-    {{ $content }}
+    {{ $content or '' }}
+    @yield('content')
 
 </div>
 
-
-@include('partials/page-js')
+    @include('partials/page-js')
 
     <script src="/js/lib/bootstrap.min.js"></script>
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
@@ -150,5 +150,8 @@
             $(this).hide();
         });
     </script>
+
+    @yield('footer-js')
+
 </body>
 </html>
