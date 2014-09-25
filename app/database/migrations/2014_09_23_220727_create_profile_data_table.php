@@ -20,7 +20,8 @@ class CreateProfileDataTable extends Migration {
             $table->string('facebook', 50)->nullable();
             $table->string('google_plus', 50)->nullable();
             $table->string('github', 50)->nullable();
-            $table->string('website', 50)->nullable();
+            $table->string('irc', 50)->nullable();
+            $table->string('website', 10)->nullable();
             $table->string('tagline', 250)->nullable();
             $table->text('description')->nullable();
             $table->string('skills_array', 250)->nullable();
