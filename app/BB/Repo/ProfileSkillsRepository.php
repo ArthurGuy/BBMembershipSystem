@@ -57,8 +57,21 @@ class ProfileSkillsRepository {
         ],
     ];
 
+    /**
+     * Return a full array fo the various skills
+     * @return array
+     */
     public function getAll()
     {
-        return $this->skills;
+        return (array)$this->skills;
+    }
+
+    public function getSelectArray()
+    {
+        $selectArray = [];
+        foreach ($this->getAll() as $id=>$skill) {
+            $selectArray[$id] = $skill['name'];
+        }
+        return $selectArray;
     }
 } 
