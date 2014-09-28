@@ -344,7 +344,8 @@ CREATE TABLE `profile_data` (
   `facebook` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `google_plus` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `github` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `website` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `irc` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `website` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `tagline` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `skills_array` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -352,6 +353,18 @@ CREATE TABLE `profile_data` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+LOCK TABLES `profile_data` WRITE;
+/*!40000 ALTER TABLE `profile_data` DISABLE KEYS */;
+
+INSERT INTO `profile_data` (`id`, `user_id`, `twitter`, `facebook`, `google_plus`, `github`, `irc`, `website`, `tagline`, `description`, `skills_array`, `created_at`, `updated_at`)
+VALUES
+	(1,1,'TwitterHandle',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-09-23 22:22:08','2014-09-23 22:22:08'),
+	(3,3,'ArthurGuy','ArthurGuy','ArthurGuy','ArthurGuy','','','Snappy tagline goes here','Description text here','[\"midi\",\"3dprinting\",\"arduino\",\"coding\",\"electronics\",\"laser-cutter\",\"welding\",\"wood-work\"]','2014-09-23 22:22:08','2014-09-27 12:53:45'),
+	(4,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-09-23 22:27:04','2014-09-23 22:27:04');
+
+/*!40000 ALTER TABLE `profile_data` ENABLE KEYS */;
+UNLOCK TABLES;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

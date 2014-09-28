@@ -26,7 +26,7 @@
                     <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="120" height="120" class="img-circle" />
                 @endif
                 <div class="caption">
-                    <strong>{{ $logEntry->user->name }}</strong><br />
+                    <strong><a href="{{ route('members.show', $logEntry->user->id) }}">{{ $logEntry->user->name }}</a></strong><br />
                     {{ $logEntry->created_at->toTimeString() }}
                 </div>
             </div>

@@ -2,7 +2,6 @@
 
 # Home
 
-Route::get('members', array('as' => 'members.index', 'uses' => 'MembersController@index'));
 Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
 
 
@@ -20,11 +19,21 @@ Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'Remin
 # Account
 
 Route::resource('account', 'AccountController');
+//Editing the profile
+Route::get('account/{account}/profile/edit', ['uses'=>'ProfileController@edit', 'as'=>'account.profile.edit', 'before'=>'role:member']);
+Route::put('account/{account}/profile', ['uses'=>'ProfileController@update', 'as'=>'account.profile.update', 'before'=>'role:member']);
+//Short register url
 Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
+//Special account editing routes
 Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'before'=>'role:admin']);
 Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'before'=>'role:admin']);
 Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'AccountController@rejoin', 'before'=>'role:member']);
 Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
+
+
+# Members
+
+Route::resource('members', 'MembersController', ['only'=>['index','show']]);
 
 
 # Subscription/Payments

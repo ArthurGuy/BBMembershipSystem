@@ -10,7 +10,8 @@
         </h1>
     </div>
     <div class="col-xs-12 col-sm-2">
-        <p><a href="{{ route('account.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Details</a></p>
+        <p><a href="{{ route('account.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Account</a></p>
+        <p><a href="{{ route('account.profile.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Profile</a></p>
     </div>
 </div>
 

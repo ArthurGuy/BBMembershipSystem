@@ -40,4 +40,9 @@ class ProfileDataRepository extends DBRepository {
         }
         return $record;
     }
+
+    public function update($userId, $profileDate)
+    {
+        return $this->getUserProfile($userId)->update($profileDate);
+    }
 } 

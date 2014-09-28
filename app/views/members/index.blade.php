@@ -1,3 +1,6 @@
+@extends('layouts.main')
+
+@section('content')
 <div class="page-header">
     <h1>Members</h1>
 </div>
@@ -17,10 +20,11 @@
                     <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
                 @endif
                 <div class="caption">
-                    <strong>{{ $user->name }}</strong>
+                    <strong><a href="{{ route('members.show', $user->id) }}">{{ $user->name }}</a></strong>
                 </div>
             </div>
         </div>
         @endforeach
     </div>
 </div>
+@stop
