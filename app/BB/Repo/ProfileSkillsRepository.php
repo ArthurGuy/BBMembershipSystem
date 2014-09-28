@@ -55,6 +55,34 @@ class ProfileSkillsRepository {
             'name' => 'PCB Design & Manufacture',
             'icon' => 'pcb-design.png'
         ],
+        'pc-building'  => [
+            'name' => 'PC Building',
+            'icon' => 'pc-building.png'
+        ],
+        'social-media'  => [
+            'name' => 'Social Media',
+            'icon' => 'social-media.png'
+        ],
+        'networking'  => [
+            'name' => 'Networking',
+            'icon' => 'networking.png'
+        ],
+        'graphic-design'  => [
+            'name' => 'Graphic Design',
+            'icon' => 'graphic-design.png'
+        ],
+        'biology'  => [
+            'name' => 'Biology',
+            'icon' => 'biology.png'
+        ],
+        'sewing'  => [
+            'name' => 'Sewing',
+            'icon' => 'sewing.png'
+        ],
+        'printing'  => [
+            'name' => 'Printing',
+            'icon' => 'printing.png'
+        ],
     ];
 
     /**
