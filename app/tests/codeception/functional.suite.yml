@@ -9,4 +9,4 @@ modules:
     enabled: [Filesystem, FunctionalHelper, Laravel4, Db, Mockery]
     config:
         Laravel4:
-            cleanup: true
+            cleanup: false
