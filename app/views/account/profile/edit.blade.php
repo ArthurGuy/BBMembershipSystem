@@ -1,4 +1,6 @@
+@extends('layouts.main')
 
+@section('content')
 <div class="col-xs-12 col-md-8 col-md-offset-2">
 
 <div class="page-header">
@@ -7,6 +9,37 @@
 </div>
 
 {{ Form::model($profileData, array('route' => ['account.profile.update', $userId], 'method'=>'PUT', 'files'=>true)) }}
+
+
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <div class="form-group {{ Notification::hasErrorDetail('skills', 'has-error has-feedback') }}">
+            {{ Form::label('skills', 'Skills') }}
+            {{ Form::select('skills[]', $skills, null, ['class'=>'form-control', 'multiple']) }}
+            {{ Notification::getErrorDetail('skills') }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <div class="form-group {{ Notification::hasErrorDetail('tagline', 'has-error has-feedback') }}">
+            {{ Form::label('tagline', 'Tagline') }}
+            {{ Form::text('tagline', null, ['class'=>'form-control']) }}
+            {{ Notification::getErrorDetail('tagline') }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <div class="form-group {{ Notification::hasErrorDetail('description', 'has-error has-feedback') }}">
+            {{ Form::label('description', 'Description') }}
+            {{ Form::textarea('description', null, ['class'=>'form-control']) }}
+            {{ Notification::getErrorDetail('description') }}
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
@@ -62,16 +95,6 @@
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
-        <div class="form-group {{ Notification::hasErrorDetail('irc', 'has-error has-feedback') }}">
-            {{ Form::label('irc', 'IRC') }}
-            {{ Form::text('irc', null, ['class'=>'form-control']) }}
-            {{ Notification::getErrorDetail('irc') }}
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12 col-md-6">
         <div class="form-group {{ Notification::hasErrorDetail('website', 'has-error has-feedback') }}">
             {{ Form::label('website', 'Website') }}
             {{ Form::text('website', null, ['class'=>'form-control']) }}
@@ -82,30 +105,10 @@
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
-        <div class="form-group {{ Notification::hasErrorDetail('tagline', 'has-error has-feedback') }}">
-            {{ Form::label('tagline', 'Tagline') }}
-            {{ Form::text('tagline', null, ['class'=>'form-control']) }}
-            {{ Notification::getErrorDetail('tagline') }}
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12 col-md-6">
-        <div class="form-group {{ Notification::hasErrorDetail('description', 'has-error has-feedback') }}">
-            {{ Form::label('description', 'Description') }}
-            {{ Form::textarea('description', null, ['class'=>'form-control']) }}
-            {{ Notification::getErrorDetail('description') }}
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12 col-md-6">
-        <div class="form-group {{ Notification::hasErrorDetail('skills', 'has-error has-feedback') }}">
-            {{ Form::label('skills', 'Skills') }}
-            {{ Form::select('skills[]', $skills, null, ['class'=>'form-control', 'multiple']) }}
-            {{ Notification::getErrorDetail('skills') }}
+        <div class="form-group {{ Notification::hasErrorDetail('irc', 'has-error has-feedback') }}">
+            {{ Form::label('irc', 'IRC') }}
+            {{ Form::text('irc', null, ['class'=>'form-control']) }}
+            {{ Notification::getErrorDetail('irc') }}
         </div>
     </div>
 </div>
@@ -121,3 +124,10 @@
 {{ Form::close() }}
 
 </div>
+@stop
+
+@section('footer-js')
+    <script>
+        $(document).ready(function() { $("select").select2(); });
+    </script>
+@stop

@@ -2,8 +2,6 @@
 
 class ProfileController extends \BaseController {
 
-    protected $layout = 'layouts.main';
-
     /**
      * @var \BB\Repo\ProfileDataRepository
      */
@@ -36,7 +34,7 @@ class ProfileController extends \BaseController {
 
         $profileData = $this->profileRepo->getUserProfile($userId);
         $skills = $this->profileSkillsRepository->getSelectArray();
-        $this->layout->content = View::make('account.profile.edit')->with('profileData', $profileData)->with('userId', $userId)->with('skills', $skills);
+        return View::make('account.profile.edit')->with('profileData', $profileData)->with('userId', $userId)->with('skills', $skills);
     }
 
     public function update($userId)
