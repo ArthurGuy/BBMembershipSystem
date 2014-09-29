@@ -83,6 +83,10 @@ class ProfileSkillsRepository {
             'name' => 'Printing',
             'icon' => 'printing.png'
         ],
+        'microcontroller'  => [
+            'name' => 'Microcontrollers',
+            'icon' => 'microcontroller.png'
+        ],
     ];
 
     /**
