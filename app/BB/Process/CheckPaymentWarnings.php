@@ -26,7 +26,7 @@ class CheckPaymentWarnings
                 $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->paument_method);
 
                 //If the cut of date is greater than (sooner) than the last payment date "expire" them
-                if ($cutOffDate->subDays(2)->gt($paidUntil))
+                if (($paidUntil == false) || $cutOffDate->subDays(2)->gt($paidUntil))
                 {
                     //set the status to left and active to false
                     $user->leave();
