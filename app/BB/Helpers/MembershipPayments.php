@@ -28,7 +28,7 @@ class MembershipPayments
     /**
      * Fetch the expiry date based on the users last sub payment
      * @param $userId
-     * @return bool|\DateTime
+     * @return bool|Carbon
      */
     public static function lastUserPaymentExpires($userId)
     {
@@ -43,8 +43,8 @@ class MembershipPayments
      * Get the date the users sub payment should be valid to
      *   This handles the different grace periods for the different payment methods.
      * @param string           $paymentMethod
-     * @param Carbon|\DateTime $refDate Defaults to today as the ref point, this can be overridden
-     * @return \DateTime
+     * @param Carbon $refDate Defaults to today as the ref point, this can be overridden
+     * @return Carbon
      */
     public static function getSubGracePeriodDate($paymentMethod, Carbon $refDate = null)
     {
