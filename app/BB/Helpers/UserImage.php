@@ -1,5 +1,6 @@
 <?php namespace BB\Helpers;
 
+use BB\Exceptions\UserImageFailedException;
 use Intervention\Image\Facades\Image;
 
 class UserImage {
@@ -29,7 +30,7 @@ class UserImage {
                 'ACL'           => 'public-read',
                 'ContentType'   => 'image/png'
             ));
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             \Log::exception($e);
             throw new UserImageFailedException();
         }
@@ -42,7 +43,7 @@ class UserImage {
                 'ACL'           => 'public-read',
                 'ContentType'   => 'image/png'
             ));
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             \Log::exception($e);
             throw new UserImageFailedException();
         }

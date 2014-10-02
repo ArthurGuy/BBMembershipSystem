@@ -9,7 +9,7 @@ class MembershipPayments
     /**
      * Fetch the date of the users last subscription payment
      * @param $userId
-     * @return bool|\DateTime
+     * @return bool|Carbon
      */
     public static function lastUserPaymentDate($userId)
     {
@@ -42,11 +42,11 @@ class MembershipPayments
     /**
      * Get the date the users sub payment should be valid to
      *   This handles the different grace periods for the different payment methods.
-     * @param string    $paymentMethod
-     * @param \DateTime $refDate Defaults to today as the ref point, this can be overridden
+     * @param string           $paymentMethod
+     * @param Carbon|\DateTime $refDate Defaults to today as the ref point, this can be overridden
      * @return \DateTime
      */
-    public static function getSubGracePeriodDate($paymentMethod, \DateTime $refDate = null)
+    public static function getSubGracePeriodDate($paymentMethod, Carbon $refDate = null)
     {
         if (is_null($refDate)) {
             $refDate = new Carbon();

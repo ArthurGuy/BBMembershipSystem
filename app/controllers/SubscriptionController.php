@@ -81,6 +81,7 @@ class SubscriptionController extends \BaseController {
 
         if (strtolower($confirmed_resource->status) =='active')
         {
+            $bill = false;
             if (isset($confirmed_resource->sub_resource_uris['bills']))
             {
                 $bill = $this->goCardless->getSubscriptionFirstBill($confirmed_resource->id);
