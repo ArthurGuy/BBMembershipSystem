@@ -10,6 +10,7 @@ settings:
     memory_limit: 1024M
 coverage:
     enabled: true
+    remote: false
     include:
         - app/*
     exclude:
