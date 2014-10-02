@@ -7,7 +7,7 @@ before_script:
   - travis_retry composer install --prefer-source --no-interaction --dev
   - mysql -e 'create database bbms_acceptance_testing;'
 
-script: vendor/bin/codecept run --coverage --coverage-xml
+script: vendor/bin/codecept run
 
 
 
