@@ -115,29 +115,49 @@
     </div><!-- /.container-fluid -->
 </nav>
 
-<div class="container-fluid">
+    <div class="container-fluid">
 
-    @include('partials/flash')
+        @include('partials/flash')
 
-    <div class="top-alerts">
-        @if($errors->any())
-        <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <ul>
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div class="top-alerts">
+            @if($errors->any())
+            <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <ul>
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            @if(Session::has('success'))
+            <div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>{{ Session::get('success') }}</div>
+            @endif
         </div>
-        @endif
-        @if(Session::has('success'))
-        <div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>{{ Session::get('success') }}</div>
-        @endif
+
+        {{ $content or '' }}
+        @yield('content')
+
     </div>
 
-    {{ $content or '' }}
-    @yield('content')
+    <footer class="siteFooter">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <span class="text-muted">
+                        Build Brighton Member System -
+                        <a href="https://github.com/ArthurGuy/BBMembershipSystem">view source</a>
+                        @if (!Auth::guest())
+                        | <a href="https://github.com/ArthurGuy/BBMembershipSystem/issues">Report an Issue</a>
+                        @endif
+                    </span>
+                    <span class="text-muted pull-right hidden-xs">
+                        Hosted on <a href="https://www.digitalocean.com/?refcode=b71ca038f612">Digital Ocean</a> using <a href="https://forge.laravel.com">Laravel Forge</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-</div>
 
     @include('partials/page-js')
 
