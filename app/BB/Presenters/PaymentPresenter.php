@@ -10,23 +10,18 @@ class PaymentPresenter extends Presenter
         switch ($this->entity->reason) {
             case 'subscription';
                 return 'Subscription';
-                break;
 
             case 'unknown';
                 return 'Unknown';
-                break;
 
             case 'induction';
                 return 'Equipment Induction';
-                break;
 
             case 'door-key';
                 return 'Key Deposit';
-                break;
 
             case 'storage-box';
                 return 'Storage Box Deposit';
-                break;
 
             default;
                 return $this->entity->reason;
@@ -38,12 +33,10 @@ class PaymentPresenter extends Presenter
         switch ($this->entity->status) {
             case 'pending';
                 return 'Pending Confirmation';
-                break;
 
             case 'paid';
             case 'withdrawn';
                 return 'Paid';
-                break;
 
             default;
                 return $this->entity->status;
@@ -60,27 +53,21 @@ class PaymentPresenter extends Presenter
         switch ($this->entity->source) {
             case 'gocardless':
                 return 'Direct Debit';
-                break;
 
             case 'paypal':
                 return 'PayPal';
-                break;
 
             case 'standing-order':
                 return 'Standing Order';
-                break;
 
             case 'manual':
                 return 'Manual';
-                break;
 
             case 'cash':
                 return 'Cash';
-                break;
 
             case 'other':
                 return 'Other';
-                break;
 
             default;
                 return $this->entity->source;

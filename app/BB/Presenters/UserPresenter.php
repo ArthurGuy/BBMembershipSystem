@@ -10,15 +10,12 @@ class UserPresenter extends Presenter
         switch ($this->entity->payment_method) {
             case 'gocardless':
                 return 'Direct Debit';
-                break;
 
             case 'paypal':
                 return 'PayPal';
-                break;
 
             case 'standing-order':
                 return 'Standing Order';
-                break;
         }
         return $this->entity->payment_method;
     }

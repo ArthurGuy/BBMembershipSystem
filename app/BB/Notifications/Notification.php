@@ -32,10 +32,10 @@ class Notification
 
     /**
      * @param       $message
-     * @param array $details
+     * @param MessageBag $details
      * @internal param null $heading
      */
-    public function success($message, $details=null)
+    public function success($message, MessageBag $details=null)
     {
         $this->message($message, $details, 'success');
     }
