@@ -21,7 +21,7 @@ modules:
             dsn: 'mysql:host=localhost;dbname=bbms_acceptance_testing'
             #dsn: 'sqlite:app/database/bbms_testing.sqlite'
             user: 'root'
-            password: 'root'
+            password: ''
             dump: app/database/dump.sql
             populate: true
             cleanup: true
