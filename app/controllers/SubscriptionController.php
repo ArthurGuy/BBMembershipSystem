@@ -136,12 +136,20 @@ class SubscriptionController extends \BaseController {
         $user = User::findWithPermission($userId);
         if ($user->payment_method == 'gocardless')
         {
-            $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
-            if ($subscription->status == 'cancelled')
-            {
-                $user->cancelSubscription();
-                Notification::success("Your subscription has been cancelled");
-                return Redirect::back();
+            try {
+                $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
+                if ($subscription->status == 'cancelled')
+                {
+                    $user->cancelSubscription();
+                    Notification::success("Your subscription has been cancelled");
+                    return Redirect::back();
+                }
+            } catch (\GoCardless_ApiException $e) {
+                if ($e->getCode() == 404) {
+                    $user->cancelSubscription();
+                    Notification::success("Your subscription has been cancelled");
+                    return Redirect::back();
+                }
             }
         }
         Notification::error("Sorry, we were unable to cancel your subscription, please get in contact");
