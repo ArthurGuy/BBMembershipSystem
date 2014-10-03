@@ -35,7 +35,15 @@
             If you know you have missed a payment please make this ASAP or ideally change over to a direct debit payment.<br />
             If you have concerns or aren't sure please contact a trustee.<br />
             <br />
-            <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a><br />
+            <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+            <small><a href="#" class="js-show-alter-subscription-amount">Change your monthly amount</a></small>
+            {{ Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) }}
+            <div class="input-group">
+                <div class="input-group-addon">&pound;</div>
+                {{ Form::text('monthly_subscription', round($user->monthly_subscription), ['class'=>'form-control']) }}
+            </div>
+            {{ Form::submit('Update', array('class'=>'btn btn-default')) }}
+            {{ Form::close() }}
         </p>
         <p>
             You can also setup a PayPal subscription, this costs us a lot more so please only do this if you don't have a UK bank account
