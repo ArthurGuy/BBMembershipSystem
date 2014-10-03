@@ -1,7 +1,6 @@
 <?php namespace BB\Process;
 
 use BB\Helpers\MembershipPayments;
-use Carbon\Carbon;
 
 /**
  * Loop through each member and look at their last subscription payment
