@@ -4,19 +4,34 @@ class PaymentRepository extends DBRepository
 {
 
     /**
-     * @var Payment
+     * @var \Payment
      */
     protected $model;
 
     static $SUBSCRIPTION = 'subscription';
     static $INDUCTION = 'induction';
 
+    /**
+     * @param \Payment $model
+     */
     function __construct(\Payment $model)
     {
         $this->model = $model;
     }
 
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0)
+
+    /**
+     * Record a payment against a user record
+     * @param string $reason    What was the reason. subscription, induction, etc...
+     * @param int    $userId    The users ID
+     * @param string $source    gocardless, paypal
+     * @param string $sourceId  A reference for the source
+     * @param double $amount    Amount received before a fee
+     * @param string $status    paid, pending, cancelled, refunded
+     * @param double $fee       The fee charged by the payment provider
+     * @return int  The ID of the payment record
+     */
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0)
     {
         $record                   = new $this->model;
         $record->user_id          = $userId;
@@ -31,7 +46,17 @@ class PaymentRepository extends DBRepository
         return $record->id;
     }
 
-    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0)
+    /**
+     * Record a subscription payment
+     * @param int    $userId    The users ID
+     * @param string $source    gocardless, paypal
+     * @param string $sourceId  A reference for the source
+     * @param double $amount    Amount received before a fee
+     * @param string $status    paid, pending, cancelled, refunded
+     * @param double $fee       The fee charged by the payment provider
+     * @return int  The ID of the payment record
+     */
+    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0)
     {
         return $this->recordSubscriptionPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee);
     }
