@@ -42,7 +42,7 @@ class Notification
 
     /**
      * @param                                      $message
-     * @param array|\Illuminate\Support\MessageBag $details
+     * @param MessageBag $details
      * @internal param string $heading
      */
     public function error($message, MessageBag $details=null)
@@ -52,7 +52,7 @@ class Notification
 
     /**
      * @param                                      $message
-     * @param array|\Illuminate\Support\MessageBag $details
+     * @param MessageBag $details
      * @internal param null $heading
      */
     public function overlay($message, MessageBag $details=null)
@@ -62,7 +62,7 @@ class Notification
 
     /**
      * @param                                      $message
-     * @param array|\Illuminate\Support\MessageBag $details
+     * @param MessageBag $details
      * @param string                               $level
      * @internal param $heading
      */

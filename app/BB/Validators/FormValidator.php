@@ -37,7 +37,7 @@ abstract class FormValidator {
      * @param array $formData
      * @param null $id
      * @throws \BB\Exceptions\FormValidationException
-     * @return mixed
+     * @return boolean
      */
     public function validate(array $formData, $id=null)
     {
