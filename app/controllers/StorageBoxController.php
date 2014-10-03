@@ -12,6 +12,13 @@ class StorageBoxController extends \BaseController {
 	public function index()
 	{
         $storageBoxes = StorageBox::all();
+
+        $availableBoxes = 0;
+        foreach ($storageBoxes as $box) {
+            if (empty($box->user_id)) {
+                $availableBoxes++;
+            }
+        }
         $memberBox = StorageBox::findMember(Auth::user()->id);
 
         $boxPayment = Auth::user()->getStorageBoxPayment();
@@ -19,7 +26,8 @@ class StorageBoxController extends \BaseController {
         $this->layout->content = View::make('storage_boxes.index')
             ->with('storageBoxes', $storageBoxes)
             ->with('memberBox', $memberBox)
-            ->with('boxPayment', $boxPayment);
+            ->with('boxPayment', $boxPayment)
+            ->with('availableBoxes', $availableBoxes);
 	}
 
 
