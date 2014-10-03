@@ -18,7 +18,7 @@ class InductionRepository extends DBRepository {
         $trainersRaw = $this->model->where('is_trainer', true)->get();
         $trainers = [];
         foreach ($trainersRaw as $trainer) {
-            if (isset($trainer->user->name))
+            if (isset($trainer->user->name) && $trainer->user->active)
             {
                 $trainers[$trainer->key][] = $trainer->user;
             }
@@ -32,7 +32,7 @@ class InductionRepository extends DBRepository {
         $usersRaw = $this->model->where('paid', true)->where('trained', '0000-00-00 00:00:00')->get();
         $users = [];
         foreach ($usersRaw as $induction) {
-            if (isset($induction->user->name))
+            if (isset($induction->user->name) && $induction->user->active)
             {
                 $users[$induction->key][] = $induction->user;
             }
