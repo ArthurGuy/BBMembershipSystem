@@ -10,16 +10,18 @@
     <div class="">
         <h3>{{ $tool->name }}</h3>
         <h4>Trainers</h4>
-        @foreach($trainers[$toolId] as $trainer)
-            <a href="{{ route('members.show', $trainer->id) }}">
-                @if ($trainer->profile_photo)
-                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="40" height="40" class="img-circle" />
-                @else
-                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="40" height="40" class="img-circle" />
-                @endif
-                {{ $trainer->name }}
-            </a>
-        @endforeach
+        @if(isset($trainers[$toolId]))
+            @foreach($trainers[$toolId] as $trainer)
+                <a href="{{ route('members.show', $trainer->id) }}">
+                    @if ($trainer->profile_photo)
+                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="40" height="40" class="img-circle" />
+                    @else
+                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="40" height="40" class="img-circle" />
+                    @endif
+                    {{ $trainer->name }}
+                </a>
+            @endforeach
+        @endif
         @if(isset($usersPendingInduction[$toolId]))
             <h4>Members waiting for an Induction</h4>
             @foreach($usersPendingInduction[$toolId] as $user)
