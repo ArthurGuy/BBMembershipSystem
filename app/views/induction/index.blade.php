@@ -14,9 +14,9 @@
             @foreach($trainers[$toolId] as $trainer)
                 <a href="{{ route('members.show', $trainer->id) }}">
                     @if ($trainer->profile_photo)
-                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="40" height="40" class="img-circle" />
+                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="40" height="40" />
                     @else
-                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="40" height="40" class="img-circle" />
+                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="40" height="40" />
                     @endif
                     {{ $trainer->name }}
                 </a>
@@ -27,9 +27,9 @@
             @foreach($usersPendingInduction[$toolId] as $user)
                 <a href="{{ route('members.show', $user->id) }}">
                     @if ($user->profile_photo)
-                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="40" height="40" class="img-circle" />
+                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="25" height="25" />
                     @else
-                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="40" height="40" class="img-circle" />
+                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="25" height="25" />
                     @endif
                     {{ $user->name }}
                 </a>
