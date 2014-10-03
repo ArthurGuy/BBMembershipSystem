@@ -72,11 +72,12 @@ class StatementImportController extends \BaseController {
             }
 
             $matchedUser = false;
+            $paymentDescription = strtolower($row[2]);
 
             //Try matching against specific match strings first
             foreach ($stringMatchUsers as $user)
             {
-                if (strpos(strtolower($row[2]), strtolower($user->import_match_string)) !== false)
+                if (strpos($paymentDescription, strtolower($user->import_match_string)) !== false)
                 {
                     $matchedUser = $user;
                     break;
@@ -88,7 +89,7 @@ class StatementImportController extends \BaseController {
             {
                 foreach ($users as $user)
                 {
-                    if (strpos(strtolower($row[2]), strtolower($user->family_name)) !== false)
+                    if (strpos($paymentDescription, strtolower($user->family_name)) !== false)
                     {
                         $matchedUser = $user;
                         break;
