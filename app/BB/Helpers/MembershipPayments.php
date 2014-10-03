@@ -28,7 +28,7 @@ class MembershipPayments
     /**
      * Fetch the expiry date based on the users last sub payment
      * @param $userId
-     * @return bool|Carbon
+     * @return false|Carbon
      */
     public static function lastUserPaymentExpires($userId)
     {
