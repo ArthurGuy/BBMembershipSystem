@@ -28,8 +28,6 @@ class StatementImportController extends \BaseController {
 
         $reader = new SpreadsheetReader($spreadsheetPath);
         $reader->ChangeSheet(0);
-        $header = $reader->current();
-        //print_r($header);
 
 
         $stringMatchUsers = User::active()->where('import_match_string', '!=', '')->get();
@@ -126,9 +124,9 @@ class StatementImportController extends \BaseController {
                 ]);
                 if ($subPayment)
                 {
-                    $user->extendMembership('standing-order', $date->addMonth());
-                    $user->monthly_subscription = $row[4];
-                    $user->save();
+                    $matchedUser->extendMembership('standing-order', $date->addMonth());
+                    $matchedUser->monthly_subscription = $row[4];
+                    $matchedUser->save();
                 }
             }
         }
