@@ -3,11 +3,22 @@
 class InductionController extends \BaseController
 {
 
+    /**
+     * @var \BB\Repo\InductionRepository
+     */
+    private $inductionRepository;
+    /**
+     * @var \BB\Repo\EquipmentRepository
+     */
+    private $equipmentRepository;
 
-    protected $layout = 'layouts.main';
-
-    function __construct()
+    /**
+     * @param \BB\Repo\InductionRepository $inductionRepository
+     */
+    function __construct(\BB\Repo\InductionRepository $inductionRepository, \BB\Repo\EquipmentRepository $equipmentRepository)
     {
+        $this->inductionRepository = $inductionRepository;
+        $this->equipmentRepository = $equipmentRepository;
     }
 
     /**
@@ -17,22 +28,19 @@ class InductionController extends \BaseController
      */
     public function index()
     {
-        $inductions  = Induction::orderBy('key')->get();
-        $trainersRaw = Induction::where('is_trainer', true)->get();
-        $inductionList = Induction::inductionList();
-        $trainers = [];
-        foreach ($inductionList as $equipmentKey => $equipment)
-        {
-            $trainers[$equipmentKey] = [];
-        }
-        foreach ($trainersRaw as $trainer) {
-            if (isset($trainer->user->name))
-            {
-                $trainers[$trainer->key][] = $trainer->user->name;
-            }
-        }
 
-        $this->layout->content = View::make('induction.index')->with('inductions', $inductions)->with('trainers', $trainers)->with('inductionList', $inductionList);
+        $equipment = $this->equipmentRepository->all();
+        $trainers = $this->inductionRepository->getTrainersByEquipment();
+
+        $usersPendingInduction = $this->inductionRepository->getUsersPendingInduction();
+
+        $inductions  = Induction::orderBy('key')->get();
+
+        return View::make('induction.index')
+            ->with('inductions', $inductions)
+            ->with('trainers', $trainers)
+            ->with('equipment', $equipment)
+            ->with('usersPendingInduction', $usersPendingInduction);
     }
 
 

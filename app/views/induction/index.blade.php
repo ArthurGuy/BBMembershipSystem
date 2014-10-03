@@ -1,13 +1,41 @@
+@extends('layouts.main')
+
+@section('content')
+
 <div class="page-header">
     <h1>Equipment Training</h1>
 </div>
 
-<h3>Trainers</h3>
-<p>
-@foreach($inductionList as $equipmentKey => $equipment)
-    <strong>{{ $equipment->name }}: </strong> {{ implode(', ', $trainers[$equipmentKey]) }}<br />
+@foreach($equipment as $toolId => $tool)
+    <div class="">
+        <h3>{{ $tool->name }}</h3>
+        <h4>Trainers</h4>
+        @foreach($trainers[$toolId] as $trainer)
+            <a href="{{ route('members.show', $trainer->id) }}">
+                @if ($trainer->profile_photo)
+                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="40" height="40" class="img-circle" />
+                @else
+                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="40" height="40" class="img-circle" />
+                @endif
+                {{ $trainer->name }}
+            </a>
+        @endforeach
+        @if(isset($usersPendingInduction[$toolId]))
+            <h4>Members waiting for an Induction</h4>
+            @foreach($usersPendingInduction[$toolId] as $user)
+                <a href="{{ route('members.show', $user->id) }}">
+                    @if ($user->profile_photo)
+                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="40" height="40" class="img-circle" />
+                    @else
+                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="40" height="40" class="img-circle" />
+                    @endif
+                    {{ $user->name }}
+                </a>
+            @endforeach
+        @endif
+    </div>
 @endforeach
-</p>
+
 
 <table class="table">
     <thead>
@@ -45,3 +73,5 @@
     </tbody>
 @endforeach
 </table>
+
+@stop
