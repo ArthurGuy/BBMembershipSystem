@@ -7,10 +7,15 @@ class AccessControlController extends Controller
      * @var
      */
     private $accessLogRepository;
+    /**
+     * @var \BB\Repo\EquipmentRepository
+     */
+    private $equipmentRepository;
 
-    function __construct(\BB\Repo\AccessLogRepository $accessLogRepository)
+    function __construct(\BB\Repo\AccessLogRepository $accessLogRepository, \BB\Repo\EquipmentRepository $equipmentRepository)
     {
         $this->accessLogRepository = $accessLogRepository;
+        $this->equipmentRepository = $equipmentRepository;
     }
 
     public function mainDoor()
@@ -81,7 +86,7 @@ class AccessControlController extends Controller
         }
 
         $keyId = $dataPacket[0];
-        $device = $dataPacket[1];
+        $deviceKey = $dataPacket[1];
         $action = $dataPacket[2];
 
         try {
@@ -91,6 +96,14 @@ class AccessControlController extends Controller
         }
         $user = $keyFob->user()->first();
 
+
+        //Make sure the device is valid
+        $device = $this->equipmentRepository->findByKey($deviceKey);
+        if (!$device) {
+            Log::debug("Device not found");
+            return Response::make(json_encode(['valid'=>'0']), 200);
+        }
+        //Perhaps we should make sure the equipment is online/available
 
         //Verify the user can use the equipment
 
