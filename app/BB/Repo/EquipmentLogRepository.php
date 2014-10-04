@@ -4,7 +4,7 @@ class EquipmentLogRepository extends DBRepository
 {
 
     /**
-     * @var EquipmentLog
+     * @var \EquipmentLog
      */
     protected $model;
 
@@ -13,6 +13,14 @@ class EquipmentLogRepository extends DBRepository
         $this->model = $model;
     }
 
+    /**
+     * Record the start of device activity
+     * @param integer $userId
+     * @param integer $keyFobId
+     * @param string  $deviceKey
+     * @param string  $notes
+     * @return integer
+     */
     public function recordStart($userId, $keyFobId, $deviceKey, $notes = '')
     {
         $session             = new $this->model;
@@ -25,6 +33,12 @@ class EquipmentLogRepository extends DBRepository
         return $session->id;
     }
 
+    /**
+     * Locate a users active session
+     * @param integer $userId
+     * @param string $deviceKey
+     * @return integer|bool
+     */
     public function findActiveSession($userId, $deviceKey)
     {
         $existingSession = $this->model->where('user_id', $userId)->where('device', $deviceKey)->where('active', 1)->orderBy('created_at', 'DESC')->first();
@@ -34,6 +48,10 @@ class EquipmentLogRepository extends DBRepository
         return false;
     }
 
+    /**
+     * Record some activity on an existing session
+     * @param integer $sessionId
+     */
     public function recordActivity($sessionId)
     {
         $existingSession = $this->model->findOrFail($sessionId);
@@ -41,6 +59,10 @@ class EquipmentLogRepository extends DBRepository
         $existingSession->save();
     }
 
+    /**
+     * Record the end of a session
+     * @param integer $sessionId
+     */
     public function endSession($sessionId)
     {
         $existingSession = $this->model->findOrFail($sessionId);
