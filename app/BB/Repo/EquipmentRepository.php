@@ -27,4 +27,18 @@ class EquipmentRepository {
             //    ]
         ];
     }
+
+    /**
+     * Return a device by its string key
+     * @param $key
+     * @return bool|object
+     */
+    public function findByKey($key)
+    {
+        $equipment = $this->all();
+        if (isset($equipment[$key])) {
+            return $equipment[$key];
+        }
+        return false;
+    }
 } 
