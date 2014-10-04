@@ -90,9 +90,9 @@ class AccessControlController extends Controller
             return Response::make(json_encode(['valid'=>'0']), 200);
         }
 
-        $keyId = $dataPacket[0];
-        $deviceKey = $dataPacket[1];
-        $action = $dataPacket[2];
+        $keyId = trim($dataPacket[0]);
+        $deviceKey = trim($dataPacket[1]);
+        $action = trim($dataPacket[2]);
 
         try {
             $keyFob = $this->lookupKeyFob($keyId);
@@ -105,12 +105,19 @@ class AccessControlController extends Controller
         //Make sure the device is valid
         $device = $this->equipmentRepository->findByKey($deviceKey);
         if (!$device) {
-            Log::debug("Device not found");
+            Log::debug("Device not found:".$deviceKey);
             return Response::make(json_encode(['valid'=>'0']), 200);
         }
         //Perhaps we should make sure the equipment is online/available
 
         //Verify the user can use the equipment
+
+
+        //Confirm the action is allowed
+        if (!in_array($action, ['start', 'ping', 'end'])) {
+            Log::debug("Invalid Action:".$action);
+            return Response::make(json_encode(['valid'=>'0']), 200);
+        }
 
 
         if ($action == 'start') {
