@@ -19,9 +19,9 @@ class CreateEquipmentLogTable extends Migration {
             $table->integer('key_fob_id');
             $table->string('device', 50);
             $table->boolean('active');    //in progress?
-            $table->dateTime('started');
-            $table->dateTime('last_update');
-            $table->dateTime('finished');
+            $table->dateTime('started')->nullable();
+            $table->dateTime('last_update')->nullable();
+            $table->dateTime('finished')->nullable();
             $table->string('notes');
 			$table->timestamps();
 		});
