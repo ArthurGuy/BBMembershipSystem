@@ -82,7 +82,7 @@ class AccessControlController extends Controller
     public function device()
     {
         $receivedData = Input::get('data');
-        Log::debug($receivedData);
+        //Log::debug($receivedData);
 
         $dataPacket = explode('|', $receivedData);
         if (count($dataPacket) != 3) {
@@ -107,6 +107,7 @@ class AccessControlController extends Controller
         if (!$device) {
             Log::debug("Device not found:".$deviceKey);
             return Response::make(json_encode(['valid'=>'0']), 200);
+            /* @TODO:We should close any existing sessions at this point */
         }
         //Perhaps we should make sure the equipment is online/available
 
