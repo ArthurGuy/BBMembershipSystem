@@ -58,7 +58,7 @@ class PaymentRepository extends DBRepository
      */
     public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0)
     {
-        return $this->recordSubscriptionPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee);
+        return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee);
     }
 
     public function updateStatus($paymentId, $status)
