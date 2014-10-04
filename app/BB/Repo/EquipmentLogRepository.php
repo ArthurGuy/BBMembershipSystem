@@ -15,15 +15,13 @@ class EquipmentLogRepository extends DBRepository
 
     public function recordStart($userId, $keyFobId, $deviceKey, $notes = '')
     {
-        $session = $this->model->create(
-            [
-                'user_id'    => $userId,
-                'key_fob_id' => $keyFobId,
-                'device'     => $deviceKey,
-                'active'     => 1,
-                'notes'      => $notes
-            ]
-        );
+        $session             = new $this->model;
+        $session->user_id    = $userId;
+        $session->key_fob_id = $keyFobId;
+        $session->device     = $deviceKey;
+        $session->Active     = 1;
+        $session->notes      = $notes;
+        $session->save();
         return $session->id;
     }
 
