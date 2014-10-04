@@ -29,7 +29,8 @@ class EquipmentLogRepository extends DBRepository
         $session->user_id    = $userId;
         $session->key_fob_id = $keyFobId;
         $session->device     = $deviceKey;
-        $session->Active     = 1;
+        $session->active     = 1;
+        $session->started    = Carbon::now();
         $session->notes      = $notes;
         $session->save();
         return $session->id;

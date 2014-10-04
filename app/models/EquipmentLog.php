@@ -21,7 +21,7 @@ class EquipmentLog extends Eloquent {
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'last_update', 'finished');
+        return array('created_at', 'updated_at', 'started', 'last_update', 'finished');
     }
 
 
