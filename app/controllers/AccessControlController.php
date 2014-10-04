@@ -71,14 +71,37 @@ class AccessControlController extends Controller
 
     public function device()
     {
-        $keyId = Input::get('data');
+        $receivedData = Input::get('data');
+        Log::debug($receivedData);
+
+        $dataPacket = explode('|', $receivedData);
+        if (count($dataPacket) != 3) {
+            Log::debug("Invalid packet");
+            return Response::make(json_encode(['valid'=>'0']), 200);
+        }
+
+        $keyId = $dataPacket[0];
+        $device = $dataPacket[1];
+        $action = $dataPacket[2];
+
         try {
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
-
             return Response::make(json_encode(['valid'=>'0']), 200);
         }
         $user = $keyFob->user()->first();
+
+
+        //Verify the user can use the equipment
+
+
+        if ($action == 'start') {
+            //Start a session
+        } elseif ($action == 'ping') {
+            //Update the use date on the session
+        } elseif ($action == 'end') {
+            //Close the session
+        }
 
         return Response::make(json_encode(['valid'=>'1', 'name'=>$user->name]), 200);
     }
