@@ -11,11 +11,16 @@ class AccessControlController extends Controller
      * @var \BB\Repo\EquipmentRepository
      */
     private $equipmentRepository;
+    /**
+     * @var \BB\Repo\EquipmentLogRepository
+     */
+    private $equipmentLogRepository;
 
-    function __construct(\BB\Repo\AccessLogRepository $accessLogRepository, \BB\Repo\EquipmentRepository $equipmentRepository)
+    function __construct(\BB\Repo\AccessLogRepository $accessLogRepository, \BB\Repo\EquipmentRepository $equipmentRepository, \BB\Repo\EquipmentLogRepository $equipmentLogRepository)
     {
         $this->accessLogRepository = $accessLogRepository;
         $this->equipmentRepository = $equipmentRepository;
+        $this->equipmentLogRepository = $equipmentLogRepository;
     }
 
     public function mainDoor()
@@ -110,10 +115,27 @@ class AccessControlController extends Controller
 
         if ($action == 'start') {
             //Start a session
+            $this->equipmentLogRepository->recordStart($user->id, $keyFob->id, $deviceKey);
         } elseif ($action == 'ping') {
             //Update the use date on the session
+
+            $sessionId = $this->equipmentLogRepository->findActiveSession($user->id, $deviceKey);
+            if ($sessionId) {
+                $this->equipmentLogRepository->recordActivity($sessionId);
+            } else {
+                //We don't have an active session, there could have been a network failure so start now
+                $this->equipmentLogRepository->recordStart($user->id, $keyFob->id, $deviceKey, 'inaccurate start');
+            }
+
         } elseif ($action == 'end') {
             //Close the session
+            $sessionId = $this->equipmentLogRepository->findActiveSession($user->id, $deviceKey);
+            if ($sessionId) {
+                $this->equipmentLogRepository->endSession($sessionId);
+            } else {
+                $sessionId = $this->equipmentLogRepository->recordStart($user->id, $keyFob->id, $deviceKey, 'inaccurate start');
+                $this->equipmentLogRepository->endSession($sessionId);
+            }
         }
 
         return Response::make(json_encode(['valid'=>'1', 'name'=>$user->name]), 200);

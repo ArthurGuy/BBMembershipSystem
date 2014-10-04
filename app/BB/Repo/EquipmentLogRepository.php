@@ -15,7 +15,7 @@ class EquipmentLogRepository extends DBRepository
 
     public function recordStart($userId, $keyFobId, $deviceKey, $notes = '')
     {
-        $this->model->create(
+        $session = $this->model->create(
             [
                 'user_id'    => $userId,
                 'key_fob_id' => $keyFobId,
@@ -24,6 +24,7 @@ class EquipmentLogRepository extends DBRepository
                 'notes'      => $notes
             ]
         );
+        return $session->id;
     }
 
     public function findActiveSession($userId, $deviceKey)
