@@ -122,25 +122,25 @@ class AccessControlController extends Controller
 
         if ($action == 'start') {
             //Start a session
-            $this->equipmentLogRepository->recordStart($user->id, $keyFob->id, $deviceKey);
+            $this->equipmentLogRepository->recordStartCloseExisting($user->id, $keyFob->id, $deviceKey);
         } elseif ($action == 'ping') {
             //Update the use date on the session
 
-            $sessionId = $this->equipmentLogRepository->findActiveSession($user->id, $deviceKey);
+            $sessionId = $this->equipmentLogRepository->findActiveUserSession($user->id, $deviceKey);
             if ($sessionId) {
                 $this->equipmentLogRepository->recordActivity($sessionId);
             } else {
                 //We don't have an active session, there could have been a network failure so start now
-                $this->equipmentLogRepository->recordStart($user->id, $keyFob->id, $deviceKey, 'inaccurate start');
+                $this->equipmentLogRepository->recordStartCloseExisting($user->id, $keyFob->id, $deviceKey, 'inaccurate start');
             }
 
         } elseif ($action == 'end') {
             //Close the session
-            $sessionId = $this->equipmentLogRepository->findActiveSession($user->id, $deviceKey);
+            $sessionId = $this->equipmentLogRepository->findActiveUserSession($user->id, $deviceKey);
             if ($sessionId) {
                 $this->equipmentLogRepository->endSession($sessionId);
             } else {
-                $sessionId = $this->equipmentLogRepository->recordStart($user->id, $keyFob->id, $deviceKey, 'inaccurate start');
+                $sessionId = $this->equipmentLogRepository->recordStartCloseExisting($user->id, $keyFob->id, $deviceKey, 'inaccurate start');
                 $this->equipmentLogRepository->endSession($sessionId);
             }
         }

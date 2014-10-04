@@ -35,15 +35,48 @@ class EquipmentLogRepository extends DBRepository
         return $session->id;
     }
 
+
+    /**
+     * Record a device start but close any existing user sessions first
+     * @param integer $userId
+     * @param integer $keyFobId
+     * @param string  $deviceKey
+     * @param string  $notes
+     * @return integer
+     */
+    public function recordStartCloseExisting($userId, $keyFobId, $deviceKey, $notes = '')
+    {
+        $existingSessionId = $this->findActiveDeviceSession($deviceKey);
+        if ($existingSessionId) {
+            $this->endSession($existingSessionId);
+        }
+        return $this->recordStart($userId, $keyFobId, $deviceKey, $notes);
+    }
+
     /**
      * Locate a users active session
      * @param integer $userId
      * @param string $deviceKey
      * @return integer|bool
      */
-    public function findActiveSession($userId, $deviceKey)
+    public function findActiveUserSession($userId, $deviceKey)
     {
         $existingSession = $this->model->where('user_id', $userId)->where('device', $deviceKey)->where('active', 1)->orderBy('created_at', 'DESC')->first();
+        if ($existingSession) {
+            return $existingSession->id;
+        }
+        return false;
+    }
+
+
+    /**
+     * Return an existing active session for the device, if any
+     * @param $deviceKey
+     * @return integer|bool
+     */
+    public function findActiveDeviceSession($deviceKey)
+    {
+        $existingSession = $this->model->where('device', $deviceKey)->where('active', 1)->orderBy('created_at', 'DESC')->first();
         if ($existingSession) {
             return $existingSession->id;
         }
