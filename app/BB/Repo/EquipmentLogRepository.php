@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use Carbon\Carbon;
+
 class EquipmentLogRepository extends DBRepository
 {
 
@@ -55,7 +57,7 @@ class EquipmentLogRepository extends DBRepository
     public function recordActivity($sessionId)
     {
         $existingSession = $this->model->findOrFail($sessionId);
-        $existingSession->last_update = \DateTime();
+        $existingSession->last_update = Carbon::now();
         $existingSession->save();
     }
 
@@ -66,7 +68,7 @@ class EquipmentLogRepository extends DBRepository
     public function endSession($sessionId)
     {
         $existingSession = $this->model->findOrFail($sessionId);
-        $existingSession->finished = \DateTime();
+        $existingSession->finished = Carbon::now();
         $existingSession->active = 0;
         $existingSession->save();
     }
