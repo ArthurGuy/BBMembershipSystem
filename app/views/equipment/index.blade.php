@@ -28,23 +28,23 @@
                 </div>
             </div>
             @if ($tool->requires_training)
-                <div class="col-sm-12 col-md-6">
-                    <h4>Trainers</h4>
-                    @if(isset($trainers[$toolId]))
-                    <div class="list-group">
-                        @foreach($trainers[$toolId] as $trainer)
-                            <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
-                                    @if ($trainer->profile_photo)
-                                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="50" height="50" />
-                                    @else
-                                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="50" height="50" />
-                                    @endif
-                                    {{ $trainer->name }}
-                            </a>
-                        @endforeach
+                @if(isset($trainers[$toolId]))
+                    <div class="col-sm-12 col-md-6">
+                        <h4>Trainers</h4>
+                        <div class="list-group">
+                            @foreach($trainers[$toolId] as $trainer)
+                                <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
+                                        @if ($trainer->profile_photo)
+                                            <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="50" height="50" />
+                                        @else
+                                            <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="50" height="50" />
+                                        @endif
+                                        {{ $trainer->name }}
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
-                    @endif
-                </div>
+                @endif
                 @if(isset($usersPendingInduction[$toolId]))
                     <div class="col-sm-12 col-md-6">
                         <h4>Members waiting for an Induction</h4>
