@@ -50,6 +50,17 @@ class EquipmentRepository {
         ];
     }
 
+    public function allPaid()
+    {
+        $equipment = $this->all();
+        foreach ($equipment as $id => $device) {
+            if ($device->cost == 0) {
+                unset($equipment[$id]);
+            }
+        }
+        return $equipment;
+    }
+
     /**
      * Return a device by its string key
      * @param $key

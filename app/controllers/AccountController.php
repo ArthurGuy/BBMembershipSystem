@@ -19,6 +19,14 @@ class AccountController extends \BaseController {
      * @var \BB\Repo\ProfileDataRepository
      */
     private $profileRepo;
+    /**
+     * @var \BB\Repo\InductionRepository
+     */
+    private $inductionRepository;
+    /**
+     * @var \BB\Repo\EquipmentRepository
+     */
+    private $equipmentRepository;
 
 
     function __construct(
@@ -27,7 +35,9 @@ class AccountController extends \BaseController {
         \BB\Helpers\GoCardlessHelper $goCardless,
         \BB\Helpers\UserImage $userImage,
         \BB\Validators\UserDetails $userDetailsForm,
-        \BB\Repo\ProfileDataRepository $profileRepo)
+        \BB\Repo\ProfileDataRepository $profileRepo,
+        \BB\Repo\InductionRepository $inductionRepository,
+        \BB\Repo\EquipmentRepository $equipmentRepository)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -35,6 +45,8 @@ class AccountController extends \BaseController {
         $this->userImage = $userImage;
         $this->userDetailsForm = $userDetailsForm;
         $this->profileRepo = $profileRepo;
+        $this->inductionRepository = $inductionRepository;
+        $this->equipmentRepository = $equipmentRepository;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
@@ -133,8 +145,8 @@ class AccountController extends \BaseController {
 	public function show($id)
 	{
         $user = User::findWithPermission($id);
-
-        $inductions = Induction::inductionList();
+        
+        $inductions = $this->equipmentRepository->allPaid();
 
         $userInductions = $user->inductions()->get();
         foreach ($inductions as $key => $induction)
