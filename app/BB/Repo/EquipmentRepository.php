@@ -35,10 +35,18 @@ class EquipmentRepository {
                 'working' => 1,
                 'requires_training' => 0,
             ],
-            //'3dprinter' => (object)[
-            //        'name' => '3D Printer',
-            //        'cost' => '0'
-            //    ]
+            'chop-saw' => (object)[
+                'name' => 'Chop Saw',
+                'cost' => 0,
+                'working' => 1,
+                'requires_training' => 0,
+            ],
+            '3dprinter' => (object)[
+                'name' => '3D Printer',
+                'cost' => '0',
+                'working' => 1,
+                'requires_training' => 0,
+            ]
         ];
     }
 
