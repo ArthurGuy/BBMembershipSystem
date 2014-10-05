@@ -3,9 +3,15 @@
 class PaymentController extends \BaseController {
 
 
-    function __construct(\BB\Helpers\GoCardlessHelper $goCardless)
+    /**
+     * @var \BB\Repo\EquipmentRepository
+     */
+    private $equipmentRepository;
+
+    function __construct(\BB\Helpers\GoCardlessHelper $goCardless, \BB\Repo\EquipmentRepository $equipmentRepository)
     {
         $this->goCardless = $goCardless;
+        $this->equipmentRepository = $equipmentRepository;
 
         $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
         $this->beforeFilter('role:admin', array('only' => ['store']));
@@ -35,7 +41,7 @@ class PaymentController extends \BaseController {
                 $name           = strtoupper("BBINDUCTION".$user->id.":".Input::get('induction_key'));
                 $description    = strtoupper(Input::get('induction_key')) . " Induction Fee";
                 $ref            = Input::get('induction_key');
-                ($item = Induction::inductionList($ref)) || App::abort(404);
+                ($item = $this->equipmentRepository->findByKey($ref)) || App::abort(404);
                 $amount         = $item->cost;
             }
             elseif ($reason == 'door-key')
@@ -190,7 +196,7 @@ class PaymentController extends \BaseController {
             if (Input::get('source') == 'manual')
             {
                 $ref = Input::get('induction_key');
-                ($item = Induction::inductionList($ref)) || App::abort(404);
+                ($item = $this->equipmentRepository->findByKey($ref)) || App::abort(404);
                 $payment = new Payment([
                     'reason'            => $reason,
                     'source'            => 'manual',

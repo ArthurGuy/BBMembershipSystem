@@ -145,7 +145,7 @@ class AccountController extends \BaseController {
 	public function show($id)
 	{
         $user = User::findWithPermission($id);
-        
+
         $inductions = $this->equipmentRepository->allPaid();
 
         $userInductions = $user->inductions()->get();
