@@ -29,7 +29,20 @@ class InductionRepository extends DBRepository {
 
     public function getUsersPendingInduction()
     {
-        $usersRaw = $this->model->where('paid', true)->where('trained', '0000-00-00 00:00:00')->get();
+        $usersRaw = $this->model->where('paid', true)->whereNull('trained')->get();
+        $users = [];
+        foreach ($usersRaw as $induction) {
+            if (isset($induction->user->name) && $induction->user->active)
+            {
+                $users[$induction->key][] = $induction->user;
+            }
+        }
+        return $users;
+    }
+
+    public function getTrainedUsers()
+    {
+        $usersRaw = $this->model->where('paid', true)->whereNotNull('trained')->get();
         $users = [];
         foreach ($usersRaw as $induction) {
             if (isset($induction->user->name) && $induction->user->active)

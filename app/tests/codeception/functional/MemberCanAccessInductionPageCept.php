@@ -9,9 +9,9 @@ Auth::login($user);
 
 //I can see the menu item
 $I->amOnPage('/');
-$I->canSee('Equipment Training');
-$I->click('Equipment Training');
+$I->canSee('Tools and Equipment');
+$I->click('Tools and Equipment');
 
-$I->canSeeCurrentUrlEquals('/equipment_training');
+$I->canSeeCurrentUrlEquals('/equipment');
 
 $I->seeResponseCodeIs(200);

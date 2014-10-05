@@ -135,6 +135,13 @@ body.register_login .top-alerts {
 
 
 
+/* Equiment Page */
+.equipmentTabs {
+    margin-bottom: 10px;
+}
+
+
+
 .siteFooter {
     position: absolute;
     bottom: 0;

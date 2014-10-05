@@ -21,28 +21,6 @@ class InductionController extends \BaseController
         $this->equipmentRepository = $equipmentRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-
-        $equipment = $this->equipmentRepository->all();
-        $trainers = $this->inductionRepository->getTrainersByEquipment();
-
-        $usersPendingInduction = $this->inductionRepository->getUsersPendingInduction();
-
-        $inductions  = Induction::orderBy('key')->get();
-
-        return View::make('induction.index')
-            ->with('inductions', $inductions)
-            ->with('trainers', $trainers)
-            ->with('equipment', $equipment)
-            ->with('usersPendingInduction', $usersPendingInduction);
-    }
-
 
     /**
      * Update the specified resource in storage.

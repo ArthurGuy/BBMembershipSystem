@@ -61,8 +61,8 @@
                     </a>
                 </li>
                 <li class="detail-link">
-                    <a href="{{ route('equipment_training.index') }}">
-                        Equipment Training
+                    <a href="{{ route('equipment.index') }}">
+                        Tools and Equipment
                     </a>
                 </li>
                 <li class="detail-link">

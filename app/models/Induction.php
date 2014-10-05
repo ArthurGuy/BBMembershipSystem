@@ -71,7 +71,7 @@ class Induction extends Eloquent {
 
     public function getIsTrainedAttribute()
     {
-        return ($this->trained->year > 0);
+        return (!empty($this->trained));
     }
 
 

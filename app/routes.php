@@ -49,10 +49,13 @@ Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-p
 
 
 # Inductions
-Route::get('equipment_training', ['uses'=>'InductionController@index', 'before'=>'role:member', 'as'=>'equipment_training.index']);
 Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'before'=>'role:admin', 'as'=>'equipment_training.update']);
 Route::resource('account.induction', 'InductionController', ['before'=>'role:admin', 'only' => ['update', 'destroy']]);
 //Route::resource('induction', 'InductionController', ['before'=>'role:admin', 'only' => ['index', 'update', 'destroy']]);
+
+
+# Equipment
+Route::get('equipment', ['uses'=>'EquipmentController@index', 'before'=>'role:member', 'as'=>'equipment.index']);
 
 
 # Statements
