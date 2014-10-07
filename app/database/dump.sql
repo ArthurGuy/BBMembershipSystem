@@ -79,7 +79,7 @@ CREATE TABLE `inductions` (
   `key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `paid` tinyint(1) NOT NULL,
   `payment_id` int(10) NOT NULL,
-  `trained` datetime NOT NULL,
+  `trained` datetime NULL,
   `trainer_user_id` int(10) NOT NULL,
   `active` tinyint(1) NOT NULL,
   `is_trainer` tinyint(1) NOT NULL,
@@ -91,6 +91,11 @@ CREATE TABLE `inductions` (
 LOCK TABLES `inductions` WRITE;
 /*!40000 ALTER TABLE `inductions` DISABLE KEYS */;
 
+INSERT INTO `inductions` (`id`, `user_id`, `key`, `paid`, `payment_id`, `trained`, `trainer_user_id`, `active`, `is_trainer`, `created_at`, `updated_at`)
+VALUES
+	(4,1,'laser',1,2523,'2014-08-17 02:55:06',0,0,1,'2014-08-17 02:55:04','2014-08-17 02:58:33'),
+	(7,1,'welder',1,2580,'2014-09-01 14:46:23',0,0,1,'2014-09-01 14:46:20','2014-09-01 14:46:59'),
+	(8,1,'lathe',1,1,NULL,0,0,0,'2014-10-03 21:04:55','2014-10-03 21:04:55');
 
 /*!40000 ALTER TABLE `inductions` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -365,6 +370,27 @@ VALUES
 
 /*!40000 ALTER TABLE `profile_data` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+# Dump of table equipment_log
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `equipment_log`;
+
+CREATE TABLE `equipment_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `key_fob_id` int(11) NOT NULL,
+  `device` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `active` tinyint(1) NOT NULL,
+  `started` datetime DEFAULT NULL,
+  `last_update` datetime DEFAULT NULL,
+  `finished` datetime DEFAULT NULL,
+  `notes` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -52,4 +52,14 @@ class InductionRepository extends DBRepository {
         }
         return $users;
     }
+
+    public function isUserTrained($userId, $device)
+    {
+        $record = $this->model->where('paid', true)->whereNotNull('trained')->where('user_id', $userId)->where('key', $device)->first();
+        if ($record) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 } 
