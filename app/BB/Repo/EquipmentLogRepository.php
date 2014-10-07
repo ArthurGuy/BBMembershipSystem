@@ -58,7 +58,7 @@ class EquipmentLogRepository extends DBRepository
      * Locate a users active session
      * @param integer $userId
      * @param string $deviceKey
-     * @return integer|bool
+     * @return integer|false
      */
     public function findActiveUserSession($userId, $deviceKey)
     {
@@ -73,7 +73,7 @@ class EquipmentLogRepository extends DBRepository
     /**
      * Return an existing active session for the device, if any
      * @param $deviceKey
-     * @return integer|bool
+     * @return integer|false
      */
     public function findActiveDeviceSession($deviceKey)
     {
