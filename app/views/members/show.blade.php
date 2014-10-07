@@ -9,7 +9,7 @@
                 <h3>{{ $profileData->present()->tagline }}</h3>
             </div>
             <div class="col-lg-2">
-            @if ($user->id == Auth::user()->id)
+            @if (!@Auth::guest() && $user->id == Auth::user()->id)
                 <a href="{{ route('account.profile.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Profile</a>
             @endif
             </div>
