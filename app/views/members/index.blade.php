@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+Build Brighton Members
+@stop
+
 @section('content')
 <div class="page-header">
     <h1>Members</h1>

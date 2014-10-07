@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+{{ $user->name }}
+@stop
+
 @section('content')
 <div class="row">
     <div class="col-sm-12 col-md-8 col-md-offset-2">

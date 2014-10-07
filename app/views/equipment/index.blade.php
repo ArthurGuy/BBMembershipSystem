@@ -1,9 +1,13 @@
 @extends('layouts.main')
 
+@section('title')
+Tools and Equipment
+@stop
+
 @section('content')
 
 <div class="page-header">
-    <h1>Equipment</h1>
+    <h1>Tools &amp; Equipment</h1>
 </div>
 <ul class="nav nav-pills equipmentTabs" role="tablist">
     @foreach($equipment as $toolId => $tool)
