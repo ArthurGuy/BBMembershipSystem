@@ -22,9 +22,9 @@ Tools and Equipment
             <div class="col-md-12">
                 <div class="well">
                     @if ($tool->requires_training)
-                        Training / Induction fee: &pound{{ $tool->cost }}<br />
+                        Induction fee: &pound{{ $tool->cost }}<br />
                     @else
-                        No training required
+                        No induction required
                     @endif
                     @if (!$tool->working)
                         <span class="label label-danger">Out of action</span>

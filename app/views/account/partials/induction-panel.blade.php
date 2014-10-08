@@ -1,12 +1,14 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Inductions / Equipment Training</h3>
+        <h3 class="panel-title">Equipment Inductions</h3>
     </div>
     <div class="panel-body">
         <p>
-            Equipment training is managed by the members so if you would like to get trained on something you will need to arrange for another member to show you the equipment.<br />
+            We charge a fee for equipment inductions, this fee goes towards the initial purchase cost of the equipment and the ongoing maintenance.<br />
+            To use this equipment you will need to pay the fee and arrange a time with another member for the induction.<br />
             The best way of managing this is to post to the mailing list expressing an interest and one or more people should be able to help.<br />
-            The training fee will need to be paid first but this can be done at any point. If you don't want to pay by Direct Debit you can pay in cash at the space.
+            The training fee will need to be paid first but this can be done at any point. If you don't want to pay by Direct Debit you can pay in cash at the space.<br />
+            Build Brighton cannot provide training for any the equipment but other members will do their best to help you out.
         </p>
     </div>
     <table class="table">
@@ -16,10 +18,10 @@
             <th>Cost</th>
             <th></th>
             <th>
-                Trained By
+                Inducted By
             </th>
             <th>
-                Is Trainer
+                Can Induct Members
             </th>
             <th>
                 @if (Auth::user()->isAdmin())
