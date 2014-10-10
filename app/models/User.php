@@ -1,5 +1,6 @@
 <?php
 
+use BB\Helpers\MembershipPayments;
 use BB\Traits\UserRoleTrait;
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
@@ -190,9 +191,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function setLeaving()
     {
-        $today = new \Carbon\Carbon();
         //If their payment has run out mark them as left immediately otherwise set them as leaving
-        if ($this->subscription_expires->lt($today))
+        $cutOffDate = MembershipPayments::getSubGracePeriodDate($this->paument_method);
+        if ($this->subscription_expires->lt($cutOffDate))
         {
             $this->active = false;
             $this->status = 'left';
