@@ -20,8 +20,8 @@ Member List
     </div>
     <div class="col-xs-12 col-sm-2">
         <p><a href="{{ route('account.create') }}" class="btn btn-info btn-sm">Create a new member</a></p>
+        <p><a href="{{ route('notificationemail.create') }}" class="btn btn-info btn-sm">Email Members</a></p>
     </div>
-
 </div>
 
 {{ HTML::userPaginatorLinks($users) }}

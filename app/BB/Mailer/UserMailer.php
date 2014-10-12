@@ -47,4 +47,14 @@ class UserMailer {
         });
     }
 
+
+    public function sendNotificationEmail($subject, $message)
+    {
+        $user = $this->user;
+        \Mail::queue('emails.notification', ['messageBody'=>$message, 'user'=>$user], function($message) use ($user, $subject)
+        {
+            $message->to($user->email, $user->email)->subject($subject);
+        });
+    }
+
 } 

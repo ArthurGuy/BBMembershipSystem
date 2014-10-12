@@ -89,6 +89,12 @@ Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storag
 # Stats
 Route::get('stats', ['uses'=>'StatsController@index', 'before'=>'role:member', 'as'=>'stats.index']);
 
+
+#Notification Emails
+Route::get('notificationemail/create', ['as' => 'notificationemail.create', 'uses' => 'NotificationEmailController@create', 'before'=>'role:admin']);
+Route::post('notificationemail', ['as' => 'notificationemail.store', 'uses' => 'NotificationEmailController@store', 'before'=>'role:admin']);
+
+
 Route::get('test', function() {
     //$process = new \BB\Process\CheckMemberships();
     //$process->run();
