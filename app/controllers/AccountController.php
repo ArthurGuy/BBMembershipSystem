@@ -27,6 +27,10 @@ class AccountController extends \BaseController {
      * @var \BB\Repo\EquipmentRepository
      */
     private $equipmentRepository;
+    /**
+     * @var \BB\Repo\UserRepository
+     */
+    private $userRepository;
 
 
     function __construct(
@@ -37,7 +41,8 @@ class AccountController extends \BaseController {
         \BB\Validators\UserDetails $userDetailsForm,
         \BB\Repo\ProfileDataRepository $profileRepo,
         \BB\Repo\InductionRepository $inductionRepository,
-        \BB\Repo\EquipmentRepository $equipmentRepository)
+        \BB\Repo\EquipmentRepository $equipmentRepository,
+        \BB\Repo\UserRepository $userRepository)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -47,6 +52,7 @@ class AccountController extends \BaseController {
         $this->profileRepo = $profileRepo;
         $this->inductionRepository = $inductionRepository;
         $this->equipmentRepository = $equipmentRepository;
+        $this->userRepository = $userRepository;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
@@ -73,9 +79,10 @@ class AccountController extends \BaseController {
 	 */
 	public function index()
 	{
-        $users = User::with('roles')->orderBy('active', true)->orderBy('status', 'desc')->paginate(100);
-        $numActiveUsers = User::active()->count();
-        $this->layout->content = View::make('account.index')->withUsers($users)->with('numActiveUsers', $numActiveUsers);
+        $sortBy = Request::get('sortBy');
+        $direction = Request::get('direction', 'asc');
+        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction'));
+        return View::make('account.index')->withUsers($users);
 	}
 
 
@@ -87,7 +94,7 @@ class AccountController extends \BaseController {
 	public function create()
 	{
         View::share('body_class', 'register_login');
-        $this->layout->content = View::make('account.create');
+        return View::make('account.create');
 	}
 
 
@@ -161,7 +168,7 @@ class AccountController extends \BaseController {
             }
         }
 
-        $this->layout->content = View::make('account.show')->withUser($user)->withInductions($inductions);
+        return View::make('account.show')->withUser($user)->withInductions($inductions);
 	}
 
 
@@ -175,7 +182,7 @@ class AccountController extends \BaseController {
 	{
         $user = User::findWithPermission($id);
 
-        $this->layout->content = View::make('account.edit')->withUser($user);
+        return View::make('account.edit')->withUser($user);
 	}
 
 

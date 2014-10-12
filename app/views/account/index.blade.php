@@ -1,3 +1,11 @@
+@extends('layouts.main')
+
+@section('title')
+Member List
+@stop
+
+@section('content')
+
 <div class="row page-header">
     <div class="col-xs-12 col-sm-10">
         <h1>Members</h1>
@@ -7,24 +15,20 @@
     </div>
 </div>
 
-<div>
-    Active Members: {{ $numActiveUsers }}
-</div>
-
 <?php echo $users->links(); ?>
 <table class="table">
     <thead>
         <tr>
             <th></th>
-            <th>Name</th>
+            <th>{{ HTML::sortUsersBy('family_name', 'Name') }}</th>
             <th>Email</th>
-            <th>Active</th>
-            <th>Status</th>
-            <th>Key Holder</th>
-            <th>Induction Complete</th>
+            <th>{{ HTML::sortUsersBy('active', 'Active') }}</th>
+            <th>{{ HTML::sortUsersBy('status', 'Status') }}</th>
+            <th>{{ HTML::sortUsersBy('key_holder', 'Key Holder') }}</th>
+            <th>{{ HTML::sortUsersBy('trusted', 'Trusted') }}</th>
             <th>Payment Method</th>
             <th>Subscription Expires</th>
-            <th>Payment</th>
+            <!--<th>Payment</th>-->
         </tr>
     </thead>
     <tbody>
@@ -32,3 +36,5 @@
     </tbody>
 </table>
 <?php echo $users->links(); ?>
+
+@stop

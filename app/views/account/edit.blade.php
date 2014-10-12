@@ -1,3 +1,11 @@
+@extends('layouts.main')
+
+@section('title')
+Edit your profile
+@stop
+
+@section('content')
+
 <div class="page-header">
     <h1>Edit your details</h1>
 </div>
@@ -158,3 +166,5 @@
 </div>
 
 {{ Form::close() }}
+
+@stop

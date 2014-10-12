@@ -29,7 +29,7 @@
         @endif
     </td>
     <td>
-        @if ($user->induction_completed)
+        @if ($user->trusted)
         <span class="glyphicon glyphicon-ok"></span>
         @else
         <span class="glyphicon glyphicon-remove"></span>
@@ -37,6 +37,7 @@
     </td>
     <td>{{ $user->present()->paymentMethod }}</td>
     <td>{{ $user->present()->subscriptionExpiryDate }}</td>
+    <!--
     <td>
         {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
         {{ Form::hidden('reason', 'subscription') }}
@@ -44,4 +45,5 @@
         {{ Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) }}
         {{ Form::close() }}
     </td>
+    -->
 </tr>

@@ -1,3 +1,11 @@
+@extends('layouts.main')
+
+@section('title')
+{{ $user->name }} - Manage your membership
+@stop
+
+@section('content')
+
 <div class="row page-header">
     <div class="col-xs-12 col-sm-10">
         <h1>
@@ -144,3 +152,4 @@
 @endif
 
 
+@stop

@@ -1,3 +1,11 @@
+@extends('layouts.main')
+
+@section('title')
+Join Build Brighton
+@stop
+
+@section('content')
+
 <div class="register-container col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 
     <div class="row">
@@ -162,3 +170,5 @@
     {{ Form::close() }}
 
 </div>
+
+@stop

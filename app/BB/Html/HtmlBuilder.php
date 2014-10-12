@@ -48,4 +48,10 @@ class HtmlBuilder extends IlluminateHtmlBuilder
             return '<li>'.$name.' - <a href="'.$url.'" title="'.$name.'">'.$url.'</a></li>';
         }
     }
+
+    public function sortUsersBy($column, $body)
+    {
+        $direction = (\Request::get('direction') == 'asc') ? 'desc' : 'asc';
+        return link_to_route('account.index', $body, ['sortBy'=>$column, 'direction'=>$direction]);
+    }
 }
