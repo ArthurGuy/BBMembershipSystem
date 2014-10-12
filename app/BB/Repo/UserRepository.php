@@ -11,7 +11,7 @@ class UserRepository extends DBRepository {
     {
         $this->model = $model;
 
-        $this->perPage = 100;
+        $this->perPage = 150;
     }
 
     public function getActive()
