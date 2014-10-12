@@ -316,6 +316,7 @@ CREATE TABLE `users` (
   `subscription_expires` date DEFAULT NULL,
   `profile_photo` tinyint(1) NOT NULL,
   `profile_photo_private` tinyint(1) NOT NULL,
+  `profile_private` tinyint(1) NOT NULL,
   `banned_date` date DEFAULT NULL,
   `banned_reason` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,

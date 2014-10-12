@@ -160,6 +160,17 @@ Edit your profile
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
+        <div class="form-group {{ Notification::hasErrorDetail('profile_private', 'has-error has-feedback') }}">
+            {{ Form::checkbox('profile_private', true, null, ['class'=>'']) }}
+            {{ Form::label('profile_private', 'Hide my Profile', ['class'=>'']) }}
+            {{ Notification::getErrorDetail('profile_private') }}
+            <span class="help-block">If you want to block your name from displaying on the public member list you can check this box.</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-md-8">
         {{ Form::submit('Update', array('class'=>'btn btn-primary')) }}
         <p></p>
     </div>

@@ -196,7 +196,7 @@ class AccountController extends \BaseController {
 	public function update($id)
 	{
         $user = User::findWithPermission($id);
-        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact', 'profile_photo', 'profile_photo_private');
+        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact', 'profile_photo', 'profile_photo_private', 'profile_private');
 
         $this->userForm->validate($input, $user->id);
 

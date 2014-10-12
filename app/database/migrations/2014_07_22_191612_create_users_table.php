@@ -47,6 +47,7 @@ class CreateUsersTable extends Migration {
             $table->date('subscription_expires')->nullable();
             $table->boolean('profile_photo');
             $table->boolean('profile_photo_private');
+            $table->boolean('profile_private');
             $table->string('banned_reason')->nullable();
             $table->date('banned_date')->nullable();
             $table->rememberToken();

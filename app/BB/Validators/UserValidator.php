@@ -22,7 +22,8 @@ class UserValidator extends FormValidator
         'monthly_subscription'  => 'required|integer|min:5',
         'emergency_contact'     => 'required',
         'profile_photo'         => 'required|image',
-        'profile_photo_private' => 'boolean'
+        'profile_photo_private' => 'boolean',
+        'profile_private'       => 'boolean',
     ];
 
 

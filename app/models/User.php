@@ -39,7 +39,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1',
         'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact',
-        'monthly_subscription', 'profile_photo_private',
+        'monthly_subscription', 'profile_photo_private', 'profile_private',
         'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status'
     ];
 
@@ -56,6 +56,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         'payment_day'           => 1,
         'profile_photo'         => 0,
         'profile_photo_private' => 0,
+        'profile_private'       => 0,
     ];
 
 

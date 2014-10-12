@@ -44,5 +44,19 @@ class UserRepository extends DBRepository {
         return isset($params['sortBy']) && isset($params['direction']) && $params['sortBy'] && $params['direction'];
     }
 
+    /**
+     * Return a collection of members for public display
+     * @param bool $showPrivateMembers Some members don't want to listed on public pages, set to true to show everyone
+     * @return mixed
+     */
+    public function getActivePublicList($showPrivateMembers=false)
+    {
+        if ($showPrivateMembers) {
+            return $this->model->active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
+        } else {
+            return $this->model->active()->where('status', '!=', 'leaving')->where('profile_private', 0)->orderBy('given_name')->get();
+        }
+    }
+
 
 }
