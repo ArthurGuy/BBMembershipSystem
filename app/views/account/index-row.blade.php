@@ -23,9 +23,9 @@
     <td>{{ HTML::statusLabel($user->status) }}</td>
     <td>
         @if($user->key_holder)
-            Yes
+            <span class="glyphicon glyphicon-ok"></span>
         @else
-            No
+            <span class="glyphicon glyphicon-remove"></span>
         @endif
     </td>
     <td>
