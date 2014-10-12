@@ -15,7 +15,7 @@ Member List
     </div>
 </div>
 
-<?php echo $users->links(); ?>
+{{ HTML::userPaginatorLinks($users) }}
 <table class="table">
     <thead>
         <tr>
@@ -35,6 +35,6 @@ Member List
         @each('account.index-row', $users, 'user')
     </tbody>
 </table>
-<?php echo $users->links(); ?>
+{{ HTML::userPaginatorLinks($users) }}
 
 @stop

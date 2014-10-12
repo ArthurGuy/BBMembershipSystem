@@ -52,6 +52,11 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     public function sortUsersBy($column, $body)
     {
         $direction = (\Request::get('direction') == 'asc') ? 'desc' : 'asc';
-        return link_to_route('account.index', $body, ['sortBy'=>$column, 'direction'=>$direction]);
+        return link_to_route('account.index', $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page')]);
+    }
+
+    public function userPaginatorLinks($userCollection)
+    {
+        return $userCollection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction')])->links();
     }
 }

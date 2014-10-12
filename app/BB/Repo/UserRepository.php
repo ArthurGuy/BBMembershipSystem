@@ -22,9 +22,9 @@ class UserRepository extends DBRepository {
     public function getPaginated(array $params)
     {
         if ($this->isSortable($params)) {
-            return $this->model->with('roles')->orderBy($params['sortBy'], $params['direction'])->paginate($this->perPage);
+            return $this->model->with('roles')->orderBy($params['sortBy'], $params['direction'])->simplePaginate($this->perPage);
         }
-        return $this->model->with('roles')->paginate($this->perPage);
+        return $this->model->with('roles')->simplePaginate($this->perPage);
     }
 
     /**
