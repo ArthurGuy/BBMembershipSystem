@@ -21,10 +21,18 @@ class UserRepository extends DBRepository {
 
     public function getPaginated(array $params)
     {
-        if ($this->isSortable($params)) {
-            return $this->model->with('roles')->orderBy($params['sortBy'], $params['direction'])->simplePaginate($this->perPage);
+        $model = $this->model->with('roles');
+
+        if ($params['showLeft']) {
+            $model = $model->where('status', 'left');
+        } else {
+            $model = $model->where('status', '!=', 'left');
         }
-        return $this->model->with('roles')->simplePaginate($this->perPage);
+
+        if ($this->isSortable($params)) {
+            return $model->orderBy($params['sortBy'], $params['direction'])->simplePaginate($this->perPage);
+        }
+        return $model->simplePaginate($this->perPage);
     }
 
     /**

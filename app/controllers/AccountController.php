@@ -81,7 +81,8 @@ class AccountController extends \BaseController {
 	{
         $sortBy = Request::get('sortBy');
         $direction = Request::get('direction', 'asc');
-        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction'));
+        $showLeft = \Request::get('showLeft', 0);
+        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft'));
         return View::make('account.index')->withUsers($users);
 	}
 
