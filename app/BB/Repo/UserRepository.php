@@ -3,14 +3,15 @@
 class UserRepository extends DBRepository {
 
     /**
-     * @var AccessLog
+     * @var \User
      */
     protected $model;
+
+    private $perPage;
 
     function __construct(\User $model)
     {
         $this->model = $model;
-
         $this->perPage = 150;
     }
 
