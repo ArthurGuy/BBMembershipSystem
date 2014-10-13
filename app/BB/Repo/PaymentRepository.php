@@ -65,4 +65,21 @@ class PaymentRepository extends DBRepository
     {
         $record = $this->model->findOrFail($paymentId);
     }
+
+
+    /**
+     * Fetch the users latest payment of a particular type
+     * @param integer $userId
+     * @param string  $reason
+     * @return mixed
+     */
+    public function latestUserPayment($userId, $reason='subscription')
+    {
+        return $this->model->where('user_id', $userId)
+            ->where('reason', $reason)
+            ->where('status', 'paid')
+            ->orWhere('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
 } 

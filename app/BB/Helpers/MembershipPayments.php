@@ -1,5 +1,6 @@
 <?php namespace BB\Helpers;
 
+use BB\Repo\PaymentRepository;
 use Carbon\Carbon;
 
 class MembershipPayments
@@ -9,16 +10,12 @@ class MembershipPayments
     /**
      * Fetch the date of the users last subscription payment
      * @param $userId
-     * @return bool|Carbon
+     * @return false|Carbon
      */
     public static function lastUserPaymentDate($userId)
     {
-        $latestSubPayment = \Payment::where('user_id', $userId)
-            ->where('reason', 'subscription')
-            ->where('status', 'paid')
-            ->orWhere('status', 'pending')
-            ->orderBy('created_at', 'desc')
-            ->first();
+        $paymentRepository = \App::make('BB\Repo\PaymentRepository');
+        $latestSubPayment = $paymentRepository->latestUserPayment($userId, 'subscription');
         if ($latestSubPayment) {
             return $latestSubPayment->created_at;
         }
