@@ -25,6 +25,8 @@ class CreateProfileDataTable extends Migration {
             $table->string('tagline', 250)->nullable();
             $table->text('description')->nullable();
             $table->string('skills_array', 250)->nullable();
+            $table->boolean('profile_photo');
+            $table->boolean('profile_photo_private');
 			$table->timestamps();
 		});
 	}

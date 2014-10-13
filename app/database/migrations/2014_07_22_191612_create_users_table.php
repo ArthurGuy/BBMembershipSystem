@@ -46,8 +46,6 @@ class CreateUsersTable extends Migration {
             $table->date('last_subscription_payment')->nullable();
             $table->date('subscription_expires')->nullable();
             $table->integer('cash_balance')->default(0);
-            $table->boolean('profile_photo');
-            $table->boolean('profile_photo_private');
             $table->boolean('profile_private');
             $table->string('banned_reason')->nullable();
             $table->date('banned_date')->nullable();

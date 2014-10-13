@@ -5,7 +5,7 @@ class ProfileData extends Eloquent {
     use \Laracasts\Presenter\PresentableTrait;
 
     protected $fillable = [
-        'twitter', 'facebook', 'google_plus', 'github', 'irc', 'website', 'tagline', 'description', 'skills'
+        'twitter', 'facebook', 'google_plus', 'github', 'irc', 'website', 'tagline', 'description', 'skills', 'profile_photo', 'profile_photo_private'
     ];
 
     protected $table = 'profile_data';

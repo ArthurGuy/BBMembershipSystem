@@ -315,8 +315,6 @@ CREATE TABLE `users` (
   `last_subscription_payment` date DEFAULT NULL,
   `subscription_expires` date DEFAULT NULL,
   `cash_balance` int(11) NOT NULL DEFAULT '0',
-  `profile_photo` tinyint(1) NOT NULL,
-  `profile_photo_private` tinyint(1) NOT NULL,
   `profile_private` tinyint(1) NOT NULL,
   `banned_date` date DEFAULT NULL,
   `banned_reason` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
@@ -330,11 +328,11 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 
-INSERT INTO `users` (`id`, `hash`, `given_name`, `family_name`, `import_match_string`, `email`, `email_verified`, `secondary_email`, `password`, `address_line_1`, `address_line_2`, `address_line_3`, `address_line_4`, `address_postcode`, `emergency_contact`, `notes`, `active`, `founder`, `director`, `status`, `trusted`, `key_holder`, `key_deposit_payment_id`, `storage_box_payment_id`, `induction_completed`, `payment_method`, `payment_day`, `monthly_subscription`, `subscription_id`, `last_subscription_payment`, `subscription_expires`, `profile_photo`, `profile_photo_private`, `banned_date`, `banned_reason`, `remember_token`, `created_at`, `updated_at`)
+INSERT INTO `users` (`id`, `hash`, `given_name`, `family_name`, `import_match_string`, `email`, `email_verified`, `secondary_email`, `password`, `address_line_1`, `address_line_2`, `address_line_3`, `address_line_4`, `address_postcode`, `emergency_contact`, `notes`, `active`, `founder`, `director`, `status`, `trusted`, `key_holder`, `key_deposit_payment_id`, `storage_box_payment_id`, `induction_completed`, `payment_method`, `payment_day`, `monthly_subscription`, `subscription_id`, `last_subscription_payment`, `subscription_expires`, `banned_date`, `banned_reason`, `remember_token`, `created_at`, `updated_at`)
 VALUES
-	(1,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Jon','Doe','','jondoe@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','Street','','Town','','PostCode','contact','',1,0,0,'active',1,1,2579,2582,1,'standing-order',30,10,'','2014-08-21','2014-10-01',0,0,NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
-	(2,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Fred','Bloggs','','fredbloggs@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','Street','','Town','','PostCode','contact','',0,0,0,'left',1,1,NULL,NULL,1,'',30,20,'','2014-08-21','2014-10-01',0,0,NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
-	(3,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Steve','Smith','','stevesmith@example.com',1,'','','Street','','Town','','PostCode','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',0,0,NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00');
+	(1,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Jon','Doe','','jondoe@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','Street','','Town','','PostCode','contact','',1,0,0,'active',1,1,2579,2582,1,'standing-order',30,10,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
+	(2,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Fred','Bloggs','','fredbloggs@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','Street','','Town','','PostCode','contact','',0,0,0,'left',1,1,NULL,NULL,1,'',30,20,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
+	(3,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Steve','Smith','','stevesmith@example.com',1,'','','Street','','Town','','PostCode','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00');
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -356,6 +354,8 @@ CREATE TABLE `profile_data` (
   `tagline` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `skills_array` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `profile_photo` tinyint(1) NOT NULL,
+  `profile_photo_private` tinyint(1) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
