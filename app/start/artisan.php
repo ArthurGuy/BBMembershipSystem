@@ -13,3 +13,4 @@
 
 Artisan::add(new CheckMembershipStatus);
 Artisan::add(new CreateMissingProfileRecords);
+Artisan::add(new RecalculateUserBalances);
