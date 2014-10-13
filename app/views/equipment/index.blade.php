@@ -89,8 +89,6 @@ Tools and Equipment
 @endforeach
 </div>
 
-<?php print_r(DB::getQueryLog()); ?>
-
 @stop
 
 @section('footer-js')
