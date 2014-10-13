@@ -20,7 +20,7 @@ class AccessLogObserver
             $user         = \User::find($accessLog->user_id);
             if ($user) {
                 $userName = $user->name;
-                if ($user->profile_photo) {
+                if ($user->profile->profile_photo) {
                     $userImageUrl = UserImage::imageUrl($user->hash);
                 }
             }
