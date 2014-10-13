@@ -142,7 +142,7 @@
     <footer class="siteFooter">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col col-sm-12">
                     <span class="text-muted">
                         <a href="https://github.com/ArthurGuy/BBMembershipSystem">
                             <img src="http://img.shields.io/badge/source-ArthurGuy%2FBBMembershipSystem-blue.svg?style=flat-square" />

@@ -155,3 +155,6 @@ body.register_login .top-alerts {
     padding-top: 5px;
     padding-bottom: 2px;
 }
+.siteFooter .col {
+    padding-left: 5px;
+}
