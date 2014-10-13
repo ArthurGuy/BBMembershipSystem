@@ -8,7 +8,10 @@ class PaymentController extends \BaseController {
      */
     private $equipmentRepository;
 
-    function __construct(\BB\Helpers\GoCardlessHelper $goCardless, \BB\Repo\EquipmentRepository $equipmentRepository)
+    function __construct(
+            \BB\Helpers\GoCardlessHelper $goCardless,
+            \BB\Repo\EquipmentRepository $equipmentRepository
+        )
     {
         $this->goCardless = $goCardless;
         $this->equipmentRepository = $equipmentRepository;
@@ -18,11 +21,13 @@ class PaymentController extends \BaseController {
     }
 
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
+    /**
+     * Start the creation of a new gocardless payment
+     *   Details get posted into this method and the redirected to gocardless
+     * @param $userId
+     * @throws \BB\Exceptions\AuthenticationException
+     * @throws \BB\Exceptions\NotImplementedException
+     */
 	public function create($userId)
 	{
         $user = User::findWithPermission($userId);
@@ -57,6 +62,16 @@ class PaymentController extends \BaseController {
                 $description    = "Storage Box Deposit";
                 $ref            = null;
                 $amount         = 5;
+            }
+            elseif ($reason == 'balance')
+            {
+                $amount         = Input::get('amount') * 1;//convert the users amount into a number
+                if (!is_numeric($amount)) {
+                    throw new \BB\Exceptions\FormValidationException("Not a valid amount", new \Illuminate\Support\MessageBag(['amount'=>'Invalid amount']));
+                }
+                $name           = strtoupper("BBBALANCE".$user->id);
+                $description    = "BB Credit Payment";
+                $ref            = null;
             }
             else
             {
@@ -155,6 +170,12 @@ class PaymentController extends \BaseController {
         {
             $user->storage_box_payment_id = $payment->id;
             $user->save();
+        }
+        elseif ($reason == 'balance')
+        {
+            $memberCreditService = \App::make('\BB\Services\Credit');
+            $memberCreditService->setUserId($user->id);
+            $memberCreditService->recalculate();
         }
         else
         {
