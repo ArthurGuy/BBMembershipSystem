@@ -115,6 +115,43 @@
 
 
 <div class="row">
+    <p class="col-xs-12 col-md-8">
+        Build Brighton is a community of people rather than a company and it operates largely on trust.<br />
+        We require a profile photo as it allows the members to help recognise new faces.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <div class="form-group {{ Notification::hasErrorDetail('profile_photo', 'has-error has-feedback') }}">
+            {{ Form::label('profile_photo', 'Profile Photo', ['class'=>'control-label']) }}
+            {{ Form::file('profile_photo', null, ['class'=>'form-control']) }}
+            {{ Notification::getErrorDetail('profile_photo') }}
+            <span class="help-block">This must be a clear image of your face, its not much use for identification otherwise!</span>
+            <span class="help-block">This photo will be displayed to members and may be used within the space, it will also be listed publicly on this site but you can turn that off below if you want.</span>
+        </div>
+        @if ($profileData->profile_photo)
+        <div class="form-group">
+            <strong>Existing Image</strong><br />
+            <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" />
+        </div>
+        @endif
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <div class="form-group {{ Notification::hasErrorDetail('profile_photo_private', 'has-error has-feedback') }}">
+            {{ Form::checkbox('profile_photo_private', true, null, ['class'=>'']) }}
+            {{ Form::label('profile_photo_private', 'Make my photo private', ['class'=>'']) }}
+            {{ Notification::getErrorDetail('profile_photo_private') }}
+            <span class="help-block">If you want to block your photo from displaying outside Build Brighton please check this box although we would rather you didn't.</span>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
     <div class="col-xs-12 col-md-8">
         {{ Form::submit('Save', array('class'=>'btn btn-primary')) }}
         <p></p>

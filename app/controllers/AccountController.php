@@ -31,6 +31,10 @@ class AccountController extends \BaseController {
      * @var \BB\Repo\UserRepository
      */
     private $userRepository;
+    /**
+     * @var \BB\Validators\ProfileValidator
+     */
+    private $profileValidator;
 
 
     function __construct(
@@ -42,7 +46,8 @@ class AccountController extends \BaseController {
         \BB\Repo\ProfileDataRepository $profileRepo,
         \BB\Repo\InductionRepository $inductionRepository,
         \BB\Repo\EquipmentRepository $equipmentRepository,
-        \BB\Repo\UserRepository $userRepository)
+        \BB\Repo\UserRepository $userRepository,
+        \BB\Validators\ProfileValidator $profileValidator)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -53,6 +58,7 @@ class AccountController extends \BaseController {
         $this->inductionRepository = $inductionRepository;
         $this->equipmentRepository = $equipmentRepository;
         $this->userRepository = $userRepository;
+        $this->profileValidator = $profileValidator;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
@@ -109,6 +115,7 @@ class AccountController extends \BaseController {
         $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'profile_photo', 'profile_photo_private');
 
         $this->userForm->validate($input);
+        $this->profileValidator->validate($input);
 
         if (empty($input['profile_photo_private']))
             $input['profile_photo_private'] = false;
@@ -126,7 +133,7 @@ class AccountController extends \BaseController {
             {
                 $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
 
-                $user->profilePhoto(true);
+                $this->profileRepo->update($user->id, ['profile_photo'=>1, 'profile_photo_private'=>$input['profile_photo_private']]);
             }
             catch (\Exception $e)
             {
@@ -196,7 +203,7 @@ class AccountController extends \BaseController {
 	public function update($id)
 	{
         $user = User::findWithPermission($id);
-        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact', 'profile_photo', 'profile_photo_private', 'profile_private');
+        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact', 'profile_private');
 
         $this->userForm->validate($input, $user->id);
 
@@ -206,6 +213,7 @@ class AccountController extends \BaseController {
         }
         $user->update($input);
 
+        /*
         if (Input::file('profile_photo'))
         {
             try
@@ -219,6 +227,7 @@ class AccountController extends \BaseController {
                 Log::error($e);
             }
         }
+        */
 
         Notification::success("Details Updated");
         return Redirect::route('account.show', $user->id);
