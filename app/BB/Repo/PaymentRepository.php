@@ -76,10 +76,33 @@ class PaymentRepository extends DBRepository
     public function latestUserPayment($userId, $reason='subscription')
     {
         return $this->model->where('user_id', $userId)
-            ->where('reason', $reason)
-            ->where('status', 'paid')
-            ->orWhere('status', 'pending')
+            ->whereRaw('reason = ? and (status = ? or status = ?)', [$reason, 'paid', 'pending'])
             ->orderBy('created_at', 'desc')
             ->first();
     }
+
+
+    /**
+     * Get all user payments of a specific reason
+     * @param $userId
+     * @param $reason
+     * @return mixed
+     */
+    public function getUserPaymentsByReason($userId, $reason)
+    {
+        return $this->model->where('user_id', $userId)
+            ->whereRaw('reason = ? and (status = ? or status = ?)', [$reason, 'paid', 'pending'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+
+    public function getUserPaymentsBySource($userId, $source)
+    {
+        return $this->model->where('user_id', $userId)
+            ->whereRaw('source = ? and (status = ? or status = ?)', [$source, 'paid', 'pending'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
 } 
