@@ -144,8 +144,12 @@
             <div class="row">
                 <div class="col-sm-12">
                     <span class="text-muted">
-                        Build Brighton Member System -
-                        <a href="https://github.com/ArthurGuy/BBMembershipSystem">view source</a>
+                        <a href="https://github.com/ArthurGuy/BBMembershipSystem">
+                            <img src="http://img.shields.io/badge/source-ArthurGuy%2FBBMembershipSystem-blue.svg?style=flat-square" />
+                        </a>
+                        <a href="https://twitter.com/ArthurGuy">
+                            <img src="http://img.shields.io/badge/author-@ArthurGuy-yellow.svg?style=flat-square" />
+                        </a>
                         @if (!Auth::guest())
                         | <a href="https://github.com/ArthurGuy/BBMembershipSystem/issues">Report an Issue</a>
                         @endif
