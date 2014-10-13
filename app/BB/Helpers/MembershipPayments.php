@@ -1,6 +1,5 @@
 <?php namespace BB\Helpers;
 
-use BB\Repo\PaymentRepository;
 use Carbon\Carbon;
 
 class MembershipPayments
