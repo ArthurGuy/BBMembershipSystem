@@ -22,7 +22,7 @@ class AccessLogRepository extends DBRepository {
     {
         $startDate = $startDate->setTime(0, 0, 0);
         $endDate = $startDate->copy()->addDay();
-        return $this->model->with('user')->where('created_at', '>', $startDate)
+        return $this->model->with('user', 'user.profile')->where('created_at', '>', $startDate)
             ->where('created_at', '<', $endDate)
             ->where('service', 'main-door')
             ->where('response', '200')

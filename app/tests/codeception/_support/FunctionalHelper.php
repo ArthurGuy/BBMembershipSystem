@@ -34,4 +34,21 @@ class FunctionalHelper extends \Codeception\Module
         $user = \User::find(2);
         \Auth::login($user);
     }
+
+    public function getActiveKeyholderMember()
+    {
+        //We know this is user 1 in the DB
+        return \User::findOrFail(1);
+    }
+
+    public function getInactiveKeyholderMember()
+    {
+        return \User::findOrFail(2);
+    }
+
+
+    public function getMemberKeyFob($userId)
+    {
+        return \KeyFob::where('user_id', $userId)->first();
+    }
 }
