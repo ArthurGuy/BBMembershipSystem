@@ -23,6 +23,9 @@ class PaymentPresenter extends Presenter
             case 'storage-box';
                 return 'Storage Box Deposit';
 
+            case 'balance';
+                return 'Credit Top up Payment';
+
             default;
                 return $this->entity->reason;
         }

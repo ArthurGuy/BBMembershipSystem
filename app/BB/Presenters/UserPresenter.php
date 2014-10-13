@@ -28,4 +28,9 @@ class UserPresenter extends Presenter
             return '-';
 
     }
+
+    public function cashBalance()
+    {
+        return '&pound;'.number_format(($this->entity->cash_balance / 100), 2);
+    }
 } 
