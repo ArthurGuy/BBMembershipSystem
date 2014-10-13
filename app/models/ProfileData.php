@@ -26,4 +26,9 @@ class ProfileData extends Eloquent {
     {
         return (array)json_decode($this->skills_array);
     }
+
+    public function user()
+    {
+        return $this->belongsTo('User');
+    }
 } 

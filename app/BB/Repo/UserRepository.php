@@ -22,7 +22,7 @@ class UserRepository extends DBRepository {
 
     public function getPaginated(array $params)
     {
-        $model = $this->model->with('roles');
+        $model = $this->model->with('roles')->with('profile');
 
         if ($params['showLeft']) {
             $model = $model->where('status', 'left');
@@ -53,9 +53,9 @@ class UserRepository extends DBRepository {
     public function getActivePublicList($showPrivateMembers=false)
     {
         if ($showPrivateMembers) {
-            return $this->model->active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
+            return $this->model->with('profile')->active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
         } else {
-            return $this->model->active()->where('status', '!=', 'leaving')->where('profile_private', 0)->orderBy('given_name')->get();
+            return $this->model->with('profile')->active()->where('status', '!=', 'leaving')->where('profile_private', 0)->orderBy('given_name')->get();
         }
     }
 

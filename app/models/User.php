@@ -120,6 +120,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $this->hasMany('KeyFob')->where('active', true)->first();
     }
 
+    public function profile()
+    {
+        return $this->hasOne('ProfileData');
+    }
+
 
     public function updateSubscription($paymentMethod, $paymentDay)
     {
