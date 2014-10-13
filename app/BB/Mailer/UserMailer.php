@@ -53,6 +53,7 @@ class UserMailer {
         $user = $this->user;
         \Mail::queue('emails.notification', ['messageBody'=>$message, 'user'=>$user], function($message) use ($user, $subject)
         {
+            $message->addReplyTo('trustees@buildbrighton.com', 'Build Brighton Trustees');
             $message->to($user->email, $user->email)->subject($subject);
         });
     }
