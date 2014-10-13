@@ -38,7 +38,7 @@ Tools and Equipment
                         <div class="list-group">
                             @foreach($trainers[$toolId] as $trainer)
                                 <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
-                                        @if ($trainer->profile_photo)
+                                        @if ($trainer->profile->profile_photo)
                                             <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($trainer->hash) }}" width="50" height="50" />
                                         @else
                                             <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="50" height="50" />
@@ -55,7 +55,7 @@ Tools and Equipment
                         <div class="list-group">
                         @foreach($usersPendingInduction[$toolId] as $user)
                             <a href="{{ route('members.show', $user->id) }}" class="list-group-item">
-                                @if ($user->profile_photo)
+                                @if ($user->profile->profile_photo)
                                     <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="25" height="25" />
                                 @else
                                     <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="25" height="25" />
@@ -72,7 +72,7 @@ Tools and Equipment
                         <div class="list-group">
                         @foreach($trainedUsers[$toolId] as $user)
                             <a href="{{ route('members.show', $user->id) }}" class="list-group-item">
-                            @if ($user->profile_photo)
+                            @if ($user->profile->profile_photo)
                                 <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="25" height="25" />
                             @else
                                 <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="25" height="25" />
@@ -89,6 +89,7 @@ Tools and Equipment
 @endforeach
 </div>
 
+<?php print_r(DB::getQueryLog()); ?>
 
 @stop
 

@@ -1,6 +1,6 @@
 <tr>
     <td>
-        @if ($user->profile_photo)
+        @if ($user->profile->profile_photo)
         <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" class="img-circle" />
         @else
         <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" class="img-circle" />

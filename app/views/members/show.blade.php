@@ -21,7 +21,7 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
-                @if ($user->profile_photo)
+                @if ($profileData->profile_photo)
                     <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="250" height="250" class="img-circle" />
                 @else
                     <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="250" height="250" class="img-circle" />
