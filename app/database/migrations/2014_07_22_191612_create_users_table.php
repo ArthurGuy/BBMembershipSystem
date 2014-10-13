@@ -45,6 +45,7 @@ class CreateUsersTable extends Migration {
             $table->string('subscription_id', 128)->nullable();
             $table->date('last_subscription_payment')->nullable();
             $table->date('subscription_expires')->nullable();
+            $table->integer('cash_balance')->default(0);
             $table->boolean('profile_photo');
             $table->boolean('profile_photo_private');
             $table->boolean('profile_private');

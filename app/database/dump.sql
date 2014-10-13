@@ -314,6 +314,7 @@ CREATE TABLE `users` (
   `subscription_id` varchar(128) COLLATE utf8_unicode_ci DEFAULT '',
   `last_subscription_payment` date DEFAULT NULL,
   `subscription_expires` date DEFAULT NULL,
+  `cash_balance` int(11) NOT NULL DEFAULT '0',
   `profile_photo` tinyint(1) NOT NULL,
   `profile_photo_private` tinyint(1) NOT NULL,
   `profile_private` tinyint(1) NOT NULL,

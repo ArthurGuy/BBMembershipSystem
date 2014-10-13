@@ -57,6 +57,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         'profile_photo'         => 0,
         'profile_photo_private' => 0,
         'profile_private'       => 0,
+        'cash_balance'          => 0,
     ];
 
 
