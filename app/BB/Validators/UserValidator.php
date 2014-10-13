@@ -21,8 +21,6 @@ class UserValidator extends FormValidator
         'address_postcode'      => 'required',
         'monthly_subscription'  => 'required|integer|min:5',
         'emergency_contact'     => 'required',
-        'profile_photo'         => 'required|image',
-        'profile_photo_private' => 'boolean',
         'profile_private'       => 'boolean',
     ];
 
@@ -32,14 +30,12 @@ class UserValidator extends FormValidator
         'email'                => 'required|email|unique:users,email,{id}',
         'secondary_email'      => 'email|unique:users,secondary_email,{id}',
         'password'             => 'min:8',
-        'profile_photo'        => 'image',
         'monthly_subscription' => ''
     ];
 
 
     protected $adminOverride = [
         'password'          => 'min:8',
-        'profile_photo'     => 'image',
         'emergency_contact' => '',
     ];
 

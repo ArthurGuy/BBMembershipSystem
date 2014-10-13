@@ -14,8 +14,8 @@ Build Brighton Members
         @foreach ($users as $user)
         <div class="col-sm-6 col-md-4 col-lg-2">
             <div class="thumbnail">
-                @if ($user->profile_photo)
-                    @if ($user->profile_photo_private)
+                @if ($user->profile->profile_photo)
+                    @if (Auth::guest() && $user->profile->profile_photo_private)
                         <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
                     @else
                         <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
@@ -31,4 +31,5 @@ Build Brighton Members
         @endforeach
     </div>
 </div>
+
 @stop

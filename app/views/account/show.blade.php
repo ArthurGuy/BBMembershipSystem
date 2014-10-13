@@ -9,7 +9,7 @@
 <div class="row page-header">
     <div class="col-xs-12 col-sm-10">
         <h1>
-            @if ($user->profile_photo)
+            @if ($user->profile->profile_photo)
             <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
             @else
             <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />

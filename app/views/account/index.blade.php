@@ -45,5 +45,4 @@ Member List
     </tbody>
 </table>
 {{ HTML::userPaginatorLinks($users) }}
-
 @stop
