@@ -5,7 +5,6 @@
 </head>
 <body>
 <p>
-    Hi {{ $user['given_name'] }},<br />
     {{ $messageBody }}
 </p>
 <p>
