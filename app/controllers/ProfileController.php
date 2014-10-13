@@ -60,6 +60,10 @@ class ProfileController extends \BaseController {
         if (empty($input['profile_photo_private']))
             $input['profile_photo_private'] = false;
 
+        //If the user hasnt provided a new image unset the field so we dont clear the old one
+        if (empty($input['profile_photo']))
+            unset($input['profile_photo']);
+
         $this->profileValidator->validate($input, $userId);
 
         $this->profileRepo->update($userId, $input);
