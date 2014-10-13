@@ -64,8 +64,30 @@
 
 @endif
 
-
-
+<!--
+<div class="row">
+    <div class="col-xs-12 col-md-6 ">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Build Brighton Credit</h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    There are a number services at Build Brighton that require payments, such as the laser fee,
+                    tuck shop and component store. You can maintain a balance here to pay for these services quickly and easily.
+                </p>
+                <strong>{{ $user->present()->cashBalance }}</strong>
+                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id])) }}
+                {{ Form::hidden('reason', 'balance') }}
+                {{ Form::hidden('source', 'gocardless') }}
+                {{ Form::text('amount', '5.00') }}
+                {{ Form::submit('Top up Now (Direct Debit)', array('class'=>'btn btn-primary btn-xs')) }}
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+</div>
+-->
 
 @if ($user->status == 'setting-up')
 
