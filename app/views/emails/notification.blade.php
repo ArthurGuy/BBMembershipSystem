@@ -8,7 +8,6 @@
     {{ $messageBody }}
 </p>
 <p>
-    Thank you,<br />
     The Build Brighton Trustees<br />
     <br />
     <a href="{{ URL::route('home') }}">Build Brighton Member System</a>
