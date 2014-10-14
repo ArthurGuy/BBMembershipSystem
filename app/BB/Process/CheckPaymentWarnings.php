@@ -16,7 +16,7 @@ class CheckPaymentWarnings
         foreach ($users as $user) {
             if ($user->subscription_expires->lt($today)) {
                 //User has passed their expiry date
-                $this->info($user->name . ' has a payment warning and has passed their expiry date');
+                echo $user->name . ' has a payment warning and has passed their expiry date'.PHP_EOL;
 
                 //Check the actual expiry date
 
@@ -31,12 +31,12 @@ class CheckPaymentWarnings
                 {
                     //set the status to left and active to false
                     $user->leave();
-                    $this->info($user->name . ' marked as having left');
+                    echo $user->name . ' marked as having left'.PHP_EOL;
                 }
 
                 //an email will be sent by the user observer
             } else {
-                $this->info($user->name . ' has a payment warning but is within their expiry date');
+                echo $user->name . ' has a payment warning but is within their expiry date'.PHP_EOL;
             }
         }
     }
