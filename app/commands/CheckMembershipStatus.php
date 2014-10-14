@@ -36,9 +36,9 @@ class CheckMembershipStatus extends Command {
 	public function fire()
 	{
         //Users with a status of payment warning
-        $this->info("Checking users with payment warnings");
-        $paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
-        $paymentWarningProcess->run();
+        //$this->info("Checking users with payment warnings");
+        //$paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
+        //$paymentWarningProcess->run();
 
 
         //Users with a status of leaving
