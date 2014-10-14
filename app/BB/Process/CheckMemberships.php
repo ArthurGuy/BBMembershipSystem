@@ -19,7 +19,7 @@ class CheckMemberships {
             echo $user->name;
             $expired = false;
 
-            $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->paument_method);
+            $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
             if ($user->subscription_expires->lt($cutOffDate))
             {
                 //echo "- Expired";
