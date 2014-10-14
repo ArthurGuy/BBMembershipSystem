@@ -49,7 +49,7 @@ class CheckMemberships {
             }
 
 
-            echo '<br />'.PHP_EOL;
+            echo PHP_EOL;
         }
     }
 } 
