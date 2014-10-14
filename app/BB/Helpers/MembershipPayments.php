@@ -45,7 +45,7 @@ class MembershipPayments
     public static function getSubGracePeriodDate($paymentMethod, Carbon $refDate = null)
     {
         if (is_null($refDate)) {
-            $refDate = new Carbon();
+            $refDate = Carbon::now();
         }
         $standingOrderCutoff = $refDate->subMonth()->subDays(7);
         $paypalCutoff        = $refDate->subDays(7);
