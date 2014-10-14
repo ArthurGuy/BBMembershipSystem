@@ -23,7 +23,7 @@ class CheckPaymentWarnings
                 $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
 
                 //What grace period do they have - when should we give them to
-                $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->paument_method);
+                $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
 
                 //If the cut of date is greater than (sooner) than the last payment date "expire" them
                 if (($paidUntil == false) || $cutOffDate->subDays(2)->gt($paidUntil))
