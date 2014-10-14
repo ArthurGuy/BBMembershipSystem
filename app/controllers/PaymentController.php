@@ -26,6 +26,7 @@ class PaymentController extends \BaseController {
      *   Details get posted into this method and the redirected to gocardless
      * @param $userId
      * @throws \BB\Exceptions\AuthenticationException
+     * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      */
 	public function create($userId)
@@ -104,6 +105,13 @@ class PaymentController extends \BaseController {
 	}
 
 
+    /**
+     * Confirm a gocardless payment and create a payment record
+     * @param $userId
+     * @return mixed
+     * @throws \BB\Exceptions\AuthenticationException
+     * @throws \BB\Exceptions\NotImplementedException
+     */
     public function confirmPayment($userId)
     {
         $confirm_params = array(
@@ -187,14 +195,22 @@ class PaymentController extends \BaseController {
     }
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
+    /**
+     * Store a manual payment
+     *
+     * @param $userId
+     * @throws \BB\Exceptions\AuthenticationException
+     * @throws \BB\Exceptions\NotImplementedException
+     * @return Response
+     */
 	public function store($userId)
 	{
         $user = User::findWithPermission($userId);
+
+        if (!Auth::user()->hasRole('admin')) {
+            throw new \BB\Exceptions\AuthenticationException;
+        }
+
         $reason = Input::get('reason');
 
         if ($reason == 'subscription')
