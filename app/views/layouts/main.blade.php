@@ -148,7 +148,7 @@
                             <img src="https://img.shields.io/badge/source-ArthurGuy%2FBBMembershipSystem-blue.svg?style=flat-square" />
                         </a>
                         <a href="https://twitter.com/ArthurGuy">
-                            <img src="https://img.shields.io/badge/author-@ArthurGuy-yellow.svg?style=flat-square" />
+                            <img src="https://img.shields.io/badge/author-@ArthurGuy-2DB94E.svg?style=flat-square" />
                         </a>
                         @if (!Auth::guest())
                         | <a href="https://github.com/ArthurGuy/BBMembershipSystem/issues">Report an Issue</a>
