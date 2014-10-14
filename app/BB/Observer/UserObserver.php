@@ -21,7 +21,7 @@ class UserObserver {
         //User status changed to payment warning
         if (($original['status'] != 'payment-warning') && ($user->status == 'payment-warning'))
         {
-            $this->paymentWarning($user);
+            //$this->paymentWarning($user);
         }
 
         //User left
