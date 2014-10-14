@@ -129,6 +129,14 @@ body.register_login .top-alerts {
 
 
 
+/* BB Credit */
+.credit-figure {
+    font-size: 3em;
+    font-weight: bold;
+    color: #D9534F;
+}
+
+
 .skill-list {
     text-align: center;
 }

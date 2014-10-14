@@ -29,6 +29,8 @@ Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscri
 Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'before'=>'role:admin']);
 Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'AccountController@rejoin', 'before'=>'role:member']);
 Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
+//BB Credit
+Route::get('account/{account}/bbcredit', ['uses'=>'BBCreditController@index', 'as'=>'account.bbcredit.index', 'before'=>'role:member']);
 
 
 # Members

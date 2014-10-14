@@ -286,12 +286,32 @@ class PaymentController extends \BaseController {
             $user->storage_box_payment_id = $payment->id;
             $user->save();
         }
+        elseif ($reason == 'balance')
+        {
+            $amount         = Input::get('amount') * 1;//convert the users amount into a number
+            if (!is_numeric($amount)) {
+                throw new \BB\Exceptions\FormValidationException("Not a valid amount", new \Illuminate\Support\MessageBag(['amount'=>'Invalid amount']));
+            }
+            $payment = new Payment([
+                'reason'            => 'balance',
+                'source'            => Input::get('source'),
+                'source_id'         => '',
+                'amount'            => $amount,
+                'amount_minus_fee'  => $amount,
+                'status'            => 'paid'
+            ]);
+            $user->payments()->save($payment);
+
+            $memberCreditService = \App::make('\BB\Services\Credit');
+            $memberCreditService->setUserId($user->id);
+            $memberCreditService->recalculate();
+        }
         else
         {
             throw new \BB\Exceptions\NotImplementedException();
         }
         Notification::success("Payment recorded");
-        return Redirect::route('account.show', $user->id);
+        return Redirect::back();
 	}
 
 
