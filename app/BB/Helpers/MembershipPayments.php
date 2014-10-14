@@ -47,10 +47,10 @@ class MembershipPayments
         if (is_null($refDate)) {
             $refDate = Carbon::now();
         }
-        $standingOrderCutoff = $refDate->subMonth()->subDays(7);
-        $paypalCutoff        = $refDate->subDays(7);
-        $goCardlessCutoff    = $refDate->subDays(7);
-        $otherCutoff         = $refDate->subDays(7);
+        $standingOrderCutoff = $refDate->copy()->subMonth()->subDays(7);
+        $paypalCutoff        = $refDate->copy()->subDays(7);
+        $goCardlessCutoff    = $refDate->copy()->subDays(7);
+        $otherCutoff         = $refDate->copy()->subDays(7);
 
         if ($paymentMethod == 'gocardless') {
             return $goCardlessCutoff;
