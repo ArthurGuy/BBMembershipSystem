@@ -35,14 +35,14 @@ class CheckMembershipStatus extends Command {
 	 */
 	public function fire()
 	{
+        //Users with a status of payment warning
+        $paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
+        $paymentWarningProcess->run();
+
+
         //Users with a status of leaving
         $leavingProcess = new \BB\Process\CheckLeavingUsers();
         $leavingProcess->run();
-
-
-        //Users with a status of payment warning
-        //$paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
-        //$paymentWarningProcess->run();
 
 
         //This should occur last as it gives people 24 hours with a payment warning
