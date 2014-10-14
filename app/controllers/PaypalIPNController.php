@@ -9,9 +9,7 @@ class PaypalIPNController extends \BaseController
     {
         $ipnMessage = new \PayPal\IPN\PPIPNMessage('', PayPalConfig::getConfig());
 
-        if ($ipnMessage->validate()) {
-            //\Log::debug("IPN Success");
-        } else {
+        if (!$ipnMessage->validate()) {
             \Log::error("Invalid IPN");
         }
 
