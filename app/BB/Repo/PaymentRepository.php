@@ -17,6 +17,7 @@ class PaymentRepository extends DBRepository
     function __construct(\Payment $model)
     {
         $this->model = $model;
+        $this->perPage = 5;
     }
 
 
@@ -103,6 +104,20 @@ class PaymentRepository extends DBRepository
             ->whereRaw('source = ? and (status = ? or status = ?)', [$source, 'paid', 'pending'])
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+
+    /**
+     * Return a paginated list of balance affecting payment for a user
+     * @param $userId
+     * @return mixed
+     */
+    public function getBalancePaymentsPaginated($userId)
+    {
+        return $this->model->where('user_id', $userId)
+            ->whereRaw('(source = ? or reason = ?) and (status = ? or status = ?)', ['balance', 'balance', 'paid', 'pending'])
+            ->orderBy('created_at', 'desc')
+            ->simplePaginate($this->perPage);
     }
 
 } 
