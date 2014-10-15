@@ -184,6 +184,10 @@ class PaymentController extends \BaseController {
             $memberCreditService = \App::make('\BB\Services\Credit');
             $memberCreditService->setUserId($user->id);
             $memberCreditService->recalculate();
+
+            //This needs to be improved
+            Notification::success("Payment recorded");
+            return Redirect::route('account.bbcredit.index', $user->id);
         }
         else
         {
