@@ -24,7 +24,7 @@ class PaymentPresenter extends Presenter
                 return 'Storage Box Deposit';
 
             case 'balance';
-                return 'Credit Top up Payment';
+                return 'Credit Top Up';
 
             default;
                 return $this->entity->reason;
@@ -72,6 +72,9 @@ class PaymentPresenter extends Presenter
             case 'other':
                 return 'Other';
 
+            case 'balance':
+                return 'BB Credit';
+
             default;
                 return $this->entity->source;
         }
@@ -80,5 +83,23 @@ class PaymentPresenter extends Presenter
     public function amount()
     {
         return '&pound;'.$this->entity->amount;
+    }
+
+    public function balanceAmount()
+    {
+        if ($this->entity->source == 'balance') {
+            return '-&pound;'.$this->entity->amount;
+        } elseif ($this->entity->reason == 'balance') {
+            return '&pound;'.$this->entity->amount;
+        }
+    }
+
+    public function balanceRowClass()
+    {
+        if ($this->entity->source == 'balance') {
+            return 'danger';
+        } elseif ($this->entity->reason == 'balance') {
+            return 'success';
+        }
     }
 } 
