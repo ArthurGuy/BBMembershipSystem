@@ -27,6 +27,7 @@ New members can join and create accounts, payments are tracked and managed throu
 ###Upcomming Features
 * Handle member storage box assignments
 * Equipment control and usage logging
+* Member credit for payment and member topup
 
 
 
