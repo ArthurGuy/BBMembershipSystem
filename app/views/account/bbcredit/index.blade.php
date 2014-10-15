@@ -56,7 +56,6 @@ Build Brighton Credit {{ $user->name }}
 
 <div class="row">
     <div class="col-xs-12">
-        <?php $payments = $user->payments()->paginate(10); ?>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Payments</h3>
@@ -73,11 +72,11 @@ Build Brighton Credit {{ $user->name }}
                 </thead>
                 <tbody>
                 @foreach ($payments as $payment)
-                <tr>
+                <tr class="{{ $payment->present()->balanceRowClass }}">
                     <td>{{ $payment->present()->reason }}</td>
                     <td>{{ $payment->present()->method }}</td>
                     <td>{{ $payment->present()->date }}</td>
-                    <td>{{ $payment->present()->amount }}</td>
+                    <td>{{ $payment->present()->balanceAmount }}</td>
                     <td>{{ $payment->present()->status }}</td>
                 </tr>
                 @endforeach
