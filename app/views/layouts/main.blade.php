@@ -6,12 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Member System') | Build Brighton</title>
 
-    <!-- Bootstrap
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/custom.css" rel="stylesheet">
-    <link href="/css/select2.css" rel="stylesheet">
-    <link href="/css/select2-bootstrap.css" rel="stylesheet">
-    -->
     <link href="/css/all.min.css" rel="stylesheet">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
