@@ -2,8 +2,6 @@
 
 class SessionController extends \BaseController {
 
-    protected $layout = 'layouts.main';
-
     protected $loginForm;
 
     function __construct(\BB\Validators\Login $loginForm)
@@ -20,7 +18,7 @@ class SessionController extends \BaseController {
 	 */
 	public function create()
 	{
-        $this->layout->content = View::make('session.create');
+        return View::make('session.create');
 	}
 
 

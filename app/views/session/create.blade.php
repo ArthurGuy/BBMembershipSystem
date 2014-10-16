@@ -1,4 +1,10 @@
+@extends('layouts.main')
 
+@section('title')
+Login
+@stop
+
+@section('content')
 
 
     <div class="login-container col-xs-12 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4">
@@ -51,3 +57,5 @@
 
         {{ Form::close() }}
     </div>
+
+@stop
