@@ -37,7 +37,9 @@
                     {{ HTML::profileSocialMediaListItem('Google+', $profileData->present()->googlePlusLink) }}
                     {{ HTML::profileSocialMediaListItem('Facebook', $profileData->present()->facebookLink) }}
                     {{ HTML::profileSocialMediaListItem('Website', $profileData->present()->website) }}
-                    {{ HTML::profileSocialMediaListItem('IRC', $profileData->present()->irc) }}
+                    @if ($profileData->irc)
+                    <li>IRC - <a href="irc://irc.freenode.net/buildbrighton">irc://irc.freenode.net/buildbrighton</a> - {{ $profileData->irc }}</li>
+                    @endif
                 </ul>
             </div>
         </div>

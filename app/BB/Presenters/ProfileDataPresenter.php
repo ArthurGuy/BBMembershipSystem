@@ -33,6 +33,13 @@ class ProfileDataPresenter extends Presenter {
         }
     }
 
+    public function IRCLink()
+    {
+        if (!empty($this->entity->irc)) {
+            return 'irc://irc.freenode.net/buildbrighton';
+        }
+    }
+
     public function description()
     {
         return nl2br($this->entity->description);
