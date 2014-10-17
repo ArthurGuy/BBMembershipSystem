@@ -49,6 +49,9 @@ Route::post('account/{account}/payment/create', ['as'=>'account.payment.create',
 Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
 Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-payment', 'uses'=>'AccountController@updateSubscriptionAmount']);
 
+Route::post('account/{account}/payment/stripe/store', ['as'=>'account.payment.stripe.store', 'uses' => 'StripePaymentController@store']);
+
+
 
 # Inductions
 Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'before'=>'role:admin', 'as'=>'equipment_training.update']);
