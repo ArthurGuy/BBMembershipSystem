@@ -15,7 +15,7 @@ class PaymentPresenter extends Presenter
                 return 'Unknown';
 
             case 'induction';
-                return 'Equipment Induction';
+                return 'Equipment Access Fee';
 
             case 'door-key';
                 return 'Key Deposit';
