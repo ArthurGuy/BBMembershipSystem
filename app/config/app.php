@@ -127,7 +127,8 @@ return array(
         'BB\Notifications\NotificationServiceProvider',
         'BB\Html\HtmlServiceProvider',
         'Artdarek\Pusherer\PushererServiceProvider',
-        'Laracasts\Utilities\UtilitiesServiceProvider'
+        'Laracasts\Utilities\UtilitiesServiceProvider',
+        'BB\ServiceProviders\StripeServiceProvider',
 	),
 
 	/*
