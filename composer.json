@@ -15,7 +15,8 @@
         "paypal/merchant-sdk-php":"3.6.*",
         "laracasts/presenter": "0.1.*",
         "artdarek/pusherer": "1.0.*",
-        "laracasts/utilities": "~1.0"
+        "laracasts/utilities": "~1.0",
+        "stripe/stripe-php": "1.*"
 	},
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
