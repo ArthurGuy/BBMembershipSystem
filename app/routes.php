@@ -100,6 +100,12 @@ Route::get('notificationemail/create', ['as' => 'notificationemail.create', 'use
 Route::post('notificationemail', ['as' => 'notificationemail.store', 'uses' => 'NotificationEmailController@store', 'before'=>'role:admin']);
 
 
+#Proposals
+Route::get('proposals', ['uses'=>'ProposalController@index', 'as'=>'proposals.index', 'before'=>'role:member']);
+Route::get('proposals/{id}', ['uses'=>'ProposalController@show', 'as'=>'proposals.show', 'before'=>'role:member']);
+Route::post('proposals/{id}', ['uses'=>'ProposalController@vote', 'as'=>'proposals.vote', 'before'=>'role:member']);
+
+
 Route::get('test', function() {
     //$process = new \BB\Process\CheckMemberships();
     //$process->run();
