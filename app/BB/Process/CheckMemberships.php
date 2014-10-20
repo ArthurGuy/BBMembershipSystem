@@ -32,7 +32,7 @@ class CheckMemberships {
                 $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
                 if ($paidUntil)
                 {
-                    if ($user->subscription_expires->gt($paidUntil))
+                    if ($user->subscription_expires->lt($paidUntil))
                     {
                         $user->extendMembership($user->payment_method, $paidUntil);
 
