@@ -19,6 +19,8 @@
                 <div class="form-group {{ $errors->has('statement') ? 'has-error has-feedback' : '' }}">
                     {{ Form::label('statement', 'CSV Statement', ['class'=>'control-label']) }}
                     {{ Form::file('statement', null, ['class'=>'form-control']) }}
+                    {{ Form::checkbox('test', 1) }}
+                    {{ Form::label('test', 'Test Process', ['class'=>'control-label']) }}
                     {{ $errors->first('statement', '<span class="help-block">:message</span>') }}
                 </div>
             </div>
