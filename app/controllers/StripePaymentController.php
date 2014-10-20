@@ -48,7 +48,7 @@ class StripePaymentController extends \BaseController {
             );
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            Notification::error("There was an error confirm your payment");
+            Notification::error("There was an error confirming your payment");
             return Redirect::to($redirect_url);
         }
 

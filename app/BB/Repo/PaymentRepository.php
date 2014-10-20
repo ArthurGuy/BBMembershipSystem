@@ -17,7 +17,7 @@ class PaymentRepository extends DBRepository
     function __construct(\Payment $model)
     {
         $this->model = $model;
-        $this->perPage = 5;
+        $this->perPage = 10;
     }
 
 
@@ -44,6 +44,9 @@ class PaymentRepository extends DBRepository
         $record->fee              = $fee;
         $record->status           = $status;
         $record->save();
+
+        //Emit an event so that things like the balance updater can run
+
         return $record->id;
     }
 

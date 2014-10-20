@@ -33,7 +33,32 @@ Build Brighton Credit {{ $user->name }}
                 <h3 class="panel-title">Add Credit</h3>
             </div>
             <div class="panel-body">
-            <p>Add credit to your account using a direct debit or credit/debit card payment</p>
+            <p>Top up using Direct Debit or a credit/debit card payment</p>
+
+
+            {{ Form::open(['method'=>'POST', 'href' => '', 'class'=>'form-inline js-multiPaymentForm']) }}
+            {{ Form::hidden('reason', 'balance') }}
+            {{ Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) }}
+            {{ Form::hidden('redirect_url', route('account.bbcredit.index', [$user->id])) }}
+
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">&pound;</div>
+                    {{ Form::input('number', 'amount', '10.00', ['class'=>'form-control js-amount', 'step'=>'0.01', 'required'=>'required']) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ Form::select('source', ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card'], null, ['class'=>'form-control'])  }}
+            </div>
+            {{ Form::submit('Top up', array('class'=>'btn btn-primary')) }}
+            <div class="has-feedback has-error">
+                <span class="help-block"></span>
+            </div>
+            {{ Form::close() }}
+
+
+<!--
+
             <h5>Direct Debit</h5>
                 {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id], 'class'=>'navbar-form')) }}
                 {{ Form::hidden('reason', 'balance') }}
@@ -47,10 +72,10 @@ Build Brighton Credit {{ $user->name }}
                 {{ Form::hidden('reason', 'balance') }}
                 {{ Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) }}
                 {{ Form::hidden('redirect_url', route('account.bbcredit.index', [$user->id])) }}
-                {{ Form::input('number', 'amount', '10.00', ['class'=>'form-control js-stripeAmount', 'min'=>10, 'step'=>'0.01', 'required'=>'required', 'title'=>'Because of card processing fees the minimum is £10']) }}
+                {{ Form::input('number', 'amount', '10.00', ['class'=>'form-control js-stripeAmount', 'step'=>'0.01', 'required'=>'required']) }}
                 {{ Form::submit('Credit/Debit Card', array('class'=>'btn btn-primary js-stripeCheckout')) }}
                 {{ Form::close() }}
-
+-->
             </div>
 
             @if (Auth::user()->isAdmin())
@@ -116,7 +141,7 @@ Build Brighton Credit {{ $user->name }}
         token: function(token) {
             console.log(token);
             $('.js-stripeToken').val(token.id);
-            $('.js-stripeForm').submit();
+            $('.js-multiPaymentForm').submit();
         }
     });
 
@@ -130,6 +155,41 @@ Build Brighton Credit {{ $user->name }}
             description: 'Balance Top up',
             amount: topUpAmount
         });
+    });
+
+    var paymentRoutes = {
+        stripe: '{{ route('account.payment.stripe.store', $user->id) }}',
+        gocardless: '{{ route('account.payment.gocardless.create', $user->id) }}'
+    };
+    var multiPaymentFormChecked = false;
+    $('.js-multiPaymentForm').on('submit', function(event) {
+
+        //Clear the error messages
+        $(this).find('.help-block').text('');
+
+        var source = $('.js-multiPaymentForm [name=source] option:selected').val();
+
+        //Update the form target
+        $(this).attr('action', paymentRoutes[source]);
+
+        //Validation rules
+        if (source == 'stripe') {
+            //Stripe is handled seperatly so stop this form post
+            event.preventDefault();
+            if (($(this).find('.js-amount').val() * 1) < 10) {
+                $(this).find('.help-block').text("Because of processing fees the payment must be £10 or over when paying by card");
+            } else {
+                var topUpAmount = ($(this).find('.js-amount').val() * 100);
+
+                    handler.open({
+                        description: 'Balance Top up',
+                        amount: topUpAmount
+                    });
+            }
+        } else {
+            //$(this).submit();
+            //return true;
+        }
     });
 </script>
 
