@@ -74,6 +74,12 @@
                 @if (!Auth::guest() && Auth::user()->isAdmin())
 
                 <li class="detail-link">
+                    <a href="{{ route('proposals.index') }}">
+                        Proposals (Admin)
+                    </a>
+                </li>
+
+                <li class="detail-link">
                     <a href="{{ route('account.index') }}">
                         Members (Admin)
                     </a>

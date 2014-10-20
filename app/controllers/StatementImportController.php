@@ -25,6 +25,14 @@ class StatementImportController extends \BaseController {
 	{
 
         $spreadsheetPath = Input::file('statement')->getRealPath();
+        $testProcess = Request::get('test');
+        if ($testProcess) {
+            $testProcess = true;
+            echo "Test Mode - no payment records are being created<br /><br />";
+        } else {
+            $testProcess = false;
+            echo "Live Mode - Payments have been created<br /><br />";
+        }
 
         $reader = new SpreadsheetReader($spreadsheetPath);
         $reader->ChangeSheet(0);
@@ -111,7 +119,7 @@ class StatementImportController extends \BaseController {
 
             echo "</tr>";
 
-            if ($matchedUser)
+            if (!$testProcess && $matchedUser)
             {
                 Payment::create([
                     'created_at' => $date,
@@ -125,7 +133,12 @@ class StatementImportController extends \BaseController {
                 ]);
                 if ($subPayment)
                 {
-                    $matchedUser->extendMembership('standing-order', $date->addMonth());
+                    $paymentMethod = 'standing-order';
+                    //If the user has switched to gocardless don't break the payment method
+                    if ($matchedUser->payment_method == 'gocardless') {
+                        $paymentMethod = 'gocardless';
+                    }
+                    $matchedUser->extendMembership($paymentMethod, $date->addMonth());
                     $matchedUser->monthly_subscription = $row[4];
                     $matchedUser->save();
                 }
