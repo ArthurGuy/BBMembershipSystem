@@ -166,3 +166,33 @@ body.register_login .top-alerts {
 .siteFooter .col {
     padding-left: 5px;
 }
+
+
+/* Feedback Widget */
+.feedbackWidgetButtonWrap {
+    position: fixed;
+    overflow: hidden;
+    bottom: 50px;
+    right: 0px;
+    height: 35px;
+    width: 130px;
+}
+#feedbackWidgetButton {
+    position: absolute;
+    right: -89px;
+    height: 31px;
+    width: 120px;
+    padding: 4px 7px;
+    background-color: #1E8C99;
+    color: white;
+    font-size: 18px;
+    transition: all 0.3s;
+    cursor: pointer;
+    box-shadow:         -1px 1px 5px 0px rgba(50, 50, 50, 0.3);
+}
+#feedbackWidgetButton .glyphicon {
+
+}
+#feedbackWidgetButton:hover {
+    right:0;
+}
