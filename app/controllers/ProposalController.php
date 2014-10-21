@@ -11,11 +11,16 @@ class ProposalController extends \BaseController {
      * @var \BB\Repo\ProposalVoteRepository
      */
     private $proposalVoteRepository;
+    /**
+     * @var \BB\Validators\ProposalVoteValidator
+     */
+    private $proposalVoteValidator;
 
-    function __construct(\BB\Repo\ProposalRepository $proposalRepository, \BB\Repo\ProposalVoteRepository $proposalVoteRepository)
+    function __construct(\BB\Repo\ProposalRepository $proposalRepository, \BB\Repo\ProposalVoteRepository $proposalVoteRepository, \BB\Validators\ProposalVoteValidator $proposalVoteValidator)
     {
         $this->proposalRepository = $proposalRepository;
         $this->proposalVoteRepository = $proposalVoteRepository;
+        $this->proposalVoteValidator = $proposalVoteValidator;
     }
 
     /**
@@ -49,6 +54,7 @@ class ProposalController extends \BaseController {
 
 
         //validation
+        $this->proposalVoteValidator->validate(Request::all());
 
         $proposal = $this->proposalRepository->getById($proposalId);
         if (!$proposal->isOpen()) {
