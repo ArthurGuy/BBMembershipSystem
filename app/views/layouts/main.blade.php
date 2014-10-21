@@ -164,7 +164,7 @@
         </div>
     </footer>
 
-
+    @if (!Auth::guest())
     <div class="feedbackWidgetButtonWrap">
         <div id="feedbackWidgetButton" data-toggle="modal" data-target="#feedbackWidgetModal">
             <span class="glyphicon glyphicon-bullhorn"></span> Feedback
@@ -196,6 +196,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Inline for now - this will be fixed at some stage -->
     <script>
