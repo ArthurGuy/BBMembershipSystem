@@ -107,6 +107,8 @@ Route::get('proposals', ['uses'=>'ProposalController@index', 'as'=>'proposals.in
 Route::get('proposals/{id}', ['uses'=>'ProposalController@show', 'as'=>'proposals.show', 'before'=>'role:member']);
 Route::post('proposals/{id}', ['uses'=>'ProposalController@vote', 'as'=>'proposals.vote', 'before'=>'role:member']);
 
+# Feedback
+Route::post('feedback', ['uses'=>'FeedbackController@store', 'as'=>'feedback.store', 'before'=>'roll:member']);
 
 Route::get('test', function() {
     //$process = new \BB\Process\CheckMemberships();

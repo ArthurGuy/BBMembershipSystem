@@ -53,7 +53,8 @@ Proposals
 
 @else
     Voting has closed<br />
-    The vote closed on {{ $proposal->present()->end_date }}
+    The vote closed on {{ $proposal->present()->end_date }}<br />
+    {{ $proposal->present()->outcome }}
 @endif
 
 </div>
