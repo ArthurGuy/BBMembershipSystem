@@ -51,6 +51,7 @@ Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-p
 
 Route::post('account/{account}/payment/stripe/store', ['as'=>'account.payment.stripe.store', 'uses' => 'StripePaymentController@store']);
 Route::post('account/{account}/payment/gocardless/create', ['as'=>'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
+Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment.gocardless.store', 'uses' => 'GoCardlessPaymentController@store']);
 
 
 
