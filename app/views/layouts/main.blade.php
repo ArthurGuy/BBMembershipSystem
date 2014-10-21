@@ -165,6 +165,36 @@
     </footer>
 
 
+    <!-- Inline for now - this will be fixed at some stage -->
+    <script>
+    $('.js-ajaxForm').on('submit', function(event) {
+        event.preventDefault();
+
+        //Get the success and failure functions for the form
+        var successFunction = $(this).attr('data-successFunction');
+        var errorFunction = $(this).attr('data-errorFunction');
+
+        $(this).find('input[type=submit]').attr('disabled', 'disabled');
+
+        //Clear the error messages
+        $(this).find('.js-errorMessages').text('');
+        $(this).find('.has-error').removeClass('has-error');
+
+        //Store the context for the callbacks
+        var $form = $(this);
+        $.ajax({
+            type: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: [function() {
+                $form.find('input[type=submit]').removeAttr('disabled');
+            }, window[successFunction]],
+            error: [function() {
+                $form.find('input[type=submit]').removeAttr('disabled');
+            }, window[errorFunction]],
+            dataType: 'json'
+        });
+    });
     @include('partials/page-js')
 
     <script src="/js/lib/bootstrap.min.js"></script>
