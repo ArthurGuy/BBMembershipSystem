@@ -1,5 +1,7 @@
 var elixir = require('laravel-elixir');
 
+require('laravel-elixir-codeception');
+
 /*
  |----------------------------------------------------------------
  | Have a Drink!
@@ -18,7 +20,11 @@ elixir(function(mix) {
             'css/custom.css',
             'css/select2.css',
             'css/select2-bootstrap.css'
-        ]);
+        ])
+        //.scripts([
+        //    'js/payments.js'
+        //])
+        .codeception();
         //.routes()
         //.events()
         //.phpUnit();
