@@ -11,6 +11,8 @@
 |
 */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 ClassLoader::addDirectories(array(
 
 	app_path().'/commands',
@@ -65,6 +67,12 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
     Log::warning($userString." tried to access something they weren't supposed to.");
 
     return Response::make("Unauthorized", 403);
+});
+
+
+App::error(function(NotFoundHttpException $exception)
+{
+    return Response::make("Not found", 404);
 });
 
 
