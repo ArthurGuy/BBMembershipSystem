@@ -4,10 +4,6 @@ class StripePaymentController extends \BaseController {
 
 
     /**
-     * @var \BB\Repo\EquipmentRepository
-     */
-    private $equipmentRepository;
-    /**
      * @var \BB\Repo\PaymentRepository
      */
     private $paymentRepository;
