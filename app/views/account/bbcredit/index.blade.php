@@ -36,46 +36,8 @@ Build Brighton Credit {{ $user->name }}
             <p>Top up using Direct Debit or a credit/debit card payment</p>
 
 
-            {{ Form::open(['method'=>'POST', 'href' => '', 'class'=>'form-inline js-multiPaymentForm']) }}
-            {{ Form::hidden('reason', 'balance') }}
-            {{ Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) }}
-            {{ Form::hidden('return_path', route('account.bbcredit.index', [$user->id], false)) }}
+            @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.bbcredit.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up'])
 
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">&pound;</div>
-                    {{ Form::input('number', 'amount', '10.00', ['class'=>'form-control js-amount', 'step'=>'0.01', 'required'=>'required']) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ Form::select('source', ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card'], null, ['class'=>'form-control'])  }}
-            </div>
-            {{ Form::submit('Top up', array('class'=>'btn btn-primary')) }}
-            <div class="has-feedback has-error">
-                <span class="help-block"></span>
-            </div>
-            {{ Form::close() }}
-
-
-<!--
-
-            <h5>Direct Debit</h5>
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id], 'class'=>'navbar-form')) }}
-                {{ Form::hidden('reason', 'balance') }}
-                {{ Form::hidden('source', 'gocardless') }}
-                {{ Form::input('number', 'amount', '10.00', ['class'=>'form-control', 'step'=>'0.01', 'required'=>'required']) }}
-                {{ Form::submit('Direct Debit', array('class'=>'btn btn-primary')) }}
-                {{ Form::close() }}
-
-            <h5>Credit / Debit Card</h5>
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.stripe.store', $user->id], 'class'=>'navbar-form js-stripeForm')) }}
-                {{ Form::hidden('reason', 'balance') }}
-                {{ Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) }}
-                {{ Form::hidden('redirect_url', route('account.bbcredit.index', [$user->id])) }}
-                {{ Form::input('number', 'amount', '10.00', ['class'=>'form-control js-stripeAmount', 'step'=>'0.01', 'required'=>'required']) }}
-                {{ Form::submit('Credit/Debit Card', array('class'=>'btn btn-primary js-stripeCheckout')) }}
-                {{ Form::close() }}
--->
             </div>
 
             @if (Auth::user()->isAdmin())
@@ -126,71 +88,5 @@ Build Brighton Credit {{ $user->name }}
         </div>
     </div>
 </div>
-
-@stop
-
-@section('footer-js')
-
-<script src="https://checkout.stripe.com/checkout.js"></script>
-<script>
-    var handler = StripeCheckout.configure({
-        key: '@stripeKey',
-        name: 'Build Brighton',
-        currency: 'GBP',
-        email: '{{ $user->email }}',
-        token: function(token) {
-            console.log(token);
-            $('.js-stripeToken').val(token.id);
-            $('.js-multiPaymentForm').submit();
-        }
-    });
-
-    $('.js-stripeForm').on('submit', function(event) {
-        event.preventDefault();
-        event.target.checkValidity();
-
-        var topUpAmount = ($('.js-stripeAmount').val() * 100);
-
-        handler.open({
-            description: 'Balance Top up',
-            amount: topUpAmount
-        });
-    });
-
-    var paymentRoutes = {
-        stripe: '{{ route('account.payment.stripe.store', $user->id) }}',
-        gocardless: '{{ route('account.payment.gocardless.create', $user->id) }}'
-    };
-    var multiPaymentFormChecked = false;
-    $('.js-multiPaymentForm').on('submit', function(event) {
-
-        //Clear the error messages
-        $(this).find('.help-block').text('');
-
-        var source = $('.js-multiPaymentForm [name=source] option:selected').val();
-
-        //Update the form target
-        $(this).attr('action', paymentRoutes[source]);
-
-        //Validation rules
-        if (source == 'stripe') {
-            //Stripe is handled seperatly so stop this form post
-            event.preventDefault();
-            if (($(this).find('.js-amount').val() * 1) < 10) {
-                $(this).find('.help-block').text("Because of processing fees the payment must be £10 or over when paying by card");
-            } else {
-                var topUpAmount = ($(this).find('.js-amount').val() * 100);
-
-                    handler.open({
-                        description: 'Balance Top up',
-                        amount: topUpAmount
-                    });
-            }
-        } else {
-            //$(this).submit();
-            //return true;
-        }
-    });
-</script>
 
 @stop
