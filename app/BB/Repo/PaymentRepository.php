@@ -23,16 +23,17 @@ class PaymentRepository extends DBRepository
 
     /**
      * Record a payment against a user record
-     * @param string $reason    What was the reason. subscription, induction, etc...
-     * @param int    $userId    The users ID
-     * @param string $source    gocardless, paypal
-     * @param string $sourceId  A reference for the source
-     * @param double $amount    Amount received before a fee
-     * @param string $status    paid, pending, cancelled, refunded
-     * @param double $fee       The fee charged by the payment provider
+     * @param string $reason What was the reason. subscription, induction, etc...
+     * @param int    $userId The users ID
+     * @param string $source gocardless, paypal
+     * @param string $sourceId A reference for the source
+     * @param double $amount Amount received before a fee
+     * @param string $status paid, pending, cancelled, refunded
+     * @param double $fee The fee charged by the payment provider
+     * @param null   $ref
      * @return int  The ID of the payment record
      */
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0)
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref=null)
     {
         $record                   = new $this->model;
         $record->user_id          = $userId;
@@ -46,23 +47,25 @@ class PaymentRepository extends DBRepository
         $record->save();
 
         //Emit an event so that things like the balance updater can run
+        \Event::fire('payment.create', array($userId, $reason, $ref));
 
         return $record->id;
     }
 
     /**
      * Record a subscription payment
-     * @param int    $userId    The users ID
-     * @param string $source    gocardless, paypal
-     * @param string $sourceId  A reference for the source
-     * @param double $amount    Amount received before a fee
-     * @param string $status    paid, pending, cancelled, refunded
-     * @param double $fee       The fee charged by the payment provider
+     * @param int    $userId The users ID
+     * @param string $source gocardless, paypal
+     * @param string $sourceId A reference for the source
+     * @param double $amount Amount received before a fee
+     * @param string $status paid, pending, cancelled, refunded
+     * @param double $fee The fee charged by the payment provider
+     * @param null   $ref
      * @return int  The ID of the payment record
      */
-    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0)
+    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref=null)
     {
-        return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee);
+        return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref);
     }
 
     public function updateStatus($paymentId, $status)

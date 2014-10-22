@@ -39,7 +39,7 @@ Build Brighton Credit {{ $user->name }}
             {{ Form::open(['method'=>'POST', 'href' => '', 'class'=>'form-inline js-multiPaymentForm']) }}
             {{ Form::hidden('reason', 'balance') }}
             {{ Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) }}
-            {{ Form::hidden('redirect_url', route('account.bbcredit.index', [$user->id])) }}
+            {{ Form::hidden('return_path', route('account.bbcredit.index', [$user->id], false)) }}
 
             <div class="form-group">
                 <div class="input-group">

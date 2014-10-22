@@ -31,6 +31,7 @@ class GoCardlessPaymentController extends \BaseController {
 
         $reason = Request::get('reason');
         $amount = Request::get('amount');
+        $returnPath = Request::get('return_path');
         $ref = $this->getReference($reason);
         $payment_details = array(
             'amount'        => $amount,
@@ -46,13 +47,15 @@ class GoCardlessPaymentController extends \BaseController {
                 'billing_postcode'  =>  $user->address_postcode,
                 'country_code'      => 'GB'
             ],
-            'state'         => $reason.':'.$ref
+            'state'         => $reason.':'.$ref.':'.$returnPath
         );
         return Redirect::to($this->goCardless->newBillUrl($payment_details));
     }
 
     public function store($userId)
     {
+        $user = User::findWithPermission($userId);
+
         $confirm_params = array(
             'resource_id'    => $_GET['resource_id'],
             'resource_type'  => $_GET['resource_type'],
@@ -65,33 +68,42 @@ class GoCardlessPaymentController extends \BaseController {
             $confirm_params['state'] = $_GET['state'];
         }
 
-        $user = User::findWithPermission($userId);
+        //Get the details, reason, reference and return url
+        $details = explode(':', Input::get('state'));
+        $reason  = 'unknown';
+        $ref     = null;
+        $returnPath = route('account.show', [$user->id], false);
+        if (is_array($details)) {
+            if (isset($details[0])) {
+                $reason = $details[0];
+            }
+            if (isset($details[1])) {
+                $ref = $details[1];
+            }
+            if (isset($details[2])) {
+                $returnPath = $details[2];
+            }
+        }
 
+
+        //Confirm the resource
         try
         {
             $confirmed_resource = $this->goCardless->confirmResource($confirm_params);
         }
         catch (\Exception $e)
         {
-            $errors = $e->getMessage();
-            Notification::error($errors);
-            return Redirect::route('account.show', $user->id);
+            Notification::error($e->getMessage());
+            return Redirect::to($returnPath);
         }
 
-        $details = explode(':',Input::get('state'));
-        $reason = $details[0];
-        $ref = $details[1];
 
-        $payment = new Payment([
-                'reason'            => $reason,
-                'source'            => 'gocardless',
-                'source_id'         => $confirmed_resource->id,
-                'amount'            => $confirmed_resource->amount,
-                'fee'               => ($confirmed_resource->amount - $confirmed_resource->amount_minus_fees),
-                'amount_minus_fee'  => $confirmed_resource->amount_minus_fees,
-                'status'            => $confirmed_resource->status
-            ]);
-        $payment = $user->payments()->save($payment);
+        //Store the payment
+        $fee = ($confirmed_resource->amount - $confirmed_resource->amount_minus_fees);
+        $paymentSourceId = $confirmed_resource->id;
+        $amount = $confirmed_resource->amount;
+        $status = $confirmed_resource->status;
+        $paymentId = $this->paymentRepository->recordPayment($reason, $userId, 'gocardless', $paymentSourceId, $amount, $status, $fee, $ref);
 
         if ($reason == 'subscription')
         {
@@ -105,17 +117,17 @@ class GoCardlessPaymentController extends \BaseController {
                     'user_id' => $user->id,
                     'key' => $ref,
                     'paid' => true,
-                    'payment_id' => $payment->id
+                    'payment_id' => $paymentId
                 ]);
         }
         elseif ($reason == 'door-key')
         {
-            $user->key_deposit_payment_id = $payment->id;
+            $user->key_deposit_payment_id = $paymentId;
             $user->save();
         }
         elseif ($reason == 'storage-box')
         {
-            $user->storage_box_payment_id = $payment->id;
+            $user->storage_box_payment_id = $paymentId;
             $user->save();
         }
         elseif ($reason == 'balance')
@@ -123,10 +135,6 @@ class GoCardlessPaymentController extends \BaseController {
             $memberCreditService = \App::make('\BB\Services\Credit');
             $memberCreditService->setUserId($user->id);
             $memberCreditService->recalculate();
-
-            //This needs to be improved
-            Notification::success("Payment recorded");
-            return Redirect::route('account.bbcredit.index', $user->id);
         }
         else
         {
@@ -134,7 +142,7 @@ class GoCardlessPaymentController extends \BaseController {
         }
 
         Notification::success("Payment made");
-        return Redirect::route('account.show', $user->id);
+        return Redirect::to($returnPath);
     }
 
 

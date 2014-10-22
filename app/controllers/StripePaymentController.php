@@ -33,9 +33,10 @@ class StripePaymentController extends \BaseController {
         $user = User::findWithPermission($userId);
 
         $stripeToken = Request::get('stripe_token');
-        $amount = Request::get('amount');
-        $reason = Request::get('reason');
-        $redirect_url = Request::get('redirect_url');
+        $amount      = Request::get('amount');
+        $reason      = Request::get('reason');
+        $returnPath  = Request::get('return_path');
+        $ref         = Request::get('ref');
 
         try {
             $charge = Stripe_Charge::create(
@@ -49,7 +50,7 @@ class StripePaymentController extends \BaseController {
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Notification::error("There was an error confirming your payment");
-            return Redirect::to($redirect_url);
+            return Redirect::to($returnPath);
         }
 
         //Replace the amount with the one from the charge, this prevents issues with variable tempering
@@ -58,10 +59,10 @@ class StripePaymentController extends \BaseController {
         //Stripe don't provide us with the fee so this should be OK
         $fee = (($amount * 0.024) + 0.2);
 
-        $this->paymentRepository->recordPayment($reason, $userId, 'stripe', $charge->id, $amount, 'paid', $fee);
+        $this->paymentRepository->recordPayment($reason, $userId, 'stripe', $charge->id, $amount, 'paid', $fee, $ref);
 
         Notification::success("Payment made");
-        return Redirect::to($redirect_url);
+        return Redirect::to($returnPath);
     }
 
 }
