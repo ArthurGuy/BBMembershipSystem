@@ -258,7 +258,17 @@
             $('.js-alter-subscription-amount-form').removeClass('hidden');
             $(this).hide();
         });
+        var paymentRoutes = {
+            stripe: '{{ route('account.payment.stripe.store', Auth::user()->id) }}',
+            gocardless: '{{ route('account.payment.gocardless.create', Auth::user()->id) }}'
+        };
+        var stripePublicKey = '@stripeKey';
+        @if (!Auth::guest())
+        var memberEmail = '{{ Auth::user()->email }}';
+        @endif
     </script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script src="/js/payments.js"></script>
 
     @yield('footer-js')
 
