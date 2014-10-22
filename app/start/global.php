@@ -22,6 +22,10 @@ ClassLoader::addDirectories(array(
 
 ));
 
+
+
+Event::subscribe('BB\Handlers\PaymentEventHandler');
+
 /*
 |--------------------------------------------------------------------------
 | Application Error Logger

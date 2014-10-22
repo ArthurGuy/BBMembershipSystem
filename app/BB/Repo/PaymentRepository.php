@@ -47,7 +47,7 @@ class PaymentRepository extends DBRepository
         $record->save();
 
         //Emit an event so that things like the balance updater can run
-        \Event::fire('payment.create', array($userId, $reason, $ref));
+        \Event::fire('payment.create', array($userId, $reason, $ref, $record->id));
 
         return $record->id;
     }
