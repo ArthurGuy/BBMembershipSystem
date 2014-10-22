@@ -103,43 +103,9 @@ class GoCardlessPaymentController extends \BaseController {
         $paymentSourceId = $confirmed_resource->id;
         $amount = $confirmed_resource->amount;
         $status = $confirmed_resource->status;
-        $paymentId = $this->paymentRepository->recordPayment($reason, $userId, 'gocardless', $paymentSourceId, $amount, $status, $fee, $ref);
 
-        if ($reason == 'subscription')
-        {
-            $user->status = 'active';
-            $user->active = true;
-            $user->save();
-        }
-        elseif ($reason == 'induction')
-        {
-            Induction::create([
-                    'user_id' => $user->id,
-                    'key' => $ref,
-                    'paid' => true,
-                    'payment_id' => $paymentId
-                ]);
-        }
-        elseif ($reason == 'door-key')
-        {
-            $user->key_deposit_payment_id = $paymentId;
-            $user->save();
-        }
-        elseif ($reason == 'storage-box')
-        {
-            $user->storage_box_payment_id = $paymentId;
-            $user->save();
-        }
-        elseif ($reason == 'balance')
-        {
-            $memberCreditService = \App::make('\BB\Services\Credit');
-            $memberCreditService->setUserId($user->id);
-            $memberCreditService->recalculate();
-        }
-        else
-        {
-            throw new \BB\Exceptions\NotImplementedException();
-        }
+        //The record payment process will make the necessary record updates
+        $this->paymentRepository->recordPayment($reason, $userId, 'gocardless', $paymentSourceId, $amount, $status, $fee, $ref);
 
         Notification::success("Payment made");
         return Redirect::to($returnPath);
