@@ -57,6 +57,9 @@ class PaymentPresenter extends Presenter
             case 'gocardless':
                 return 'Direct Debit';
 
+            case 'stripe':
+                return 'Credit/Debit Card';
+
             case 'paypal':
                 return 'PayPal';
 
