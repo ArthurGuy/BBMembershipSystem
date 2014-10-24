@@ -1,10 +1,10 @@
 @extends('layouts.main')
 
-@section('main-title')
+@section('page-title')
 Page title
 @stop
 
-@section('title')
+@section('meta-title')
 Page title 2
 @stop
 

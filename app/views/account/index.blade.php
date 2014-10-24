@@ -4,20 +4,26 @@
 Member List
 @stop
 
+@section('page-title')
+Members
+@stop
+
+@section('main-tab-bar')
+<nav id="mainTabBar">
+    <ul class="" role="tablist">
+        <li class="@if (Request::get('showLeft', 0) == '0') active @endif">
+            {{ link_to_route('account.index', 'New and Active Members', ['showLeft'=>0]) }}
+        </li>
+        <li class="@if (Request::get('showLeft', 0) == 1) active @endif">
+            {{ link_to_route('account.index', 'Members who have Left', ['showLeft'=>1]) }}
+        </li>
+    </ul>
+</nav>
+@stop
+
 @section('content')
 
 <div class="row page-header">
-    <div class="col-xs-12 col-sm-10">
-        <h1>Members</h1>
-        <ul class="nav nav-pills">
-            <li class="@if (Request::get('showLeft', 0) == '0') active @endif">
-                {{ link_to_route('account.index', 'New and Active Members', ['showLeft'=>0]) }}
-            </li>
-            <li class="@if (Request::get('showLeft', 0) == 1) active @endif">
-                {{ link_to_route('account.index', 'Members who have Left', ['showLeft'=>1]) }}
-            </li>
-        </ul>
-    </div>
     <div class="col-xs-12 col-sm-2">
         <p><a href="{{ route('account.create') }}" class="btn btn-info btn-sm">Create a new member</a></p>
         <p><a href="{{ route('notificationemail.create') }}" class="btn btn-info btn-sm">Email Members</a></p>

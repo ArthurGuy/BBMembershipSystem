@@ -8,9 +8,9 @@ Tools &amp; Equipment
 Tools and Equipment
 @stop
 
-@section('tab-bar')
-<nav id="tabBar">
-    <ul class="nav nav-pills equipmentTabs" role="tablist">
+@section('main-tab-bar')
+<nav id="mainTabBar">
+    <ul class="equipmentTabs" role="tablist">
         @foreach($equipment as $toolId => $tool)
             <li class=""><a href="#{{ $toolId }}" data-toggle="tab" role="tab">{{ $tool->name }}</a></li>
         @endforeach
