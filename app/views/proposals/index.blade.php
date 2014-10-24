@@ -37,6 +37,7 @@ Proposals
 
 <div class="well well-sm">
 Proposals will be carried forward if there are more people in favour of a proposal than against.
-If a proposal doesn't pass it may be reopened for a second round of voting
+If a proposal doesn't pass it may be reopened for a second round of voting providing there is a valid reason.<br />
+Non voters will be counted as having placed a 0 or neutral vote.
 </div>
 @stop
