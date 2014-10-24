@@ -235,6 +235,26 @@
             $field.find('.js-errorMessages').text(errors[n]);
         }
     }
+
+
+    $(".menuToggleButton").on('click', function() {
+        $("body").addClass("menuOpen");
+        $(".modalMask").addClass("display");
+    });
+    $(".modalMask").on('click', function() {
+        $(".modalMask").removeClass("display");
+        $("body").removeClass("menuOpen");
+    });
+
+    $(window).on("scroll", function(e) {
+        //console.log($("body").scrollTop());
+      if ($("body").scrollTop() > 39) {
+        $("#bodyWrap").addClass("fixedHeader");
+      } else {
+        $("#bodyWrap").removeClass("fixedHeader");
+      }
+
+    });
     </script>
 
 
