@@ -155,6 +155,8 @@
 
 </div>
 
+<div class="modalMask"></div>
+
     @if (!Auth::guest())
     <div class="feedbackWidgetButtonWrap hidden-sm">
         <div id="feedbackWidgetButton" data-toggle="modal" data-target="#feedbackWidgetModal">
