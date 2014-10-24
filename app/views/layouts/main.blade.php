@@ -140,7 +140,9 @@
                             <img src="https://img.shields.io/badge/author-@ArthurGuy-2DB94E.svg?style=flat-square" />
                         </a>
                         @if (!Auth::guest())
-                        | <a href="https://github.com/ArthurGuy/BBMembershipSystem/issues">Report an Issue</a>
+                        <span class="hidden-xs">
+                            | <a href="https://github.com/ArthurGuy/BBMembershipSystem/issues">Report an Issue</a>
+                        </span>
                         @endif
                     </span>
                     <span class="text-muted pull-right hidden-xs">
