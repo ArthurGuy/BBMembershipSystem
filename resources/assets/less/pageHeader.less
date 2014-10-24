@@ -1,39 +1,92 @@
 
 #pageTitle {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  //box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   background-color: @brand-primary;
   left: 0;
   right: 0;
   top: 0;
   z-index: 1;
-  position: fixed;
-  height: 64px;
-  padding-left: 240px;
+  position: relative;
+  height: 120px;
+
 
   .titles {
     font-size: 24px;
     line-height: 64px;
-    width: 100%;
     color: #FFF;
-    margin: 0 auto;
+    margin: 00px auto;
     overflow: hidden;
+    padding-top: 40px;
 
     .title {
       margin:10px 20px;
     }
   }
+
+
 }
 
-
-
-.page-header {
-  //background-color: @brand-primary;
-}
-
-@media screen and (max-width: 1429px) {
-
+#bodyWrap.fixedHeader {
+  margin-top: 103px;
   #pageTitle {
-    padding-left: 0;
+    height: 64px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    position: fixed;
+    padding-left: 240px;
+
+    .titles {
+      padding-top: 0px;
+    }
+  }
+  .menuToggleButton {
+    padding-top: 7px;
   }
 
 }
+
+.menuToggleButton {
+  position: relative;
+  float: left;
+  padding: 47px 20px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  .icon-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+    background-color: rgba(255, 255, 255, 0.75);
+    margin-left: 3px;
+
+    & + .icon-bar {
+      margin-top: 4px;
+    }
+  }
+  .menu-label {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 75%;
+    font-weight: 700;
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+
+    #pageTitle {
+      padding-left: 0 !important;
+    }
+  .siteFooter {
+    padding-left: 0 !important;
+  }
+
+}
+@media screen and (min-width: @screen-lg) {
+  //Large screen size
+
+  .menuToggleButton {
+    display: none;
+  }
+
+}
+
+

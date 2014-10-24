@@ -1,0 +1,76 @@
+body {
+  background: #F9F9F9;
+}
+
+#bodyWrap {
+  float: left;
+  height: 100%;
+  padding-bottom: 100px;
+  padding-left: 240px;
+  width: 100%;
+  -webkit-transition: padding-left .3s ease-in;
+  -moz-transition: padding-left .3s ease-in;
+  transition: padding-left .3s ease-in;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+}
+
+
+@media screen and (max-width: @screen-lg) {
+
+  #bodyWrap {
+    padding-left: 0;
+  }
+}
+
+
+.container-fluid {
+  margin-top:25px;
+}
+@media screen and (max-width: @screen-lg) {
+  //Less than Large size
+  .container, .container-fluid {
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+  }
+}
+@media screen and (min-width: @screen-lg) {
+  //Large size
+  .container, .container-fluid {
+    padding-left: 45px !important;
+    padding-right: 45px !important;
+  }
+}
+
+
+
+
+
+.modalMask {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  left: 0;
+  opacity: .1;
+  top: 0;
+  visibility: hidden;
+  width: 100%;
+  z-index: 3;
+  position: fixed;
+  -webkit-transition: visibility 0 linear .4s,opacity .4s cubic-bezier(.4,0,.2,1);
+  -moz-transition: visibility 0 linear .4s,opacity .4s cubic-bezier(.4,0,.2,1);
+  transition: visibility 0 linear .4s,opacity .4s cubic-bezier(.4,0,.2,1);
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.modalMask.display {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition-delay: 0;
+  -moz-transition-delay: 0;
+  transition-delay: 0;
+}

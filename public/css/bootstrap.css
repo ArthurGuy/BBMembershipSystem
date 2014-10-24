@@ -6114,6 +6114,63 @@ button.close {
     display: none !important;
   }
 }
+body {
+  background: #F9F9F9;
+}
+#bodyWrap {
+  float: left;
+  height: 100%;
+  padding-bottom: 100px;
+  padding-left: 240px;
+  width: 100%;
+  -webkit-transition: padding-left 0.3s ease-in;
+  transition: padding-left 0.3s ease-in;
+  box-sizing: border-box;
+}
+@media screen and (max-width: 1200px) {
+  #bodyWrap {
+    padding-left: 0;
+  }
+}
+.container-fluid {
+  margin-top: 25px;
+}
+@media screen and (max-width: 1200px) {
+  .container,
+  .container-fluid {
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .container,
+  .container-fluid {
+    padding-left: 45px !important;
+    padding-right: 45px !important;
+  }
+}
+.modalMask {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  left: 0;
+  opacity: .1;
+  top: 0;
+  visibility: hidden;
+  width: 100%;
+  z-index: 3;
+  position: fixed;
+  -webkit-transition: visibility 0 linear 0.4s, opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: visibility 0 linear 0.4s, opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.modalMask.display {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition-delay: 0;
+  transition-delay: 0;
+}
 .mainSidenav {
   border-right: 1px solid #d9d9d9;
   bottom: 0;
@@ -6123,6 +6180,7 @@ button.close {
   font-family: 'RobotoDraft', sans-serif;
   left: 0;
   position: fixed;
+  overflow: auto;
   top: 0;
   width: 240px;
   z-index: 4;
@@ -6145,6 +6203,7 @@ button.close {
 }
 .mainSidenav .navbar-nav {
   width: 100%;
+  margin-left: 0 !important;
 }
 .mainSidenav .secondaryNav {
   margin-top: 20px;
@@ -6155,68 +6214,102 @@ button.close {
   display: block;
   height: 64px;
   margin: auto;
-  padding: 9px 15px 9px 15px;
+  padding: 7px 15px 7px 15px;
   position: relative;
 }
 .navbar-default {
   display: none;
 }
-.bodyWrap {
-  background: #F9F9F9;
-  float: left;
-  height: 100%;
-  padding-bottom: 100px;
-  padding-left: 240px;
-  width: 100%;
-  -webkit-transition: padding-left 0.3s ease-in;
-  transition: padding-left 0.3s ease-in;
-  box-sizing: border-box;
-}
-@media screen and (max-width: 1429px) {
+@media screen and (max-width: 1200px) {
   .mainSidenav {
     visibility: hidden;
     -webkit-transform: translateX(-241px);
     -ms-transform: translateX(-241px);
     transform: translateX(-241px);
   }
-  .bodyWrap {
-    padding-left: 0;
-  }
 }
-.container-fluid {
-  margin-top: 64px;
+.menuOpen .mainSidenav {
+  visibility: visible;
+  -webkit-transform: translateX(0px);
+      -ms-transform: translateX(0px);
+          transform: translateX(0px);
 }
 #pageTitle {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   background-color: #1e8c99;
   left: 0;
   right: 0;
   top: 0;
   z-index: 1;
-  position: fixed;
-  height: 64px;
-  padding-left: 240px;
+  position: relative;
+  height: 120px;
 }
 #pageTitle .titles {
   font-size: 24px;
   line-height: 64px;
-  width: 100%;
   color: #FFF;
-  margin: 0 auto;
+  margin: 00px auto;
   overflow: hidden;
+  padding-top: 40px;
 }
 #pageTitle .titles .title {
   margin: 10px 20px;
 }
-@media screen and (max-width: 1429px) {
+#bodyWrap.fixedHeader {
+  margin-top: 103px;
+}
+#bodyWrap.fixedHeader #pageTitle {
+  height: 64px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  position: fixed;
+  padding-left: 240px;
+}
+#bodyWrap.fixedHeader #pageTitle .titles {
+  padding-top: 0px;
+}
+#bodyWrap.fixedHeader .menuToggleButton {
+  padding-top: 7px;
+}
+.menuToggleButton {
+  position: relative;
+  float: left;
+  padding: 47px 20px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.menuToggleButton .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+  background-color: rgba(255, 255, 255, 0.75);
+  margin-left: 3px;
+}
+.menuToggleButton .icon-bar + .icon-bar {
+  margin-top: 4px;
+}
+.menuToggleButton .menu-label {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 75%;
+  font-weight: 700;
+}
+@media screen and (max-width: 1200px) {
   #pageTitle {
-    padding-left: 0;
+    padding-left: 0 !important;
+  }
+  .siteFooter {
+    padding-left: 0 !important;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .menuToggleButton {
+    display: none;
   }
 }
 #mainTabBar {
   height: 64px;
   background-color: #1e8c99;
-  margin-top: 64px;
+  margin-top: 0px;
   color: #FFF;
   font-size: 19px;
 }
