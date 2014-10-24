@@ -4,7 +4,7 @@
 Tools &amp; Equipment
 @stop
 
-@section('title')
+@section('meta-title')
 Tools and Equipment
 @stop
 

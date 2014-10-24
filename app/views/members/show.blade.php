@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title')
+@section('meta-title')
 {{ $user->name }}
 @stop
 
