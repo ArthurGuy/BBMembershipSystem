@@ -88,12 +88,17 @@
         </ul>
     </nav>
 
-
-<div class="bodyWrap">
+<div id="bodyWrap">
 
     <header id="pageTitle">
+        <div class="menuToggleButton">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="menu-label">Menu</span>
+        </div>
         <div class="titles">
-            <h1 class="title">@yield('main-title', 'Page Title')</h1>
+            <h1 class="title">@yield('page-title', 'Page Title')</h1>
         </div>
     </header>
 
