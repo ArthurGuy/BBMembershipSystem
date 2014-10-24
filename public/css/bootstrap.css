@@ -6155,7 +6155,7 @@ button.close {
   display: block;
   height: 64px;
   margin: auto;
-  padding: 12px 15px 10px 15px;
+  padding: 9px 15px 9px 15px;
   position: relative;
 }
 .navbar-default {
@@ -6183,6 +6183,77 @@ button.close {
     padding-left: 0;
   }
 }
-.page-header {
+.container-fluid {
+  margin-top: 64px;
+}
+#pageTitle {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   background-color: #1e8c99;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  position: fixed;
+  height: 64px;
+  padding-left: 240px;
+}
+#pageTitle .titles {
+  font-size: 24px;
+  line-height: 64px;
+  width: 100%;
+  color: #FFF;
+  margin: 0 auto;
+  overflow: hidden;
+}
+#pageTitle .titles .title {
+  margin: 10px 20px;
+}
+@media screen and (max-width: 1429px) {
+  #pageTitle {
+    padding-left: 0;
+  }
+}
+#mainTabBar {
+  height: 64px;
+  background-color: #1e8c99;
+  margin-top: 64px;
+  color: #FFF;
+  font-size: 19px;
+}
+#mainTabBar ul {
+  margin: 5px 0;
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+#mainTabBar li {
+  float: left;
+  position: relative;
+  display: block;
+}
+#mainTabBar li.active {
+  border-bottom: 5px solid #FFF;
+}
+#mainTabBar li:hover {
+  border-bottom: 5px solid #FFF;
+}
+#mainTabBar a {
+  position: relative;
+  display: block;
+  padding: 15px 25px 12px;
+  color: #FFF;
+}
+#mainTabBar a:hover,
+#mainTabBar a:active,
+#mainTabBar a:visited,
+#mainTabBar a:focus {
+  text-decoration: none;
+}
+.siteFooter {
+  bottom: 0;
+  right: 0;
+  padding-left: 240px;
+}
+.siteFooter .container-fluid {
+  margin-top: 0;
 }

@@ -1,3 +1,39 @@
-.page-header {
+
+#pageTitle {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   background-color: @brand-primary;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  position: fixed;
+  height: 64px;
+  padding-left: 240px;
+
+  .titles {
+    font-size: 24px;
+    line-height: 64px;
+    width: 100%;
+    color: #FFF;
+    margin: 0 auto;
+    overflow: hidden;
+
+    .title {
+      margin:10px 20px;
+    }
+  }
+}
+
+
+
+.page-header {
+  //background-color: @brand-primary;
+}
+
+@media screen and (max-width: 1429px) {
+
+  #pageTitle {
+    padding-left: 0;
+  }
+
 }
