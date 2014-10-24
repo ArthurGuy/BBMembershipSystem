@@ -30,6 +30,8 @@
 
         <span class="sidenav-brand">
             <a href="{{ route('home') }}"><img class="" src="/img/logo.png" height="50" /></a>
+            {{ HTML::statusLabel(Auth::user()->status) }}
+            @if (Auth::user()->isAdmin())<span class="label label-danger">Admin</span>@endif
         </span>
 
         <ul class="nav navbar-nav">
