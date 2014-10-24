@@ -25,10 +25,11 @@
     @endif
 </head>
 <body class="{{ $body_class or '' }}">
+
     <nav class="mainSidenav" role="navigation">
 
         <span class="sidenav-brand">
-            <a href="{{ route('home') }}"><img class="" src="/img/logo.png" height="45" /></a>
+            <a href="{{ route('home') }}"><img class="" src="/img/logo.png" height="50" /></a>
         </span>
 
         <ul class="nav navbar-nav">
@@ -100,6 +101,7 @@
             @endif
         </ul>
     </nav>
+
 <nav class="navbar navbar-default " role="navigation">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -191,7 +193,17 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
+
 <div class="bodyWrap">
+
+    <header id="pageTitle">
+        <div class="titles">
+            <h1 class="title">@yield('main-title', 'Page Title')</h1>
+        </div>
+    </header>
+
+    @yield('main-tab-bar')
+
     <div class="container-fluid">
 
         @include('partials/flash')
@@ -215,7 +227,7 @@
         @yield('content')
 
     </div>
-</div>
+
     <footer class="siteFooter">
         <div class="container-fluid">
             <div class="row">
@@ -239,8 +251,10 @@
         </div>
     </footer>
 
+</div>
+
     @if (!Auth::guest())
-    <div class="feedbackWidgetButtonWrap">
+    <div class="feedbackWidgetButtonWrap hidden-sm">
         <div id="feedbackWidgetButton" data-toggle="modal" data-target="#feedbackWidgetModal">
             <span class="glyphicon glyphicon-bullhorn"></span> Feedback
         </div>

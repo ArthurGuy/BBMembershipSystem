@@ -1,19 +1,27 @@
 @extends('layouts.main')
 
+@section('main-title')
+Tools &amp; Equipment
+@stop
+
 @section('title')
 Tools and Equipment
 @stop
 
+@section('tab-bar')
+<nav id="tabBar">
+    <ul class="nav nav-pills equipmentTabs" role="tablist">
+        @foreach($equipment as $toolId => $tool)
+            <li class=""><a href="#{{ $toolId }}" data-toggle="tab" role="tab">{{ $tool->name }}</a></li>
+        @endforeach
+    </ul>
+</nav>
+@stop
+
+
 @section('content')
 
-<div class="page-header">
-    <h1>Tools &amp; Equipment</h1>
-</div>
-<ul class="nav nav-pills equipmentTabs" role="tablist">
-    @foreach($equipment as $toolId => $tool)
-        <li class=""><a href="#{{ $toolId }}" data-toggle="tab" role="tab">{{ $tool->name }}</a></li>
-    @endforeach
-</ul>
+
 
 <div class="tab-content">
 @foreach($equipment as $toolId => $tool)
