@@ -82,119 +82,12 @@
                 <li><a href="{{ route('login') }}">Login</a></li>
                 <li><a href="{{ route('register') }}">Become a Member</a></li>
             @else
-
                 <li><a href="{{ route('account.show', Auth::id()) }}">Your Membership</a></li>
                 <li><a href="{{ route('logout') }}">Logout</a></li>
-
-                @if (Auth::user()->isAdmin())
-                <li>
-                    <span class="navbar-text">
-                        <span class="label label-danger">Admin</span>
-                    </span>
-                </li>
-                @endif
-
-                <li>
-                    <span class="navbar-text">
-                        {{ HTML::statusLabel(Auth::user()->status) }}
-                    </span>
-                </li>
-
             @endif
         </ul>
     </nav>
 
-<nav class="navbar navbar-default " role="navigation">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-
-            <a class="navbar-brand brand-logo" href="{{ route('home') }}"><img class="" src="/img/logo.png" height="40" /></a>
-
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <a class="navbar-brand brand-name-short" href="{{ route('home') }}" title="Build Brighton Member System">BB Member System</a>
-            <a class="navbar-brand" href="">BB</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="detail-link">
-                    <a href="{{ route('members.index') }}">
-                        Members
-                    </a>
-                </li>
-                <li class="detail-link">
-                    <a href="{{ route('storage_boxes.index') }}">
-                        Member Storage
-                    </a>
-                </li>
-                <li class="detail-link">
-                    <a href="{{ route('equipment.index') }}">
-                        Tools and Equipment
-                    </a>
-                </li>
-                <li class="detail-link">
-                    <a href="{{ route('activity.index') }}">
-                        Activity
-                    </a>
-                </li>
-                <li class="detail-link">
-                    <a href="{{ route('stats.index') }}">
-                        Stats
-                    </a>
-                </li>
-                <li class="detail-link">
-                    <a href="{{ route('proposals.index') }}">
-                        Proposals
-                    </a>
-                </li>
-
-                @if (!Auth::guest() && Auth::user()->isAdmin())
-
-                <li class="detail-link">
-                    <a href="{{ route('account.index') }}">
-                        Members (Admin)
-                    </a>
-                </li>
-
-                @endif
-            </ul>
-
-
-            <ul class="nav navbar-nav navbar-right">
-                @if (Auth::guest())
-                <li><a href="{{ route('login') }}">Login</a></li>
-                <li><a href="{{ route('register') }}">Become a Member</a></li>
-                @else
-
-                @if (Auth::user()->isAdmin())
-                <li>
-                    <span class="navbar-text">
-                        <span class="label label-danger">Admin</span>
-                    </span>
-                </li>
-                @endif
-
-                <li>
-                    <span class="navbar-text">
-                        {{ HTML::statusLabel(Auth::user()->status) }}
-                    </span>
-                </li>
-
-                <li><a href="{{ route('account.show', Auth::id()) }}">Your Membership</a></li>
-                <li><a href="{{ route('logout') }}">Logout</a></li>
-                @endif
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
 
 <div class="bodyWrap">
 
