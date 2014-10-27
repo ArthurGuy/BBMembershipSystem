@@ -75,7 +75,7 @@
                 <div class="col col-sm-12">
                     <span class="text-muted">
                         <a href="https://github.com/ArthurGuy/BBMembershipSystem">
-                            <img src="https://img.shields.io/badge/source-ArthurGuy%2FBBMembershipSystem-blue.svg?style=flat-square" />
+                            <img src="https://img.shields.io/badge/source-ArthurGuy%2FBBMS-blue.svg?style=flat-square" />
                         </a>
                         <a href="https://twitter.com/ArthurGuy">
                             <img src="https://img.shields.io/badge/author-@ArthurGuy-2DB94E.svg?style=flat-square" />
