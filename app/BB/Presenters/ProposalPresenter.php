@@ -22,9 +22,9 @@ class ProposalPresenter extends Presenter {
     public function status()
     {
         if ($this->entity->isOpen()) {
-            return 'Open for votes';
+            return 'Open';
         } else {
-            return 'Voting closed';
+            return 'Closed';
         }
     }
 
