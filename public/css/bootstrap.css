@@ -1,3 +1,23 @@
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif;
@@ -6254,6 +6274,28 @@ body {
   right: 0;
   top: 0;
   padding: 15px;
+}
+.mainSidenav .toggleSettings:hover > span.glyphicon {
+  -webkit-animation-name: spin;
+          animation-name: spin;
+  -webkit-animation-duration: 1000ms;
+          animation-duration: 1000ms;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+}
+.mainSidenav .memberAccountLinks .accountSettings {
+  overflow: hidden;
+  height: 0;
+  padding: 0;
+  -webkit-transition: height 0.2s;
+          transition: height 0.2s;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mainSidenav .memberAccountLinks.open .accountSettings {
+  height: 70px;
 }
 .sidenav-brand {
   display: block;

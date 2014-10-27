@@ -8,7 +8,7 @@
             @endif
         </span>
         @if (!Auth::guest())
-        <ul class="nav">
+        <ul class="nav memberAccountLinks">
             <li class="withAction">
                 <a href="{{ route('account.show', [Auth::id()]) }}">Your Membership</a>
                 <a class="toggleSettings" href=""><span class="glyphicon glyphicon-cog"></span></a>

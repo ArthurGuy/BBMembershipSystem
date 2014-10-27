@@ -63,6 +63,25 @@
     top: 0;
     padding: 15px;
   }
+  .toggleSettings:hover > span.glyphicon {
+    animation-name: spin;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+
+  .memberAccountLinks .accountSettings {
+    //display: none;
+    overflow: hidden;
+    height: 0;
+    padding: 0;
+    transition: height 0.2s;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  }
+  .memberAccountLinks.open .accountSettings {
+    //display: block;
+    height: 70px;
+  }
 }
 .sidenav-brand {
 
@@ -87,5 +106,4 @@
   visibility: visible;
   transform: translateX(0px);
 }
-
 

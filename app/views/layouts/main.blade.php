@@ -189,7 +189,6 @@
     });
 
     $(window).on("scroll", function(e) {
-        //console.log($("body").scrollTop());
       if ($("body").scrollTop() > 103) {
         $("#bodyWrap").addClass("fixedHeader");
       } else {
@@ -200,9 +199,8 @@
 
     $(".mainSidenav .toggleSettings").on('click', function(event) {
         event.preventDefault();
-        $(".mainSidenav .accountSettings").toggleClass('hidden');
+        $(".mainSidenav .memberAccountLinks").toggleClass('open');
     });
-    $(".mainSidenav .accountSettings").addClass('hidden');
     </script>
 
 
