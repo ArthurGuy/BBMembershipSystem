@@ -1,13 +1,15 @@
 @extends('layouts.main')
 
-@section('title')
+@section('meta-title')
+Proposals
+@stop
+@section('page-title')
 Proposals
 @stop
 
 @section('content')
 
 <div class="page-header">
-    <h1>Proposals</h1>
     <h4>Have your say in what happens at Build Brighton</h4>
 </div>
 
@@ -19,7 +21,6 @@ Proposals
             <th>Status</th>
             <th>End Date</th>
             <th>Outcome</th>
-            <th>Proposal Created</th>
         </tr>
     </thead>
 @foreach ($proposals as $proposal)
@@ -29,7 +30,6 @@ Proposals
             <td>{{ $proposal->present()->status }}</td>
             <td>{{ $proposal->present()->end_date }}</td>
             <td>{{ $proposal->present()->outcome }}</td>
-            <td>{{ $proposal->present()->created_at }}</td>
         </tr>
     </tbody>
 @endforeach

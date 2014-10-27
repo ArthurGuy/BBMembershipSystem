@@ -1,13 +1,15 @@
 @extends('layouts.main')
 
-@section('title')
+@section('meta-title')
 Build Brighton Members
 @stop
 
+@section('page-title')
+Members
+@stop
+
+
 @section('content')
-<div class="page-header">
-    <h1>Members</h1>
-</div>
 
 <div class="member-grid">
     <div class="row">

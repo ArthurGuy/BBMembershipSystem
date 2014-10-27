@@ -1,0 +1,39 @@
+#mainTabBar {
+  height: 64px;
+  background-color: @brand-primary;
+  margin-top: 0px;
+  color: #FFF;
+  font-size: ceil((@font-size-base * 1.3));
+
+  ul {
+    margin: 5px 0;
+    float: left;
+    width: 100%;
+    padding: 0;
+  }
+
+  li {
+    float: left;
+    position: relative;
+    display: block;
+
+    &.active {
+      border-bottom:5px solid #FFF;
+    }
+    &:hover {
+      border-bottom:5px solid #FFF;
+    }
+
+
+  }
+  a {
+    position: relative;
+    display: block;
+    padding: 15px 25px 12px;
+    color: #FFF;
+
+    &:hover, &:active, &:visited, &:focus {
+      text-decoration: none;
+    }
+  }
+}
