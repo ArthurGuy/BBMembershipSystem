@@ -5,7 +5,8 @@
 @stop
 
 @section('page-title')
-    {{ $user->name }}
+    {{ $user->name }}<br />
+    <small>{{ $user->email }}</small>
 @stop
 
 @section('page-key-image')
