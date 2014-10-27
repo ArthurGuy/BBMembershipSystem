@@ -62,7 +62,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
 
     public function sideNavLink($name, $route, $routeParams=[])
     {
-        return '<li class=""><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
+        return '<li><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
     }
 
 }

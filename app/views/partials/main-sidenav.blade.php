@@ -13,9 +13,9 @@
                 <a href="{{ route('account.show', [Auth::id()]) }}">Your Membership</a>
                 <a class="toggleSettings" href=""><span class="glyphicon glyphicon-cog"></span></a>
             </li>
-            <ul class="nav nested-nav accountSettings hidden">
-                {{ HTML::sideNavLink('Edit your account', 'account.edit', [Auth::id()]) }}
-                {{ HTML::sideNavLink('Edit your profile', 'account.profile.edit', [Auth::id()]) }}
+            <ul class="nav nested-nav accountSettings">
+                {{ HTML::sideNavLink('Edit Your Account', 'account.edit', [Auth::id()]) }}
+                {{ HTML::sideNavLink('Edit Your Profile', 'account.profile.edit', [Auth::id()]) }}
             </ul>
         </ul>
         @endif

@@ -201,7 +201,7 @@
         event.preventDefault();
         $(".mainSidenav .accountSettings").toggleClass('hidden');
     });
-
+    $(".mainSidenav .accountSettings").addClass('hidden');
     </script>
 
 
