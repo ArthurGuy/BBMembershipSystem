@@ -6454,3 +6454,30 @@ body.register_login #pageTitle {
 .memberProfile .editProfileLink {
   margin-top: 10px;
 }
+.memberActivityGrid {
+  text-align: center;
+}
+.memberActivityGrid a:hover {
+  text-decoration: none;
+}
+.memberActivityGrid .activityBlock {
+  background-color: #1e8c99;
+  margin-bottom: 20px;
+  border: 1px solid #f2f2f2;
+}
+.memberActivityGrid .activityBlock .profilePhoto {
+  min-width: 125px;
+  width: 100%;
+  height: 100%;
+}
+.memberActivityGrid .activityBlock .activityDetails {
+  margin: 10px 5px;
+  height: 60px;
+  color: white;
+}
+.memberActivityGrid .activityBlock a {
+  color: white;
+}
+.memberActivityGrid .activityBlock a:hover {
+  text-decoration: none;
+}

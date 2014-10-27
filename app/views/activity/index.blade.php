@@ -26,17 +26,17 @@ Activity Log
     </ul>
 </div>
 
-<div class="member-grid">
+<div class="memberActivityGrid">
     <div class="row">
         @foreach ($logEntries as $logEntry)
         <div class="col-sm-6 col-md-4 col-lg-2">
-            <div class="thumbnail">
+            <div class="activityBlock">
                 @if ($logEntry->user->profile->profile_photo)
-                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($logEntry->user->hash) }}" width="120" height="120" class="img-circle" />
+                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($logEntry->user->hash) }}" width="200" height="200" class="profilePhoto" />
                 @else
-                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="120" height="120" class="img-circle" />
+                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="200" height="200" class="profilePhoto" />
                 @endif
-                <div class="caption">
+                <div class="activityDetails">
                     <strong><a href="{{ route('members.show', $logEntry->user->id) }}">{{ $logEntry->user->name }}</a></strong><br />
                     {{ $logEntry->created_at->toTimeString() }}
                 </div>
