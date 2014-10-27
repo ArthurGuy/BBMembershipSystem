@@ -1,0 +1,24 @@
+.snackBar {
+  padding: 15px;
+  margin: 0 auto;
+  position: fixed;
+  min-width: 288px;
+  max-width: 568px;
+  bottom: 20px;
+  z-index: 4;
+  background-color: #323232;
+  color: @gray-lightest;
+  border-radius: 2px;
+
+  ul {
+    margin-bottom: 0;
+    padding-left: 17px;
+  }
+}
+
+@media screen and (min-width: @screen-lg) {
+  //Large screen size
+  .snackBar {
+    min-width: 500px;
+  }
+}

@@ -49,6 +49,7 @@
 
         @include('partials/flash')
 
+        <!-- This alert block shouldn't be used any more and can probably be removed -->
         <div class="top-alerts">
             @if($errors->any())
             <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

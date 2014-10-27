@@ -6481,3 +6481,24 @@ body.register_login #pageTitle {
 .memberActivityGrid .activityBlock a:hover {
   text-decoration: none;
 }
+.snackBar {
+  padding: 15px;
+  margin: 0 auto;
+  position: fixed;
+  min-width: 288px;
+  max-width: 568px;
+  bottom: 20px;
+  z-index: 4;
+  background-color: #323232;
+  color: #f2f2f2;
+  border-radius: 2px;
+}
+.snackBar ul {
+  margin-bottom: 0;
+  padding-left: 17px;
+}
+@media screen and (min-width: 1200px) {
+  .snackBar {
+    min-width: 500px;
+  }
+}

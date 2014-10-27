@@ -84,7 +84,7 @@ App::error(function(\BB\Exceptions\FormValidationException $exception)
     if (Request::wantsJson()) {
         return Response::json($exception->getErrors(), 400);
     } else {
-        Notification::error("Something wasn't right, please check the errors below", $exception->getErrors());
+        Notification::error("Something wasn't right, please check the form for errors", $exception->getErrors());
         return Redirect::back()->withInput();
     }
 });
