@@ -7,7 +7,7 @@
   top: 0;
   z-index: 1;
   position: relative;
-  height: 120px;
+  min-height: 170px; //120
 
 
   .titles {
@@ -16,30 +16,48 @@
     color: #FFF;
     margin: 00px auto;
     overflow: hidden;
-    padding-top: 40px;
+    padding-top: 103px;
 
     .title {
       margin:10px 20px;
     }
+    img {
+      float: left;
+      margin: 10px 20px;
+      transition: all .1s;
+      margin-top: -50px;
+    }
   }
-
-
 }
 
+
+//On the home and register page don't render the title block
+body.home #pageTitle, body.register_login #pageTitle {
+  display: none;
+}
+
+//Scrolled down the page
 #bodyWrap.fixedHeader {
-  margin-top: 103px;
+
   #pageTitle {
-    height: 64px;
+    min-height: 64px;
+    height: initial;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
     position: fixed;
     padding-left: 240px;
 
     .titles {
       padding-top: 0px;
+
+      img {
+        width: 0px;
+        height: 0px;
+        margin:0;
+      }
     }
   }
   .menuToggleButton {
-    padding-top: 7px;
+    padding-top: 11px;
   }
 
 }
@@ -47,7 +65,7 @@
 .menuToggleButton {
   position: relative;
   float: left;
-  padding: 47px 20px 0;
+  padding: 112px 10px 0 20px;
   margin-top: 8px;
   margin-bottom: 8px;
   cursor: pointer;
@@ -67,6 +85,13 @@
     color: rgba(255, 255, 255, 0.75);
     font-size: 75%;
     font-weight: 700;
+  }
+}
+
+@media screen and (max-width: @screen-sm-min) {
+  #pageTitle .titles h1 {
+    font-size: @font-size-h1 * 0.66;
+    margin-top: 20px !important;
   }
 }
 

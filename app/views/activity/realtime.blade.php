@@ -1,8 +1,16 @@
-<script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
+@extends('layouts.main')
 
-<div class="page-header">
-    <h1>Realtime Activity Log</h1>
-</div>
+@section('meta-title')
+Realtime Activity Log
+@stop
+
+@section('page-title')
+Realtime Activity Log
+@stop
+
+@section('content')
+
+<script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
 
 <h3>Door Access</h3>
 <div id="member-grid" class="member-grid">
@@ -26,3 +34,5 @@
         }
     });
 </script>
+
+@stop

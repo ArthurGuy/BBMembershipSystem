@@ -1,17 +1,25 @@
-<div class="page-header">
-    <h1>Stats</h1>
-</div>
+@extends('layouts.main')
+
+@section('meta-title')
+Stats
+@stop
+
+@section('page-title')
+Stats
+@stop
+
+@section('content')
 
 <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="col-sm-12 col-md-6 col-lg-4 well">
         <h3 class="text-center">Payment Methods</h3>
         <div id="paymentMethods" style="height:400px"></div>
     </div>
-    <div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="col-sm-12 col-md-6 col-lg-4 well">
         <h3 class="text-center">Monthly Subscription Amounts</h3>
         <div id="monthlyAmounts" style="height:400px"></div>
     </div>
-    <div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="col-sm-12 col-md-6 col-lg-4 well">
 
         <h3 class="text-center">Average Monthly Subscription</h3>
         <p class="text-center">
@@ -60,3 +68,5 @@ google.load("visualization", "1", {packages:["corechart"]});
     }
 
 </script>
+
+@stop

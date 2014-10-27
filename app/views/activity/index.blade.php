@@ -1,5 +1,16 @@
+@extends('layouts.main')
+
+@section('meta-title')
+Activity Log
+@stop
+
+@section('page-title')
+Activity Log
+@stop
+
+@section('content')
+
 <div class="page-header">
-    <h1>Activity Log</h1>
     <h3>Door access to the main space - {{ $date->format('l jS \\of F'); }}</h3>
     <ul class="pager">
     @if ($previousDate)
@@ -34,3 +45,5 @@
         @endforeach
     </div>
 </div>
+
+@stop

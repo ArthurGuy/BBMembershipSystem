@@ -5258,8 +5258,8 @@ a.list-group-item-danger.active:focus {
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
-  background-color: #f5f5f5;
-  border: 1px solid #e3e3e3;
+  background-color: #ffffff;
+  border: 1px solid #ededed;
   border-radius: 1px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
@@ -6127,6 +6127,9 @@ body {
   transition: padding-left 0.3s ease-in;
   box-sizing: border-box;
 }
+#bodyWrap.fixedHeader {
+  margin-top: 168px;
+}
 @media screen and (max-width: 1200px) {
   #bodyWrap {
     padding-left: 0;
@@ -6142,12 +6145,23 @@ body {
     padding-right: 25px !important;
   }
 }
+@media screen and (max-width: 992px) {
+  .container,
+  .container-fluid {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
 @media screen and (min-width: 1200px) {
   .container,
   .container-fluid {
     padding-left: 45px !important;
     padding-right: 45px !important;
   }
+}
+.row {
+  margin-left: -10px;
+  margin-right: -10px;
 }
 .modalMask {
   background-color: rgba(0, 0, 0, 0.5);
@@ -6241,7 +6255,7 @@ body {
   top: 0;
   z-index: 1;
   position: relative;
-  height: 120px;
+  min-height: 170px;
 }
 #pageTitle .titles {
   font-size: 24px;
@@ -6249,16 +6263,25 @@ body {
   color: #FFF;
   margin: 00px auto;
   overflow: hidden;
-  padding-top: 40px;
+  padding-top: 103px;
 }
 #pageTitle .titles .title {
   margin: 10px 20px;
 }
-#bodyWrap.fixedHeader {
-  margin-top: 103px;
+#pageTitle .titles img {
+  float: left;
+  margin: 10px 20px;
+  -webkit-transition: all .1s;
+          transition: all .1s;
+  margin-top: -50px;
+}
+body.home #pageTitle,
+body.register_login #pageTitle {
+  display: none;
 }
 #bodyWrap.fixedHeader #pageTitle {
-  height: 64px;
+  min-height: 64px;
+  height: initial;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   position: fixed;
   padding-left: 240px;
@@ -6266,13 +6289,18 @@ body {
 #bodyWrap.fixedHeader #pageTitle .titles {
   padding-top: 0px;
 }
+#bodyWrap.fixedHeader #pageTitle .titles img {
+  width: 0px;
+  height: 0px;
+  margin: 0;
+}
 #bodyWrap.fixedHeader .menuToggleButton {
-  padding-top: 7px;
+  padding-top: 11px;
 }
 .menuToggleButton {
   position: relative;
   float: left;
-  padding: 47px 20px 0;
+  padding: 112px 10px 0 20px;
   margin-top: 8px;
   margin-bottom: 8px;
   cursor: pointer;
@@ -6292,6 +6320,12 @@ body {
   color: rgba(255, 255, 255, 0.75);
   font-size: 75%;
   font-weight: 700;
+}
+@media screen and (max-width: 768px) {
+  #pageTitle .titles h1 {
+    font-size: 23.76px;
+    margin-top: 20px !important;
+  }
 }
 @media screen and (max-width: 1200px) {
   #pageTitle {
@@ -6349,4 +6383,13 @@ body {
 }
 .siteFooter .container-fluid {
   margin-top: 0;
+}
+.memberList .profilePhotoCol {
+  text-align: center;
+}
+@media screen and (max-width: 992px) {
+  .memberList .profilePhoto {
+    width: 50px;
+    height: 50px;
+  }
 }

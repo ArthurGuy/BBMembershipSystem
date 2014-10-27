@@ -30,8 +30,10 @@
 
         <span class="sidenav-brand">
             <a href="{{ route('home') }}"><img class="" src="/img/logo.png" height="50" /></a>
+            @if (!Auth::guest())
             {{ HTML::statusLabel(Auth::user()->status) }}
             @if (Auth::user()->isAdmin())<span class="label label-danger">Admin</span>@endif
+            @endif
         </span>
 
         <ul class="nav navbar-nav">
@@ -60,20 +62,18 @@
                     Stats
                 </a>
             </li>
-            @if (!Auth::guest() && Auth::user()->isAdmin())
-
             <li class="detail-link">
                 <a href="{{ route('proposals.index') }}">
-                    Proposals (Admin)
+                    Proposals
                 </a>
             </li>
 
+            @if (!Auth::guest() && Auth::user()->isAdmin())
             <li class="detail-link">
                 <a href="{{ route('account.index') }}">
                     Members (Admin)
                 </a>
             </li>
-
             @endif
         </ul>
 
@@ -98,7 +98,8 @@
             <span class="menu-label">Menu</span>
         </div>
         <div class="titles">
-            <h1 class="title">@yield('page-title', 'Page Title')</h1>
+            <span class="hidden-xs">@yield('page-key-image')</span>
+            <h1 class="title">@yield('page-title')</h1>
         </div>
     </header>
 
@@ -248,13 +249,14 @@
 
     $(window).on("scroll", function(e) {
         //console.log($("body").scrollTop());
-      if ($("body").scrollTop() > 39) {
+      if ($("body").scrollTop() > 103) {
         $("#bodyWrap").addClass("fixedHeader");
       } else {
         $("#bodyWrap").removeClass("fixedHeader");
       }
 
     });
+
     </script>
 
 

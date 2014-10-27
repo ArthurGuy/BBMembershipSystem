@@ -1,14 +1,15 @@
 @extends('layouts.main')
 
 @section('meta-title')
-Edit your profile
+Edit your details
+@stop
+
+@section('page-title')
+Edit your details
 @stop
 
 @section('content')
 
-<div class="page-header">
-    <h1>Edit your details</h1>
-</div>
 
 {{ Form::model($user, array('route' => ['account.update', $user->id], 'method'=>'PUT', 'files'=>true)) }}
 

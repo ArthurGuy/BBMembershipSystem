@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('page-title')
-Page title
+A longer page title
 @stop
 
 @section('meta-title')

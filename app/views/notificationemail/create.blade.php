@@ -4,16 +4,19 @@
 Email all active members
 @stop
 
+@section('page-title')
+Email Members
+@stop
+
 @section('content')
 
     <div class="row page-header">
         <div class="col-xs-12">
-            <h1>Email Members</h1>
             <p>Send an email to all the active members</p>
         </div>
     </div>
 
-    <div class="col-xs-6">
+    <div class="col-xs-12 col-md-12 col-lg-8">
         {{ Form::open(array('route' => 'notificationemail.store', 'class'=>'', 'method'=>'POST')) }}
 
         <div class="row">

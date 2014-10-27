@@ -12,10 +12,10 @@ Members
 <nav id="mainTabBar">
     <ul class="" role="tablist">
         <li class="@if (Request::get('showLeft', 0) == '0') active @endif">
-            {{ link_to_route('account.index', 'New and Active Members', ['showLeft'=>0]) }}
+            {{ link_to_route('account.index', 'Active Members', ['showLeft'=>0]) }}
         </li>
         <li class="@if (Request::get('showLeft', 0) == 1) active @endif">
-            {{ link_to_route('account.index', 'Members who have Left', ['showLeft'=>1]) }}
+            {{ link_to_route('account.index', 'Old Members', ['showLeft'=>1]) }}
         </li>
     </ul>
 </nav>
@@ -23,27 +23,25 @@ Members
 
 @section('content')
 
-<div class="row page-header">
-    <div class="col-xs-12 col-sm-2">
-        <p><a href="{{ route('account.create') }}" class="btn btn-info btn-sm">Create a new member</a></p>
-        <p><a href="{{ route('notificationemail.create') }}" class="btn btn-info btn-sm">Email Members</a></p>
+<div class="row">
+    <div class="col-xs-12">
+        <p class="">
+            <a href="{{ route('account.create') }}" class="btn btn-info btn-sm">Create a new member</a>
+            <a href="{{ route('notificationemail.create') }}" class="btn btn-info btn-sm">Email Members</a>
+        </p>
     </div>
 </div>
 
 {{ HTML::userPaginatorLinks($users) }}
-<table class="table">
+<table class="table memberList">
     <thead>
         <tr>
             <th></th>
             <th>{{ HTML::sortUsersBy('family_name', 'Name') }}</th>
-            <th>Email</th>
-            <th>{{ HTML::sortUsersBy('active', 'Active') }}</th>
             <th>{{ HTML::sortUsersBy('status', 'Status') }}</th>
-            <th>{{ HTML::sortUsersBy('key_holder', 'Key Holder') }}</th>
-            <th>{{ HTML::sortUsersBy('trusted', 'Trusted') }}</th>
-            <th>Payment Method</th>
-            <th>Subscription Expires</th>
-            <!--<th>Payment</th>-->
+            <th class="hidden-xs">{{ HTML::sortUsersBy('key_holder', 'Key Holder') }}</th>
+            <th class="hidden-xs">{{ HTML::sortUsersBy('trusted', 'Trusted') }}</th>
+            <th class="hidden-xs">Subscription</th>
         </tr>
     </thead>
     <tbody>

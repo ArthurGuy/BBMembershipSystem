@@ -1,5 +1,8 @@
 <ul class="nav nav-pills">
     <li>
+        <p class="navbar-text">{{ $user->email }}</p>
+    </li>
+    <li>
         <p class="navbar-text">{{ HTML::statusLabel($user->status) }}</p>
     </li>
 

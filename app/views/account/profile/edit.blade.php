@@ -1,10 +1,17 @@
 @extends('layouts.main')
 
+@section('meta-title')
+Fill in your profile
+@stop
+
+@section('page-title')
+Fill in your profile
+@stop
+
 @section('content')
 <div class="col-xs-12 col-md-8 col-md-offset-2">
 
 <div class="page-header">
-    <h1>Fill in your profile</h1>
     <p>This information will be shared with others, enter as much or as little as you want</p>
 </div>
 
