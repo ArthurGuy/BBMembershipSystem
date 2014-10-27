@@ -9,29 +9,22 @@
 @stop
 
 @section('content')
-<div class="row">
-    <div class="col-sm-12 col-md-8 col-md-offset-2">
-        <div class="row page-header">
-            <div class="col-xs-12 col-sm-12 col-lg-10">
-                <h1>{{ $user->name }}</h1>
-                <h3>{{ $profileData->present()->tagline }}</h3>
-            </div>
-            <div class="col-lg-2">
-            @if (!@Auth::guest() && $user->id == Auth::user()->id)
-                <a href="{{ route('account.profile.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Profile</a>
-            @endif
-            </div>
-        </div>
+<div class="row memberProfile">
+    <div class="col-sm-12 col-md-10 col-md-offset-1">
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
                 @if ($profileData->profile_photo)
-                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="250" height="250" class="img-circle" />
+                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="250" height="250" class="profilePhoto" />
                 @else
-                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="250" height="250" class="img-circle" />
+                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="250" height="250" class="profilePhoto" />
+                @endif
+                @if (!@Auth::guest() && $user->id == Auth::user()->id)
+                    <a href="{{ route('account.profile.edit', $user->id) }}" class="btn btn-info btn-xs editProfileLink">Edit Your Profile</a>
                 @endif
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 pull-right">
+                <h3>{{ $profileData->present()->tagline }}</h3>
                 <p class="lead">
                     {{ $profileData->present()->description }}
                 </p>
