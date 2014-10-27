@@ -26,67 +26,7 @@
 </head>
 <body class="{{ $body_class or '' }}">
 
-    <nav class="mainSidenav" role="navigation">
-
-        <span class="sidenav-brand">
-            <a href="{{ route('home') }}"><img class="" src="/img/logo.png" height="50" /></a>
-            @if (!Auth::guest())
-            {{ HTML::statusLabel(Auth::user()->status) }}
-            @if (Auth::user()->isAdmin())<span class="label label-danger">Admin</span>@endif
-            @endif
-        </span>
-
-        <ul class="nav navbar-nav">
-            <li class="detail-link">
-                <a href="{{ route('members.index') }}">
-                    Members
-                </a>
-            </li>
-            <li class="detail-link">
-                <a href="{{ route('storage_boxes.index') }}">
-                    Member Storage
-                </a>
-            </li>
-            <li class="detail-link">
-                <a href="{{ route('equipment.index') }}">
-                    Tools and Equipment
-                </a>
-            </li>
-            <li class="detail-link">
-                <a href="{{ route('activity.index') }}">
-                    Activity
-                </a>
-            </li>
-            <li class="detail-link">
-                <a href="{{ route('stats.index') }}">
-                    Stats
-                </a>
-            </li>
-            <li class="detail-link">
-                <a href="{{ route('proposals.index') }}">
-                    Proposals
-                </a>
-            </li>
-
-            @if (!Auth::guest() && Auth::user()->isAdmin())
-            <li class="detail-link">
-                <a href="{{ route('account.index') }}">
-                    Members (Admin)
-                </a>
-            </li>
-            @endif
-        </ul>
-
-        <ul class="nav navbar-nav secondaryNav">
-            @if (Auth::guest())
-                <li><a href="{{ route('login') }}">Login</a></li>
-                <li><a href="{{ route('register') }}">Become a Member</a></li>
-            @else
-                <li><a href="{{ route('account.show', Auth::id()) }}">Your Membership</a></li>
-                <li><a href="{{ route('logout') }}">Logout</a></li>
-            @endif
-        </ul>
-    </nav>
+    @include('partials/main-sidenav')
 
 <div id="bodyWrap">
 
@@ -255,6 +195,11 @@
         $("#bodyWrap").removeClass("fixedHeader");
       }
 
+    });
+
+    $(".mainSidenav .toggleSettings").on('click', function(event) {
+        event.preventDefault();
+        $(".mainSidenav .accountSettings").toggleClass('hidden');
     });
 
     </script>

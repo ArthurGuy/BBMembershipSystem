@@ -60,4 +60,9 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         return $userCollection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction'), 'showLeft'=>\Request::get('showLeft')])->links();
     }
 
+    public function sideNavLink($name, $route, $routeParams=[])
+    {
+        return '<li class=""><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
+    }
+
 }
