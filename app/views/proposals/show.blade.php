@@ -14,14 +14,12 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
 
     <h1 class="visible-xs">{{ $proposal->title }}</h1>
     <p>{{ $proposal->present()->description }}</p>
-
 </div>
 
 <div class="well">
-Proposal created on {{ $proposal->present()->created_at }}<br />
 @if ($proposal->isOpen())
     <strong>Voting is open</strong><br />
-    The vote closes on {{ $proposal->present()->end_date }}
+
 
     {{ Form::open(array('method'=>'POST', 'route' => ['proposals.vote', $proposal->id], 'class'=>'')) }}
 
@@ -55,7 +53,10 @@ Proposal created on {{ $proposal->present()->created_at }}<br />
         {{ Form::submit('Vote', array('class'=>'btn btn-primary')) }}
     @endif
     {{ Form::close() }}
-
+    <p>
+    <br />
+    The vote closes on {{ $proposal->present()->end_date }}
+    </p>
 @else
     Voting has closed<br />
     The vote closed on {{ $proposal->present()->end_date }}<br />
@@ -64,28 +65,5 @@ Proposal created on {{ $proposal->present()->created_at }}<br />
 
 </div>
 
-<h3>Voters</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Member</th>
-            <th>Vote</th>
-        </tr>
-    </thead>
-@foreach ($memberVotes as $vote)
-    <tbody>
-        <tr>
-            <td>{{ link_to_route('members.show', $vote->member->name, $vote->member->id) }}</td>
-            <td>
-            @if ($vote->abstain)
-            Abstained
-            @else
-            {{ $vote->vote }}
-            @endif
-            </td>
-        </tr>
-    </tbody>
-@endforeach
-</table>
 
 @stop
