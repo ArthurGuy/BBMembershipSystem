@@ -49,7 +49,7 @@ class MembershipPayments
         }
         $standingOrderCutoff = $refDate->copy()->subMonth()->subDays(7);
         $paypalCutoff        = $refDate->copy()->subDays(7);
-        $goCardlessCutoff    = $refDate->copy()->subDays(7);
+        $goCardlessCutoff    = $refDate->copy()->subDays(14);
         $otherCutoff         = $refDate->copy()->subDays(7);
 
         if ($paymentMethod == 'gocardless') {
