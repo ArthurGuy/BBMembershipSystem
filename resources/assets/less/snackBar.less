@@ -1,6 +1,5 @@
 .snackBar {
   padding: 15px;
-  margin: 0 auto;
   position: fixed;
   min-width: 288px;
   max-width: 568px;
@@ -9,16 +8,25 @@
   background-color: #323232;
   color: @gray-lightest;
   border-radius: 2px;
+  transform: translateY(0);
+  transform-style: preserve-3d;
+  transition-duration: .1s;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
 
   ul {
     margin-bottom: 0;
     padding-left: 17px;
   }
 }
+.snackBarHidden {
+  //bottom: -100px;
+  transform: translateY(100px);
+}
 
 @media screen and (min-width: @screen-lg) {
   //Large screen size
   .snackBar {
     min-width: 500px;
+    left:20px;
   }
 }

@@ -6524,7 +6524,6 @@ body.register_login #pageTitle {
 }
 .snackBar {
   padding: 15px;
-  margin: 0 auto;
   position: fixed;
   min-width: 288px;
   max-width: 568px;
@@ -6533,13 +6532,28 @@ body.register_login #pageTitle {
   background-color: #323232;
   color: #f2f2f2;
   border-radius: 2px;
+  -webkit-transform: translateY(0);
+      -ms-transform: translateY(0);
+          transform: translateY(0);
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-transition-duration: .1s;
+          transition-duration: .1s;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 .snackBar ul {
   margin-bottom: 0;
   padding-left: 17px;
 }
+.snackBarHidden {
+  -webkit-transform: translateY(100px);
+      -ms-transform: translateY(100px);
+          transform: translateY(100px);
+}
 @media screen and (min-width: 1200px) {
   .snackBar {
     min-width: 500px;
+    left: 20px;
   }
 }
