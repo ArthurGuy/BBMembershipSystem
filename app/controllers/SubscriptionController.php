@@ -40,7 +40,7 @@ class SubscriptionController extends \BaseController {
             ]
         );
         //If a start date is provided then it isn't immediate
-        if ($user->subscription_expires->gt($today)) {
+        if ($user->subscription_expires && $user->subscription_expires->gt($today)) {
             $payment_details['start_at'] = $user->subscription_expires->toISO8601String();
         }
 
