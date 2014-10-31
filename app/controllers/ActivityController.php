@@ -32,7 +32,7 @@ class ActivityController extends \BaseController {
         }
         $previousDate = $date->copy()->subDay();
 
-        $this->layout->content = View::make('activity.index')->with('logEntries', $logEntries)->with('date', $date)->with('nextDate', $nextDate)->with('previousDate', $previousDate);
+        return View::make('activity.index')->with('logEntries', $logEntries)->with('date', $date)->with('nextDate', $nextDate)->with('previousDate', $previousDate);
 	}
 
 
@@ -41,7 +41,7 @@ class ActivityController extends \BaseController {
 	 */
 	public function realtime()
 	{
-        $this->layout->content = View::make('activity.realtime');
+        return View::make('activity.realtime');
 	}
 
 

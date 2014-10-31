@@ -1,15 +1,24 @@
+
 @if (Notification::hasMessage())
-<div class="top-alerts">
-    <div class="alert alert-{{ Notification::getLevel() }} alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        {{ Notification::getMessage() }}
-        @if (Notification::hasDetails())
-        <ul>
-            @foreach(Notification::getDetails()->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-        @endif
-    </div>
+<div class="snackBar snackBar-{{ Notification::getLevel() }}">
+    {{ Notification::getMessage() }}
+    @if (Notification::hasDetails())
+    <ul>
+        @foreach(Notification::getDetails()->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+    @endif
 </div>
+<script>
+    setTimeout(function () {
+            $('.snackBar').fadeOut();
+    }, 3000);
+    $('.snackBar').on('click', function() {
+        $(this).fadeOut();
+    });
+</script>
 @endif
+
+
+

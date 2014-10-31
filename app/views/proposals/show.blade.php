@@ -1,22 +1,25 @@
 @extends('layouts.main')
 
-@section('title')
+@section('meta-title')
 Proposals
+@stop
+
+@section('page-title')
+Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
 @stop
 
 @section('content')
 
 <div class="page-header">
 
-    <h1>{{ $proposal->title }} <small>Proposal</small></h1>
+    <h1 class="visible-xs">{{ $proposal->title }}</h1>
     <p>{{ $proposal->present()->description }}</p>
-
 </div>
 
 <div class="well">
 @if ($proposal->isOpen())
     <strong>Voting is open</strong><br />
-    The vote closes on {{ $proposal->present()->end_date }}
+
 
     {{ Form::open(array('method'=>'POST', 'route' => ['proposals.vote', $proposal->id], 'class'=>'')) }}
 
@@ -45,12 +48,15 @@ Proposals
         </label>
     </div>
     @if (isset($memberVote))
-        {{ Form::submit('Change your Vote', array('class'=>'btn btn-default')) }}
+        {{ Form::submit('Change your Vote', array('class'=>'btn btn-primary')) }}
     @else
-        {{ Form::submit('Vote', array('class'=>'btn btn-default')) }}
+        {{ Form::submit('Vote', array('class'=>'btn btn-primary')) }}
     @endif
     {{ Form::close() }}
-
+    <p>
+    <br />
+    The vote closes on {{ $proposal->present()->end_date }}
+    </p>
 @else
     Voting has closed<br />
     The vote closed on {{ $proposal->present()->end_date }}<br />
@@ -59,28 +65,5 @@ Proposals
 
 </div>
 
-<h3>Voters</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Member</th>
-            <th>Vote</th>
-        </tr>
-    </thead>
-@foreach ($memberVotes as $vote)
-    <tbody>
-        <tr>
-            <td>{{ link_to_route('members.show', $vote->member->name, $vote->member->id) }}</td>
-            <td>
-            @if ($vote->abstain)
-            Abstained
-            @else
-            {{ $vote->vote }}
-            @endif
-            </td>
-        </tr>
-    </tbody>
-@endforeach
-</table>
 
 @stop

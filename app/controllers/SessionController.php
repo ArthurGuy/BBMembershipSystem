@@ -18,6 +18,9 @@ class SessionController extends \BaseController {
 	 */
 	public function create()
 	{
+        if (!Auth::guest()) {
+            return Redirect::to('account/'.Auth::id());
+        }
         return View::make('session.create');
 	}
 

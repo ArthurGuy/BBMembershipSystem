@@ -83,7 +83,7 @@ class PaymentRepository extends DBRepository
     public function latestUserPayment($userId, $reason='subscription')
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('reason = ? and (status = ? or status = ?)', [$reason, 'paid', 'pending'])
+            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', [$reason, 'paid', 'pending', 'withdrawn'])
             ->orderBy('created_at', 'desc')
             ->first();
     }
@@ -98,7 +98,7 @@ class PaymentRepository extends DBRepository
     public function getUserPaymentsByReason($userId, $reason)
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('reason = ? and (status = ? or status = ?)', [$reason, 'paid', 'pending'])
+            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', [$reason, 'paid', 'pending', 'withdrawn'])
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -107,7 +107,7 @@ class PaymentRepository extends DBRepository
     public function getUserPaymentsBySource($userId, $source)
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('source = ? and (status = ? or status = ?)', [$source, 'paid', 'pending'])
+            ->whereRaw('source = ? and (status = ? or status = ? or status = ?)', [$source, 'paid', 'pending', 'withdrawn'])
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -121,7 +121,7 @@ class PaymentRepository extends DBRepository
     public function getBalancePaymentsPaginated($userId)
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('(source = ? or reason = ?) and (status = ? or status = ?)', ['balance', 'balance', 'paid', 'pending'])
+            ->whereRaw('(source = ? or reason = ?) and (status = ? or status = ? or status = ?)', ['balance', 'balance', 'paid', 'pending', 'withdrawn'])
             ->orderBy('created_at', 'desc')
             ->simplePaginate($this->perPage);
     }

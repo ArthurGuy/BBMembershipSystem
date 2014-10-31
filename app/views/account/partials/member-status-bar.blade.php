@@ -13,31 +13,25 @@
     </li>
     @endif
 
+    @if ($user->active)
     <li>
         <p class="navbar-text">{{ HTML::keyHolderLabel($user->key_holder) }}</p>
     </li>
+    @endif
 
-    @if ($user->trusted)
+    @if (!$user->key_holder && $user->trusted)
     <li>
         <p class="navbar-text"><label class="label label-success">Trusted Member</label></p>
     </li>
     @endif
 
-    @if (!$user->induction_completed)
+    @if ($user->active)
     <li>
-        <p class="navbar-text"><label class="label label-warning">Induction Pending</label></p>
+        <p class="navbar-text">{{ $user->present()->subscriptionDetailLine }}</p>
     </li>
     @endif
 
-    <li>
-        <p class="navbar-text">Payment Method: {{ $user->present()->paymentMethod }}</p>
-    </li>
-
-    <li>
-        <p class="navbar-text">Monthly Payment: &pound;{{ round($user->monthly_subscription) }}</p>
-    </li>
-
-    @if ($user->subscription_expires)
+    @if ($user->active && $user->subscription_expires)
     <li>
         <p class="navbar-text">
             Subscription Expires:

@@ -2,7 +2,6 @@
 
 class StorageBoxController extends \BaseController {
 
-    protected $layout = 'layouts.main';
 
 	/**
 	 * Display a listing of the resource.
@@ -23,7 +22,7 @@ class StorageBoxController extends \BaseController {
 
         $boxPayment = Auth::user()->getStorageBoxPayment();
 
-        $this->layout->content = View::make('storage_boxes.index')
+        return View::make('storage_boxes.index')
             ->with('storageBoxes', $storageBoxes)
             ->with('memberBox', $memberBox)
             ->with('boxPayment', $boxPayment)

@@ -1,6 +1,10 @@
-<div class="page-header">
-    <h1>Member Storage Boxes</h1>
-</div>
+@extends('layouts.main')
+
+@section('page-title')
+    Member Storage Boxes
+@stop
+
+@section('content')
 
 @if ($memberBox)
 
@@ -22,6 +26,8 @@
         <p>
             Storage boxes require a £5 deposit, this can be paid in cash at the space or via Direct Debit now.
         </p>
+        
+
         {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', Auth::user()->id])) }}
         {{ Form::hidden('reason', 'storage-box') }}
         {{ Form::hidden('source', 'gocardless') }}
@@ -57,3 +63,6 @@
     </tbody>
 @endforeach
 </table>
+
+
+@stop

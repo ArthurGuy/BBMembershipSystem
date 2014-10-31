@@ -29,7 +29,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         if ($active) {
             return '<label class="label label-success" data-toggle="tooltip" data-placement="top" title="You are allowed to use the space">Access to the space</label>';
         } else {
-            return '<label class="label label-danger" data-toggle="tooltip" data-placement="top" title="You do not have permission to use the space">No access to he space</label>';
+            return '<label class="label label-danger" data-toggle="tooltip" data-placement="top" title="You do not have permission to use the space">No access to the space</label>';
         }
     }
 
@@ -38,7 +38,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         if ($key_holder) {
             return '<label class="label label-success" data-toggle="tooltip" data-placement="top" title="You can access the space when ever you want">Key Holder</label><br />';
         } else {
-            return '<label class="label label-default" data-toggle="tooltip" data-placement="top" title="You can only use the space when a key holder is there">Key Holder: not yet</label>';
+            return '<label class="label label-default" data-toggle="tooltip" data-placement="top" title="You can only use the space when a key holder is present">Key Holder: not yet</label>';
         }
     }
 
@@ -58,6 +58,11 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     public function userPaginatorLinks($userCollection)
     {
         return $userCollection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction'), 'showLeft'=>\Request::get('showLeft')])->links();
+    }
+
+    public function sideNavLink($name, $route, $routeParams=[])
+    {
+        return '<li><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
     }
 
 }

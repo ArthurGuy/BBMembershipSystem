@@ -16,6 +16,9 @@ class UserPresenter extends Presenter
 
             case 'standing-order':
                 return 'Standing Order';
+
+            case '':
+                return '-';
         }
         return $this->entity->payment_method;
     }
@@ -33,4 +36,18 @@ class UserPresenter extends Presenter
     {
         return '&pound;'.number_format(($this->entity->cash_balance / 100), 2);
     }
+
+    public function monthlySubscription()
+    {
+        return '&pound;'.number_format(round($this->entity->monthly_subscription));
+    }
+
+    public function subscriptionDetailLine()
+    {
+        if ($this->entity->status == 'setting-up') {
+            return '';
+        }
+        return ''.$this->monthlySubscription.' a month by '.$this->paymentMethod.'';
+    }
+
 } 

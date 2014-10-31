@@ -110,7 +110,6 @@ Route::post('proposals/{id}', ['uses'=>'ProposalController@vote', 'as'=>'proposa
 # Feedback
 Route::post('feedback', ['uses'=>'FeedbackController@store', 'as'=>'feedback.store', 'before'=>'roll:member']);
 
-Route::get('test', function() {
-    //$process = new \BB\Process\CheckMemberships();
-    //$process->run();
+Route::get('example', function() {
+    return View::make('example');
 });

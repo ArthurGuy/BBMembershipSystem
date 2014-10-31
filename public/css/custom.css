@@ -113,11 +113,6 @@ body.register_login .top-alerts {
 }
 
 
-/* Public member page */
-.member-grid {
-    text-align: center;
-}
-
 
 
 /* Stats Page */
@@ -196,3 +191,5 @@ body.register_login .top-alerts {
 #feedbackWidgetButton:hover {
     right:0;
 }
+
+

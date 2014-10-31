@@ -1,27 +1,23 @@
 @extends('layouts.main')
 
-@section('title')
+@section('meta-title')
 {{ $user->name }} - Manage your membership
 @stop
 
-@section('content')
+@section('page-title')
+    {{ $user->name }}<br />
+    <small>{{ $user->email }}</small>
+@stop
 
-<div class="row page-header">
-    <div class="col-xs-12 col-sm-10">
-        <h1>
-            @if ($user->profile->profile_photo)
-            <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
-            @else
-            <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
-            @endif
-            {{ $user->name }} <small>{{ $user->email }}</small>
-        </h1>
-    </div>
-    <div class="col-xs-12 col-sm-2">
-        <p><a href="{{ route('account.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Account</a></p>
-        <p><a href="{{ route('account.profile.edit', $user->id) }}" class="btn btn-info btn-sm">Edit Your Profile</a></p>
-    </div>
-</div>
+@section('page-key-image')
+    @if ($user->profile->profile_photo)
+        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
+    @else
+        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
+    @endif
+@stop
+
+@section('content')
 
 @include('account.partials.member-status-bar')
 

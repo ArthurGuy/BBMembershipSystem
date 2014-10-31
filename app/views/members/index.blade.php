@@ -1,31 +1,35 @@
 @extends('layouts.main')
 
-@section('title')
+@section('meta-title')
 Build Brighton Members
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Members</h1>
-</div>
+@section('page-title')
+Members
+@stop
 
-<div class="member-grid">
+
+@section('content')
+
+<div class="memberGrid">
     <div class="row">
         @foreach ($users as $user)
         <div class="col-sm-6 col-md-4 col-lg-2">
-            <div class="thumbnail">
+            <div class="memberBlock">
+                <a href="{{ route('members.show', $user->id) }}">
                 @if ($user->profile->profile_photo)
                     @if (Auth::guest() && $user->profile->profile_photo_private)
-                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
+                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="200" height="200" class="profilePhoto" />
                     @else
-                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
+                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="200" height="200" class="profilePhoto" />
                     @endif
                 @else
-                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
+                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="200" height="200" class="profilePhoto" />
                 @endif
-                <div class="caption">
-                    <strong><a href="{{ route('members.show', $user->id) }}">{{ $user->name }}</a></strong>
+                <div class="memberDetails">
+                    <strong>{{ $user->name }}</strong>
                 </div>
+                </a>
             </div>
         </div>
         @endforeach

@@ -1,5 +1,6 @@
 @extends('layouts.main')
 
+
 @section('content')
 
 	<div class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
@@ -17,6 +18,9 @@
                 </p>
                 <p>
                     For more information on Build Brighton please visit <a href="http://www.buildbrighton.com">www.buildbrighton.com</a>
+                </p>
+                <p>
+                Already part of Build Brighton then <a href="{{ route('login') }}" class="">Log in</a>
                 </p>
             </div>
         </div>
