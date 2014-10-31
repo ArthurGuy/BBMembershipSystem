@@ -12,7 +12,7 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//www.google.com/jsapi"></script>
-
+    <script>var BB = BB || {};</script>
     @if (App::environment() == 'production')
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
