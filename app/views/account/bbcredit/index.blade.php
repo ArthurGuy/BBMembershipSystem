@@ -33,7 +33,7 @@ Build Brighton Credit
 
             </div>
 
-            @if (Auth::user()->isAdmin())
+            @if (Auth::user()->isAdmin() && 0)
             <div class="panel-footer">
                 {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id], 'class'=>'navbar-form')) }}
                 {{ Form::hidden('reason', 'balance') }}
@@ -61,7 +61,7 @@ Build Brighton Credit
     <div class="col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Payments</h3>
+                <h3 class="panel-title">Payment History</h3>
             </div>
             <table class="table">
                 <thead>
