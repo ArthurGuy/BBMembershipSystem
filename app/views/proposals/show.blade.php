@@ -59,7 +59,7 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
     </p>
 @else
     Voting has closed<br />
-    The vote closed on {{ $proposal->present()->end_date }}<br />
+    The vote closed at the end of {{ $proposal->present()->end_date }}<br />
     {{ $proposal->present()->outcome }}
 @endif
 
