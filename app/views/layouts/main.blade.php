@@ -101,7 +101,7 @@
 <div class="modalMask"></div>
 
     @if (!Auth::guest())
-    <div class="feedbackWidgetButtonWrap hidden-sm">
+    <div class="feedbackWidgetButtonWrap hidden-sm hidden-xs">
         <div id="feedbackWidgetButton" data-toggle="modal" data-target="#feedbackWidgetModal">
             <span class="glyphicon glyphicon-bullhorn"></span> Feedback
         </div>
@@ -115,7 +115,10 @@
                 </div>
                 {{ Form::open(array('method'=>'POST', 'route' => ['feedback.store'], 'class'=>'js-feedbackModalForm js-ajaxForm', 'data-successFunction'=>'feedbackFormSuccess', 'data-errorFunction'=>'feedbackFormError')) }}
                 <div class="modal-body">
-                    <p>If you have any comments or thoughts or ideas about the operation of the BBMS system we would love to hear them</p>
+                    <p>
+                        If you have any comments or thoughts or ideas about the operation of the BBMS system we would love to hear them.<br />
+                        If you have an account related query please email the trustees at <a href="mailto:trustees@buildbrighton.com">trustees@buildbrighton.com</a>
+                    </p>
 
                     <div class="form-group js-field-comments">
                         {{ Form::label('comments', 'Your Thoughts') }}
