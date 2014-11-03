@@ -25,7 +25,7 @@ class ProposalRepository extends DBRepository {
         return $this->model->where('end_date', '<', Carbon::now()->format('Y-m-d'))->where('processed', false)->get();
     }
 
-    public function setResults($proposalId, $result, $votesCast, $for, $against, $abstentions, $quorum)
+    public function setResults($proposalId, $result, $votesCast, $for, $against, $neutral, $abstentions, $quorum)
     {
         $proposal = $this->getById($proposalId);
         $proposal->result = $result;
