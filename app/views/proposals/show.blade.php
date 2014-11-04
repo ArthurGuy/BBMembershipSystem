@@ -66,4 +66,34 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
 </div>
 
 
+@if ($proposal->id == 3)
+<div class="well">
+    <p>
+    If you pledged money towards the new laser cutter please make that payment now.
+    This money will be record against your account for use against future laser cutter fees, it will appear as a credit top up
+    </p>
+    {{ Form::open(['method'=>'POST', 'href' => '', 'class'=>'form-inline js-multiPaymentForm']) }}
+        {{ Form::hidden('reason', 'balance') }}
+        {{ Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) }}
+        {{ Form::hidden('return_path', route('proposals.show', [$proposal->id], false)) }}
+        {{ Form::hidden('reference', 'laser-cutter') }}
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">&pound;</div>
+                {{ Form::input('number', 'amount', '50.00', ['class'=>'form-control js-amount', 'step'=>'1', 'required'=>'required']) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::select('source', ['gocardless'=>'Direct Debit'], null, ['class'=>'form-control'])  }}
+        </div>
+        {{ Form::submit('Make your pledge payment now', array('class'=>'btn btn-primary')) }}
+        <div class="has-feedback has-error">
+            <span class="help-block"></span>
+        </div>
+    {{ Form::close() }}
+</div>
+@endif
+
+
 @stop
