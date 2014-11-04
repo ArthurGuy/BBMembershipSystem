@@ -210,6 +210,17 @@
 
     @include('partials/page-js')
 
+    @if (!Auth::guest())
+        <script>
+        var paymentRoutes = {
+            stripe: '{{ route('account.payment.stripe.store', Auth::user()->id) }}',
+            gocardless: '{{ route('account.payment.gocardless.create', Auth::user()->id) }}'
+        };
+        var stripePublicKey = '@stripeKey';
+        var memberEmail = '{{ Auth::user()->email }}';
+        </script>
+    @endif
+    <script src="https://checkout.stripe.com/checkout.js"></script>
     <script src="/js/all.min.js"></script>
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
     <script>
@@ -220,18 +231,8 @@
             $('.js-alter-subscription-amount-form').removeClass('hidden');
             $(this).hide();
         });
-
-        @if (!Auth::guest())
-        var paymentRoutes = {
-            stripe: '{{ route('account.payment.stripe.store', Auth::user()->id) }}',
-            gocardless: '{{ route('account.payment.gocardless.create', Auth::user()->id) }}'
-        };
-        var stripePublicKey = '@stripeKey';
-        var memberEmail = '{{ Auth::user()->email }}';
-        @endif
     </script>
-    <script src="https://checkout.stripe.com/checkout.js"></script>
-    <script src="/js/payments.js"></script>
+
 
     @yield('footer-js')
 

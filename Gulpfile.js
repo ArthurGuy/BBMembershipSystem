@@ -22,7 +22,7 @@ elixir(function(mix) {
             'css/select2-bootstrap.css'
         ])
         .scripts([
-            //'js/payments.js',
+            'js/partials/payments.js',
             'js/partials/snackbar.js',
             'js/lib/bootstrap.min.js',
             'js/lib/select2.min.js'
