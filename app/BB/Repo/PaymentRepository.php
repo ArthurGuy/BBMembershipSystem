@@ -44,6 +44,7 @@ class PaymentRepository extends DBRepository
         $record->amount_minus_fee = ($amount - $fee);
         $record->fee              = $fee;
         $record->status           = $status;
+        $record->reference        = $ref;
         $record->save();
 
         //Emit an event so that things like the balance updater can run

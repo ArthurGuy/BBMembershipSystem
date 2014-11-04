@@ -28,7 +28,7 @@ class Payment extends Eloquent {
      * @var array
      */
     protected $fillable = [
-        'source', 'source_id', 'user_id', 'amount', 'fee', 'amount_minus_fee', 'status', 'reason', 'created_at'
+        'source', 'source_id', 'user_id', 'amount', 'fee', 'amount_minus_fee', 'status', 'reason', 'created_at', 'reference'
     ];
 
 

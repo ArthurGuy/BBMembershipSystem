@@ -174,6 +174,10 @@ class GoCardlessPaymentController extends \BaseController {
         {
             return Request::get('induction_key');
         }
+        elseif ($reason == 'balance')
+        {
+            return Request::get('reference');
+        }
         return false;
     }
 
