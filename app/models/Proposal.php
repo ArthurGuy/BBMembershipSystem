@@ -28,7 +28,7 @@ class Proposal extends Eloquent {
 
     public function isOpen()
     {
-        return $this->end_date->gt(Carbon::now());
+        return $this->end_date->gt(Carbon::now()->subDay());
     }
 
 
