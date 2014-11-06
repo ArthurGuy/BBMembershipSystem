@@ -92,6 +92,7 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
             <span class="help-block"></span>
         </div>
     {{ Form::close() }}
+    If you want to make a payment buy bank transfer please use the reference <strong>{{ Auth::user()->id }}:BALANCE:LASER-CUTTER</strong>
 </div>
 @endif
 
