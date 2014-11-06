@@ -1,10 +1,11 @@
 {{ Form::open(['method'=>'POST', 'href' => '', 'class'=>'form-inline js-multiPaymentForm']) }}
         {{ Form::hidden('reason', $reason) }}
+        {{ Form::hidden('display_reason', $displayReason, ['class'=>'js-paymentDescription']) }}
         {{ Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) }}
         {{ Form::hidden('return_path', $returnPath) }}
 
         @if ($amount != null)
-            {{ Form::hidden('amount', $amount) }}
+            {{ Form::hidden('amount', $amount, ['class'=>'js-amount']) }}
         @else
             <div class="form-group">
                 <div class="input-group">
