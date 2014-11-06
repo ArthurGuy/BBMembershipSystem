@@ -1,10 +1,6 @@
 <tr>
     <td class="profilePhotoCol">
-        @if ($user->profile->profile_photo)
-        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" class="img-circle profilePhoto" />
-        @else
-        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" class="img-circle profilePhoto" />
-        @endif
+        {{ HTML::memberPhoto($user->profile, $user->hash, 100, 'img-circle profilePhoto') }}
     </td>
     <td>
         <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>

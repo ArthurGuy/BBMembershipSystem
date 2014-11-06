@@ -10,11 +10,7 @@
 @stop
 
 @section('page-key-image')
-    @if ($user->profile->profile_photo)
-        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="100" height="100" />
-    @else
-        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="100" height="100" />
-    @endif
+    {{ HTML::memberPhoto($user->profile, $user->hash, 100, '') }}
 @stop
 
 @section('content')

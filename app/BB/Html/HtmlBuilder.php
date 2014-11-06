@@ -24,6 +24,20 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         }
     }
 
+
+    public function memberPhoto($profileData, $userHash, $size=250, $class='profilePhoto')
+    {
+        if ($profileData->profile_photo) {
+            if (\Auth::guest() && $profileData->profile_photo_private) {
+                return '<img src="'.\BB\Helpers\UserImage::anonymous().'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
+            } else {
+                return '<img src="'.\BB\Helpers\UserImage::thumbnailUrl($userHash).'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
+            }
+        } else {
+            return '<img src="'.\BB\Helpers\UserImage::anonymous().'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
+        }
+    }
+
     public function spaceAccessLabel($active)
     {
         if ($active) {
