@@ -14,11 +14,17 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
+
                 @if ($profileData->profile_photo)
-                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="250" height="250" class="profilePhoto" />
+                    @if (Auth::guest() && $profileData->profile_photo_private)
+                        <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="250" height="250" class="profilePhoto" />
+                    @else
+                        <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" width="250" height="250" class="profilePhoto" />
+                    @endif
                 @else
                     <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="250" height="250" class="profilePhoto" />
                 @endif
+
                 @if (!@Auth::guest() && $user->id == Auth::user()->id)
                     <a href="{{ route('account.profile.edit', $user->id) }}" class="btn btn-info btn-xs editProfileLink">Edit Your Profile</a>
                 @endif
