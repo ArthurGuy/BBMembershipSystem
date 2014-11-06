@@ -30,16 +30,8 @@
                 @if (!$user->key_deposit_payment_id)
                     <p>If you would like a door key you need to pay a £10 deposit, this can be paid now or by cash at the space.</p>
 
-                    @include('partials/payment-form', ['reason'=>'door-key', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>10, 'buttonLabel'=>'Pay Now'])
+                    @include('partials/payment-form', ['reason'=>'door-key', 'displayReason'=>'Door Key Deposit', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>10, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'stripe']])
 
-                    <p>
-                    {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id])) }}
-                    {{ Form::hidden('reason', 'door-key') }}
-                    {{ Form::hidden('source', 'gocardless') }}
-                    {{ Form::submit('Pay Now (DD)', array('class'=>'btn btn-primary btn-xs')) }}
-                        <small>You don't need to be paying via direct debit to use the option</small>
-                    {{ Form::close() }}
-                    </p>
                 @else
                     You have paid the key deposit, please let a trustee know and they will issue you will a key.
                 @endif
