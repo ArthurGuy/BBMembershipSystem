@@ -28,7 +28,10 @@
             </div>
             <div class="panel-body">
                 @if (!$user->key_deposit_payment_id)
-                    <p>If you would like a door key you need to pay a £10 deposit, this can be paid by a one off direct debit payment or by cash at the space.</p>
+                    <p>If you would like a door key you need to pay a £10 deposit, this can be paid now or by cash at the space.</p>
+
+                    @include('partials/payment-form', ['reason'=>'door-key', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>10, 'buttonLabel'=>'Pay Now'])
+
                     <p>
                     {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id])) }}
                     {{ Form::hidden('reason', 'door-key') }}
