@@ -14,7 +14,7 @@
             </div>
         @endif
         <div class="form-group">
-            {{ Form::select('source', ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card'], null, ['class'=>'form-control'])  }}
+            {{ HTML::paymentFormMethodDropdown($methods) }}
         </div>
         {{ Form::submit($buttonLabel, array('class'=>'btn btn-primary')) }}
         <div class="has-feedback has-error">

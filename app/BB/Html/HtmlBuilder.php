@@ -79,4 +79,15 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         return '<li><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
     }
 
+    function paymentFormMethodDropdown($methods=[]) {
+        $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card'];
+        if (!empty($methods)) {
+            foreach ($possibleMethods as $method => $methodName) {
+                if (!in_array($method, $methods)) {
+                    unset($possibleMethods[$method]);
+                }
+            }
+        }
+        return \Form::select('source', $possibleMethods, null, ['class'=>'form-control']);
+    }
 }
