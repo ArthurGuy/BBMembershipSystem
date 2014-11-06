@@ -32,9 +32,10 @@ $('.js-multiPaymentForm').on('submit', function(event) {
                 $(this).find('.help-block').text("Because of processing fees the payment must be £10 or over when paying by card");
             } else {
                 var topUpAmount = ($(this).find('.js-amount').val() * 100);
+                var description = ($(this).find('.js-paymentDescription').val());
 
                 handler.open({
-                    description: 'Balance Top up',
+                    description: description,
                     amount: topUpAmount
                 });
             }

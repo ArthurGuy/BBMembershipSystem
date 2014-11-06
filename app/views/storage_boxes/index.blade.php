@@ -27,7 +27,7 @@
             Storage boxes require a £5 deposit, this can be paid in cash at the space or via the form below.
         </p>
 
-        @include('partials/payment-form', ['reason'=>'storage-box', 'returnPath'=>route('storage_boxes.index', [], false), 'amount'=>5, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'stripe']])
+        @include('partials/payment-form', ['reason'=>'storage-box', 'displayReason'=>'Storage Box Deposit', 'returnPath'=>route('storage_boxes.index', [], false), 'amount'=>10, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'stripe']])
 
         @else
 
