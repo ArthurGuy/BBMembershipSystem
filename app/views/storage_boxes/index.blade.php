@@ -24,15 +24,10 @@
         @if ($availableBoxes > 0)
 
         <p>
-            Storage boxes require a £5 deposit, this can be paid in cash at the space or via Direct Debit now.
+            Storage boxes require a £5 deposit, this can be paid in cash at the space or via the form below.
         </p>
 
-        {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', Auth::user()->id])) }}
-        {{ Form::hidden('reason', 'storage-box') }}
-        {{ Form::hidden('source', 'gocardless') }}
-        {{ Form::submit('Pay Now (Direct Debit)', array('class'=>'btn btn-primary btn-xs')) }}
-        <small>You don't need to be paying via direct debit to use the option</small>
-        {{ Form::close() }}
+        @include('partials/payment-form', ['reason'=>'storage-box', 'returnPath'=>route('storage_boxes.index', [], false), 'amount'=>5, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'stripe']])
 
         @else
 
