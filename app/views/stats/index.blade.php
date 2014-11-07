@@ -11,26 +11,47 @@ Stats
 @section('content')
 
 <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-4 well">
-        <h3 class="text-center">Payment Methods</h3>
-        <div id="paymentMethods" style="height:400px"></div>
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <div class="well">
+            <h3 class="text-center">Payment Methods</h3>
+            <div id="paymentMethods" style="height:400px"></div>
+        </div>
     </div>
-    <div class="col-sm-12 col-md-6 col-lg-4 well">
-        <h3 class="text-center">Monthly Subscription Amounts</h3>
-        <div id="monthlyAmounts" style="height:400px"></div>
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <div class="well">
+            <h3 class="text-center">Monthly Subscription Amounts</h3>
+            <div id="monthlyAmounts" style="height:400px"></div>
+        </div>
     </div>
-    <div class="col-sm-12 col-md-6 col-lg-4 well">
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <div class="well">
 
-        <h3 class="text-center">Average Monthly Subscription</h3>
-        <p class="text-center">
-            <span class="key-figure">&pound;{{ $averageMonthlyAmount }}</span>
-        </p>
+            <h3 class="text-center">Average Monthly Subscription</h3>
+            <p class="text-center">
+                <span class="key-figure">&pound;{{ $averageMonthlyAmount }}</span>
+            </p>
 
 
-        <h3 class="text-center">Active Members</h3>
-        <p class="text-center">
-            <span class="key-figure">{{ $numActiveUsers }}</span>
-        </p>
+            <h3 class="text-center">Paying Members</h3>
+            <p class="text-center">
+                <span class="key-figure">{{ $numMembers }}</span>
+            </p>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <div class="well">
+            <h3 class="text-center">Members Visiting the Maker Space</h3>
+
+            <h4 class="text-center">Last 30 days</h4>
+            <p class="text-center">
+                <span class="key-figure">{{ $numActiveUsers }}</span>
+            </p>
+
+            <h4 class="text-center">Last 90 days</h4>
+            <p class="text-center">
+                <span class="key-figure">{{ $numActiveUsersQuarter }}</span>
+            </p>
+        </div>
     </div>
 </div>
 <script>

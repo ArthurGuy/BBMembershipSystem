@@ -11,11 +11,16 @@ class StatsController extends \BaseController
      * @var \BB\Repo\UserRepository
      */
     private $userRepository;
+    /**
+     * @var \BB\Repo\AccessLogRepository
+     */
+    private $accessLogRepository;
 
 
-    function __construct(\BB\Repo\UserRepository $userRepository)
+    function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\AccessLogRepository $accessLogRepository)
     {
         $this->userRepository = $userRepository;
+        $this->accessLogRepository = $accessLogRepository;
     }
 
     /**
@@ -87,7 +92,24 @@ class StatsController extends \BaseController
 
 
         //Number of Users
-        $numActiveUsers = count($users);
+        $numMembers = count($users);
+
+
+        //door access logs
+        $logEntrys = $this->accessLogRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonth(), \Carbon\Carbon::now());
+        $userArray = [];
+        foreach ($logEntrys as $entry) {
+            $userArray[] = $entry->user_id;
+        }
+        $numActiveUsers = count(array_unique($userArray));
+
+        $logEntrys = $this->accessLogRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonths(3), \Carbon\Carbon::now());
+        $userArray = [];
+        foreach ($logEntrys as $entry) {
+            $userArray[] = $entry->user_id;
+        }
+        $numActiveUsersQuarter = count(array_unique($userArray));
+
 
         JavaScript::put([
                 'paymentMethods' => $paymentMethods,
@@ -96,7 +118,9 @@ class StatsController extends \BaseController
 
         return View::make('stats.index')
             ->with('averageMonthlyAmount', round($averageMonthlyAmount))
-            ->with('numActiveUsers', $numActiveUsers);
+            ->with('numMembers', $numMembers)
+            ->with('numActiveUsers', $numActiveUsers)
+            ->with('numActiveUsersQuarter', $numActiveUsersQuarter);
     }
 
 

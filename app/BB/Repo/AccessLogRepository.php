@@ -42,4 +42,18 @@ class AccessLogRepository extends DBRepository {
     }
 
 
+    public function activeUsersForPeriod(\DateTime $startDate, \DateTime $endDate)
+    {
+        $startDate = $startDate->setTime(0, 0, 0);
+        $endDate = $endDate->setTime(23, 59, 59);
+        return $this->model
+            ->where('created_at', '>', $startDate)
+            ->where('created_at', '<', $endDate)
+            ->where('service', 'main-door')
+            ->where('response', '200')
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+
 } 
