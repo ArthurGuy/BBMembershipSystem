@@ -30,6 +30,8 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         if ($profileData->profile_photo) {
             if (\Auth::guest() && $profileData->profile_photo_private) {
                 return '<img src="'.\BB\Helpers\UserImage::anonymous().'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
+            } elseif ((!\Auth::guest() && !\Auth::user()->shouldMemberSeeProtectedPhoto()) && $profileData->profile_photo_private) {
+                return '<img src="'.\BB\Helpers\UserImage::anonymous().'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
             } else {
                 return '<img src="'.\BB\Helpers\UserImage::thumbnailUrl($userHash).'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
             }

@@ -151,6 +151,19 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->attributes['password'] = Hash::make($password);
     }
 
+    //Used for profile photos
+    public function shouldMemberSeeProtectedPhoto()
+    {
+        switch ($this->attributes['status']) {
+            case 'active':
+            case 'payment-warning':
+            case 'honorary':
+                return true;
+            default:
+                return false;
+        }
+    }
+
 
 
     # Scopes
