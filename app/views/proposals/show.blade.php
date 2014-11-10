@@ -41,12 +41,14 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
             -1
         </label>
     </div>
+    <!--
     <div class="radio">
         <label data-toggle="tooltip" data-placement="right" title="I am abstaining from this vote">
             {{ Form::radio('vote', 'abstain', (isset($memberVote) && $memberVote->abstain)) }}
             Abstain
         </label>
     </div>
+    -->
     @if (isset($memberVote))
         {{ Form::submit('Change your Vote', array('class'=>'btn btn-primary')) }}
     @else

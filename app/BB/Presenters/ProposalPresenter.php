@@ -39,7 +39,10 @@ class ProposalPresenter extends Presenter {
             } else {
                 $outputText .= '<strong>Failed</strong>: ';
             }
-            $outputText .= $this->entity->votes_for.' for, '.$this->entity->votes_against.' against, '.$this->entity->abstentions.' abstentions';
+            $outputText .= $this->entity->votes_for.' for, '.$this->entity->votes_against.' against';
+            if ($this->entity->abstentions > 0) {
+                $outputText .= ', '.$this->entity->abstentions.' abstentions';
+            }
             return $outputText;
         } else {
             return 'Waiting on a final vote count';
