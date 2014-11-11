@@ -93,6 +93,13 @@ class AccountController extends \BaseController {
 	}
 
 
+    public function trustedMissingPhotos()
+    {
+        $users = $this->userRepository->getTrustedMissingPhotos();
+        return $users;
+    }
+
+
 	/**
 	 * Show the form for creating a new resource.
 	 *

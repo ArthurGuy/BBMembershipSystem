@@ -18,6 +18,7 @@ Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'Remin
 
 # Account
 
+Route::get('account/trusted_missing_photos', ['uses'=>'AccountController@trustedMissingPhotos', 'as'=>'account.trusted_missing_photos', 'before'=>'role:admin']);
 Route::resource('account', 'AccountController');
 //Editing the profile
 Route::get('account/{account}/profile/edit', ['uses'=>'ProfileController@edit', 'as'=>'account.profile.edit', 'before'=>'role:member']);

@@ -59,5 +59,10 @@ class UserRepository extends DBRepository {
         }
     }
 
+    public function getTrustedMissingPhotos()
+    {
+        return \DB::table('users')->join('profile_data', 'users.id', '=', 'profile_data.user_id')->where('trusted', '1')->where('profile_data.profile_photo', 0)->get();
+    }
+
 
 }
