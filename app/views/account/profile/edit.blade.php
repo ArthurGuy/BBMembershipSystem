@@ -137,12 +137,24 @@ Fill in your profile
             <span class="help-block">This must be a clear image of your face, its not much use for identification otherwise!</span>
             <span class="help-block">This photo will be displayed to members and may be used within the space, it will also be listed publicly on this site but you can turn that off below if you want.</span>
         </div>
+        <div class="row">
         @if ($profileData->profile_photo)
-        <div class="form-group">
-            <strong>Existing Image</strong><br />
-            <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" />
+        <div class="col-xs-6">
+            <div class="form-group">
+                <strong>Existing Profile Image</strong><br />
+                <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($user->hash) }}" />
+            </div>
         </div>
         @endif
+        @if ($profileData->new_profile_photo)
+        <div class="col-xs-6">
+            <div class="form-group">
+                <strong>New Profile Image - pending review</strong><br />
+                <img src="{{ \BB\Helpers\UserImage::newThumbnailUrl($user->hash) }}" />
+            </div>
+        </div>
+        @endif
+        </div>
     </div>
 </div>
 
