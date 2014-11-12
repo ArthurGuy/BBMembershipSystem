@@ -13,18 +13,18 @@ class ProfileValidator extends FormValidator
         'tagline'               => 'max:250',
         'description'           => '',
         'skills'                => 'array',
-        'profile_photo'         => 'required|image',
+        'new_profile_photo'     => 'required|image',
         'profile_photo_private' => 'boolean',
     ];
 
     //During an update these rules will override the ones above
     protected $updateRules = [
-        'profile_photo' => 'image',
+        'new_profile_photo' => 'image',
     ];
 
 
     protected $adminOverride = [
-        'profile_photo' => 'image',
+        'new_profile_photo' => 'image',
     ];
 
 } 

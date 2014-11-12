@@ -119,7 +119,7 @@ class AccountController extends \BaseController {
 	 */
 	public function store()
 	{
-        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'profile_photo', 'profile_photo_private');
+        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'new_profile_photo', 'profile_photo_private');
 
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);
@@ -134,13 +134,13 @@ class AccountController extends \BaseController {
         $this->profileRepo->createProfile($user->id);
 
 
-        if (Input::file('profile_photo'))
+        if (Input::file('new_profile_photo'))
         {
             try
             {
-                $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
+                $this->userImage->uploadPhoto($user->hash, Input::file('new_profile_photo')->getRealPath(), true);
 
-                $this->profileRepo->update($user->id, ['profile_photo'=>1, 'profile_photo_private'=>$input['profile_photo_private']]);
+                $this->profileRepo->update($user->id, ['new_profile_photo'=>1, 'profile_photo_private'=>$input['profile_photo_private']]);
             }
             catch (\Exception $e)
             {
@@ -245,7 +245,7 @@ class AccountController extends \BaseController {
     public function adminUpdate($id)
     {
         $user = User::findWithPermission($id);
-        $input = Input::only('trusted', 'key_holder', 'induction_completed');
+        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'profile_photo_checked');
 
         //$this->userDetailsForm->validate($input, $user->id);
 
@@ -258,7 +258,14 @@ class AccountController extends \BaseController {
         if (Input::has('induction_completed'))
             $user->induction_completed = Input::get('induction_completed');
 
-        //$user->update($input);
+        if (Input::has('profile_photo_checked') && Input::get('profile_photo_checked')) {
+            $profile = $user->profile()->first();
+
+            $this->userImage->approveNewImage($user->hash);
+
+            $profile->update(['new_profile_photo'=>false, 'profile_photo'=>true]);
+        }
+
         $user->save();
         Notification::success("Details Updated");
         return Redirect::route('account.show', $user->id);

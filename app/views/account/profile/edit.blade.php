@@ -19,7 +19,7 @@ Fill in your profile
 
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('skills', 'has-error has-feedback') }}">
             {{ Form::label('skills', 'Skills') }}
             {{ Form::select('skills[]', $skills, null, ['class'=>'form-control', 'multiple']) }}
@@ -29,7 +29,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('tagline', 'has-error has-feedback') }}">
             {{ Form::label('tagline', 'Tagline') }}
             {{ Form::text('tagline', null, ['class'=>'form-control']) }}
@@ -39,7 +39,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('description', 'has-error has-feedback') }}">
             {{ Form::label('description', 'Description') }}
             {{ Form::textarea('description', null, ['class'=>'form-control']) }}
@@ -49,7 +49,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('twitter', 'has-error has-feedback') }}">
             {{ Form::label('twitter', 'Twitter') }}
             <div class="input-group">
@@ -62,7 +62,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('facebook', 'has-error has-feedback') }}">
             {{ Form::label('facebook', 'Facebook') }}
             <div class="input-group">
@@ -75,7 +75,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('google_plus', 'has-error has-feedback') }}">
             {{ Form::label('google_plus', 'Google+') }}
             <div class="input-group">
@@ -88,7 +88,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('github', 'has-error has-feedback') }}">
             {{ Form::label('github', 'GitHub') }}
             <div class="input-group">
@@ -101,7 +101,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('website', 'has-error has-feedback') }}">
             {{ Form::label('website', 'Website') }}
             {{ Form::text('website', null, ['class'=>'form-control']) }}
@@ -111,7 +111,7 @@ Fill in your profile
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('irc', 'has-error has-feedback') }}">
             {{ Form::label('irc', 'IRC') }}
             {{ Form::text('irc', null, ['class'=>'form-control']) }}
@@ -130,10 +130,10 @@ Fill in your profile
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('profile_photo', 'has-error has-feedback') }}">
-            {{ Form::label('profile_photo', 'Profile Photo', ['class'=>'control-label']) }}
-            {{ Form::file('profile_photo', null, ['class'=>'form-control']) }}
-            {{ Notification::getErrorDetail('profile_photo') }}
+        <div class="form-group {{ Notification::hasErrorDetail('new_profile_photo', 'has-error has-feedback') }}">
+            {{ Form::label('new_profile_photo', 'Profile Photo', ['class'=>'control-label']) }}
+            {{ Form::file('new_profile_photo', null, ['class'=>'form-control']) }}
+            {{ Notification::getErrorDetail('new_profile_photo') }}
             <span class="help-block">This must be a clear image of your face, its not much use for identification otherwise!</span>
             <span class="help-block">This photo will be displayed to members and may be used within the space, it will also be listed publicly on this site but you can turn that off below if you want.</span>
         </div>
@@ -152,7 +152,7 @@ Fill in your profile
             {{ Form::checkbox('profile_photo_private', true, null, ['class'=>'']) }}
             {{ Form::label('profile_photo_private', 'Make my photo private', ['class'=>'']) }}
             {{ Notification::getErrorDetail('profile_photo_private') }}
-            <span class="help-block">If you want to block your photo from displaying outside Build Brighton please check this box although we would rather you didn't.</span>
+            <span class="help-block">This blocks your photo from displaying outside of Build Brighton.</span>
         </div>
     </div>
 </div>

@@ -60,30 +60,28 @@ class ProfileController extends \BaseController {
         if (empty($input['profile_photo_private']))
             $input['profile_photo_private'] = false;
 
-        //If the user hasnt provided a new image unset the field so we dont clear the old one
-        if (empty($input['profile_photo']))
-            unset($input['profile_photo']);
-
         $this->profileValidator->validate($input, $userId);
 
         $this->profileRepo->update($userId, $input);
 
-        if (Input::file('profile_photo'))
+        if (Input::file('new_profile_photo'))
         {
             try
             {
-                $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
+                $this->userImage->uploadPhoto($user->hash, Input::file('new_profile_photo')->getRealPath(), true);
 
-                //$user->profilePhoto(true);
-                $this->profileRepo->update($userId, ['profile_photo'=>1]);
+                $this->profileRepo->update($userId, ['new_profile_photo'=>1]);
+
+                Notification::success("Photo uploaded, it will be checked and appear shortly");
             }
             catch (\Exception $e)
             {
                 Log::error($e);
             }
+        } else {
+            Notification::success("Profile Updated");
         }
 
-        Notification::success("Profile Updated");
         return Redirect::route('members.show', $userId);
     }
 

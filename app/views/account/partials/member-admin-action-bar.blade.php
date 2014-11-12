@@ -41,6 +41,22 @@
         </div>
         @endif
     </div>
+
+    @if ($user->profile->new_profile_photo)
+    <div class="col-xs-12 col-md-6">
+        <h4>Check Profile Photo</h4>
+        <img src="{{ \BB\Helpers\UserImage::newThumbnailUrl($user->hash) }}" />
+        <div class="row">
+            <div class="col-xs-12">
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
+                {{ Form::hidden('profile_photo_checked', '1') }}
+                {{ Form::submit('Approve Photo', array('class'=>'btn btn-default')) }}
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if (!$user->induction_completed)
     <div class="col-xs-12 col-md-6">
         <h4>Induction</h4>

@@ -140,11 +140,11 @@ Join Build Brighton
         </p>
     </div>
 
-    <div class="form-group {{ Notification::hasErrorDetail('profile_photo', 'has-error has-feedback') }}">
-        {{ Form::label('profile_photo', 'Profile Photo', ['class'=>'col-sm-3 control-label']) }}
+    <div class="form-group {{ Notification::hasErrorDetail('new_profile_photo', 'has-error has-feedback') }}">
+        {{ Form::label('new_profile_photo', 'Profile Photo', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::file('profile_photo', null, ['class'=>'form-control']) }}
-            {{ Notification::getErrorDetail('profile_photo') }}
+            {{ Form::file('new_profile_photo', null, ['class'=>'form-control']) }}
+            {{ Notification::getErrorDetail('new_profile_photo') }}
             <span class="help-block">This must be a clear image of your face, its not much use for identification otherwise!</span>
             <span class="help-block">This photo will be displayed to members and may be used within the space, it will also be listed publicly on this site but you can turn that off below if you want.</span>
         </div>

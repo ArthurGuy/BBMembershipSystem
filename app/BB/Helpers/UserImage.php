@@ -12,7 +12,7 @@ class UserImage {
 
     }
 
-    public function uploadPhoto($userId, $filePath)
+    public function uploadPhoto($userId, $filePath, $newImage=false)
     {
         $tmpFilePath = storage_path("tmp")."/".$userId.".png";
         $tmpFilePathThumb = storage_path("tmp")."/".$userId."-thumb.png";
@@ -21,11 +21,19 @@ class UserImage {
         Image::make($filePath)->fit(500)->save($tmpFilePath);
         Image::make($filePath)->fit(200)->save($tmpFilePathThumb);
 
+        if ($newImage) {
+            $newFilename      = \App::environment() . '/user-photo/' . md5($userId) . '-new.png';
+            $newThumbFilename = \App::environment() . '/user-photo/' . md5($userId) . '-thumb-new.png';
+        } else {
+            $newFilename      = \App::environment() . '/user-photo/' . md5($userId) . '.png';
+            $newThumbFilename = \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
+        }
+
         $s3 = \AWS::get('s3');
         try {
             $s3->putObject(array(
                 'Bucket'        => self::$bucket,
-                'Key'           => \App::environment().'/user-photo/'.md5($userId).'.png',
+                'Key'           => $newFilename,
                 'Body'          => file_get_contents($tmpFilePath),
                 'ACL'           => 'public-read',
                 'ContentType'   => 'image/png',
@@ -39,7 +47,7 @@ class UserImage {
         try {
             $s3->putObject(array(
                 'Bucket'        => self::$bucket,
-                'Key'           => \App::environment().'/user-photo/'.md5($userId).'-thumb.png',
+                'Key'           => $newThumbFilename,
                 'Body'          => file_get_contents($tmpFilePathThumb),
                 'ACL'           => 'public-read',
                 'ContentType'   => 'image/png',
@@ -54,6 +62,46 @@ class UserImage {
         \File::delete($tmpFilePathThumb);
     }
 
+    /**
+     * Delete an old profile image and replace it with a new one.
+     * @param $userId
+     */
+    public function approveNewImage($userId) {
+
+        $sourceFilename      = \App::environment() . '/user-photo/' . md5($userId) . '-new.png';
+        $sourceThumbFilename = \App::environment() . '/user-photo/' . md5($userId) . '-thumb-new.png';
+
+        $targetFilename      = \App::environment() . '/user-photo/' . md5($userId) . '.png';
+        $targetThumbFilename = \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
+
+        $s3 = \AWS::get('s3');
+        $s3->copyObject(array(
+            'Bucket'     => self::$bucket,
+            'Key'        => $targetFilename,
+            'CopySource' => self::$bucket."/".$sourceFilename,
+            'ACL'           => 'public-read',
+            'ContentType'   => 'image/png',
+            'ServerSideEncryption' => 'AES256',
+        ));
+        $s3->deleteObject(array(
+            'Bucket' => self::$bucket,
+            'Key'    => $sourceFilename
+        ));
+
+        $s3->copyObject(array(
+            'Bucket'     => self::$bucket,
+            'Key'        => $targetThumbFilename,
+            'CopySource' => self::$bucket."/".$sourceThumbFilename,
+            'ACL'           => 'public-read',
+            'ContentType'   => 'image/png',
+            'ServerSideEncryption' => 'AES256',
+        ));
+        $s3->deleteObject(array(
+            'Bucket' => self::$bucket,
+            'Key'    => $sourceThumbFilename
+        ));
+    }
+
     public static function imageUrl($userId)
     {
         return "https://s3-eu-west-1.amazonaws.com/".self::$bucket."/".\App::environment().'/user-photo/'.md5($userId).'.png';
@@ -62,6 +110,11 @@ class UserImage {
     public static function thumbnailUrl($userId)
     {
         return "https://s3-eu-west-1.amazonaws.com/".self::$bucket."/".\App::environment().'/user-photo/'.md5($userId).'-thumb.png';
+    }
+
+    public static function newThumbnailUrl($userId)
+    {
+        return "https://s3-eu-west-1.amazonaws.com/".self::$bucket."/".\App::environment().'/user-photo/'.md5($userId).'-thumb-new.png';
     }
 
     public static function gravatar($email)
