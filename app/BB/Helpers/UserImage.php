@@ -28,7 +28,8 @@ class UserImage {
                 'Key'           => \App::environment().'/user-photo/'.md5($userId).'.png',
                 'Body'          => file_get_contents($tmpFilePath),
                 'ACL'           => 'public-read',
-                'ContentType'   => 'image/png'
+                'ContentType'   => 'image/png',
+                'ServerSideEncryption' => 'AES256',
             ));
         } catch(\Exception $e) {
             \Log::exception($e);
@@ -41,7 +42,8 @@ class UserImage {
                 'Key'           => \App::environment().'/user-photo/'.md5($userId).'-thumb.png',
                 'Body'          => file_get_contents($tmpFilePathThumb),
                 'ACL'           => 'public-read',
-                'ContentType'   => 'image/png'
+                'ContentType'   => 'image/png',
+                'ServerSideEncryption' => 'AES256',
             ));
         } catch(\Exception $e) {
             \Log::exception($e);
