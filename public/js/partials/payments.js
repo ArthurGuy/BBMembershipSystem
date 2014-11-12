@@ -3,6 +3,7 @@ var handler = StripeCheckout.configure({
     name: 'Build Brighton',
     currency: 'GBP',
     email: memberEmail,
+    allowRememberMe: false,
     token: function(token) {
         //Fill in the token and submit the form again
         $('.js-stripeToken').val(token.id);
