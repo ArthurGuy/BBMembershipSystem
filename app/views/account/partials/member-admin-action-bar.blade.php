@@ -44,13 +44,16 @@
 
     @if ($user->profile->new_profile_photo)
     <div class="col-xs-12 col-md-6">
-        <h4>Check Profile Photo</h4>
+        <h4>Review Profile Photo</h4>
         <img src="{{ \BB\Helpers\UserImage::newThumbnailUrl($user->hash) }}" />
         <div class="row">
             <div class="col-xs-12">
                 {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
-                {{ Form::hidden('profile_photo_checked', '1') }}
-                {{ Form::submit('Approve Photo', array('class'=>'btn btn-default')) }}
+                <div class="form-group">
+                    {{ Form::label('photo_approved', 'Approved') }}
+                    {{ Form::select('photo_approved', ['0'=>'No', '1'=>'Yes'], 1, ['class'=>'form-control']) }}
+                </div>
+                {{ Form::submit('Save', array('class'=>'btn btn-default')) }}
                 {{ Form::close() }}
             </div>
         </div>

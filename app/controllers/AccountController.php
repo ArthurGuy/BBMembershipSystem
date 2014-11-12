@@ -245,7 +245,7 @@ class AccountController extends \BaseController {
     public function adminUpdate($id)
     {
         $user = User::findWithPermission($id);
-        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'profile_photo_checked');
+        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'photo_approved');
 
         //$this->userDetailsForm->validate($input, $user->id);
 
@@ -258,12 +258,15 @@ class AccountController extends \BaseController {
         if (Input::has('induction_completed'))
             $user->induction_completed = Input::get('induction_completed');
 
-        if (Input::has('profile_photo_checked') && Input::get('profile_photo_checked')) {
+        if (Input::has('photo_approved')) {
             $profile = $user->profile()->first();
 
-            $this->userImage->approveNewImage($user->hash);
-
-            $profile->update(['new_profile_photo'=>false, 'profile_photo'=>true]);
+            if (Input::get('photo_approved')) {
+                $this->userImage->approveNewImage($user->hash);
+                $profile->update(['new_profile_photo' => false, 'profile_photo' => true]);
+            } else {
+                $profile->update(['new_profile_photo' => false]);
+            }
         }
 
         $user->save();
