@@ -29,7 +29,7 @@ Build Brighton Credit
             <p>Top up using Direct Debit or a credit/debit card payment</p>
 
 
-            @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.bbcredit.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up'])
+            @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.bbcredit.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up', 'displayReason'=>'Balance Payment', 'methods'=>['gocardless', 'stripe']])
 
             </div>
 
