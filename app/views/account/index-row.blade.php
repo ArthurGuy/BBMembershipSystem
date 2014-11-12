@@ -12,6 +12,9 @@
     </td>
     <td>
         {{ HTML::statusLabel($user->status) }}
+        @if ($user->profile->new_profile_photo)
+            <br /><span class="label label-info">Photo to approve</span>
+        @endif
     </td>
     <td class="hidden-xs">
         @if($user->key_holder)
