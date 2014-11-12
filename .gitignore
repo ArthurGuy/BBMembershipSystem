@@ -8,3 +8,5 @@ composer.lock
 Thumbs.db
 
 app/tests/codeception/_output/*
+npm-debug.log
+app/storage/tmp
