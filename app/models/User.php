@@ -242,11 +242,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    /*
     public function profilePhoto($photoAvailable=true)
     {
         $this->profile_photo = $photoAvailable;
         $this->save();
     }
+    */
 
     public function isAdmin()
     {
