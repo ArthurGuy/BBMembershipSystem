@@ -21,13 +21,19 @@
 
 @if ($user->trusted && !$user->key_holder)
 <div class="row">
-    <div class="col-xs-12 col-md-6 ">
+    <div class="col-xs-12 col-md-8">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Door Key</h3>
             </div>
             <div class="panel-body">
-                @if (!$user->key_deposit_payment_id)
+                @if (!$user->profile->profile_photo && !$user->profile->new_profile_photo)
+                    <p>
+                        If you would like a door key you will need to upload a profile photo so other members can identify you.<br />
+                        You can do this from the <a href="{{ route('account.profile.edit', [$user->id]) }}">profile edit page</a>.
+                        From that page you can also choose to hide your photo from public view.
+                    </p>
+                @elseif (!$user->key_deposit_payment_id)
                     <p>If you would like a door key you need to pay a £10 deposit, this can be paid now or by cash at the space.</p>
 
                     @include('partials/payment-form', ['reason'=>'door-key', 'displayReason'=>'Door Key Deposit', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>10, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'stripe']])
@@ -35,6 +41,23 @@
                 @else
                     You have paid the key deposit, please let a trustee know and they will issue you will a key.
                 @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+@if (!$user->profile->profile_photo && !$user->profile->new_profile_photo && $user->key_holder)
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">Profile photo missing</h3>
+            </div>
+            <div class="panel-body">
+                A requirement of being a key holder is having a profile photo uploaded so other members can identify you.<br />
+                You can upload a photo from the <a href="{{ route('account.profile.edit', [$user->id]) }}">profile edit page</a>.
+                From that page you can also choose to hide your photo from public view.
             </div>
         </div>
     </div>
