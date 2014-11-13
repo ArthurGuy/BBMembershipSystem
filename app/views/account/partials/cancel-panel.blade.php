@@ -4,7 +4,7 @@
     </div>
     <div class="panel-body">
         <p>
-        If your thinking of leaving we would love to hear from you, please send us a message and we will see if we can help.<br />
+        If you're thinking of leaving we would love to hear from you first, please send us a message and we will see if we can help.<br />
         <a href="mailto:trustees@buildbrighton.com">Email the trustees</a>
         </p>
         @if ($user->payment_method == 'gocardless')
