@@ -48,9 +48,12 @@ class StatementImportController extends \BaseController {
         {
             echo "<tr>";
             $subPayment = false;
+            $balancePayment = false;
+            $paymentReference = null;
             //print_r($row);
 
             //If the payment isn't a credit then we don't care about it
+            //if (($row[1] != 'CR') && ($row[1]) != 'BP')
             if ($row[1] != 'CR')
             {
                 continue;
@@ -58,6 +61,8 @@ class StatementImportController extends \BaseController {
 
             $date = new \Carbon\Carbon($row[0]);
             echo "<td>".$date.'</td>';
+
+            //echo "<td>".$row[1].'</td>';
 
             if (strpos(strtoupper($row[2]), 'SUB') !== false)
             {
@@ -67,11 +72,24 @@ class StatementImportController extends \BaseController {
             {
                 $subPayment = true;
             }
+            elseif (strpos($row[2], '-BALANCE-') !== false)
+            {
+                $balancePayment = true;
+                $descriptionParts = explode('-BALANCE-', $row[2]);
+                if (is_array($descriptionParts) && count($descriptionParts) > 1) {
+                    $paymentReference = strtolower($descriptionParts[1]);
+                }
+            }
 
             if ($subPayment)
             {
                 echo '<td>SUB</td>';
                 $reasonString = 'subscription';
+            }
+            elseif ($balancePayment)
+            {
+                echo '<td>Balance</td>';
+                $reasonString = 'balance';
             }
             else
             {
@@ -115,6 +133,8 @@ class StatementImportController extends \BaseController {
 
             echo '<td>'.$row[2].'</td>';
 
+            //echo '<td>'.$row[3].'</td>';
+
             echo '<td>'.$row[4].'</td>';
 
             echo "</tr>";
@@ -129,7 +149,8 @@ class StatementImportController extends \BaseController {
                     'amount' => $row[4],
                     'fee' => 0,
                     'amount_minus_fee' => $row[4],
-                    'status' => 'paid'
+                    'status' => 'paid',
+                    'reference' => $paymentReference
                 ]);
                 if ($subPayment)
                 {
