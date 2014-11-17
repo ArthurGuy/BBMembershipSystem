@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+use Carbon\Carbon;
 
 class ProposalController extends \BaseController {
 
@@ -15,12 +17,20 @@ class ProposalController extends \BaseController {
      * @var \BB\Validators\ProposalVoteValidator
      */
     private $proposalVoteValidator;
+    /**
+     * @var \BB\Validators\ProposalValidator
+     */
+    private $proposalValidator;
 
-    function __construct(\BB\Repo\ProposalRepository $proposalRepository, \BB\Repo\ProposalVoteRepository $proposalVoteRepository, \BB\Validators\ProposalVoteValidator $proposalVoteValidator)
+    function __construct(\BB\Repo\ProposalRepository $proposalRepository,
+        \BB\Repo\ProposalVoteRepository $proposalVoteRepository,
+        \BB\Validators\ProposalVoteValidator $proposalVoteValidator,
+        \BB\Validators\ProposalValidator $proposalValidator)
     {
         $this->proposalRepository = $proposalRepository;
         $this->proposalVoteRepository = $proposalVoteRepository;
         $this->proposalVoteValidator = $proposalVoteValidator;
+        $this->proposalValidator = $proposalValidator;
     }
 
     /**
@@ -50,9 +60,6 @@ class ProposalController extends \BaseController {
 
     public function vote($proposalId)
     {
-        //dd(Request::all());
-
-
         //validation
         $this->proposalVoteValidator->validate(Request::all());
 
@@ -66,4 +73,24 @@ class ProposalController extends \BaseController {
         Notification::success("Vote cast");
         return Redirect::back();
     }
+
+    public function create()
+    {
+        $endDate = Carbon::now()->addDays(3)->format('Y-m-d');
+        return View::make('proposals.create')->with('endDate', $endDate);
+    }
+
+    public function store()
+    {
+        $this->proposalValidator->validate(Request::all());
+
+        $data = Request::only('title', 'description', 'end_date');
+        $data['user_id'] = \Auth::user()->id;
+        $this->proposalRepository->create($data);
+
+        Notification::success("Proposal created");
+        return Redirect::route('proposals.index');
+    }
+
+
 } 

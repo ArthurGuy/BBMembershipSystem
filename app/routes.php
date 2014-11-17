@@ -105,6 +105,8 @@ Route::post('notificationemail', ['as' => 'notificationemail.store', 'uses' => '
 
 #Proposals
 Route::get('proposals', ['uses'=>'ProposalController@index', 'as'=>'proposals.index', 'before'=>'role:member']);
+Route::get('proposals/create', ['uses'=>'ProposalController@create', 'as'=>'proposals.create', 'before'=>'role:admin']);
+Route::post('proposals', ['uses'=>'ProposalController@store', 'as'=>'proposals.store', 'before'=>'role:admin']);
 Route::get('proposals/{id}', ['uses'=>'ProposalController@show', 'as'=>'proposals.show', 'before'=>'role:member']);
 Route::post('proposals/{id}', ['uses'=>'ProposalController@vote', 'as'=>'proposals.vote', 'before'=>'role:member']);
 

@@ -37,4 +37,9 @@ class ProposalRepository extends DBRepository {
         $proposal->processed = true;
         $proposal->save();
     }
+
+    public function create($data)
+    {
+        return $this->model->create($data);
+    }
 }

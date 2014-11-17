@@ -21,6 +21,10 @@ class Proposal extends Eloquent {
         return array('created_at', 'updated_at', 'end_date');
     }
 
+    protected $fillable = [
+        'title', 'description', 'end_date', 'user_id'
+    ];
+
     public function votes()
     {
         return $this->hasMany('ProposalVote');

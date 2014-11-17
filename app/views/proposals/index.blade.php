@@ -13,6 +13,15 @@ Proposals
     <h4>Have your say in what happens at Build Brighton</h4>
 </div>
 
+@if (!Auth::guest() && Auth::user()->isAdmin())
+<div class="row">
+    <div class="col-xs-12">
+        <p class="">
+            <a href="{{ route('proposals.create') }}" class="btn btn-info btn-sm">Create a proposal</a>
+        </p>
+    </div>
+</div>
+@endif
 
 <table class="table">
     <thead>
