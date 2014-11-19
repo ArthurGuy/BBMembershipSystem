@@ -37,7 +37,15 @@ Activity Log
                     <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="200" height="200" class="profilePhoto" />
                 @endif
                 <div class="activityDetails">
-                    <strong><a href="{{ route('members.show', $logEntry->user->id) }}">{{ $logEntry->user->name }}</a></strong><br />
+                    <strong><a href="{{ route('members.show', $logEntry->user->id) }}">{{ $logEntry->user->name }}</a></strong>
+                    <!--
+                    <span class="memberFlags">
+                        @if ($logEntry->user->keyholderStatus())
+                        <span class="glyphicon glyphicon-lock" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
+                        @endif
+                    </span>
+                    -->
+                    <br />
                     {{ $logEntry->created_at->toTimeString() }}
                 </div>
             </div>

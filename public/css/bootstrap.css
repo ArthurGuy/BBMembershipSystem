@@ -6476,6 +6476,7 @@ body.register_login #pageTitle {
   background-color: #1e8c99;
   margin-bottom: 20px;
   border: 1px solid #f2f2f2;
+  position: relative;
 }
 .memberGrid .memberBlock .profilePhoto {
   min-width: 125px;
@@ -6486,6 +6487,10 @@ body.register_login #pageTitle {
   margin: 10px 5px;
   height: 40px;
   color: white;
+}
+.memberGrid .memberBlock .memberFlags {
+  font-weight: normal;
+  padding-left: 4px;
 }
 .memberProfile .profilePhoto {
   min-width: 200px;
