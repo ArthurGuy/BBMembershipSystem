@@ -112,7 +112,7 @@ class AccessControlController extends Controller
 
 
         //Return a status based on the users status
-        if ($user->active && $user->key_holder) {
+        if ($user->keyholderStatus()) {
             $log->response = 200;
             $log->save();
             return Response::make("OK:8F00:".$user->name, 200);
