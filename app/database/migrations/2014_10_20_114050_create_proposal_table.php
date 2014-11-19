@@ -18,6 +18,7 @@ class CreateProposalTable extends Migration {
             $table->string('title', 100);
             $table->longText('description');
             $table->integer('user_id'); //proposer
+            $table->date('start_date');
             $table->date('end_date');
             $table->integer('votes_cast');
             $table->integer('votes_for');

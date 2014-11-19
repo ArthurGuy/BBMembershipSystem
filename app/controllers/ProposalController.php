@@ -76,15 +76,16 @@ class ProposalController extends \BaseController {
 
     public function create()
     {
+        $startDate = Carbon::now()->format('Y-m-d');
         $endDate = Carbon::now()->addDays(3)->format('Y-m-d');
-        return View::make('proposals.create')->with('endDate', $endDate);
+        return View::make('proposals.create')->with('startDate', $startDate)->with('endDate', $endDate);
     }
 
     public function store()
     {
         $this->proposalValidator->validate(Request::all());
 
-        $data = Request::only('title', 'description', 'end_date');
+        $data = Request::only('title', 'description', 'start_date', 'end_date');
         $data['user_id'] = \Auth::user()->id;
         $this->proposalRepository->create($data);
 

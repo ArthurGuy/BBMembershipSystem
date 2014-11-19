@@ -59,6 +59,9 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
     <br />
     The vote closes on {{ $proposal->present()->end_date }}
     </p>
+@elseif (!$proposal->hasStarted())
+    Voting hasn't started yet.<br />
+    Open for voting on {{ $proposal->start_date->format('jS M') }}
 @else
     Voting has closed<br />
     The vote closed at the end of {{ $proposal->present()->end_date }}<br />

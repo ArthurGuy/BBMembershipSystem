@@ -36,6 +36,16 @@ Create a Proposal
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ Notification::hasErrorDetail('start_date', 'has-error has-feedback') }}">
+                    {{ Form::label('start_date', 'Start Date') }}
+                    {{ Form::text('start_date', $startDate, ['class'=>'form-control']) }}
+                    {{ Notification::getErrorDetail('start_date') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ Notification::hasErrorDetail('end_date', 'has-error has-feedback') }}">
                     {{ Form::label('end_date', 'End Date') }}
                     {{ Form::text('end_date', $endDate, ['class'=>'form-control']) }}

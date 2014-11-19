@@ -4,6 +4,11 @@ use Laracasts\Presenter\Presenter;
 
 class ProposalPresenter extends Presenter {
 
+    public function start_date()
+    {
+        return $this->entity->start_date->toFormattedDateString();
+    }
+
     public function end_date()
     {
         return $this->entity->end_date->toFormattedDateString();
@@ -23,6 +28,8 @@ class ProposalPresenter extends Presenter {
     {
         if ($this->entity->isOpen()) {
             return 'Open';
+        } else if (!$this->entity->hasStarted()) {
+            return 'Opens '.$this->entity->start_date->format('jS M');
         } else {
             return 'Closed';
         }
