@@ -164,6 +164,18 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         }
     }
 
+    /**
+     * Is this user considered a keyholder - can they use the space on their own
+     * @return bool
+     */
+    public function keyholderStatus()
+    {
+        if ($this->active && $this->key_holder && $this->trusted) {
+            return true;
+        }
+        return false;
+    }
+
 
 
     # Scopes
