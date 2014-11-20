@@ -30,20 +30,31 @@ class Proposal extends Eloquent {
         return $this->hasMany('ProposalVote');
     }
 
+    /**
+     * Is the proposal open for voting
+     * @return bool
+     */
     public function isOpen()
     {
         return $this->hasStarted() && !$this->hasFinished();
     }
 
+    /**
+     * Are we past the start date - has it started
+     * @return bool
+     */
     public function hasStarted()
     {
         return Carbon::now()->setTime(0, 0, 0)->gte($this->start_date);
     }
 
+    /**
+     * Has the proposal passed the finish date
+     * @return bool
+     */
     public function hasFinished()
     {
         return Carbon::now()->subDay()->gt($this->end_date);
-        //return $this->end_date->gt(Carbon::now()->subDay());
     }
 
 } 

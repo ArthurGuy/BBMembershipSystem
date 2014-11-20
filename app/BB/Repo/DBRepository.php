@@ -35,4 +35,14 @@ abstract class DBRepository {
     {
         return $this->model->get();
     }
+
+    /**
+     * Create a new record
+     * @param $data
+     * @return mixed
+     */
+    public function create($data)
+    {
+        return $this->model->create($data);
+    }
 } 
