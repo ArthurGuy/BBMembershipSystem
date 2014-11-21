@@ -13,7 +13,13 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
 <div class="page-header">
 
     <h1 class="visible-xs">{{ $proposal->title }}</h1>
-    <p>{{ $proposal->present()->description }}</p>
+    <p>
+        {{ $proposal->present()->description }}
+        @if (!Auth::guest() && Auth::user()->isAdmin() && !$proposal->hasStarted())
+            <br />
+            <a href="{{ route('proposals.edit', $proposal->id) }}">Edit Proposal</a>
+        @endif
+    </p>
 </div>
 
 <div class="well">
@@ -41,14 +47,6 @@ Proposal<span class="hidden-xs"> > {{ $proposal->title }}</span>
             -1
         </label>
     </div>
-    <!--
-    <div class="radio">
-        <label data-toggle="tooltip" data-placement="right" title="I am abstaining from this vote">
-            {{ Form::radio('vote', 'abstain', (isset($memberVote) && $memberVote->abstain)) }}
-            Abstain
-        </label>
-    </div>
-    -->
     @if (isset($memberVote))
         {{ Form::submit('Change your Vote', array('class'=>'btn btn-primary')) }}
     @else

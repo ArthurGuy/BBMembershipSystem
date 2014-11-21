@@ -65,7 +65,7 @@ class ProposalController extends \BaseController {
 
         $proposal = $this->proposalRepository->getById($proposalId);
         if (!$proposal->isOpen()) {
-            throw new \BB\Exceptions\ValidationException();
+            throw new \BB\Exceptions\ValidationException("The proposal isn't open for voting");
         }
 
         $this->proposalVoteRepository->castVote($proposalId, Auth::user()->id, Request::get('vote'));
@@ -93,5 +93,25 @@ class ProposalController extends \BaseController {
         return Redirect::route('proposals.index');
     }
 
+    public function edit($proposalId)
+    {
+        if (!$this->proposalRepository->canEdit($proposalId)) {
+            throw new \BB\Exceptions\ValidationException("The proposal can no longer be edited");
+        }
+        $proposal = $this->proposalRepository->getById($proposalId);
+
+        return View::make('proposals.edit')->with('proposal', $proposal);
+    }
+
+    public function update($proposalId)
+    {
+        $this->proposalValidator->validate(Request::all(), $proposalId);
+        $data = Request::only('title', 'description', 'start_date', 'end_date');
+
+        $this->proposalRepository->update($proposalId, $data);
+
+        Notification::success("Proposal updated");
+        return Redirect::route('proposals.index');
+    }
 
 } 

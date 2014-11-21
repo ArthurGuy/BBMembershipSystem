@@ -109,6 +109,9 @@ Route::get('proposals/create', ['uses'=>'ProposalController@create', 'as'=>'prop
 Route::post('proposals', ['uses'=>'ProposalController@store', 'as'=>'proposals.store', 'before'=>'role:admin']);
 Route::get('proposals/{id}', ['uses'=>'ProposalController@show', 'as'=>'proposals.show', 'before'=>'role:member']);
 Route::post('proposals/{id}', ['uses'=>'ProposalController@vote', 'as'=>'proposals.vote', 'before'=>'role:member']);
+Route::get('proposals/{id}/edit', ['uses'=>'ProposalController@edit', 'as'=>'proposals.edit', 'before'=>'role:admin']);
+Route::post('proposals/{id}/update', ['uses'=>'ProposalController@update', 'as'=>'proposals.update', 'before'=>'role:admin']);
+
 
 # Feedback
 Route::post('feedback', ['uses'=>'FeedbackController@store', 'as'=>'feedback.store', 'before'=>'roll:member']);

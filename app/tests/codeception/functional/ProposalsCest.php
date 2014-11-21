@@ -145,6 +145,85 @@ class ProposalsCest
                     $I->sendPOST('/proposals/4', ['vote'=>'+1']);
                 })
         );
+    }
+
+    public function adminCanEditUnstartedProposal(FunctionalTester $I)
+    {
+        $I->am('an admin');
+        $I->wantTo('make sure I can edit a proposal that hasnt been started');
+
+        //Create a proposal that's currently open
+        $startDate = Carbon::now()->addDays(1)->format('Y-m-d');
+        $endDate = Carbon::now()->addDays(5)->format('Y-m-d');
+        $I->haveInDatabase('proposals', ['id'=>2, 'title'=>'Proposal 2', 'description'=>'Demo Description', 'user_id'=>'3', 'start_date'=>$startDate, 'end_date'=>$endDate]);
+
+        //Load and login a known member
+        $user = User::find(3);
+        Auth::login($user);
+
+        $I->haveEnabledFilters();
+
+        $I->amOnPage('/proposals/2');
+
+        //I can visit the edit page
+        $I->click('Edit Proposal');
+        $I->canSeeCurrentUrlEquals('/proposals/2/edit');
+
+        $I->click('Update');
+        $I->canSeeCurrentUrlEquals('/proposals');
+
+    }
+
+    public function memberCantEditUnstartedProposal(FunctionalTester $I)
+    {
+        $I->am('a member');
+        $I->wantTo('make sure I cannt edit a proposal');
+
+        //Create a proposal that's currently open
+        $startDate = Carbon::now()->subDay()->format('Y-m-d');
+        $endDate = Carbon::now()->addDays(2)->format('Y-m-d');
+        $I->haveInDatabase('proposals', ['id'=>2, 'title'=>'Proposal 2', 'description'=>'Demo Description', 'user_id'=>'1', 'start_date'=>$startDate, 'end_date'=>$endDate]);
+
+        //Load and login a known member
+        $user = User::find(1);
+        Auth::login($user);
+
+        $I->haveEnabledFilters();
+
+        $I->amOnPage('/proposals/2');
+
+        //I can visit the edit page
+        $I->cantSee('Edit Proposal');
+
+        //Make sure I cant visit the edit page
+        $I->assertTrue(
+            $I->seeExceptionThrown('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', function() use ($I){
+                    $I->amOnPage('proposals/2/edit');
+                })
+        );
+
+    }
+
+    public function adminCantEditStartedProposal(FunctionalTester $I)
+    {
+        $I->am('an admin');
+        $I->wantTo('make sure I cannt edit a proposal thats been started');
+
+        //Create a proposal that's currently open
+        $startDate = Carbon::now()->subDays(2)->format('Y-m-d');
+        $endDate = Carbon::now()->addDays(2)->format('Y-m-d');
+        $I->haveInDatabase('proposals', ['id'=>2, 'title'=>'Proposal 2', 'description'=>'Demo Description', 'user_id'=>'3', 'start_date'=>$startDate, 'end_date'=>$endDate]);
+
+        //Load and login a known member
+        $user = User::find(3);
+        Auth::login($user);
+
+        $I->haveEnabledFilters();
+
+        $I->amOnPage('/proposals/2');
+
+        //I can visit the edit page
+        $I->cantSee('Edit Proposal');
 
     }
 }

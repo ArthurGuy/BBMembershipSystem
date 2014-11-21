@@ -10,5 +10,9 @@ class ProposalValidator extends FormValidator
         'end_date'            => 'required|date_format:Y-m-d|after:today'
     ];
 
+    protected $updateRules = [
+        'start_date'          => 'required|date_format:Y-m-d',
+    ];
+
 
 } 
