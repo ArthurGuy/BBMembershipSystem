@@ -395,6 +395,44 @@ CREATE TABLE `equipment_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+-- Create syntax for TABLE 'proposal_votes'
+CREATE TABLE `proposal_votes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `proposal_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `vote` int(11) DEFAULT NULL,
+  `abstain` tinyint(1) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Create syntax for TABLE 'proposals'
+CREATE TABLE `proposals` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `votes_cast` int(11) NOT NULL,
+  `votes_for` int(11) NOT NULL,
+  `votes_against` int(11) NOT NULL,
+  `abstentions` int(11) NOT NULL,
+  `quorum` tinyint(1) NOT NULL,
+  `result` int(11) NOT NULL,
+  `processed` tinyint(1) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `proposals` (`id`, `title`, `description`, `user_id`, `start_date`, `end_date`, `votes_cast`, `votes_for`, `votes_against`, `abstentions`, `quorum`, `result`, `processed`, `created_at`, `updated_at`)
+VALUES
+	(1, 'Proposal 1', 'This is the text for a test proposal', 1, '2014-10-10', '2014-10-13', 0, 0, 0, 0, 0, 0, 0, '2014-10-20 00:00:00', '2014-10-20 00:00:00');
+
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
