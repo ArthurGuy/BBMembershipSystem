@@ -34,6 +34,7 @@ class AccessControlController extends Controller
             //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
             $responseBody = json_encode(['valid'=>'0', 'reason'=>'Not found']);
             $failed = true;
+            Log::debug("Keyfob code not found ".$keyId);
         }
 
         if (!$failed) {
