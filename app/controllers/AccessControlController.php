@@ -30,7 +30,7 @@ class AccessControlController extends Controller
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
 
-            return Response::make('Key not found', 404);
+            return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
         }
         $user = $keyFob->user()->first();
 
@@ -44,17 +44,17 @@ class AccessControlController extends Controller
             //OK
             $log['response'] = 200;
             $this->accessLogRepository->logAccessAttempt($log);
-            return Response::make($user->name, 200);
+            return Response::make(json_encode(['valid'=>'1', 'reason'=>'', 'name'=>$user->name]), 200);
         } elseif ($user->active) {
             //Not a keyholder
             $log['response'] = 403;
             $this->accessLogRepository->logAccessAttempt($log);
-            return Response::make('Not a keyholder', 403); //403 = forbidden
+            return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not a keyholder', 'name'=>$user->name]), 200);
         } else {
             //bad
             $log['response'] = 402;
             $this->accessLogRepository->logAccessAttempt($log);
-            return Response::make('Not active', 402); //402 = payment required
+            return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not active', 'name'=>$user->name]), 200);
         }
     }
 
