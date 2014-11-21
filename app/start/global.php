@@ -93,6 +93,16 @@ App::error(function(\BB\Exceptions\FormValidationException $exception)
     }
 });
 
+App::error(function(\BB\Exceptions\ValidationException $exception)
+    {
+        if (Request::wantsJson()) {
+            return Response::json($exception->getMessage(), 400);
+        } else {
+            Notification::error($exception->getMessage());
+            return Redirect::back()->withInput();
+        }
+    });
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
