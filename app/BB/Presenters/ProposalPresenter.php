@@ -1,6 +1,7 @@
 <?php namespace BB\Presenters;
 
 use Laracasts\Presenter\Presenter;
+use Michelf\Markdown;
 
 class ProposalPresenter extends Presenter {
 
@@ -21,7 +22,8 @@ class ProposalPresenter extends Presenter {
 
     public function description()
     {
-        return nl2br($this->entity->description);
+        return Markdown::defaultTransform($this->entity->description);
+        //return nl2br($this->entity->description);
     }
 
     public function status()
