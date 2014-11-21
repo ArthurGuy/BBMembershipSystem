@@ -25,37 +25,50 @@ class AccessControlController extends Controller
 
     public function mainDoor()
     {
+        $failed = false;
+
         $keyId = Input::get('data');
         try {
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
-
-            return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
+            //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
+            $responseBody = json_encode(['valid'=>'0', 'reason'=>'Not found']);
+            $failed = true;
         }
-        $user = $keyFob->user()->first();
+
+        if (!$failed) {
+            $user = $keyFob->user()->first();
 
 
-        $log               = [];
-        $log['key_fob_id'] = $keyFob->id;
-        $log['user_id']    = $user->id;
-        $log['service']    = 'main-door';
+            $log               = [];
+            $log['key_fob_id'] = $keyFob->id;
+            $log['user_id']    = $user->id;
+            $log['service']    = 'main-door';
 
-        if ($user->active && $user->key_holder) {
-            //OK
-            $log['response'] = 200;
-            $this->accessLogRepository->logAccessAttempt($log);
-            return Response::make(json_encode(['valid'=>'1', 'reason'=>'', 'name'=>$user->name]), 200);
-        } elseif ($user->active) {
-            //Not a keyholder
-            $log['response'] = 403;
-            $this->accessLogRepository->logAccessAttempt($log);
-            return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not a keyholder', 'name'=>$user->name]), 200);
+            if ($user->active && $user->key_holder) {
+                //OK
+                $log['response'] = 200;
+                $this->accessLogRepository->logAccessAttempt($log);
+                //return Response::make(json_encode(['valid'=>'1', 'reason'=>'', 'name'=>$user->name]), 200);
+                $responseBody = json_encode(['valid' => '1', 'reason' => '', 'name' => $user->name]);
+            } elseif ($user->active) {
+                //Not a keyholder
+                $log['response'] = 403;
+                $this->accessLogRepository->logAccessAttempt($log);
+                //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not a keyholder', 'name'=>$user->name]), 200);
+                $responseBody = json_encode(['valid' => '0', 'reason' => 'Not a keyholder', 'name' => $user->name]);
         } else {
-            //bad
-            $log['response'] = 402;
-            $this->accessLogRepository->logAccessAttempt($log);
-            return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not active', 'name'=>$user->name]), 200);
+                //bad
+                $log['response'] = 402;
+                $this->accessLogRepository->logAccessAttempt($log);
+                //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not active', 'name'=>$user->name]), 200);
+                $responseBody = json_encode(['valid' => '0', 'reason' => 'Not active', 'name' => $user->name]);
+            }
         }
+
+        $response = Response::make($responseBody.PHP_EOL, 200);
+        $response->headers->set('Content-Length', strlen($response->getContent()));
+        return $response;
     }
 
 
