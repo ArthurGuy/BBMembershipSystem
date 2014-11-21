@@ -27,14 +27,14 @@ class AccessControlController extends Controller
     {
         $failed = false;
 
-        $keyId = Input::get('data');
+        $keyId = trim(Input::get('data'));
         try {
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
             //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
             $responseBody = json_encode(['valid'=>'0', 'reason'=>'Not found']);
             $failed = true;
-            Log::debug("Keyfob code not found ".$keyId);
+            Log::debug("New System: Keyfob code not found ".$keyId);
         }
 
         if (!$failed) {
@@ -58,7 +58,7 @@ class AccessControlController extends Controller
                 $this->accessLogRepository->logAccessAttempt($log);
                 //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not a keyholder', 'name'=>$user->name]), 200);
                 $responseBody = json_encode(['valid' => '0', 'reason' => 'Not a keyholder', 'name' => $user->name]);
-        } else {
+            } else {
                 //bad
                 $log['response'] = 402;
                 $this->accessLogRepository->logAccessAttempt($log);
