@@ -1,7 +1,7 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
+	"name": "ArthurGuy/BBMS",
+	"description": "Build Brighton Member System",
+	"keywords": ["laravel"],
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
@@ -16,7 +16,8 @@
         "laracasts/presenter": "0.1.*",
         "artdarek/pusherer": "1.0.*",
         "laracasts/utilities": "~1.0",
-        "stripe/stripe-php": "1.*"
+        "stripe/stripe-php": "1.*",
+        "michelf/php-markdown": "1.4.*"
 	},
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
