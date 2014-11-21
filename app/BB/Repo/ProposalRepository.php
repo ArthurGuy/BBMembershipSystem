@@ -65,7 +65,7 @@ class ProposalRepository extends DBRepository {
     public function canEdit($proposalId)
     {
         //Possibly expand this to allow editing on proposals that have been started but received no votes
-        $proposal = $this->model->getById($proposalId);
+        $proposal = $this->getById($proposalId);
         return $proposal->hasStarted();
     }
 }

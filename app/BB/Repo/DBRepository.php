@@ -45,4 +45,16 @@ abstract class DBRepository {
     {
         return $this->model->create($data);
     }
+
+
+    /**
+     * Update a record
+     * @param $recordId
+     * @param $recordData
+     * @return mixed
+     */
+    public function update($recordId, $recordData)
+    {
+        return $this->getById($recordId)->update($recordData);
+    }
 } 
