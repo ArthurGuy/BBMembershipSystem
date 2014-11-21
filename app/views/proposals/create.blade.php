@@ -29,7 +29,7 @@ Create a Proposal
                     {{ Form::label('description', 'Description') }}
                     {{ Form::textarea('description', null, ['class'=>'form-control']) }}
                     {{ Notification::getErrorDetail('description') }}
-                    <p>HTML can be included here. Don't forget to put links in "a" tags</p>
+                    <p>Please use markdown for formatting proposal text</p>
                 </div>
             </div>
         </div>
