@@ -217,7 +217,7 @@
             stripe: '{{ route('account.payment.stripe.store', Auth::user()->id) }}',
             gocardless: '{{ route('account.payment.gocardless.create', Auth::user()->id) }}'
         };
-        var stripePublicKey = '@stripeKey';
+        var stripePublicKey = '@stripeKey()';
         var memberEmail = '{{ Auth::user()->email }}';
         </script>
     @endif
