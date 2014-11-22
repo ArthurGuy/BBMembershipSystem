@@ -46,7 +46,7 @@ class AccessControlController extends Controller
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
             //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
-            $responseBody = json_encode(['valid'=>'0', 'reason'=>'Not found']);
+            $responseBody = json_encode(['valid'=>'0', 'msg'=>'Not found']);
             $failed = true;
             //Log::debug("New System: Keyfob code not found ".$keyId);
         }
@@ -67,19 +67,19 @@ class AccessControlController extends Controller
                 $this->accessLogRepository->logAccessAttempt($log);
                 //return Response::make(json_encode(['valid'=>'1', 'reason'=>'', 'name'=>$user->name]), 200);
                 $userName = substr($user->given_name, 0, 20);
-                $responseBody = json_encode(['valid' => '1', 'reason' => '', 'name' => $userName]);
+                $responseBody = json_encode(['valid' => '1', 'msg' => $userName]);
             } elseif ($user->active) {
                 //Not a keyholder
                 $log['response'] = 403;
                 $this->accessLogRepository->logAccessAttempt($log);
                 //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not a keyholder', 'name'=>$user->name]), 200);
-                $responseBody = json_encode(['valid' => '0', 'reason' => 'Not a keyholder', 'name' => $user->name]);
+                $responseBody = json_encode(['valid' => '0', 'msg' => 'Not a keyholder']);
             } else {
                 //bad
                 $log['response'] = 402;
                 $this->accessLogRepository->logAccessAttempt($log);
                 //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not active', 'name'=>$user->name]), 200);
-                $responseBody = json_encode(['valid' => '0', 'reason' => 'Not active', 'name' => $user->name]);
+                $responseBody = json_encode(['valid' => '0', 'msg' => 'Not active']);
             }
         }
 
