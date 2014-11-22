@@ -16,7 +16,7 @@ class AccessLog extends Eloquent {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'key_fob_id', 'response', 'service'
+        'user_id', 'key_fob_id', 'response', 'service', 'delayed'
     ];
 
 

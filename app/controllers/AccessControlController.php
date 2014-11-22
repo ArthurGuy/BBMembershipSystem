@@ -28,13 +28,17 @@ class AccessControlController extends Controller
         $failed = false;
 
         $message = null;
+        $isDelayed = false;
         $keyId = trim(Input::get('data'));
         if (strpos($keyId, '|') !== false) {
             $keyParts = explode('|', $keyId);
             $keyId    = $keyParts[0];
             $message  = $keyParts[1];
+            if ($message == 'delayed') {
+                $isDelayed = true;
+            }
         }
-        
+
         try {
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
@@ -52,6 +56,7 @@ class AccessControlController extends Controller
             $log['key_fob_id'] = $keyFob->id;
             $log['user_id']    = $user->id;
             $log['service']    = 'main-door';
+            $log['delayed']    = $isDelayed;
 
             if ($user->active && $user->key_holder) {
                 //OK

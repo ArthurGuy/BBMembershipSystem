@@ -19,6 +19,7 @@ class CreateAccessLogTable extends Migration {
             $table->integer('key_fob_id');
             $table->string('response', 5);   //Status code
             $table->string('service', 50);
+            $table->boolean('delayed');
 			$table->timestamps();
 		});
 	}
