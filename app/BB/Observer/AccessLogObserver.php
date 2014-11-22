@@ -14,6 +14,10 @@ class AccessLogObserver
      */
     public function saved($accessLog)
     {
+        //If the record was delayed then we don't want a real time event
+        if ($accessLog->delayed) {
+            return;
+        }
         try {
             $userName     = null;
             $userImageUrl = UserImage::anonymous();
