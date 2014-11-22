@@ -27,7 +27,14 @@ class AccessControlController extends Controller
     {
         $failed = false;
 
+        $message = null;
         $keyId = trim(Input::get('data'));
+        if (strpos($keyId, '|') !== false) {
+            $keyParts = explode('|', $keyId);
+            $keyId    = $keyParts[0];
+            $message  = $keyParts[1];
+        }
+        
         try {
             $keyFob = $this->lookupKeyFob($keyId);
         } catch (Exception $e) {
@@ -51,7 +58,8 @@ class AccessControlController extends Controller
                 $log['response'] = 200;
                 $this->accessLogRepository->logAccessAttempt($log);
                 //return Response::make(json_encode(['valid'=>'1', 'reason'=>'', 'name'=>$user->name]), 200);
-                $responseBody = json_encode(['valid' => '1', 'reason' => '', 'name' => $user->name]);
+                $userName = substr($user->given_name, 0, 20);
+                $responseBody = json_encode(['valid' => '1', 'reason' => '', 'name' => $userName]);
             } elseif ($user->active) {
                 //Not a keyholder
                 $log['response'] = 403;
