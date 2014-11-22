@@ -46,7 +46,11 @@ Activity Log
                     </span>
                     -->
                     <br />
-                    {{ $logEntry->created_at->toTimeString() }}
+                    @if ($logEntry->delayed)
+                        <span data-toggle="tooltip" data-placement="below" title="This record doesn't have an accurate time">(delayed)</span>
+                    @else
+                        {{ $logEntry->created_at->toTimeString() }}
+                    @endif
                 </div>
             </div>
         </div>
