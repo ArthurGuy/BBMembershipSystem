@@ -30,6 +30,9 @@ class AccessControlController extends Controller
         $message = null;
         $isDelayed = false;
         $keyId = trim(Input::get('data'));
+
+        Log::debug("New System. Entry message received: ".$keyId);
+
         if (strpos($keyId, '|') !== false) {
             $keyParts = explode('|', $keyId);
             $keyId    = $keyParts[0];
@@ -45,7 +48,7 @@ class AccessControlController extends Controller
             //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
             $responseBody = json_encode(['valid'=>'0', 'reason'=>'Not found']);
             $failed = true;
-            Log::debug("New System: Keyfob code not found ".$keyId);
+            //Log::debug("New System: Keyfob code not found ".$keyId);
         }
 
         if (!$failed) {
