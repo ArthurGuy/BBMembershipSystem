@@ -28,6 +28,7 @@ class CreateProfileDataTable extends Migration {
             $table->boolean('profile_photo');
             $table->boolean('profile_photo_private');
             $table->boolean('new_profile_photo');
+            $table->boolean('profile_photo_on_wall');
 			$table->timestamps();
 		});
 	}

@@ -60,6 +60,21 @@
     </div>
     @endif
 
+    <div class="col-xs-12 col-md-6">
+        <h4>Profile Photo On Wall</h4>
+        <div class="row">
+            <div class="col-xs-12">
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'navbar-form navbar-left')) }}
+                <div class="form-group">
+                    {{ Form::label('profile_photo_on_wall', 'On Wall') }}
+                    {{ Form::select('profile_photo_on_wall', ['0'=>'No', '1'=>'Yes'], $user->profile->profile_photo_on_wall, ['class'=>'form-control']) }}
+                </div>
+                {{ Form::submit('Save', array('class'=>'btn btn-default')) }}
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+
     @if (!$user->induction_completed)
     <div class="col-xs-12 col-md-6">
         <h4>Induction</h4>
