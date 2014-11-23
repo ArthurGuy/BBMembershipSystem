@@ -27,7 +27,7 @@
                 <h3 class="panel-title">Door Key</h3>
             </div>
             <div class="panel-body">
-                @if (!$user->profile->profile_photo && !$user->profile->new_profile_photo)
+                @if (!$user->profile->profile_photo && !$user->profile->new_profile_photo && !$user->profile->profile_photo_on_wall)
                     <p>
                         If you would like a door key you will need to upload a profile photo so other members can identify you.<br />
                         You can do this from the <a href="{{ route('account.profile.edit', [$user->id]) }}">profile edit page</a>.
@@ -47,7 +47,7 @@
 </div>
 @endif
 
-@if (!$user->profile->profile_photo && !$user->profile->new_profile_photo && $user->key_holder)
+@if (!$user->profile->profile_photo && !$user->profile->new_profile_photo && $user->key_holder && !$user->profile->profile_photo_on_wall)
 <div class="row">
     <div class="col-xs-12 col-md-8">
         <div class="panel panel-warning">
