@@ -10,8 +10,6 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,100' rel='stylesheet' type='text/css'>
     <link href="/css/all.min.css" rel="stylesheet">
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//www.google.com/jsapi"></script>
     <script>var BB = BB || {};</script>
     @if (App::environment() == 'production')
@@ -138,6 +136,9 @@
     </div>
     @endif
 
+
+    <script src="/js/vendor.js"></script>
+
     <!-- Inline for now - this will be fixed at some stage -->
     <script>
     $('.js-ajaxForm').on('submit', function(event) {
@@ -222,8 +223,8 @@
         </script>
     @endif
     <script src="https://checkout.stripe.com/checkout.js"></script>
-    <script src="/js/all.min.js"></script>
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
+    <script src="/js/all.min.js"></script>
     <script>
         $('[data-toggle=tooltip]').tooltip({});
 
