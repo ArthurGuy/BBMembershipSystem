@@ -2,7 +2,7 @@
 [![Code Climate](http://img.shields.io/codeclimate/github/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://codeclimate.com/github/ArthurGuy/BBMembershipSystem)
 [![Code Quality](http://img.shields.io/scrutinizer/g/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://scrutinizer-ci.com/g/ArthurGuy/BBMembershipSystem)
 
-BB Membership System
+BBMS (Build Brighton Member System)
 ====================
 
 The Build Brighton membership management system
@@ -23,11 +23,11 @@ New members can join and create accounts, payments are tracked and managed throu
 * The ability for members to cancel their subscription and leave Build Brighton (not that they would want to!)
 * Collect deposit payments for door keys and member storage boxes
 * Door entry control and tracking
+* Member credit for payment and member topup
 
 ###Upcomming Features
 * Handle member storage box assignments
 * Equipment control and usage logging
-* Member credit for payment and member topup
 
 
 
@@ -43,8 +43,8 @@ There are a variety of member statuses which are used for various scenarios.
 ###Other Makerspaces
 This system can be used with only minor modifications by other spaces.<br />
 The Build Brighton naming is hardcoded into the pages and pieces of text will need to be altered.<br />
-It has been design to work primarily with GoCardless but the PayPal integration is OK and would be good enough on its own.<br />
-The system also has limited support for scanning and processing payments from bank statements
+It has been designed to work primarily with GoCardless but the PayPal integration is OK and would be good enough on its own.<br />
+The system also has support for scanning and processing payments from bank statements
 
 
 ###Seting It Up
