@@ -2,6 +2,8 @@ var elixir = require('laravel-elixir');
 
 require('laravel-elixir-codeception');
 
+require('laravel-elixir-bower');
+
 /*
  |----------------------------------------------------------------
  | Have a Drink!
@@ -27,6 +29,7 @@ elixir(function(mix) {
             'js/lib/bootstrap.min.js',
             'js/lib/select2.min.js'
         ])
+        .bower()
         .codeception();
         //.routes()
         //.events()
