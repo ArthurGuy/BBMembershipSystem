@@ -50,23 +50,14 @@ The system also has limited support for scanning and processing payments from ba
 ###Seting It Up
 The system is build on the Laravel framework so familiarity with that would help.
 
-The config options below need to be setup in an .env config file or passed in to php can access them through $_SERVER
+A .env file needs to be setup, please take a look at the example one for the options that are needed.
+This file can be renamed by removing the .example from the end.
 
-* AWS_KEY
-* AWS_SECRET
-* DB_HOST
-* DB_NAME
-* DB_USER
-* DB_PASS
-* GOCARDLESS_APP_ID
-* GOCARDLESS_APP_SECRET
-* GOCARDLESS_MERCHANT_ID
-* GOCARDLESS_ACCESS_TOKEN
-* MAILGUN_USERNAME
-* MAILGUN_PASSWORD
-* ENCRYPTION_KEY
+Composer needs to be available and the install command run to load the required assets.
 
-Some of these wont be needed.<br />
+The app/storage directory needs to be writable. 
+
+Some of the config options wont be needed.<br />
 AWS is used for avatar storage.<br />
 The system is built for a MySQL DB but a similar system will work<br />
 GoCardless as above<br />
