@@ -31,6 +31,26 @@ class AccessControlController extends Controller
         $isDelayed = false;
         $keyId = trim(Input::get('data'));
 
+
+
+        //Is this a system message
+        if (strpos($keyId, ':') === 0) {
+            $keyId = substr($keyId, 1, strlen($keyId));
+
+            Log::debug("System Message Received: ".$keyId);
+
+            $messageParts = ["", ""];
+            if (strpos($keyId, '|') !== false) {
+                $messageParts = explode('|', $keyId);
+            }
+
+            $device = $messageParts[0];
+            $message = $messageParts[1];
+
+            return Response::make(PHP_EOL, 200);
+        }
+
+
         Log::debug("New System. Entry message received: ".$keyId);
 
         if (strpos($keyId, '|') !== false) {
