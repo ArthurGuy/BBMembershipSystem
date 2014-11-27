@@ -12,6 +12,16 @@ class ProfileData extends Eloquent {
 
     protected $presenter = 'BB\Presenters\ProfileDataPresenter';
 
+    protected $auditFields = array('profile_photo', 'new_profile_photo', 'profile_photo_on_wall');
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::observe(new \BB\Observer\UserAuditObserver());
+    }
+
     public function setSkillsAttribute($skills)
     {
         if (is_array($skills)) {
@@ -30,5 +40,13 @@ class ProfileData extends Eloquent {
     public function user()
     {
         return $this->belongsTo('User');
+    }
+
+    /**
+     * @return array
+     */
+    public function getAuditFields()
+    {
+        return $this->auditFields;
     }
 } 
