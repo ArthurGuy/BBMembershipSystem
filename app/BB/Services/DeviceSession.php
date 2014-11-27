@@ -5,38 +5,9 @@ use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 
-class DeviceSession {
+class DeviceSession extends KeyFobAccess {
 
-    /**
-     * The key fob string
-     * @var string
-     */
-    private $keyFobId;
 
-    /**
-     * The key fob record
-     * @var
-     */
-    private $keyFob;
-
-    /**
-     * The key for the selected device
-     * @var string
-     */
-    private $deviceKey;
-
-    /**
-     * The selected device record
-     * The device that's being acted apon
-     * @var
-     */
-    private $device;
-
-    /**
-     * The action of the current session
-     * @var string
-     */
-    private $action;
 
     /**
      * The valid actions for the device
@@ -69,62 +40,6 @@ class DeviceSession {
         $this->equipmentLogRepository = $equipmentLogRepository;
     }
 
-
-    /**
-     * @param string $keyFobId
-     */
-    public function setKeyFobId($keyFobId)
-    {
-        $this->keyFobId = $keyFobId;
-    }
-
-    /**
-     * @param string $deviceKey
-     */
-    public function setDeviceKey($deviceKey)
-    {
-        $this->deviceKey = $deviceKey;
-    }
-
-    /**
-     * @param string $action
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKeyFobId()
-    {
-        return $this->keyFobId;
-    }
-
-    /**
-     * @return
-     */
-    public function getKeyFob()
-    {
-        return $this->keyFob;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDeviceKey()
-    {
-        return $this->deviceKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
 
     public function validateData()
     {
@@ -173,21 +88,6 @@ class DeviceSession {
         $this->action = trim(strtolower($dataPacket[2]));
     }
 
-    private function lookupKeyFob($keyId)
-    {
-        try {
-            $keyFob = \KeyFob::lookup($keyId);
-            return $keyFob;
-        } catch (\Exception $e) {
-            $keyId = substr('BB'.$keyId, 0, 12);
-            try {
-                $keyFob = \KeyFob::lookup($keyId);
-            } catch (\Exception $e) {
-                throw new ValidationException("Key fob ID not valid");
-            }
-            return $keyFob;
-        }
-    }
 
     public function processAction()
     {
