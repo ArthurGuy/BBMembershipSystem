@@ -31,6 +31,7 @@ CREATE TABLE `access_log` (
   `key_fob_id` int(11) NOT NULL,
   `response` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `service` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `delayed` tinyint(1) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
