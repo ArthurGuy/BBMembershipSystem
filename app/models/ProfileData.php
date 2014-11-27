@@ -12,7 +12,7 @@ class ProfileData extends Eloquent {
 
     protected $presenter = 'BB\Presenters\ProfileDataPresenter';
 
-    protected $auditFields = array('profile_photo', 'new_profile_photo', 'profile_photo_on_wall');
+    protected $auditFields = array('profile_photo', 'profile_photo_on_wall');
 
 
     public static function boot()

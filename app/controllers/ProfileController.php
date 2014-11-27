@@ -56,6 +56,8 @@ class ProfileController extends \BaseController {
         $user = User::findWithPermission($userId);
 
         $input = Input::all();
+        //Clear the profile photo field as this is handled separately below.
+        unset($input['new_profile_photo']);
 
         if (empty($input['profile_photo_private']))
             $input['profile_photo_private'] = false;
