@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Response;
+
 class AccessControlController extends Controller
 {
 
@@ -15,12 +17,21 @@ class AccessControlController extends Controller
      * @var \BB\Repo\EquipmentLogRepository
      */
     private $equipmentLogRepository;
+    /**
+     * @var \BB\Services\BuildingAccess
+     */
+    private $buildingAccess;
 
-    function __construct(\BB\Repo\AccessLogRepository $accessLogRepository, \BB\Repo\EquipmentRepository $equipmentRepository, \BB\Repo\EquipmentLogRepository $equipmentLogRepository)
+    function __construct(
+        \BB\Repo\AccessLogRepository $accessLogRepository,
+        \BB\Repo\EquipmentRepository $equipmentRepository,
+        \BB\Repo\EquipmentLogRepository $equipmentLogRepository,
+        \BB\Services\BuildingAccess $buildingAccess)
     {
         $this->accessLogRepository = $accessLogRepository;
         $this->equipmentRepository = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
+        $this->buildingAccess = $buildingAccess;
     }
 
     public function mainDoor()
@@ -29,33 +40,55 @@ class AccessControlController extends Controller
 
         $message = null;
         $isDelayed = false;
-        $keyId = trim(Input::get('data'));
 
 
+        $receivedData = trim(Input::get('data'));
 
-        //Is this a system message
-        if (strpos($keyId, ':') === 0) {
-            $keyId = substr($keyId, 1, strlen($keyId));
+        Log::debug("New System. Entry message received: ".$receivedData);
 
-            Log::debug("System Message Received: ".$keyId);
+        //What access point is this?
+        $this->buildingAccess->setDeviceKey('main-door');
 
-            $messageParts = ["", ""];
-            if (strpos($keyId, '|') !== false) {
-                $messageParts = explode('|', $keyId);
-            }
 
-            $device = $messageParts[0];
-            $message = $messageParts[1];
+        try {
 
-            return Response::make(PHP_EOL, 200);
+            //Decode the message and store the message parameters in the building access object
+            $this->buildingAccess->decodeDeviceCommand($receivedData);
+
+            //Verify everything is good
+            $this->buildingAccess->validateData();
+
+        } catch (\BB\Exceptions\ValidationException $e) {
+
+            //The data was invalid or the user doesnt have access
+            $response = Response::make(json_encode(['valid' => '0', 'msg' => $e->getMessage()]).PHP_EOL, 200);
+            $response->headers->set('Content-Length', strlen($response->getContent()));
+            return $response;
         }
 
 
-        Log::debug("New System. Entry message received: ".$keyId);
+        //Is this a system message
+        if ($this->buildingAccess->isSystemMessage()) {
+            return $this->handleSystemMessage($receivedData);
+        }
 
-        if (strpos($keyId, '|') !== false) {
-            $keyParts = explode('|', $keyId);
-            $keyId    = $keyParts[0];
+
+        $this->buildingAccess->logSuccess();
+
+        $userName = substr($this->buildingAccess->getUser()->given_name, 0, 20);
+        $responseBody = json_encode(['valid' => '1', 'msg' => $userName]);
+
+        $response = Response::make($responseBody.PHP_EOL, 200);
+        $response->headers->set('Content-Length', strlen($response->getContent()));
+        return $response;
+
+
+        /*
+
+
+        if (strpos($receivedData, '|') !== false) {
+            $keyParts = explode('|', $receivedData);
+            $receivedData    = $keyParts[0];
             $message  = $keyParts[1];
             if ($message == 'delayed') {
                 $isDelayed = true;
@@ -63,12 +96,12 @@ class AccessControlController extends Controller
         }
 
         try {
-            $keyFob = $this->lookupKeyFob($keyId);
+            $keyFob = $this->lookupKeyFob($receivedData);
         } catch (Exception $e) {
             //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
             $responseBody = json_encode(['valid'=>'0', 'msg'=>'Not found']);
             $failed = true;
-            //Log::debug("New System: Keyfob code not found ".$keyId);
+            //Log::debug("New System: Keyfob code not found ".$receivedData);
         }
 
         if (!$failed) {
@@ -106,6 +139,7 @@ class AccessControlController extends Controller
         $response = Response::make($responseBody.PHP_EOL, 200);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
+        */
     }
 
 
@@ -187,6 +221,39 @@ class AccessControlController extends Controller
             $keyFob = KeyFob::lookup($keyId);
             return $keyFob;
         }
+    }
+
+    /**
+     * @param $receivedData
+     * @return bool
+     *
+    public function isSystemMessage($receivedData)
+    {
+        return strpos($receivedData, ':') === 0;
+    }
+     */
+
+    /**
+     * @param $receivedData
+     * @return mixed
+     */
+    public function handleSystemMessage($receivedData)
+    {
+        $receivedData = substr($receivedData, 1, strlen($receivedData));
+
+        Log::debug("System Message Received: " . $receivedData);
+
+        $messageParts = ["", ""];
+        if (strpos($receivedData, '|') !== false) {
+            $messageParts = explode('|', $receivedData);
+        }
+
+        $device  = $messageParts[0];
+        $message = $messageParts[1];
+
+        //@TODO: Log this data
+
+        return Response::make(PHP_EOL, 200);
     }
 
 } 
