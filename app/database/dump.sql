@@ -366,11 +366,11 @@ CREATE TABLE `profile_data` (
 LOCK TABLES `profile_data` WRITE;
 /*!40000 ALTER TABLE `profile_data` DISABLE KEYS */;
 
-INSERT INTO `profile_data` (`id`, `user_id`, `twitter`, `facebook`, `google_plus`, `github`, `irc`, `website`, `tagline`, `description`, `skills_array`, `created_at`, `updated_at`)
+INSERT INTO `profile_data` (`id`, `user_id`, `twitter`, `facebook`, `google_plus`, `github`, `irc`, `website`, `tagline`, `description`, `skills_array`, `profile_photo`, `created_at`, `updated_at`)
 VALUES
-	(1,1,'TwitterHandle',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-09-23 22:22:08','2014-09-23 22:22:08'),
-	(3,3,'ArthurGuy','ArthurGuy','ArthurGuy','ArthurGuy','','','Snappy tagline goes here','Description text here','[\"midi\",\"3dprinting\",\"arduino\",\"coding\",\"electronics\",\"laser-cutter\",\"welding\",\"wood-work\"]','2014-09-23 22:22:08','2014-09-27 12:53:45'),
-	(4,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-09-23 22:27:04','2014-09-23 22:27:04');
+	(1,1,'TwitterHandle',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1','2014-09-23 22:22:08','2014-09-23 22:22:08'),
+	(3,3,'ArthurGuy','ArthurGuy','ArthurGuy','ArthurGuy','','','Snappy tagline goes here','Description text here','[\"midi\",\"3dprinting\",\"arduino\",\"coding\",\"electronics\",\"laser-cutter\",\"welding\",\"wood-work\"]','0','2014-09-23 22:22:08','2014-09-27 12:53:45'),
+	(4,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','2014-09-23 22:27:04','2014-09-23 22:27:04');
 
 /*!40000 ALTER TABLE `profile_data` ENABLE KEYS */;
 UNLOCK TABLES;
