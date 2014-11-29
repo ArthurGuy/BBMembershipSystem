@@ -19,10 +19,7 @@ class DeviceSession extends KeyFobAccess {
      * @var
      */
     private $equipmentRepository;
-    /**
-     * @var \User
-     */
-    private $user;
+
     /**
      * @var InductionRepository
      */
@@ -126,14 +123,6 @@ class DeviceSession extends KeyFobAccess {
             $sessionId = $this->equipmentLogRepository->recordStartCloseExisting($this->user->id, $this->keyFob->id, $this->deviceKey, 'inaccurate start');
             $this->equipmentLogRepository->endSession($sessionId);
         }
-    }
-
-    /**
-     * @return \User
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 
 

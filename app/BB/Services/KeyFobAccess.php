@@ -35,6 +35,11 @@ abstract class KeyFobAccess {
      */
     protected $action;
 
+    /**
+     * @var \User
+     */
+    protected $user;
+
 
 
     /**
@@ -91,6 +96,14 @@ abstract class KeyFobAccess {
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * @return \User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
 
