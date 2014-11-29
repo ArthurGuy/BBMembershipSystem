@@ -241,7 +241,7 @@ class AccessControlController extends Controller
     {
         $receivedData = substr($receivedData, 1, strlen($receivedData));
 
-        Log::debug("System Message Received: " . $receivedData);
+        //Log::debug("System Message Received: " . $receivedData);
 
         $messageParts = ["", ""];
         if (strpos($receivedData, '|') !== false) {
