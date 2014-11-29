@@ -96,7 +96,7 @@ class BuildingAccess extends KeyFobAccess {
 
         if (!($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
             $this->logFailure();
-            //throw new ValidationException("Member not trusted");
+            throw new ValidationException("Member not trusted");
         }
 
     }
