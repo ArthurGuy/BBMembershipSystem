@@ -6,41 +6,18 @@ class AccessControlController extends Controller
 {
 
     /**
-     * @var
-     */
-    private $accessLogRepository;
-    /**
-     * @var \BB\Repo\EquipmentRepository
-     */
-    private $equipmentRepository;
-    /**
-     * @var \BB\Repo\EquipmentLogRepository
-     */
-    private $equipmentLogRepository;
-    /**
      * @var \BB\Services\BuildingAccess
      */
     private $buildingAccess;
 
-    function __construct(
-        \BB\Repo\AccessLogRepository $accessLogRepository,
-        \BB\Repo\EquipmentRepository $equipmentRepository,
-        \BB\Repo\EquipmentLogRepository $equipmentLogRepository,
-        \BB\Services\BuildingAccess $buildingAccess)
+    function __construct(\BB\Services\BuildingAccess $buildingAccess)
     {
-        $this->accessLogRepository = $accessLogRepository;
-        $this->equipmentRepository = $equipmentRepository;
-        $this->equipmentLogRepository = $equipmentLogRepository;
         $this->buildingAccess = $buildingAccess;
     }
 
     public function mainDoor()
     {
-        $failed = false;
-
         $message = null;
-        $isDelayed = false;
-
 
         $receivedData = trim(Input::get('data'));
 
@@ -81,65 +58,6 @@ class AccessControlController extends Controller
         $response = Response::make($responseBody.PHP_EOL, 200);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
-
-
-        /*
-
-
-        if (strpos($receivedData, '|') !== false) {
-            $keyParts = explode('|', $receivedData);
-            $receivedData    = $keyParts[0];
-            $message  = $keyParts[1];
-            if ($message == 'delayed') {
-                $isDelayed = true;
-            }
-        }
-
-        try {
-            $keyFob = $this->lookupKeyFob($receivedData);
-        } catch (Exception $e) {
-            //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not found']), 200);
-            $responseBody = json_encode(['valid'=>'0', 'msg'=>'Not found']);
-            $failed = true;
-            //Log::debug("New System: Keyfob code not found ".$receivedData);
-        }
-
-        if (!$failed) {
-            $user = $keyFob->user()->first();
-
-
-            $log               = [];
-            $log['key_fob_id'] = $keyFob->id;
-            $log['user_id']    = $user->id;
-            $log['service']    = 'main-door';
-            $log['delayed']    = $isDelayed;
-
-            if ($user->active && $user->key_holder) {
-                //OK
-                $log['response'] = 200;
-                $this->accessLogRepository->logAccessAttempt($log);
-                //return Response::make(json_encode(['valid'=>'1', 'reason'=>'', 'name'=>$user->name]), 200);
-                $userName = substr($user->given_name, 0, 20);
-                $responseBody = json_encode(['valid' => '1', 'msg' => $userName]);
-            } elseif ($user->active) {
-                //Not a keyholder
-                $log['response'] = 403;
-                $this->accessLogRepository->logAccessAttempt($log);
-                //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not a keyholder', 'name'=>$user->name]), 200);
-                $responseBody = json_encode(['valid' => '0', 'msg' => 'Not a keyholder']);
-            } else {
-                //bad
-                $log['response'] = 402;
-                $this->accessLogRepository->logAccessAttempt($log);
-                //return Response::make(json_encode(['valid'=>'0', 'reason'=>'Not active', 'name'=>$user->name]), 200);
-                $responseBody = json_encode(['valid' => '0', 'msg' => 'Not active']);
-            }
-        }
-
-        $response = Response::make($responseBody.PHP_EOL, 200);
-        $response->headers->set('Content-Length', strlen($response->getContent()));
-        return $response;
-        */
     }
 
 
