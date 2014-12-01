@@ -1,11 +1,11 @@
 @extends('layouts.main')
 
 @section('meta-title')
-Build Brighton Credit {{ $user->name }}
+Build Brighton Balance {{ $user->name }}
 @stop
 
 @section('page-title')
-Build Brighton Credit
+Build Brighton Balance
 @stop
 
 @section('content')
@@ -13,14 +13,13 @@ Build Brighton Credit
 <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-10">
         <p>
-            There are a number services at Build Brighton that require payments, such as the laser fee,
-            tuck shop and component store. You can maintain a balance here to pay for these services quickly and easily.
+            This is your Build Brighton Balance, it can be used to pay for your time on the laser and in the future other things as well.
         </p>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-10">
+    <div class="col-xs-12 col-sm-6 col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Add Credit</h3>
@@ -29,7 +28,7 @@ Build Brighton Credit
             <p>Top up using Direct Debit or a credit/debit card payment</p>
 
 
-            @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.bbcredit.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up', 'displayReason'=>'Balance Payment', 'methods'=>['gocardless', 'stripe']])
+            @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.balance.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up', 'displayReason'=>'Balance Payment', 'methods'=>['gocardless', 'stripe']])
 
             </div>
 
@@ -45,7 +44,7 @@ Build Brighton Credit
             @endif
         </div>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-2">
+    <div class="col-xs-12 col-sm-6 col-md-3">
             <div class="panel panel-default text-center">
                 <div class="panel-heading">
                     <h3 class="panel-title">Balance</h3>
@@ -61,7 +60,7 @@ Build Brighton Credit
     <div class="col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Payment History</h3>
+                <h3 class="panel-title">Balance Payment History</h3>
             </div>
             <table class="table">
                 <thead>

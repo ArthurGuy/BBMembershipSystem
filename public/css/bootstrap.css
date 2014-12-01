@@ -6294,7 +6294,7 @@ body {
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 .mainSidenav .memberAccountLinks.open .accountSettings {
-  height: 70px;
+  height: 90px;
 }
 .sidenav-brand {
   display: block;
