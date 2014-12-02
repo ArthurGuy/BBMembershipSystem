@@ -26,7 +26,7 @@ class AccessControlController extends Controller
 
         $receivedData = trim(Input::get('data'));
 
-        Log::debug("New System. Entry message received: ".$receivedData);
+        //Log::debug("New System. Entry message received: ".$receivedData);
 
         //What access point is this?
         $this->buildingAccess->setDeviceKey('main-door');
@@ -41,6 +41,8 @@ class AccessControlController extends Controller
             $this->buildingAccess->validateData();
 
         } catch (\BB\Exceptions\ValidationException $e) {
+
+            Log::debug("Entry message received - failed: ".$receivedData);
 
             //The data was invalid or the user doesnt have access
             $response = Response::make(json_encode(['valid' => '0', 'msg' => $e->getMessage()]).PHP_EOL, 200);
@@ -168,6 +170,8 @@ class AccessControlController extends Controller
         } elseif ($message == 'heartbeat') {
             $this->deviceRepository->logHeartbeat($device);
         }
+
+        Log::debug("System Message: ".$receivedData);
 
         return Response::make(PHP_EOL, 200);
     }
