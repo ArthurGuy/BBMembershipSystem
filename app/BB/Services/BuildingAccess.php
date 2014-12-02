@@ -62,12 +62,17 @@ class BuildingAccess extends KeyFobAccess {
             if (!in_array($this->action, $this->systemDeviceActions)) {
                 throw new ValidationException("Invalid Device Action");
             }
-        } else {
-            if (!in_array($this->action, $this->deviceActions)) {
-                throw new ValidationException("Invalid Device Action");
+            //Validate the device
+            if (!in_array($this->deviceKey, $this->devices)) {
+                throw new ValidationException("Invalid device key");
             }
+            return;
         }
 
+        //Validate the action
+        if (!in_array($this->action, $this->deviceActions)) {
+            throw new ValidationException("Invalid Device Action");
+        }
 
         //Validate the device
         if (!in_array($this->deviceKey, $this->devices)) {
