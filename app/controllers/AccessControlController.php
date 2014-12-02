@@ -81,7 +81,7 @@ class AccessControlController extends Controller
         return Response::make(json_encode(['valid'=>'1', 'name'=>$user->name, 'status'=>$statusString]), 200);
     }
 
-
+    /*
     public function legacy()
     {
         $keyId = Input::get('data');
@@ -128,6 +128,7 @@ class AccessControlController extends Controller
             return Response::make("NOTFOUND", 200);
         }
     }
+    */
 
     private function lookupKeyFob($keyId)
     {
