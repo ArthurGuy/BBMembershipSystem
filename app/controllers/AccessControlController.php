@@ -9,10 +9,15 @@ class AccessControlController extends Controller
      * @var \BB\Services\BuildingAccess
      */
     private $buildingAccess;
+    /**
+     * @var \BB\Repo\DeviceRepository
+     */
+    private $deviceRepository;
 
-    function __construct(\BB\Services\BuildingAccess $buildingAccess)
+    function __construct(\BB\Services\BuildingAccess $buildingAccess, \BB\Repo\DeviceRepository $deviceRepository)
     {
         $this->buildingAccess = $buildingAccess;
+        $this->deviceRepository = $deviceRepository;
     }
 
     public function mainDoor()
@@ -144,23 +149,11 @@ class AccessControlController extends Controller
 
     /**
      * @param $receivedData
-     * @return bool
-     *
-    public function isSystemMessage($receivedData)
-    {
-        return strpos($receivedData, ':') === 0;
-    }
-     */
-
-    /**
-     * @param $receivedData
      * @return mixed
      */
     public function handleSystemMessage($receivedData)
     {
         $receivedData = substr($receivedData, 1, strlen($receivedData));
-
-        //Log::debug("System Message Received: " . $receivedData);
 
         $messageParts = ["", ""];
         if (strpos($receivedData, '|') !== false) {
@@ -170,7 +163,11 @@ class AccessControlController extends Controller
         $device  = $messageParts[0];
         $message = $messageParts[1];
 
-        //@TODO: Log this data
+        if ($message == 'boot') {
+            $this->deviceRepository->logBoot($device);
+        } elseif ($message == 'heartbeat') {
+            $this->deviceRepository->logHeartbeat($device);
+        }
 
         return Response::make(PHP_EOL, 200);
     }
