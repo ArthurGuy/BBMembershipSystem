@@ -112,7 +112,7 @@ class BuildingAccess extends KeyFobAccess {
         //Remove the start : character
         $receivedData = substr($receivedData, 1, strlen($receivedData));
 
-        \Log::debug("System Message Received: " . $receivedData);
+        //\Log::debug("System Message Received: " . $receivedData);
 
         //The system message consists of a device key and an action
         if (strpos($receivedData, '|') === false) {
