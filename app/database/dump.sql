@@ -434,6 +434,16 @@ VALUES
 	(1, 'Proposal 1', 'This is the text for a test proposal', 1, '2014-10-10', '2014-10-13', 0, 0, 0, 0, 0, 0, 0, '2014-10-20 00:00:00', '2014-10-20 00:00:00');
 
 
+CREATE TABLE `devices` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `device_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `last_boot` datetime NOT NULL,
+  `last_heartbeat` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
