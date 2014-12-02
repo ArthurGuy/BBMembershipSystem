@@ -10,7 +10,7 @@ class LegacyAccessControlCest
     public function _after(ApiTester $I)
     {
     }
-
+/*
     public function successfullMemberLogin(ApiTester $I)
     {
         $I->am('an active member');
@@ -67,4 +67,5 @@ class LegacyAccessControlCest
         //Make sure a failure is returned
         $I->canSeeResponseEquals('NOTFOUND');
     }
+*/
 }
