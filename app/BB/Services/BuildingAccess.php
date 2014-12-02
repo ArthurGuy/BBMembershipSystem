@@ -15,7 +15,7 @@ class BuildingAccess extends KeyFobAccess {
      */
     private $deviceActions = ['delayed', ''];
 
-    private $systemDeviceActions = ['boot', 'ping', 'tamper'];
+    private $systemDeviceActions = ['boot', 'heartbeat', 'tamper'];
 
     private $devices = ['main-door'];
     /**
