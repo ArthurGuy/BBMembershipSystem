@@ -123,5 +123,17 @@
             <p>Payment made, box to be assigned</p>
         @endif
     </div>
+
+    @if ($user->payment_method == 'cash')
+    <div class="col-xs-12 col-md-6">
+        <h4>Cash Subscription Payment</h4>
+        {{ Form::open(array('method'=>'POST', 'class'=>'form-inline', 'route' => ['account.payment.store', $user->id])) }}
+        {{ Form::hidden('reason', 'subscription') }}
+        {{ Form::hidden('source', 'cash') }}
+        {{ Form::submit('Record A &pound;'.round($user->monthly_subscription).' Cash Payment', array('class'=>'btn btn-default')) }}
+        {{ Form::close() }}
+        </div>
+    @endif
+
 </div>
 @endif
