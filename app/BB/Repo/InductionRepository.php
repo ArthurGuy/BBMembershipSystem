@@ -13,6 +13,9 @@ class InductionRepository extends DBRepository {
     }
 
 
+    /**
+     * @return array
+     */
     public function getTrainersByEquipment()
     {
         $trainersRaw = $this->model->with('user', 'user.profile')->where('is_trainer', true)->get();
@@ -26,7 +29,19 @@ class InductionRepository extends DBRepository {
         return $trainers;
     }
 
+    /**
+     * @param $deviceId
+     * @return array
+     */
+    public function getTrainersForEquipment($deviceId)
+    {
+        return $this->model->with('user', 'user.profile')->where('is_trainer', true)->where('key', $deviceId)->get();
+    }
 
+
+    /**
+     * @return array
+     */
     public function getUsersPendingInduction()
     {
         $usersRaw = $this->model->with('user', 'user.profile')->where('paid', true)->whereNull('trained')->get();
@@ -40,6 +55,9 @@ class InductionRepository extends DBRepository {
         return $users;
     }
 
+    /**
+     * @return array
+     */
     public function getTrainedUsers()
     {
         $usersRaw = $this->model->with('user', 'user.profile')->where('paid', true)->whereNotNull('trained')->get();
@@ -53,6 +71,11 @@ class InductionRepository extends DBRepository {
         return $users;
     }
 
+    /**
+     * @param $userId
+     * @param $device
+     * @return bool
+     */
     public function isUserTrained($userId, $device)
     {
         $record = $this->model->with('user', 'user.profile')->where('paid', true)->whereNotNull('trained')->where('user_id', $userId)->where('key', $device)->first();

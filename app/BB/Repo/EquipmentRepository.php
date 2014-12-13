@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class EquipmentRepository {
 
     public function all()
@@ -72,6 +74,6 @@ class EquipmentRepository {
         if (isset($equipment[$key])) {
             return $equipment[$key];
         }
-        return false;
+        throw new ModelNotFoundException();
     }
 } 
