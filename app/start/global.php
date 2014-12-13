@@ -11,6 +11,7 @@
 |
 */
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 ClassLoader::addDirectories(array(
@@ -78,6 +79,10 @@ App::error(function(NotFoundHttpException $exception)
 {
     return Response::make("Not found", 404);
 });
+App::error(function(MOdelNotFoundException $exception)
+{
+    return Response::make("Not found", 404);
+});
 
 
 /**
@@ -94,14 +99,14 @@ App::error(function(\BB\Exceptions\FormValidationException $exception)
 });
 
 App::error(function(\BB\Exceptions\ValidationException $exception)
-    {
-        if (Request::wantsJson()) {
-            return Response::json($exception->getMessage(), 400);
-        } else {
-            Notification::error($exception->getMessage());
-            return Redirect::back()->withInput();
-        }
-    });
+{
+    if (Request::wantsJson()) {
+        return Response::json($exception->getMessage(), 400);
+    } else {
+        Notification::error($exception->getMessage());
+        return Redirect::back()->withInput();
+    }
+});
 
 /*
 |--------------------------------------------------------------------------
