@@ -4,6 +4,7 @@ use BB\Exceptions\ValidationException;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DeviceSession extends KeyFobAccess {
 
@@ -47,8 +48,9 @@ class DeviceSession extends KeyFobAccess {
             throw new ValidationException("Invalid Device Action");
         }
         //Validate the device
-        $this->device = $this->equipmentRepository->findByKey($this->deviceKey);
-        if (!$this->device) {
+        try {
+            $this->device = $this->equipmentRepository->findByKey($this->deviceKey);
+        } catch (ModelNotFoundException $e) {
             throw new ValidationException("Invalid Device Key");
         }
         //Confirm the device is working
