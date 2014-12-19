@@ -27,8 +27,20 @@ elixir(function(mix) {
             'js/partials/payments.js',
             'js/partials/snackbar.js',
             'js/lib/bootstrap.min.js',
-            'js/lib/select2.min.js'
+            'js/lib/select2.min.js',
+
+            'js/app.js',
+            'js/router.js',
+            'js/models/role.js',
+            'js/models/user.js',
+            'js/routes/rolesRoute.js',
+            'js/routes/usersRoute.js',
+            'js/routes/createRoleMemberRoute.js',
+            'js/controllers/RolesController.js'
         ])
+        //.scriptsIn('public/js/routes')
+        //.scriptsIn('public/js/controllers')
+        //.scriptsIn('plublic/js/models')
         .bower()
         .codeception();
         //.routes()

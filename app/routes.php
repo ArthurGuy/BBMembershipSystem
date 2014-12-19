@@ -116,6 +116,10 @@ Route::post('proposals/{id}/update', ['uses'=>'ProposalController@update', 'as'=
 # Feedback
 Route::post('feedback', ['uses'=>'FeedbackController@store', 'as'=>'feedback.store', 'before'=>'roll:member']);
 
+
+# Roles
+Route::resource('roles', 'RolesController', ['before'=>'role:admin']);
+
 Route::get('example', function() {
     return View::make('example');
 });
