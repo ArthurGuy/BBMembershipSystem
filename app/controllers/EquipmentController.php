@@ -10,14 +10,21 @@ class EquipmentController extends \BaseController {
      * @var \BB\Repo\EquipmentRepository
      */
     private $equipmentRepository;
+    /**
+     * @var \BB\Repo\EquipmentLogRepository
+     */
+    private $equipmentLogRepository;
 
     /**
-     * @param \BB\Repo\InductionRepository $inductionRepository
+     * @param \BB\Repo\InductionRepository    $inductionRepository
+     * @param \BB\Repo\EquipmentRepository    $equipmentRepository
+     * @param \BB\Repo\EquipmentLogRepository $equipmentLogRepository
      */
-    function __construct(\BB\Repo\InductionRepository $inductionRepository, \BB\Repo\EquipmentRepository $equipmentRepository)
+    function __construct(\BB\Repo\InductionRepository $inductionRepository, \BB\Repo\EquipmentRepository $equipmentRepository, \BB\Repo\EquipmentLogRepository $equipmentLogRepository)
     {
         $this->inductionRepository = $inductionRepository;
         $this->equipmentRepository = $equipmentRepository;
+        $this->equipmentLogRepository = $equipmentLogRepository;
     }
 
     /**
@@ -43,5 +50,15 @@ class EquipmentController extends \BaseController {
             ->with('equipment', $equipment)
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('trainedUsers', $trainedUsers);
+    }
+
+    public function show($equipmentId)
+    {
+        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $trainers = $this->inductionRepository->getTrainersForEquipment($equipmentId);
+
+        $equipmentLog = $this->equipmentLogRepository->getAllForEquipment($equipmentId);
+
+        return View::make('equipment.show')->with('equipmentId', $equipmentId)->with('equipment', $equipment)->with('trainers', $trainers)->with('equipmentLog', $equipmentLog);
     }
 } 

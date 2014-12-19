@@ -107,4 +107,13 @@ class EquipmentLogRepository extends DBRepository
         $existingSession->save();
     }
 
+    /**
+     * @param $deviceKey
+     * @return mixed
+     */
+    public function getAllForEquipment($deviceKey)
+    {
+        return $this->model->where('device', $deviceKey)->orderBy('created_at', 'DESC')->get();
+    }
+
 } 
