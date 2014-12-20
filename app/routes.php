@@ -92,6 +92,7 @@ Route::get('activity/realtime', ['uses' => 'ActivityController@realtime', 'as'=>
 
 # Storage Boxes
 Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'before'=>'role:member']);
+Route::put('storage_boxes/{id}', ['uses'=>'StorageBoxController@update', 'as'=>'storage_boxes.update', 'before'=>'role:member']);
 
 
 # Stats
