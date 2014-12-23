@@ -9,14 +9,23 @@
 @if ($memberBox)
 
     <p>
-        You have a storage box
+        You have box {{ $memberBox->id }}.
+        Please make sure you name is written on the masking tape label, this allows others to return items to you.
     </p>
 
 @elseif($boxPayment)
 
-    <p>
-        We have your payment, please email <a href="mailto::arthur@arthurguy.co.uk">Arthur</a> to arrange to collect a box.
-    </p>
+    <div class="well">
+        @if ($availableBoxes > 0)
+            <p>
+                It looks like we have a box available, you can use the claim button below to select a storage box.<br />
+                You should probably check to make sure its on the shelf first.
+            </p>
+        @else
+            <p>We have your payment but don't currently have any spare boxes, we hope to get more soon.</p>
+        @endif
+    </div>
+
 @else
 
     <div class="well">
@@ -24,7 +33,7 @@
         @if ($availableBoxes > 0)
 
         <p>
-            Storage boxes require a £5 deposit, this can be paid in cash at the space or via the form below.
+            Storage boxes require a &pound;5 deposit, this can be paid in cash at the space or via the form below.
         </p>
 
         @include('partials/payment-form', ['reason'=>'storage-box', 'displayReason'=>'Storage Box Deposit', 'returnPath'=>route('storage_boxes.index', [], false), 'amount'=>5, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless']])
@@ -45,14 +54,33 @@
             <th>ID</th>
             <th>Size</th>
             <th>Member</th>
+            <th></th>
         </tr>
     </thead>
 @foreach ($storageBoxes as $box)
     <tbody>
-        <tr>
+        <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
             <td>{{ $box->id }}</td>
             <td>{{ $box->size }}</td>
             <td>{{ $box->user->name or 'Available' }}</td>
+            <td>
+                @if($box->user && !$box->user->active)
+                    @if (Auth::user()->isAdmin())
+                        {{ Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) }}
+                        {{ Form::hidden('user_id', '') }}
+                        Member left:
+                        {{ Form::submit('Reclaim', array('class'=>'btn btn-default btn-sm')) }}
+                        {{ Form::close() }}
+                    @else
+                        Member left - box to be reclaimed
+                    @endif
+                @elseif ($canClaimBox && !$box->user)
+                    {{ Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) }}
+                    {{ Form::hidden('user_id', Auth::user()->id) }}
+                    {{ Form::submit('Claim', array('class'=>'btn btn-default')) }}
+                    {{ Form::close() }}
+                @endif
+            </td>
         </tr>
     </tbody>
 @endforeach
