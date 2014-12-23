@@ -32,6 +32,7 @@
         {{ HTML::sideNavLink('Proposals', 'proposals.index') }}
         @if (!Auth::guest() && Auth::user()->isAdmin())
         {{ HTML::sideNavLink('Members (Admin)', 'account.index') }}
+        {{ HTML::sideNavLink('Roles (Admin)', 'roles.index') }}
         @endif
     </ul>
 
