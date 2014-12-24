@@ -31,7 +31,4 @@ elixir(function(mix) {
         ])
         .bower()
         .codeception();
-        //.routes()
-        //.events()
-        //.phpUnit();
 });

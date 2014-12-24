@@ -65,7 +65,7 @@
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
                 @if($box->user && !$box->user->active)
-                    @if (Auth::user()->isAdmin())
+                    @if (Auth::user()->hasRole('storage'))
                         {{ Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) }}
                         {{ Form::hidden('user_id', '') }}
                         Member left:

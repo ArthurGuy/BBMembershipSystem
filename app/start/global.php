@@ -79,7 +79,7 @@ App::error(function(NotFoundHttpException $exception)
 {
     return Response::view('errors.404', [], 404);
 });
-App::error(function(MOdelNotFoundException $exception)
+App::error(function(ModelNotFoundException $exception)
 {
     return Response::view('errors.404', [], 404);
 });
