@@ -57,9 +57,10 @@ Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment
 
 
 # Inductions
-Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'before'=>'role:admin', 'as'=>'equipment_training.update']);
-Route::resource('account.induction', 'InductionController', ['before'=>'role:admin', 'only' => ['update', 'destroy']]);
-//Route::resource('induction', 'InductionController', ['before'=>'role:admin', 'only' => ['index', 'update', 'destroy']]);
+Route::group(array('before' => 'role:admin'), function() {
+    Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'as'=>'equipment_training.update']);
+    Route::resource('account.induction', 'InductionController', ['only' => ['update', 'destroy']]);
+});
 
 
 # Equipment
@@ -71,8 +72,9 @@ Route::resource('statement-import', 'StatementImportController', ['except' => ['
 
 
 # KeyFobs
-Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy'], 'before'=>'role:admin']);
-
+Route::group(array('before' => 'role:admin'), function() {
+    Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy']]);
+});
 
 # PayPal IPN
 Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
