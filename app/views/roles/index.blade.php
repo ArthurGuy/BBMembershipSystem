@@ -10,68 +10,50 @@ Member Roles
 @section('content')
 
 
-<script type="text/x-handlebars" data-template-name="application">
-    <h1>App name: @{{appName}}</h1>
-    @{{outlet}}
-</script>
-
-<script type="text/x-handlebars" data-template-name="roles">
-
-
-    <section id="rolesapp">
-
-        <section id="main">
-
-            <table class="table">
-                <thead>
+<table class="table">
+<thead>
+    <tr>
+        <th>Role</th>
+        <th>Members</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach($roles as $role)
+        <tr>
+            <td>{{ $role->name }}</td>
+            <td>
+                <table class="table">
+                @foreach($role->users as $user)
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Link</th>
+                        <td width="50%">{{ $user->name }}</td>
+                        <td>
+                        {{ Form::open(array('method'=>'DELETE', 'route' => ['roles.users.destroy', $role->id, $user->id], 'class'=>'form-inline')) }}
+                        {{ Form::submit('Remove', array('class'=>'btn btn-default btn-xs')) }}
+                        {{ Form::close() }}
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @{{#each controller}}
-                        <tr>
-                            <td>@{{ id }}</td>
-                            <td>@{{name}}</td>
-                            <td>@{{#link-to 'role' this}}@{{ name }}@{{/link-to}}</td>
-                            <td><button @{{action 'deleteRole' this}}>Delete</button></td>
-                        </tr>
-                    @{{else}}
-                    None
-                    @{{/each}}
-                </tbody>
-            </table>
+                @endforeach
+                    <tr>
+                        {{ Form::open(array('method'=>'POST', 'route' => ['roles.users.store', $role->id], 'class'=>'form-inline')) }}
+                        <td>{{ Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'js-member-select form-control']) }}</td>
+                        <td>
+                        {{ Form::submit('Add', array('class'=>'btn btn-default btn-sm')) }}
+                        </td>
+                        {{ Form::close() }}
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+</table>
 
-            <h4>Create a new Role</h4>
-            @{{input type="text" value=newRoleName action="createRole"}}
+@stop
 
-
-        </section>
-
-    </section>
-
-
+@section('footer-js')
+<script>
+$(document).ready(function() {
+    $(".js-member-select").select2();
+});
 </script>
-
-
-<script type="text/x-handlebars" data-template-name="role">
-    <h1>Name: @{{name}}</h1>
-    <h2>Users</h2>
-    @{{#each users}}
-        <li>@{{given_name}}</li>
-    @{{else}}
-        No Users
-    @{{/each}}
-
-    @{{outlet}}
-</script>
-
-<script type="text/x-handlebars" data-template-name="createRoleMember">
-    <label>User name</label>
-    @{{input value=name}}
-</script>
-
-
 @stop

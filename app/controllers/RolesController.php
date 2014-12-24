@@ -9,11 +9,9 @@ class RolesController extends \BaseController {
 	 */
 	public function index()
 	{
-        if (Request::ajax()) {
-            //return Response::make(['roles'=>[(object)['id'=>1, 'name'=>"test", 'user_ids'=>[1,2]],(object)['id'=>2, 'name'=>"test2", 'user_ids'=>[3]]]]);
-            return Response::make(["roles"=>Role::with('Users')->get()]);
-        }
-		return View::make('roles.index');
+        $roles = Role::with('Users')->get();
+        $memberList = User::dropdown();
+		return View::make('roles.index')->with('roles', $roles)->with('memberList', $memberList);
 	}
 
 
