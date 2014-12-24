@@ -105,7 +105,7 @@ class StorageBoxController extends \BaseController {
             $this->selfClaimBox($boxId, $userId);
         } else {
             //No id - reclaiming the box
-            if (!Auth::user()->isAdmin()) {
+            if (!Auth::user()->hasRole('storage')) {
                 throw new \BB\Exceptions\AuthenticationException();
             }
 
