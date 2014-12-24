@@ -33,10 +33,7 @@ class RolesController extends \BaseController {
 	 */
 	public function store()
 	{
-        if (Request::ajax()) {
-            $role = Role::create(['name'=>Request::input('role.name')]);
-            return Response::make(["role"=>$role]);
-        }
+
 	}
 
 
@@ -48,10 +45,7 @@ class RolesController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        if (Request::ajax()) {
-            return Response::make(["role"=>Role::with('Users')->find($id)]);
-        }
-        return View::make('roles.index');
+
 	}
 
 
@@ -75,14 +69,7 @@ class RolesController extends \BaseController {
 	 */
 	public function update($id)
 	{
-        $role = Role::find($id);
-        if (Request::ajax()) {
 
-            $role->name = Request::input('role.name');
-            $role->save();
-
-            return Response::make(["role"=>$role]);
-        }
 	}
 
 
@@ -94,11 +81,7 @@ class RolesController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-        $role = Role::find($id);
-        if ($role->users->count() > 0) {
-            return Response::make(["errors"=>['Role in use']], 422);
-        }
-        $role->delete();
+        
 	}
 
 
