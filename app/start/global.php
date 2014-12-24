@@ -77,11 +77,11 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
 
 App::error(function(NotFoundHttpException $exception)
 {
-    return Response::make("Not found", 404);
+    return Response::view('errors.404', [], 404);
 });
 App::error(function(MOdelNotFoundException $exception)
 {
-    return Response::make("Not found", 404);
+    return Response::view('errors.404', [], 404);
 });
 
 
