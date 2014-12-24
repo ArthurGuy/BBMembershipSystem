@@ -9,7 +9,9 @@ Member Roles
 
 @section('content')
 
-
+<p>
+Assign members to specific roles in order to control how much access they have and what they can do
+</p>
 <table class="table">
 <thead>
     <tr>
