@@ -71,7 +71,7 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
     }
     Log::warning($userString." tried to access something they weren't supposed to.");
 
-    return Response::make("Unauthorized", 403);
+    return Response::view('errors.403', [], 403);
 });
 
 
