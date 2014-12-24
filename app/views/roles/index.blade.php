@@ -20,7 +20,7 @@ Member Roles
 <tbody>
     @foreach($roles as $role)
         <tr>
-            <td>{{ $role->name }}</td>
+            <td>{{ $role->title }} ({{ $role->name }})</td>
             <td>
                 <table class="table">
                 @foreach($role->users as $user)
