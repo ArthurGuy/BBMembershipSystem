@@ -10,7 +10,7 @@ class RolesController extends \BaseController {
 	public function index()
 	{
         $roles = Role::with('Users')->get();
-        $memberList = User::dropdown();
+        $memberList = User::dropdown(true);
 		return View::make('roles.index')->with('roles', $roles)->with('memberList', $memberList);
 	}
 
