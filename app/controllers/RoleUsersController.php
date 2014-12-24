@@ -49,7 +49,7 @@ class RoleUsersController extends \BaseController {
         //don't let people remove the admin permission if they are a trustee
 
         $user = User::findOrFail($userId);
-        if ($user->director && $role->name == 'admin') {
+        if ($user->active && $user->director && $role->name == 'admin') {
             Notification::error("You cannot remove a trustee from the admin group");
             return Redirect::back();
         }
