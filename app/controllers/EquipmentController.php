@@ -57,7 +57,7 @@ class EquipmentController extends \BaseController {
         $equipment = $this->equipmentRepository->findByKey($equipmentId);
         $trainers = $this->inductionRepository->getTrainersForEquipment($equipmentId);
 
-        $equipmentLog = $this->equipmentLogRepository->getAllForEquipment($equipmentId);
+        $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipmentId);
 
         return View::make('equipment.show')->with('equipmentId', $equipmentId)->with('equipment', $equipment)->with('trainers', $trainers)->with('equipmentLog', $equipmentLog);
     }

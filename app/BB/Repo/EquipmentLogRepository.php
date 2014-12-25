@@ -98,11 +98,15 @@ class EquipmentLogRepository extends DBRepository
     /**
      * Record the end of a session
      * @param integer $sessionId
+     * @param \DateTime    $finishedDate
      */
-    public function endSession($sessionId)
+    public function endSession($sessionId, $finishedDate = null)
     {
         $existingSession = $this->model->findOrFail($sessionId);
-        $existingSession->finished = Carbon::now();
+        if ($finishedDate === null) {
+            $finishedDate = Carbon::now();
+        }
+        $existingSession->finished = $finishedDate;
         $existingSession->active = 0;
         $existingSession->save();
     }
@@ -114,6 +118,20 @@ class EquipmentLogRepository extends DBRepository
     public function getAllForEquipment($deviceKey)
     {
         return $this->model->where('device', $deviceKey)->orderBy('created_at', 'DESC')->get();
+    }
+
+    /**
+     * @param $deviceKey
+     * @return mixed
+     */
+    public function getFinishedForEquipment($deviceKey)
+    {
+        return $this->model->where('device', $deviceKey)->where('active', false)->orderBy('created_at', 'DESC')->get();
+    }
+
+    public function getActiveRecords()
+    {
+        return $this->model->where('active', true)->orderBy('created_at', 'DESC')->get();
     }
 
 } 
