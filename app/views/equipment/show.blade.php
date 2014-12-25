@@ -37,7 +37,7 @@ Tools and Equipment
                         <h4>Trainers</h4>
                         <div class="list-group">
                             @foreach($trainers as $trainer)
-                                <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
+                                <a href="{{ route('members.show', $trainer->user->id) }}" class="list-group-item">
                                     {{ HTML::memberPhoto($trainer->user->profile, $trainer->hash, 50, '') }}
                                     {{ $trainer->user->name }}
                                 </a>
@@ -63,7 +63,7 @@ Tools and Equipment
             <tr>
                 <td>{{ $log->present()->started }}</td>
                 <td>{{ $log->present()->timeUsed }}</td>
-                <td>{{ $log->user->name }}</td>
+                <td><a href="{{ route('members.show', $log->user->id) }}">{{ $log->user->name }}</a></td>
             </tr>
         @endforeach
         </tbody>
