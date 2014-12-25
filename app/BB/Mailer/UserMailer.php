@@ -4,7 +4,7 @@ class UserMailer {
 
 
     /**
-     * @var User
+     * @var \User
      */
     private $user;
 
@@ -41,7 +41,12 @@ class UserMailer {
     public function sendLeftMessage()
     {
         $user = $this->user;
-        \Mail::queue('emails.user-left', ['user'=>$user], function($message) use ($user)
+
+        $storageBoxRepository = \App::make('BB\Repo\StorageBoxRepository');
+
+        $memberBox = $storageBoxRepository->getMemberBox($this->user->id);
+
+        \Mail::queue('emails.user-left', ['user'=>$user, 'memberBox'=>$memberBox], function($message) use ($user)
         {
             $message->to($user->email, $user->email)->subject('Sorry to see you go')->cc('info@buildbrighton.com');
         });

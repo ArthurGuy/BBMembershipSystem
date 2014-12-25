@@ -24,9 +24,10 @@ New members can join and create accounts, payments are tracked and managed throu
 * Collect deposit payments for door keys and member storage boxes
 * Door entry control and tracking
 * Member credit for payment and member topup
+* Member storage box status and self assignment once payment is received
+* Member role system for managing delegated duties
 
 ###Upcomming Features
-* Handle member storage box assignments
 * Equipment control and usage logging
 
 
@@ -40,7 +41,7 @@ There are a variety of member statuses which are used for various scenarios.
 * Left - Leaving users move here once their last payment expires.
 
 
-###Other Makerspaces
+###Other Maker spaces
 This system can be used with only minor modifications by other spaces.<br />
 The Build Brighton naming is hardcoded into the pages and pieces of text will need to be altered.<br />
 It has been designed to work primarily with GoCardless but the PayPal integration is OK and would be good enough on its own.<br />

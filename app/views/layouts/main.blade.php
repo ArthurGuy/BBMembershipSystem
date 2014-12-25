@@ -8,7 +8,7 @@
     <title>@yield('meta-title', 'Member System') | Build Brighton</title>
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,100' rel='stylesheet' type='text/css'>
-    <link href="/css/all.min.css" rel="stylesheet">
+    <link href="/css/all.css" rel="stylesheet">
 
     <script src="//www.google.com/jsapi"></script>
     <script>var BB = BB || {};</script>
@@ -224,7 +224,7 @@
     @endif
     <script src="https://checkout.stripe.com/checkout.js"></script>
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
-    <script src="/js/all.min.js"></script>
+    <script src="/js/all.js"></script>
     <script>
         $('[data-toggle=tooltip]').tooltip({});
 

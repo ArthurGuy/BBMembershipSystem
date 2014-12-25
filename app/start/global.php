@@ -71,17 +71,17 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
     }
     Log::warning($userString." tried to access something they weren't supposed to.");
 
-    return Response::make("Unauthorized", 403);
+    return Response::view('errors.403', [], 403);
 });
 
 
 App::error(function(NotFoundHttpException $exception)
 {
-    return Response::make("Not found", 404);
+    return Response::view('errors.404', [], 404);
 });
-App::error(function(MOdelNotFoundException $exception)
+App::error(function(ModelNotFoundException $exception)
 {
-    return Response::make("Not found", 404);
+    return Response::view('errors.404', [], 404);
 });
 
 

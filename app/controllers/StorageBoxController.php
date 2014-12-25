@@ -2,6 +2,16 @@
 
 class StorageBoxController extends \BaseController {
 
+    /**
+     * @var \BB\Repo\StorageBoxRepository
+     */
+    private $storageBoxRepository;
+
+    public function __construct(\BB\Repo\StorageBoxRepository $storageBoxRepository)
+    {
+        $this->storageBoxRepository = $storageBoxRepository;
+    }
+
 
 	/**
 	 * Display a listing of the resource.
@@ -10,23 +20,25 @@ class StorageBoxController extends \BaseController {
 	 */
 	public function index()
 	{
-        $storageBoxes = StorageBox::all();
+        $storageBoxes = $this->storageBoxRepository->getAll();
 
-        $availableBoxes = 0;
-        foreach ($storageBoxes as $box) {
-            if (empty($box->user_id)) {
-                $availableBoxes++;
-            }
-        }
-        $memberBox = StorageBox::findMember(Auth::user()->id);
+        $availableBoxes = $this->storageBoxRepository->numAvailableBoxes();
+
+        $memberBox = $this->storageBoxRepository->getMemberBox(Auth::user()->id);
 
         $boxPayment = Auth::user()->getStorageBoxPayment();
+
+        $canClaimBox = false;
+        if (($availableBoxes > 0) && $boxPayment && !$memberBox) {
+            $canClaimBox = true;
+        }
 
         return View::make('storage_boxes.index')
             ->with('storageBoxes', $storageBoxes)
             ->with('memberBox', $memberBox)
             ->with('boxPayment', $boxPayment)
-            ->with('availableBoxes', $availableBoxes);
+            ->with('availableBoxes', $availableBoxes)
+            ->with('canClaimBox', $canClaimBox);
 	}
 
 
@@ -76,16 +88,61 @@ class StorageBoxController extends \BaseController {
 	}
 
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param $boxId
+     * @throws \BB\Exceptions\AuthenticationException
+     * @throws \BB\Exceptions\ValidationException
+     * @internal param int $id
+     * @return Response
+     */
+	public function update($boxId)
 	{
-		//
+        $userId = Request::get('user_id');
+
+        if ($userId) {
+            $this->selfClaimBox($boxId, $userId);
+        } else {
+            //No id - reclaiming the box
+            if (!Auth::user()->hasRole('storage')) {
+                throw new \BB\Exceptions\AuthenticationException();
+            }
+
+            $this->storageBoxRepository->update($boxId, ['user_id'=>0]);
+        }
+
+        Notification::success("Member box updated");
+        return Redirect::route('storage_boxes.index');
 	}
+
+    private function selfClaimBox($boxId, $userId)
+    {
+        if ($userId != Auth::user()->id) {
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
+        $box = $this->storageBoxRepository->getById($boxId);
+
+        //Make sure the box is available
+        if (!$box->available) {
+            throw new \BB\Exceptions\ValidationException();
+        }
+
+        //Does the user have a box
+        $memberBox = $this->storageBoxRepository->getMemberBox(Auth::user()->id);
+        if ($memberBox) {
+            throw new \BB\Exceptions\ValidationException();
+        }
+
+        //Have the paid for a box
+        $boxPayment = Auth::user()->getStorageBoxPayment();
+        if (!$boxPayment) {
+            throw new \BB\Exceptions\ValidationException();
+        }
+
+        $this->storageBoxRepository->update($boxId, ['user_id'=>Auth::user()->id]);
+    }
 
 
 	/**

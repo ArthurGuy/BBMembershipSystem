@@ -7,7 +7,7 @@ class Role extends Eloquent {
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'title'];
 
     public function users()
     {

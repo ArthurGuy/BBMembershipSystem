@@ -321,10 +321,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         $this->save();
     }
 
-    public static function dropdown()
+    public static function dropdown($activeOnly = null)
     {
         $userArray = [];
-        $users = self::all();
+        if ($activeOnly) {
+            $users = self::active()->get();
+        } else {
+            $users = self::all();
+        }
         foreach ($users as $user)
         {
             $userArray[$user->id] = $user->name;

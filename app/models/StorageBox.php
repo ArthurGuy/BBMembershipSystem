@@ -18,7 +18,8 @@ class StorageBox extends Eloquent
      */
     protected $fillable = [
         'size',
-        'active'
+        'active',
+        'user_id'
     ];
 
 
@@ -35,6 +36,11 @@ class StorageBox extends Eloquent
     public static function findMember($userId)
     {
         return self::where('user_id', '=', $userId)->first();
+    }
+
+    public function getAvailableAttribute()
+    {
+        return ($this->active && !$this->user_id);
     }
 
 

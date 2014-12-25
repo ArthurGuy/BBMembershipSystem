@@ -57,9 +57,10 @@ Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment
 
 
 # Inductions
-Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'before'=>'role:admin', 'as'=>'equipment_training.update']);
-Route::resource('account.induction', 'InductionController', ['before'=>'role:admin', 'only' => ['update', 'destroy']]);
-//Route::resource('induction', 'InductionController', ['before'=>'role:admin', 'only' => ['index', 'update', 'destroy']]);
+Route::group(array('before' => 'role:admin'), function() {
+    Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'as'=>'equipment_training.update']);
+    Route::resource('account.induction', 'InductionController', ['only' => ['update', 'destroy']]);
+});
 
 
 # Equipment
@@ -72,8 +73,9 @@ Route::resource('statement-import', 'StatementImportController', ['except' => ['
 
 
 # KeyFobs
-Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy'], 'before'=>'role:admin']);
-
+Route::group(array('before' => 'role:admin'), function() {
+    Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy']]);
+});
 
 # PayPal IPN
 Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
@@ -93,6 +95,7 @@ Route::get('activity/realtime', ['uses' => 'ActivityController@realtime', 'as'=>
 
 # Storage Boxes
 Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'before'=>'role:member']);
+Route::put('storage_boxes/{id}', ['uses'=>'StorageBoxController@update', 'as'=>'storage_boxes.update', 'before'=>'role:member']);
 
 
 # Stats
@@ -116,6 +119,14 @@ Route::post('proposals/{id}/update', ['uses'=>'ProposalController@update', 'as'=
 
 # Feedback
 Route::post('feedback', ['uses'=>'FeedbackController@store', 'as'=>'feedback.store', 'before'=>'roll:member']);
+
+
+# Roles
+Route::group(array('before' => 'role:admin'), function() {
+    Route::resource('roles', 'RolesController', []);
+    Route::resource('roles.users', 'RoleUsersController', ['only' => ['destroy', 'store']]);
+});
+
 
 Route::get('example', function() {
     return View::make('example');
