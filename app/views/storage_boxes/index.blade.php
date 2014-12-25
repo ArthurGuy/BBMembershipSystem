@@ -48,6 +48,12 @@
 
 @endif
 
+@if (Auth::user()->hasRole('storage'))
+<div class="well">
+    When marking a box as returned please make sure the box has been cleared and is available in the shelf.
+</div>
+@endif
+
 <table class="table">
     <thead>
         <tr>
@@ -73,6 +79,13 @@
                         {{ Form::close() }}
                     @else
                         Member left - box to be reclaimed
+                    @endif
+                @elseif ($box->user)
+                    @if (Auth::user()->hasRole('storage'))
+                    {{ Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) }}
+                    {{ Form::hidden('user_id', '') }}
+                    {{ Form::submit('Return Box', array('class'=>'btn btn-default btn-sm')) }}
+                    {{ Form::close() }}
                     @endif
                 @elseif ($canClaimBox && !$box->user)
                     {{ Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) }}
