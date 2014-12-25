@@ -56,37 +56,32 @@ class EquipmentLogPresenter extends Presenter
     {
         $delta = $this->entity->finished->diffInSeconds($this->entity->started);
 
-        // a little weeks per month, 365 days per year... good enough!!
-        $divs = array(
-            'second' => Carbon::SECONDS_PER_MINUTE,
-            'minute' => Carbon::MINUTES_PER_HOUR,
-            'hour' => Carbon::HOURS_PER_DAY,
-            'day' => Carbon::DAYS_PER_WEEK,
-            'week' => 30 / Carbon::DAYS_PER_WEEK,
-            'month' => Carbon::MONTHS_PER_YEAR
-        );
+        $hours = (int)($delta / 3600);
+        $seconds = $delta % 3600;   //seconds after hours taken away
+        $minutes = (int)($seconds / 60);
+        $seconds = $seconds % 60;
 
-        $unit = 'year';
+        $txt = '';
 
-        foreach ($divs as $divUnit => $divValue) {
-            if ($delta < $divValue) {
-                $unit = $divUnit;
-                break;
-            }
-
-            $delta = $delta / $divValue;
+        if ($hours > 0) {
+            $txt .= $hours . ' hour';
+            $txt .= $hours == 1 ? '' : 's';
+            $txt .= ' ';
         }
 
-        $delta = (int) $delta;
-
-        if ($delta == 0) {
-            $delta = 1;
+        if ($minutes > 0) {
+            $txt .= $minutes . ' minute';
+            $txt .= $minutes == 1 ? '' : 's';
+            $txt .= ' ';
         }
 
-        $txt = $delta . ' ' . $unit;
-        $txt .= $delta == 1 ? '' : 's';
+        if ($seconds > 0) {
+            $txt .= $seconds . ' second';
+            $txt .= $seconds == 1 ? '' : 's';
+            $txt .= ' ';
+        }
 
-        return $txt . '';
+        return trim($txt);
     }
 
 } 
