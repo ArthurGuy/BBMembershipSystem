@@ -16,32 +16,39 @@ Tools and Equipment
 @section('content')
 
 <div class="row">
-    <div class="col-md-12 col-lg-6">
+
+    <div class="col-md-12 col-lg-12">
         <div class="well">
-            @if ($equipment->requires_training)
-                Induction fee: &pound{{ $equipment->cost }}<br />
-            @else
-                No induction required
-            @endif
-            @if (!$equipment->working)
-                <span class="label label-danger">Out of action</span>
-            @endif
+            <div class="row">
+                <div class="col-md-12 col-lg-6">
+                    @if ($equipment->requires_training)
+                        This piece of equipment requires that an induction fee is paid, this goes towards maintaining the equipment.<br />
+                        Induction fee: &pound{{ $equipment->cost }}<br />
+                    @else
+                        No induction required
+                    @endif
+                    @if (!$equipment->working)
+                        <span class="label label-danger">Out of action</span>
+                    @endif
+                </div>
+
+                @if ($equipment->requires_training)
+                    <div class="col-sm-12 col-md-6">
+                        <h4>Trainers</h4>
+                        <div class="list-group">
+                            @foreach($trainers as $trainer)
+                                <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
+                                    {{ HTML::memberPhoto($trainer->user->profile, $trainer->hash, 50, '') }}
+                                    {{ $trainer->user->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
+
         </div>
     </div>
-
-    @if ($equipment->requires_training)
-        <div class="col-sm-12 col-md-6">
-            <h4>Trainers</h4>
-            <div class="list-group">
-                @foreach($trainers as $trainer)
-                    <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
-                        {{ HTML::memberPhoto($trainer->user->profile, $trainer->hash, 50, '') }}
-                        {{ $trainer->name }}
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    @endif
 
     <table class="table">
         <thead>
