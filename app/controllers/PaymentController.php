@@ -204,6 +204,7 @@ class PaymentController extends \BaseController {
      *
      * @param $userId
      * @throws \BB\Exceptions\AuthenticationException
+     * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      * @return Response
      */
