@@ -21,6 +21,17 @@ class PaymentRepository extends DBRepository
     }
 
 
+    public function getPaginated(array $params)
+    {
+        $model = $this->model;
+
+        if ($this->isSortable($params)) {
+            return $model->orderBy($params['sortBy'], $params['direction'])->simplePaginate($this->perPage);
+        }
+        return $model->simplePaginate($this->perPage);
+    }
+
+
     /**
      * Record a payment against a user record
      * @param string $reason What was the reason. subscription, induction, etc...

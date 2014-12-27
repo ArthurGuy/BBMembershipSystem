@@ -7,17 +7,33 @@ class PaymentController extends \BaseController {
      * @var \BB\Repo\EquipmentRepository
      */
     private $equipmentRepository;
+    /**
+     * @var \BB\Repo\PaymentRepository
+     */
+    private $paymentRepository;
 
     function __construct(
             \BB\Helpers\GoCardlessHelper $goCardless,
-            \BB\Repo\EquipmentRepository $equipmentRepository
+            \BB\Repo\EquipmentRepository $equipmentRepository,
+            \BB\Repo\PaymentRepository $paymentRepository
         )
     {
         $this->goCardless = $goCardless;
         $this->equipmentRepository = $equipmentRepository;
+        $this->paymentRepository = $paymentRepository;
 
         $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
         $this->beforeFilter('role:admin', array('only' => ['store']));
+    }
+
+
+    public function index()
+    {
+        $sortBy = Request::get('sortBy');
+        $direction = Request::get('direction', 'asc');
+        $this->paymentRepository->setPerPage(25);
+        $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
+        return View::make('payments.index')->with('payments', $payments);
     }
 
 
