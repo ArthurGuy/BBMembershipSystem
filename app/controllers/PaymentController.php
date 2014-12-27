@@ -41,7 +41,7 @@ class PaymentController extends \BaseController {
 
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
 
-        $dateRangeStart = \Carbon\Carbon::create(2013, 01, 01);
+        $dateRangeStart = \Carbon\Carbon::create(2009, 07, 01);
         $dateRange = [];
         while ($dateRangeStart->lt(\Carbon\Carbon::now())) {
             $dateRange[$dateRangeStart->toDateString()] = $dateRangeStart->format('F Y');
