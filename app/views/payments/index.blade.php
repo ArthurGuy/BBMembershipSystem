@@ -11,17 +11,11 @@ Payments
 @section('main-tab-bar')
 <nav id="mainTabBar">
     <ul class="" role="tablist">
-        <li class="@if (Request::get('showLeft', 0) == '0') active @endif">
-            {{ link_to_route('payments.index', 'All Payments', []) }}
+        <li class="active">
+            {{ link_to_route('payments.index', 'All Payments') }}
         </li>
-        <li class="@if (Request::get('keyDeposits', 0) == 1) active @endif">
-            {{ link_to_route('payments.index', 'Key Deposits', ['keyDeposits'=>1]) }}
-        </li>
-        <li class="@if (Request::get('boxDeposits', 0) == 1) active @endif">
-            {{ link_to_route('payments.index', 'Box Deposits', ['boxDeposits'=>1]) }}
-        </li>
-        <li class="@if (Request::get('boxDeposits', 0) == 1) active @endif">
-            {{ link_to_route('payments.index', 'Balance Payments', ['boxDeposits'=>1]) }}
+        <li class="">
+            {{ link_to_route('payments.overview', 'Overview') }}
         </li>
     </ul>
 </nav>

@@ -48,6 +48,7 @@ Route::post('gocardless/webhook', ['uses' => 'GoCardlessWebhookController@receiv
 Route::resource('account.payment', 'PaymentController', ['only' => ['store', 'edit', 'update', 'destroy']]);
 Route::group(array('before' => 'role:admin'), function() {
     Route::resource('payments', 'PaymentController', ['only' => ['index']]);
+    Route::get('payments/overview', ['uses'=>'PaymentController@overview', 'as'=>'payments.overview']);
 });
 Route::post('account/{account}/payment/create', ['as'=>'account.payment.create', 'uses' => 'PaymentController@create']);
 Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
