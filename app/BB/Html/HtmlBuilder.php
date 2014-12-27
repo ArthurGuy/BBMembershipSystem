@@ -84,7 +84,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
 
     public function sortablePaginatorLinks($collection)
     {
-        return $collection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction')])->links();
+        return $collection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction'), 'date_filter'=>\Request::get('date_filter')])->links();
     }
 
     public function sideNavLink($name, $route, $routeParams=[])
