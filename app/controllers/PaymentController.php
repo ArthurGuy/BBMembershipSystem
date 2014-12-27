@@ -29,8 +29,8 @@ class PaymentController extends \BaseController {
 
     public function index()
     {
-        $sortBy = Request::get('sortBy');
-        $direction = Request::get('direction', 'asc');
+        $sortBy = Request::get('sortBy', 'created_at');
+        $direction = Request::get('direction', 'desc');
         $this->paymentRepository->setPerPage(25);
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
         return View::make('payments.index')->with('payments', $payments);
