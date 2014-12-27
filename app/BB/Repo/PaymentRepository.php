@@ -11,6 +11,10 @@ class PaymentRepository extends DBRepository
     static $SUBSCRIPTION = 'subscription';
     static $INDUCTION = 'induction';
 
+
+    protected $startDate = null;
+    protected $endDate = null;
+
     /**
      * @param \Payment $model
      */
@@ -24,6 +28,10 @@ class PaymentRepository extends DBRepository
     public function getPaginated(array $params)
     {
         $model = $this->model;
+
+        if ($this->hasDateFilter()) {
+            $model = $model->where('created_at', '>=', $this->startDate)->where('created_at', '<=', $this->endDate);
+        }
 
         if ($this->isSortable($params)) {
             return $model->orderBy($params['sortBy'], $params['direction'])->paginate($this->perPage);
@@ -136,6 +144,17 @@ class PaymentRepository extends DBRepository
             ->whereRaw('(source = ? or reason = ?) and (status = ? or status = ? or status = ?)', ['balance', 'balance', 'paid', 'pending', 'withdrawn'])
             ->orderBy('created_at', 'desc')
             ->simplePaginate($this->perPage);
+    }
+
+    public function dateFilter($startDate, $endDate)
+    {
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+    }
+
+    private function hasDateFilter()
+    {
+        return ($this->startDate && $this->endDate);
     }
 
 } 

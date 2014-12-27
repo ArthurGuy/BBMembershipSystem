@@ -31,9 +31,24 @@ class PaymentController extends \BaseController {
     {
         $sortBy = Request::get('sortBy', 'created_at');
         $direction = Request::get('direction', 'desc');
+        $dateFilter = Request::get('date_filter', '');
         $this->paymentRepository->setPerPage(25);
+
+        if ($dateFilter) {
+            $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dateFilter)->setTime(0,0,0);
+            $this->paymentRepository->dateFilter($startDate, $startDate->copy()->addMonth());
+        }
+
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
-        return View::make('payments.index')->with('payments', $payments);
+
+        $dateRangeStart = \Carbon\Carbon::create(2013, 01, 01);
+        $dateRange = [];
+        while ($dateRangeStart->lt(\Carbon\Carbon::now())) {
+            $dateRange[$dateRangeStart->toDateString()] = $dateRangeStart->format('F Y');
+            $dateRangeStart->addMonth();
+        }
+
+        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange);
     }
 
 
