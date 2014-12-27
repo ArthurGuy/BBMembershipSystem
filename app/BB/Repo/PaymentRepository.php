@@ -26,9 +26,9 @@ class PaymentRepository extends DBRepository
         $model = $this->model;
 
         if ($this->isSortable($params)) {
-            return $model->orderBy($params['sortBy'], $params['direction'])->simplePaginate($this->perPage);
+            return $model->orderBy($params['sortBy'], $params['direction'])->paginate($this->perPage);
         }
-        return $model->simplePaginate($this->perPage);
+        return $model->paginate($this->perPage);
     }
 
 
