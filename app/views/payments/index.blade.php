@@ -32,7 +32,7 @@ Payments
 <div class="row">
     <div class="col-xs-12 well">
         {{ Form::open(array('method'=>'GET', 'route' => ['payments.index'], 'class'=>'navbar-form navbar-left')) }}
-        {{ Form::select('date_filter', [''=>'All Time']+$dateRange, null, ['class'=>'form-control']) }}
+        {{ Form::select('date_filter', [''=>'All Time']+$dateRange, Request::get('date_filter', ''), ['class'=>'form-control']) }}
         {{ Form::submit('Filter', array('class'=>'btn btn-default btn-sm')) }}
         {{ Form::close() }}
     </div>
