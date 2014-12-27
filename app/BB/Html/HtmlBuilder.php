@@ -71,10 +71,10 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         return link_to_route('account.index', $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page'), 'showLeft'=>\Request::get('showLeft')]);
     }
 
-    public function sortPaymentsBy($column, $body)
+    public function sortBy($column, $body, $route)
     {
         $direction = (\Request::get('direction') == 'asc') ? 'desc' : 'asc';
-        return link_to_route('payments.index', $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page')]);
+        return link_to_route($route, $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page')]);
     }
 
     public function userPaginatorLinks($userCollection)

@@ -14,11 +14,11 @@ Payments
 <table class="table memberList">
     <thead>
         <tr>
-            <th>{{ HTML::sortPaymentsBy('created_at', 'Date') }}</th>
+            <th>{{ HTML::sortBy('created_at', 'Date', 'payments.index') }}</th>
             <th>Member</th>
-            <th>{{ HTML::sortPaymentsBy('reason', 'Reason') }}</th>
-            <th>{{ HTML::sortPaymentsBy('method', 'Method') }}</th>
-            <th>{{ HTML::sortPaymentsBy('amount', 'Amount') }}</th>
+            <th>{{ HTML::sortBy('reason', 'Reason', 'payments.index') }}</th>
+            <th>{{ HTML::sortBy('source', 'Method', 'payments.index') }}</th>
+            <th>{{ HTML::sortBy('amount', 'Amount', 'payments.index') }}</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -26,5 +26,6 @@ Payments
         @each('payments.index-row', $payments, 'payment')
     </tbody>
 </table>
+{{ HTML::sortablePaginatorLinks($payments) }}
 
 @stop
