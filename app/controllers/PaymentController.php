@@ -32,7 +32,7 @@ class PaymentController extends \BaseController {
         $sortBy = Request::get('sortBy', 'created_at');
         $direction = Request::get('direction', 'desc');
         $dateFilter = Request::get('date_filter', '');
-        $this->paymentRepository->setPerPage(25);
+        $this->paymentRepository->setPerPage(50);
 
         if ($dateFilter) {
             $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dateFilter)->setTime(0,0,0);
