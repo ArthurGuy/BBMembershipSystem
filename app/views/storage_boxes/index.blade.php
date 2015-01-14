@@ -33,7 +33,9 @@
                     </p>
                 @endif
                 @if ($canPayMore)
+                    <p>
                     If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need pay its &pound;5 deposit
+                    </p>
                     @include('partials/payment-form', ['reason'=>'storage-box', 'displayReason'=>'Storage Box Deposit', 'returnPath'=>route('storage_boxes.index', [], false), 'amount'=>5, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'balance']])
                 @endif
                 @if ($moneyAvailable > 0)
