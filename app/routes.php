@@ -58,6 +58,8 @@ Route::post('account/{account}/payment/stripe/store', ['as'=>'account.payment.st
 Route::post('account/{account}/payment/gocardless/create', ['as'=>'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
 Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment.gocardless.store', 'uses' => 'GoCardlessPaymentController@store']);
 
+//balance payments
+Route::post('account/{account}/payment/balance/create', ['as'=>'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
 
 
 # Inductions

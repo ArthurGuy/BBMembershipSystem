@@ -93,7 +93,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     }
 
     function paymentFormMethodDropdown($methods=[]) {
-        $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card'];
+        $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card', 'balance'=>'Pay using your Balance'];
         if (!empty($methods)) {
             foreach ($possibleMethods as $method => $methodName) {
                 if (!in_array($method, $methods)) {

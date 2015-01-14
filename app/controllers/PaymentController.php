@@ -4,6 +4,13 @@ class PaymentController extends \BaseController {
 
 
     /**
+     *
+     * @TODO: Workout exactly what this is used for - I think most of the functionality has been moved elsewhere
+     *
+     */
+
+
+    /**
      * @var \BB\Repo\EquipmentRepository
      */
     private $equipmentRepository;
