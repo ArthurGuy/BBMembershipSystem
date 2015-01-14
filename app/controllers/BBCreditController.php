@@ -7,24 +7,27 @@ class BBCreditController extends \BaseController {
      */
     private $userRepository;
     /**
-     * @var \BB\Repo\PaymentRepository
+     * @var \BB\Services\Credit
      */
-    private $paymentRepository;
+    private $bbCredit;
 
-    public function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\PaymentRepository $paymentRepository)
+    public function __construct(\BB\Repo\UserRepository $userRepository, \BB\Services\Credit $bbCredit)
     {
         $this->userRepository = $userRepository;
-        $this->paymentRepository = $paymentRepository;
+        $this->bbCredit = $bbCredit;
     }
 
     public function index($userId)
     {
         //Verify the user can access this user record
         $user = User::findWithPermission($userId);
+        $this->bbCredit->setUserId($user->id);
 
-        $payments = $this->paymentRepository->getBalancePaymentsPaginated($userId);
+        $userBalance = $this->bbCredit->getBalanceFormatted();
 
-        return View::make('account.bbcredit.index')->with('user', $user)->with('payments', $payments);
+        $payments = $this->bbCredit->getBalancePaymentsPaginated($userId);
+
+        return View::make('account.bbcredit.index')->with('user', $user)->with('payments', $payments)->with('userBalance', $userBalance);
     }
 
 } 
