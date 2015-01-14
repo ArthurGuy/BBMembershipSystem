@@ -32,11 +32,8 @@
                         box (and clean if necessary) and return it to the member shelves, you can then use the return link above.
                     </p>
                 @endif
-                @if ($paymentTotal > 0 && 0)
-                    You have paid &pound{{ $paymentTotal }} towards box deposits and &pound;{{ $moneyAvailable }} of this is available for additional boxes.<br />
-                @endif
                 @if ($canPayMore)
-                    If you wish to claim another box you will need pay its &pound;5 deposit
+                    If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need pay its &pound;5 deposit
                     @include('partials/payment-form', ['reason'=>'storage-box', 'displayReason'=>'Storage Box Deposit', 'returnPath'=>route('storage_boxes.index', [], false), 'amount'=>5, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'balance']])
                 @endif
                 @if ($moneyAvailable > 0)
