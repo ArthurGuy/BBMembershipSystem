@@ -52,7 +52,7 @@ class MemberStorageCest
         $I->amOnPage('/storage_boxes');
 
         //Make sure it has seen our payment
-        $I->see('It looks like we have a box available');
+        $I->see("Total Paid &pound5");
 
         //Claim a box
         $I->see('Claim');
@@ -60,6 +60,23 @@ class MemberStorageCest
 
         //The page should now have our name next to the claimed box
         $I->see($user->name);
-        $I->see('You have box');
+
+        //We should be able to return the box
+        $I->see('Return Box');
+
+        //Add another payment
+        $paymentId = $I->haveInDatabase('payments', ['user_id'=>$user->id, 'reason'=>'storage-box', 'source'=>'other', 'amount'=>10.00, 'status'=>'paid']);
+        $user->storage_box_payment_id = $paymentId;
+        $user->save();
+
+        $I->amOnPage('/storage_boxes');
+
+        //Make sure it has seen our new payment
+        $I->see("Total Paid &pound15");
+
+        //We should now be able to claim another box
+        $I->see('Claim');
+        $I->click('Claim');
+
     }
 }
