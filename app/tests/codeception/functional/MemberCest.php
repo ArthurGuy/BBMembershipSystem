@@ -61,4 +61,31 @@ class MemberCest
         $I->amOnPage('/account/1/balance');
         $I->canSeeCurrentUrlEquals('/login');
     }
+
+    public function memberCantAddCash(FunctionalTester $I)
+    {
+        $I->am('a member');
+        $I->wantTo('make sure I cant add cash payments to my account');
+
+        //Load and login a known member
+        $user = User::find(1);
+        Auth::login($user);
+
+        $I->haveEnabledFilters();
+
+        //I cant see option
+        $I->amOnPage('/account/'.$user->id.'');
+        $I->cantSee('Record a cash balance payment');
+
+        //Make sure they cant post payment directly
+        //Confirm that posting directly generates a validation exception
+        $I->assertTrue(
+            $I->seeExceptionThrown('BB\Exceptions\AuthenticationException', function() use ($I, $user){
+                $I->sendPOST('/account/'.$user->id.'/payment/cash/create', ['reason'=>'balance', 'amount'=>4.69, 'return_path'=>'/']);
+            })
+        );
+
+        //One final check
+        $I->cantSeeInDatabase('payments', ['amount'=>4.69]);
+    }
 }

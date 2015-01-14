@@ -34,6 +34,7 @@ Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 
 Route::get('account/{account}/balance', ['uses'=>'BBCreditController@index', 'as'=>'account.balance.index', 'before'=>'role:member']);
 
 
+
 # Members
 
 Route::resource('members', 'MembersController', ['only'=>['index','show']]);
@@ -60,6 +61,8 @@ Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment
 
 //balance payments
 Route::post('account/{account}/payment/balance/create', ['as'=>'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
+//Cash
+Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
 
 
 # Inductions
