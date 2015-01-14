@@ -50,7 +50,7 @@ Build Brighton Balance
                     <h3 class="panel-title">Balance</h3>
                 </div>
                 <div class="panel-body">
-                    <span class="credit-figure">{{ $user->present()->cashBalance }}</span>
+                    <span class="credit-figure">{{ $userBalance }}</span>
                 </div>
             </div>
         </div>
