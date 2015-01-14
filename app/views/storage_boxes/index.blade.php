@@ -82,7 +82,7 @@
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
             <td>{{ $box->id }}</td>
-            <td>{{ $box->size }}</td>
+            <td>{{ $box->size }}L</td>
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
                 @if($box->user && !$box->user->active)
