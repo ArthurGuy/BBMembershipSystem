@@ -3,7 +3,7 @@
 class StorageBoxRepository extends DBRepository {
 
     /**
-     * @var StorageBox
+     * @var \StorageBox
      */
     protected $model;
 
@@ -20,6 +20,18 @@ class StorageBoxRepository extends DBRepository {
     public function getMemberBox($userId)
     {
         return $this->model->findMember($userId);
+    }
+
+
+    /**
+     * Return a collection of storage boxes belonging to the user
+     *
+     * @param $userId
+     * @return mixed
+     */
+    public function getMemberBoxes($userId)
+    {
+        return $this->model->where('user_id', $userId)->where('active', true)->get();
     }
 
     /**
