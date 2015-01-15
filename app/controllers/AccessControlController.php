@@ -150,8 +150,8 @@ class AccessControlController extends Controller
     }
 
     /**
-     * @param $receivedData
-     * @return mixed
+     * @param string $receivedData
+     * @return Illuminate\Http\Response
      */
     public function handleSystemMessage($receivedData)
     {
