@@ -112,7 +112,7 @@ class PaymentRepository extends DBRepository
     /**
      * Get all user payments of a specific reason
      * @param $userId
-     * @param $reason
+     * @param string $reason
      * @return mixed
      */
     public function getUserPaymentsByReason($userId, $reason)
@@ -124,6 +124,9 @@ class PaymentRepository extends DBRepository
     }
 
 
+    /**
+     * @param string $source
+     */
     public function getUserPaymentsBySource($userId, $source)
     {
         return $this->model->where('user_id', $userId)
@@ -149,7 +152,7 @@ class PaymentRepository extends DBRepository
 
     /**
      * Return a collection of payments specifically for storage boxes
-     * @param $userId
+     * @param integer $userId
      * @return mixed
      */
     public function getStorageBoxPayments($userId)
