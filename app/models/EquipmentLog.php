@@ -1,6 +1,13 @@
-<?php 
+<?php
+
+use Laracasts\Presenter\PresentableTrait;
 
 class EquipmentLog extends Eloquent {
+
+    use PresentableTrait;
+
+
+    protected $presenter = 'BB\Presenters\EquipmentLogPresenter';
 
     /**
      * The database table used by the model.

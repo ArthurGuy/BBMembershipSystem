@@ -74,6 +74,7 @@ Route::group(array('before' => 'role:admin'), function() {
 
 # Equipment
 Route::get('equipment', ['uses'=>'EquipmentController@index', 'before'=>'role:member', 'as'=>'equipment.index']);
+Route::get('equipment/{equipment}', ['uses'=>'EquipmentController@show', 'before'=>'role:member', 'as'=>'equipment.show']);
 
 
 # Statements
