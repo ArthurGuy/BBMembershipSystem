@@ -198,6 +198,8 @@ class AccessControlController extends Controller
             ]
         ]);
 
+        Log::debug($response);
+
         return Response::make(json_encode(['name'=>$user->name]), 200);
     }
 
