@@ -17,7 +17,8 @@
         "artdarek/pusherer": "1.0.*",
         "laracasts/utilities": "~1.0",
         "stripe/stripe-php": "1.*",
-        "michelf/php-markdown": "1.4.*"
+        "michelf/php-markdown": "1.4.*",
+		"guzzlehttp/guzzle": "~5.0"
 	},
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

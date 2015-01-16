@@ -128,4 +128,24 @@ class AccessControlCest
         //$I->seeInDatabase('access_log', ['user_id'=>$user->id, 'key_fob_id'=>$keyFob->id, 'response'=>200, 'service'=>'main-door']);
     }
 
+    /*
+    public function sparkStatusCheck(ApiTester $I)
+    {
+        $I->am('a spark core');
+        $I->wantTo('fetch a member status');
+
+        $user = $I->getActiveKeyholderMember();
+        $keyFob = $I->getMemberKeyFob($user->id);
+
+        //Post the keyfob to the endpoint
+        $I->sendPOST('/access-control/spark-status', ['data'=>$keyFob->key_id, 'coreid'=>'foobar']);
+
+        //The endpoint always returns 200
+        $I->seeResponseCodeIs(200);
+
+        //Make sure a good response is returned
+        $I->seeResponseIsJson();
+
+    }
+*/
 }
