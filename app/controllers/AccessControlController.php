@@ -171,7 +171,7 @@ class AccessControlController extends Controller
             $this->deviceRepository->logHeartbeat($device);
         }
 
-        Log::debug("System Message: ".$receivedData);
+        //Log::debug("System Message: ".$receivedData);
 
         return Response::make(PHP_EOL, 200);
     }
