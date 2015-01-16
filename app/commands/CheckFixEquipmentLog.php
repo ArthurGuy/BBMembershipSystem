@@ -56,6 +56,8 @@ class CheckFixEquipmentLog extends Command {
                 //We don't know how long the user was active so record a minute
                 $this->equipmentLogRepository->endSession($log->id, $log->started->addMinute());
             }
+
+            //We should also be merging records and perhaps deleting very short records
         }
 	}
 
