@@ -176,4 +176,29 @@ class AccessControlController extends Controller
         return Response::make(PHP_EOL, 200);
     }
 
+
+    public function sparkStatus()
+    {
+        $data = Request::only(['event', 'data', 'published_at', 'coreid']);
+
+        try {
+            $keyFob = $this->lookupKeyFob($data['data']);
+        } catch (Exception $e) {
+
+            return Response::make(json_encode(['valid'=>'0']), 404);
+        }
+        $user = $keyFob->user()->first();
+
+        $client = new GuzzleHttp\Client();
+        $response = $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/status-response', [
+            'body' => [
+                'name' => $user->name,
+                'status' => $user->status,
+                'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
+            ]
+        ]);
+
+        return Response::make(json_encode(['name'=>$user->name]), 200);
+    }
+
 } 
