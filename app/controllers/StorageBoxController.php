@@ -6,10 +6,20 @@ class StorageBoxController extends \BaseController {
      * @var \BB\Repo\StorageBoxRepository
      */
     private $storageBoxRepository;
+    /**
+     * @var \BB\Repo\PaymentRepository
+     */
+    private $paymentRepository;
+    /**
+     * @var \BB\Services\MemberStorage
+     */
+    private $memberStorage;
 
-    public function __construct(\BB\Repo\StorageBoxRepository $storageBoxRepository)
+    public function __construct(\BB\Repo\StorageBoxRepository $storageBoxRepository, \BB\Repo\PaymentRepository $paymentRepository, \BB\Services\MemberStorage $memberStorage)
     {
         $this->storageBoxRepository = $storageBoxRepository;
+        $this->paymentRepository = $paymentRepository;
+        $this->memberStorage = $memberStorage;
     }
 
 
@@ -24,21 +34,38 @@ class StorageBoxController extends \BaseController {
 
         $availableBoxes = $this->storageBoxRepository->numAvailableBoxes();
 
-        $memberBox = $this->storageBoxRepository->getMemberBox(Auth::user()->id);
+        //Setup the member storage object
+        $this->memberStorage->setMember(Auth::user()->id);
+        
+        $volumeAvailable = $this->memberStorage->volumeAvailable();
+        $memberBoxes = $this->memberStorage->getMemberBoxes();
 
-        $boxPayment = Auth::user()->getStorageBoxPayment();
+        //Work out how much the user has paid
+        $boxPayments = $this->memberStorage->getBoxPayments();
 
-        $canClaimBox = false;
-        if (($availableBoxes > 0) && $boxPayment && !$memberBox) {
-            $canClaimBox = true;
+
+        $paymentTotal = $this->memberStorage->getPaymentTotal();
+        $boxesTaken = $this->memberStorage->getNumBoxesTaken();
+        $moneyAvailable = $this->memberStorage->getMoneyAvailable();
+
+
+        //Can we accept more money from them
+        $canPayMore = false;
+        if (($volumeAvailable >= 4) && ($moneyAvailable <= 0)) {
+            $canPayMore = true;
         }
+
 
         return View::make('storage_boxes.index')
             ->with('storageBoxes', $storageBoxes)
-            ->with('memberBox', $memberBox)
-            ->with('boxPayment', $boxPayment)
+            ->with('boxPayments', $boxPayments)
             ->with('availableBoxes', $availableBoxes)
-            ->with('canClaimBox', $canClaimBox);
+            ->with('memberBoxes', $memberBoxes)
+            ->with('volumeAvailable', $volumeAvailable)
+            ->with('paymentTotal', $paymentTotal)
+            ->with('boxesTaken', $boxesTaken)
+            ->with('canPayMore', $canPayMore)
+            ->with('moneyAvailable', $moneyAvailable);
 	}
 
 
@@ -104,11 +131,15 @@ class StorageBoxController extends \BaseController {
         if ($userId) {
             $this->selfClaimBox($boxId, $userId);
         } else {
-            //No id - reclaiming the box
-            if (!Auth::user()->hasRole('storage')) {
-                throw new \BB\Exceptions\AuthenticationException();
+            $box = $this->storageBoxRepository->getById($boxId);
+            if ($box->user_id == Auth::user()->id) {
+                //User is returning their own box
+            } else {
+                //No id - reclaiming the box
+                if (!Auth::user()->hasRole('storage')) {
+                    throw new \BB\Exceptions\AuthenticationException();
+                }
             }
-
             $this->storageBoxRepository->update($boxId, ['user_id'=>0]);
         }
 
@@ -130,15 +161,16 @@ class StorageBoxController extends \BaseController {
         }
 
         //Does the user have a box
-        $memberBox = $this->storageBoxRepository->getMemberBox(Auth::user()->id);
-        if ($memberBox) {
-            throw new \BB\Exceptions\ValidationException();
+        $this->memberStorage->setMember(Auth::user()->id);
+
+        $volumeAvailable = $this->memberStorage->volumeAvailable();
+        if ($volumeAvailable < $box->size) {
+            throw new \BB\Exceptions\ValidationException("You have reached your storage limit");
         }
 
         //Have the paid for a box
-        $boxPayment = Auth::user()->getStorageBoxPayment();
-        if (!$boxPayment) {
-            throw new \BB\Exceptions\ValidationException();
+        if ($this->memberStorage->getRemainingBoxesPaidFor() <= 0) {
+            throw new \BB\Exceptions\ValidationException("You need to pay the deposit first");
         }
 
         $this->storageBoxRepository->update($boxId, ['user_id'=>Auth::user()->id]);

@@ -24,7 +24,7 @@ class PaymentPresenter extends Presenter
                 return 'Storage Box Deposit';
 
             case 'balance';
-                return 'Credit Top Up';
+                return 'Balance Top Up';
 
             default;
                 return $this->entity->reason;
@@ -76,7 +76,7 @@ class PaymentPresenter extends Presenter
                 return 'Other';
 
             case 'balance':
-                return 'BB Credit';
+                return 'BB Balance';
 
             default;
                 return $this->entity->source;

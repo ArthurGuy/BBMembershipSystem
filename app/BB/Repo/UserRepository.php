@@ -7,8 +7,6 @@ class UserRepository extends DBRepository {
      */
     protected $model;
 
-    private $perPage;
-
     function __construct(\User $model)
     {
         $this->model = $model;
@@ -36,14 +34,6 @@ class UserRepository extends DBRepository {
         return $model->simplePaginate($this->perPage);
     }
 
-    /**
-     * @param array $params
-     * @return bool
-     */
-    public function isSortable(array $params)
-    {
-        return isset($params['sortBy']) && isset($params['direction']) && $params['sortBy'] && $params['direction'];
-    }
 
     /**
      * Return a collection of members for public display

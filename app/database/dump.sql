@@ -272,8 +272,8 @@ LOCK TABLES `storage_boxes` WRITE;
 
 INSERT INTO `storage_boxes` (`id`, `size`, `user_id`, `active`, `created_at`, `updated_at`)
 VALUES
-	(1,'19L',0,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
-	(2,'19L',0,1,'0000-00-00 00:00:00','0000-00-00 00:00:00');
+	(1,'9',0,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+	(2,'9',0,1,'0000-00-00 00:00:00','0000-00-00 00:00:00');
 
 /*!40000 ALTER TABLE `storage_boxes` ENABLE KEYS */;
 UNLOCK TABLES;

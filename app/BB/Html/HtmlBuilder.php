@@ -71,9 +71,20 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         return link_to_route('account.index', $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page'), 'showLeft'=>\Request::get('showLeft')]);
     }
 
+    public function sortBy($column, $body, $route)
+    {
+        $direction = (\Request::get('direction') == 'asc') ? 'desc' : 'asc';
+        return link_to_route($route, $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page'), 'date_filter'=>\Request::get('date_filter')]);
+    }
+
     public function userPaginatorLinks($userCollection)
     {
         return $userCollection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction'), 'showLeft'=>\Request::get('showLeft')])->links();
+    }
+
+    public function sortablePaginatorLinks($collection)
+    {
+        return $collection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction'), 'date_filter'=>\Request::get('date_filter')])->links();
     }
 
     public function sideNavLink($name, $route, $routeParams=[])
@@ -82,7 +93,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     }
 
     function paymentFormMethodDropdown($methods=[]) {
-        $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card'];
+        $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card', 'balance'=>'Pay using your Balance'];
         if (!empty($methods)) {
             foreach ($possibleMethods as $method => $methodName) {
                 if (!in_array($method, $methods)) {

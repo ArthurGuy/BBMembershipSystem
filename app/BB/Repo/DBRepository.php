@@ -7,6 +7,8 @@ abstract class DBRepository {
      */
     protected $model;
 
+    protected $perPage;
+
     /**
      * @param $model
      */
@@ -56,5 +58,20 @@ abstract class DBRepository {
     public function update($recordId, $recordData)
     {
         return $this->getById($recordId)->update($recordData);
+    }
+
+
+    /**
+     * @param array $params
+     * @return bool
+     */
+    public function isSortable(array $params)
+    {
+        return isset($params['sortBy']) && isset($params['direction']) && $params['sortBy'] && $params['direction'];
+    }
+
+    public function setPerPage($perPage)
+    {
+        $this->perPage = $perPage;
     }
 } 

@@ -14,6 +14,7 @@ class Credit {
      * @var UserRepository
      */
     private $userRepository;
+    private $user;
 
     /**
      * @param PaymentRepository $paymentRepository
@@ -32,6 +33,7 @@ class Credit {
     public function setUserId($userId)
     {
         $this->userId = $userId;
+        $this->user = $this->userRepository->getById($this->userId);
     }
 
 
@@ -47,9 +49,48 @@ class Credit {
         foreach ($negativePayments as $payment) {
             $runningTotal = $runningTotal - ($payment->amount * 100);
         }
-        $user = $this->userRepository->getById($this->userId);
-        $user->cash_balance = $runningTotal;
-        $user->save();
+        $this->user->cash_balance = $runningTotal;
+        $this->user->save();
+    }
+
+    /**
+     * Can the user spend money they don't have and if so how much?
+     * @param $reason
+     * @return int
+     */
+    public function acceptableNegativeBalance($reason)
+    {
+        switch ($reason) {
+            case 'storage-box':
+                return 0;
+            case 'subscription':
+                return 0;
+            case 'induction':
+                return 0;
+            case 'laser-cutter':
+                return 5;
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Get the users balance
+     * @return float
+     */
+    public function getBalance()
+    {
+        return $this->user->cash_balance / 100;
+    }
+
+    public function getBalanceFormatted()
+    {
+        return '&pound;'.number_format(($this->user->cash_balance / 100), 2);
+    }
+
+    public function getBalancePaymentsPaginated()
+    {
+        return $this->paymentRepository->getBalancePaymentsPaginated($this->user->id);
     }
 
 

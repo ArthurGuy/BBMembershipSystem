@@ -11,6 +11,10 @@ class PaymentRepository extends DBRepository
     static $SUBSCRIPTION = 'subscription';
     static $INDUCTION = 'induction';
 
+
+    protected $startDate = null;
+    protected $endDate = null;
+
     /**
      * @param \Payment $model
      */
@@ -18,6 +22,21 @@ class PaymentRepository extends DBRepository
     {
         $this->model = $model;
         $this->perPage = 10;
+    }
+
+
+    public function getPaginated(array $params)
+    {
+        $model = $this->model;
+
+        if ($this->hasDateFilter()) {
+            $model = $model->where('created_at', '>=', $this->startDate)->where('created_at', '<=', $this->endDate);
+        }
+
+        if ($this->isSortable($params)) {
+            return $model->orderBy($params['sortBy'], $params['direction'])->paginate($this->perPage);
+        }
+        return $model->paginate($this->perPage);
     }
 
 
@@ -93,7 +112,7 @@ class PaymentRepository extends DBRepository
     /**
      * Get all user payments of a specific reason
      * @param $userId
-     * @param $reason
+     * @param string $reason
      * @return mixed
      */
     public function getUserPaymentsByReason($userId, $reason)
@@ -105,6 +124,9 @@ class PaymentRepository extends DBRepository
     }
 
 
+    /**
+     * @param string $source
+     */
     public function getUserPaymentsBySource($userId, $source)
     {
         return $this->model->where('user_id', $userId)
@@ -125,6 +147,31 @@ class PaymentRepository extends DBRepository
             ->whereRaw('(source = ? or reason = ?) and (status = ? or status = ? or status = ?)', ['balance', 'balance', 'paid', 'pending', 'withdrawn'])
             ->orderBy('created_at', 'desc')
             ->simplePaginate($this->perPage);
+    }
+
+
+    /**
+     * Return a collection of payments specifically for storage boxes
+     * @param integer $userId
+     * @return mixed
+     */
+    public function getStorageBoxPayments($userId)
+    {
+        return $this->model->where('user_id', $userId)
+            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', ['storage-box', 'paid', 'pending', 'withdrawn'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function dateFilter($startDate, $endDate)
+    {
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+    }
+
+    private function hasDateFilter()
+    {
+        return ($this->startDate && $this->endDate);
     }
 
 } 

@@ -4,20 +4,58 @@ class PaymentController extends \BaseController {
 
 
     /**
+     *
+     * @TODO: Workout exactly what this is used for - I think most of the functionality has been moved elsewhere
+     *
+     */
+
+
+    /**
      * @var \BB\Repo\EquipmentRepository
      */
     private $equipmentRepository;
+    /**
+     * @var \BB\Repo\PaymentRepository
+     */
+    private $paymentRepository;
 
     function __construct(
             \BB\Helpers\GoCardlessHelper $goCardless,
-            \BB\Repo\EquipmentRepository $equipmentRepository
+            \BB\Repo\EquipmentRepository $equipmentRepository,
+            \BB\Repo\PaymentRepository $paymentRepository
         )
     {
         $this->goCardless = $goCardless;
         $this->equipmentRepository = $equipmentRepository;
+        $this->paymentRepository = $paymentRepository;
 
         $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
         $this->beforeFilter('role:admin', array('only' => ['store']));
+    }
+
+
+    public function index()
+    {
+        $sortBy = Request::get('sortBy', 'created_at');
+        $direction = Request::get('direction', 'desc');
+        $dateFilter = Request::get('date_filter', '');
+        $this->paymentRepository->setPerPage(50);
+
+        if ($dateFilter) {
+            $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dateFilter)->setTime(0,0,0);
+            $this->paymentRepository->dateFilter($startDate, $startDate->copy()->addMonth());
+        }
+
+        $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
+
+        $dateRangeStart = \Carbon\Carbon::create(2009, 07, 01);
+        $dateRange = [];
+        while ($dateRangeStart->lt(\Carbon\Carbon::now())) {
+            $dateRange[$dateRangeStart->toDateString()] = $dateRangeStart->format('F Y');
+            $dateRangeStart->addMonth();
+        }
+
+        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange);
     }
 
 
@@ -204,6 +242,7 @@ class PaymentController extends \BaseController {
      *
      * @param $userId
      * @throws \BB\Exceptions\AuthenticationException
+     * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      * @return Response
      */

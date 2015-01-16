@@ -36,13 +36,13 @@ class ProposalRepository extends DBRepository {
     /**
      * Fill in the results for a proposal
      * @param $proposalId
-     * @param $result
-     * @param $votesCast
-     * @param $for
-     * @param $against
-     * @param $neutral
-     * @param $abstentions
-     * @param $quorum
+     * @param integer $result
+     * @param integer $votesCast
+     * @param integer $for
+     * @param integer $against
+     * @param integer $neutral
+     * @param integer $abstentions
+     * @param boolean $quorum
      */
     public function setResults($proposalId, $result, $votesCast, $for, $against, $neutral, $abstentions, $quorum)
     {
@@ -60,7 +60,7 @@ class ProposalRepository extends DBRepository {
     /**
      * Is the specific proposal available for editing
      * @param $proposalId
-     * @return mixed
+     * @return boolean
      */
     public function canEdit($proposalId)
     {

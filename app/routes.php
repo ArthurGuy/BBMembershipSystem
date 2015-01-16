@@ -34,6 +34,7 @@ Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 
 Route::get('account/{account}/balance', ['uses'=>'BBCreditController@index', 'as'=>'account.balance.index', 'before'=>'role:member']);
 
 
+
 # Members
 
 Route::resource('members', 'MembersController', ['only'=>['index','show']]);
@@ -45,7 +46,11 @@ Route::get('account/{account}/subscription/store', ['as' => 'account.subscriptio
 Route::resource('account.subscription', 'SubscriptionController', ['except' => ['store', 'update', 'edit', 'show', 'index']]);
 Route::post('gocardless/webhook', ['uses' => 'GoCardlessWebhookController@receive']);
 
-Route::resource('account.payment', 'PaymentController', ['only' => ['store', 'edit', 'update', 'destroy', 'index']]);
+Route::resource('account.payment', 'PaymentController', ['only' => ['store', 'edit', 'update', 'destroy']]);
+Route::group(array('before' => 'role:admin'), function() {
+    Route::resource('payments', 'PaymentController', ['only' => ['index']]);
+    Route::get('payments/overview', ['uses'=>'PaymentController@overview', 'as'=>'payments.overview']);
+});
 Route::post('account/{account}/payment/create', ['as'=>'account.payment.create', 'uses' => 'PaymentController@create']);
 Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
 Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-payment', 'uses'=>'AccountController@updateSubscriptionAmount']);
@@ -54,6 +59,10 @@ Route::post('account/{account}/payment/stripe/store', ['as'=>'account.payment.st
 Route::post('account/{account}/payment/gocardless/create', ['as'=>'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
 Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment.gocardless.store', 'uses' => 'GoCardlessPaymentController@store']);
 
+//balance payments
+Route::post('account/{account}/payment/balance/create', ['as'=>'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
+//Cash
+Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
 
 
 # Inductions
@@ -84,6 +93,7 @@ Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 # Access Control
 Route::post('access-control/main-door', ['uses' => 'AccessControlController@mainDoor']);
 Route::post('access-control/status', ['uses' => 'AccessControlController@status']);
+Route::get('access-control/status', ['uses' => 'AccessControlController@status']);
 //Route::post('access-control/legacy', ['uses' => 'AccessControlController@legacy']);
 Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorController@all']);
 Route::post('access-control/device', ['uses' => 'DeviceAccessControlController@device']);

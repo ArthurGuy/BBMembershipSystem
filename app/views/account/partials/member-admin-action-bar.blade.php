@@ -110,18 +110,23 @@
     </div>
 
     <div class="col-xs-12 col-md-6">
-        <h4>Storage Box</h4>
-        @if (!$user->storage_box_payment_id)
-            {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id], 'class'=>'navbar-form')) }}
-            {{ Form::hidden('reason', 'storage-box') }}
-            {{ Form::select('source', ['other'=>'Other', 'cash'=>'Cash'], null, ['class'=>'form-control']) }}
-            {{ Form::submit('Record Deposit Payment', array('class'=>'btn btn-default')) }}
-            {{ Form::close() }}
-        @elseif(StorageBox::findMember($user->id))
-            <p>The member has a storage box</p>
-        @else
-            <p>Payment made, box to be assigned</p>
-        @endif
+
+        <h4>Record a cash balance payment</h4>
+        {{ Form::open(['method'=>'POST', 'route' => ['account.payment.cash.create', $user->id], 'class'=>'form-inline']) }}
+        {{ Form::hidden('reason', 'balance') }}
+        {{ Form::hidden('return_path', 'account/'.$user->id) }}
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">&pound;</div>
+                {{ Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'required'=>'required']) }}
+            </div>
+        </div>
+
+        {{ Form::submit('Record Payment', array('class'=>'btn btn-primary')) }}
+
+        {{ Form::close() }}
+
     </div>
 
     @if ($user->payment_method == 'cash')
