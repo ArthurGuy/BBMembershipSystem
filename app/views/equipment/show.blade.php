@@ -68,6 +68,9 @@ Tools and Equipment
         @endforeach
         </tbody>
     </table>
+    <div class="panel-footer">
+        <?php echo $equipmentLog->links(); ?>
+    </div>
 </div>
 
 @stop

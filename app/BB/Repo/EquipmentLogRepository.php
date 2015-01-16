@@ -13,6 +13,7 @@ class EquipmentLogRepository extends DBRepository
     function __construct(\EquipmentLog $model)
     {
         $this->model = $model;
+        $this->perPage = 10;
     }
 
     /**
@@ -126,7 +127,7 @@ class EquipmentLogRepository extends DBRepository
      */
     public function getFinishedForEquipment($deviceKey)
     {
-        return $this->model->where('device', $deviceKey)->where('active', false)->orderBy('created_at', 'DESC')->get();
+        return $this->model->where('device', $deviceKey)->where('active', false)->orderBy('created_at', 'DESC')->paginate($this->perPage);
     }
 
     public function getActiveRecords()
