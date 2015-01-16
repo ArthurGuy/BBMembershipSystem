@@ -10,7 +10,7 @@ class CheckFixEquipmentLog extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'bb:equipment-fix';
+	protected $name = 'bb:fix-equipment-log';
 
 	/**
 	 * The console command description.
