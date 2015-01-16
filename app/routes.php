@@ -98,7 +98,7 @@ Route::get('access-control/status', ['uses' => 'AccessControlController@status']
 Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorController@all']);
 Route::post('access-control/device', ['uses' => 'DeviceAccessControlController@device']);
 //Spark Core Testing
-Route::post('access-control/status', ['uses' => 'DeviceAccessControlController@sparkStatus']);
+Route::post('access-control/spark-status', ['uses' => 'DeviceAccessControlController@sparkStatus']);
 
 # Activity Page
 Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'before'=>'role:member']);
