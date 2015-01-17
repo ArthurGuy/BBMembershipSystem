@@ -138,8 +138,3 @@ Route::group(array('before' => 'role:admin'), function() {
     Route::resource('roles', 'RolesController', []);
     Route::resource('roles.users', 'RoleUsersController', ['only' => ['destroy', 'store']]);
 });
-
-
-Route::get('example', function() {
-    return View::make('example');
-});
