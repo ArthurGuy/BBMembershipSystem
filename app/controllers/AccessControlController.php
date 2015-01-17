@@ -185,6 +185,14 @@ class AccessControlController extends Controller
             $keyFob = $this->lookupKeyFob($data['data']);
         } catch (Exception $e) {
 
+            $client = new GuzzleHttp\Client();
+            $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
+                'body' => [
+                    'args' => json_encode(['name'=>'', 'status'=>'Unknown', 'balance'=>'']),
+                    'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
+                ]
+            ]);
+
             return Response::make(json_encode(['valid'=>'0']), 404);
         }
         $user = $keyFob->user()->first();
@@ -192,7 +200,7 @@ class AccessControlController extends Controller
         $client = new GuzzleHttp\Client();
         $response = $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
             'body' => [
-                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status]),
+                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance/100), 2)]),
                 'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
             ]
         ]);
