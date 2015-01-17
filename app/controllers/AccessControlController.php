@@ -192,8 +192,7 @@ class AccessControlController extends Controller
         $client = new GuzzleHttp\Client();
         $response = $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
             'body' => [
-                'name' => $user->name,
-                'status' => $user->status,
+                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status]),
                 'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
             ]
         ]);
