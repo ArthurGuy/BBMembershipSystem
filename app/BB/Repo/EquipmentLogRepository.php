@@ -13,7 +13,7 @@ class EquipmentLogRepository extends DBRepository
     function __construct(\EquipmentLog $model)
     {
         $this->model = $model;
-        $this->perPage = 10;
+        $this->perPage = 25;
     }
 
     /**
