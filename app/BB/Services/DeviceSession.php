@@ -29,13 +29,18 @@ class DeviceSession extends KeyFobAccess {
      * @var EquipmentLogRepository
      */
     private $equipmentLogRepository;
+    /**
+     * @var Credit
+     */
+    private $bbCredit;
 
 
-    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository)
+    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository, \BB\Services\Credit $bbCredit)
     {
         $this->equipmentRepository = $equipmentRepository;
         $this->inductionRepository = $inductionRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
+        $this->bbCredit = $bbCredit;
     }
 
 
@@ -73,6 +78,14 @@ class DeviceSession extends KeyFobAccess {
                 throw new ValidationException("User Not Trained");
             }
         }
+
+
+        //Make sure the member has enough money on their account
+        $minimumBalance = $this->bbCredit->acceptableNegativeBalance('equipment-fee');
+        if (($this->user->cash_balance + ($minimumBalance * 100)) <= 0) {
+            throw new ValidationException("User doesn't have enough credit");
+        }
+
     }
 
     public function decodeDeviceCommand($receivedData)
