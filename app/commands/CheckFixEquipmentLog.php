@@ -59,6 +59,22 @@ class CheckFixEquipmentLog extends Command {
 
             //We should also be merging records and perhaps deleting very short records
         }
+        $unProcessedRecords = $this->equipmentLogRepository->getUnprocessedRecords();
+        foreach ($unProcessedRecords as $record)
+        {
+            if (!$record->active) {
+                $secondsActive = $record->finished->diffInSeconds($record->started);
+
+                //If the record is less tha 30 seconds ignore it
+                if ($secondsActive < 30) {
+                    $record->removed = true;
+                }
+
+                //Processing is finished
+                $record->processed = true;
+                $record->Save();
+            }
+        }
 	}
 
 }

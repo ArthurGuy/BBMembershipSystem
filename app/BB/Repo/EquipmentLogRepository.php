@@ -135,4 +135,13 @@ class EquipmentLogRepository extends DBRepository
         return $this->model->where('active', true)->orderBy('created_at', 'DESC')->get();
     }
 
+    public function getFinishedRecords()
+    {
+        return $this->model->where('active', false)->orderBy('created_at', 'DESC')->get();
+    }
+    public function getUnprocessedRecords()
+    {
+        return $this->model->where('processed', false)->orderBy('created_at', 'DESC')->get();
+    }
+
 } 

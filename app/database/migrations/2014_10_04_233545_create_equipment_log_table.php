@@ -22,6 +22,9 @@ class CreateEquipmentLogTable extends Migration {
             $table->dateTime('started')->nullable();
             $table->dateTime('last_update')->nullable();
             $table->dateTime('finished')->nullable();
+			$table->boolean('removed');
+			$table->boolean('billed');
+			$table->boolean('processed');
             $table->string('notes');
 			$table->timestamps();
 		});
