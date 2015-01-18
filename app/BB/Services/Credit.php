@@ -1,5 +1,6 @@
 <?php namespace BB\Services;
 
+use BB\Exceptions\NotImplementedException;
 use BB\Repo\PaymentRepository;
 use BB\Repo\UserRepository;
 
@@ -93,5 +94,14 @@ class Credit {
         return $this->paymentRepository->getBalancePaymentsPaginated($this->user->id);
     }
 
+
+    public static function getDeviceFee($device)
+    {
+        switch ($device) {
+            case 'laser':
+                return 3.00;
+        }
+        throw new NotImplementedException("No fee exists for this device");
+    }
 
 } 
