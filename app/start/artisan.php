@@ -17,3 +17,4 @@ Artisan::add(new RecalculateUserBalances);
 //Artisan::add(new MigrateProfilePhotoData);
 Artisan::add(new CalculateProposalVotes);
 Artisan::add(new CheckFixEquipmentLog);
+Artisan::add(new CalculateEquipmentFees);
