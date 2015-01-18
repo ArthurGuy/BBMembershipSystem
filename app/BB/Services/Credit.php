@@ -67,7 +67,7 @@ class Credit {
                 return 0;
             case 'induction':
                 return 0;
-            case 'laser-cutter':
+            case 'equipment-fee':
                 return 5;
             default:
                 return 0;
