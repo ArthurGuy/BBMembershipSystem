@@ -150,6 +150,15 @@ class EquipmentLogRepository extends DBRepository
     }
 
     /**
+     * Return all records that have been checked over but not billed
+     * @return mixed
+     */
+    public function getFinishedUnbilledRecords()
+    {
+        return $this->model->where('processed', true)->where('removed', false)->where('billed', false)->orderBy('created_at', 'DESC')->get();
+    }
+
+    /**
      * Get all records that haven't been checked yet
      * @return mixed
      */
