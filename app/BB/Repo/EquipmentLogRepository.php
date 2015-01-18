@@ -122,23 +122,37 @@ class EquipmentLogRepository extends DBRepository
     }
 
     /**
+     * Return records that have been checked over
      * @param $deviceKey
      * @return mixed
      */
     public function getFinishedForEquipment($deviceKey)
     {
-        return $this->model->where('device', $deviceKey)->where('active', false)->orderBy('created_at', 'DESC')->paginate($this->perPage);
+        return $this->model->where('device', $deviceKey)->where('processed', true)->where('removed', false)->orderBy('created_at', 'DESC')->paginate($this->perPage);
     }
 
+    /**
+     * Return all records that are currently listed as active
+     * @return mixed
+     */
     public function getActiveRecords()
     {
         return $this->model->where('active', true)->orderBy('created_at', 'DESC')->get();
     }
 
+    /**
+     * Return all records that have been checked over
+     * @return mixed
+     */
     public function getFinishedRecords()
     {
-        return $this->model->where('active', false)->orderBy('created_at', 'DESC')->get();
+        return $this->model->where('processed', true)->where('removed', false)->orderBy('created_at', 'DESC')->get();
     }
+
+    /**
+     * Get all records that haven't been checked yet
+     * @return mixed
+     */
     public function getUnprocessedRecords()
     {
         return $this->model->where('processed', false)->orderBy('created_at', 'DESC')->get();
