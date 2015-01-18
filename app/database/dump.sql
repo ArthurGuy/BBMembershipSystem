@@ -183,6 +183,7 @@ DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `reason` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `reference` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `source` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `source_id` varchar(128) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `user_id` int(11) NOT NULL,
@@ -399,6 +400,17 @@ CREATE TABLE `equipment_log` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+LOCK TABLES `equipment_log` WRITE;
+/*!40000 ALTER TABLE `equipment_log` DISABLE KEYS */;
+
+INSERT INTO `equipment_log` (`id`, `user_id`, `key_fob_id`, `device`, `active`, `started`, `last_update`, `finished`, `removed`, `billed`, `processed`, `notes`, `created_at`, `updated_at`)
+VALUES
+	(1, 1, 1, 'laser', 0, '2014-12-13 15:45:10', NULL, '2014-12-13 15:50:50', 0, 0, 1, '', '2014-12-13 15:50:50', '2015-01-18 21:55:14'),
+	(3, 1, 1, 'laser', 0, '2014-12-25 21:54:09', NULL, '2014-12-25 21:54:20', 1, 0, 1, '', '2014-12-25 22:54:09', '2015-01-18 19:03:11');
+
+/*!40000 ALTER TABLE `equipment_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 -- Create syntax for TABLE 'proposal_votes'
