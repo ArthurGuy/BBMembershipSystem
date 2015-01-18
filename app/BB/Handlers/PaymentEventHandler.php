@@ -43,9 +43,11 @@ class PaymentEventHandler {
         } elseif ($reason == 'door-key') {
             $this->recordDoorKeyPaymentId($userId, $paymentId);
         } elseif ($reason == 'storage-box') {
-            $this->recordStorageBoxPaymentId($userId, $paymentId);
+
+        } elseif ($reason == 'equipment-fee') {
+            $this->updateBalance($userId);
         } else {
-            dd([$userId, $reason, $ref, $paymentId]);
+            
         }
     }
 
@@ -85,11 +87,5 @@ class PaymentEventHandler {
         $user->save();
     }
 
-    private function recordStorageBoxPaymentId($userId, $paymentId)
-    {
-        /* @TODO: Verify payment amount is valid - this could have been changed */
-        $user = $this->userRepository->getById($userId);
-        $user->storage_box_payment_id = $paymentId;
-        $user->save();
-    }
+
 } 
