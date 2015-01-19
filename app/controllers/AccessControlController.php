@@ -181,6 +181,8 @@ class AccessControlController extends Controller
     {
         $data = Request::only(['event', 'data', 'published_at', 'coreid']);
 
+        Log::debug($data);
+
         try {
             $keyFob = $this->lookupKeyFob($data['data']);
         } catch (Exception $e) {
