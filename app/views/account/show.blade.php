@@ -134,7 +134,7 @@
                 </div>
                 <div class="panel-body">
                     <p class="lead">
-                        Your currently setup to leave Build Brighton once your subscription payment expires.<br />
+                        You're currently setup to leave Build Brighton once your subscription payment expires.<br />
                         Once this happens you will no longer have access to the work space, mailing list or any other member areas.
                     </p>
                     <p>
