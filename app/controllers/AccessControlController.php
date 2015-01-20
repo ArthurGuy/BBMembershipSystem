@@ -190,7 +190,7 @@ class AccessControlController extends Controller
             $client = new GuzzleHttp\Client();
             $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
                 'body' => [
-                    'args' => json_encode(['name'=>'', 'status'=>'Unknown', 'balance'=>'', 'success'=>'0']),
+                    'args' => json_encode(['name'=>'', 'status'=>'Unknown', 'balance'=>'', 'success'=>false]),
                     'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
                 ]
             ]);
@@ -202,7 +202,7 @@ class AccessControlController extends Controller
         $client = new GuzzleHttp\Client();
         $response = $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
             'body' => [
-                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance/100), 2), 'success'=>'1']),
+                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance/100), 2), 'success'=>true]),
                 'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
             ]
         ]);
