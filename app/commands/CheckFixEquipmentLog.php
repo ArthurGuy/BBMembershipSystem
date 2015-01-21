@@ -65,8 +65,8 @@ class CheckFixEquipmentLog extends Command {
             if (!$record->active) {
                 $secondsActive = $record->finished->diffInSeconds($record->started);
 
-                //If the record is less tha 30 seconds ignore it
-                if ($secondsActive < 30) {
+                //If the record is less than 60 seconds ignore it
+                if ($secondsActive <= 60) {
                     $record->removed = true;
                 }
 
