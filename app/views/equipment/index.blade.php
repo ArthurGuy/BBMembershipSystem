@@ -32,11 +32,13 @@ Tools and Equipment
                     @if ($tool->requires_training)
                         Induction fee: &pound{{ $tool->cost }}<br />
                     @else
-                        No induction required
+                        No induction required<br />
                     @endif
                     @if (!$tool->working)
                         <span class="label label-danger">Out of action</span>
                     @endif
+                    <br />
+                    <a href="{{ route('equipment.show', $toolId) }}">Activity Log</a>
                 </div>
             </div>
             @if ($tool->requires_training)
