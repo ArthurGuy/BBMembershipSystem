@@ -18,9 +18,9 @@ Tools and Equipment
 <div class="row">
 
     <div class="col-md-12 col-lg-12">
-        <div class="well">
-            <div class="row">
-                <div class="col-md-12 col-lg-6">
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <div class="well">
                     @if ($equipment->requires_training)
                         This piece of equipment requires that an induction fee is paid, this goes towards maintaining the equipment.<br />
                         Induction fee: &pound{{ $equipment->cost }}<br />
@@ -31,22 +31,21 @@ Tools and Equipment
                         <span class="label label-danger">Out of action</span>
                     @endif
                 </div>
-
-                @if ($equipment->requires_training)
-                    <div class="col-sm-12 col-md-6">
-                        <h4>Trainers</h4>
-                        <div class="list-group">
-                            @foreach($trainers as $trainer)
-                                <a href="{{ route('members.show', $trainer->user->id) }}" class="list-group-item">
-                                    {{ HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 50, '') }}
-                                    {{ $trainer->user->name }}
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
             </div>
 
+            @if ($equipment->requires_training)
+                <div class="col-sm-12 col-md-6">
+                    <h4>Trainers</h4>
+                    <div class="list-group">
+                        @foreach($trainers as $trainer)
+                            <a href="{{ route('members.show', $trainer->user->id) }}" class="list-group-item">
+                                {{ HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') }}
+                                {{ $trainer->user->name }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 
