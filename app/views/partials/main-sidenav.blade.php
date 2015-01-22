@@ -16,8 +16,10 @@
             <ul class="nav nested-nav accountSettings">
                 {{ HTML::sideNavLink('Edit Your Account', 'account.edit', [Auth::id()]) }}
                 {{ HTML::sideNavLink('Edit Your Profile', 'account.profile.edit', [Auth::id()]) }}
-                {{ HTML::sideNavLink('Manage Your Balance', 'account.balance.index', [Auth::id()]) }}
             </ul>
+
+                {{ HTML::sideNavLink('Manage Your Balance', 'account.balance.index', [Auth::id()]) }}
+
         </ul>
         @endif
     </header>

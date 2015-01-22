@@ -11,9 +11,9 @@ Build Brighton Balance
 @section('content')
 
 <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-10">
+    <div class="col-xs-12">
         <p>
-            This is your Build Brighton Balance, it can be used to pay for your time on the laser and in the future other things as well.
+            This is your Build Brighton Balance, it can be used to pay for your time on the laser, storage boxes and in the future many other things as well.
         </p>
     </div>
 </div>
@@ -25,23 +25,14 @@ Build Brighton Balance
                 <h3 class="panel-title">Add Credit</h3>
             </div>
             <div class="panel-body">
-            <p>Top up using Direct Debit or a credit/debit card payment</p>
+                <p>Top up using Direct Debit or a credit/debit card payment</p>
 
+                @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.balance.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up', 'displayReason'=>'Balance Payment', 'methods'=>['gocardless', 'stripe']])
 
-            @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.balance.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up', 'displayReason'=>'Balance Payment', 'methods'=>['gocardless', 'stripe']])
-
+                <p>
+                    Cash top ups can be made to a trustee in the space
+                </p>
             </div>
-
-            @if (Auth::user()->isAdmin() && 0)
-            <div class="panel-footer">
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id], 'class'=>'navbar-form')) }}
-                {{ Form::hidden('reason', 'balance') }}
-                {{ Form::text('amount', '5.00', ['class'=>'form-control']) }}
-                {{ Form::select('source', ['cash'=>'Cash'], null, ['class'=>'form-control']) }}
-                {{ Form::submit('Record Top up', array('class'=>'btn btn-default')) }}
-                {{ Form::close() }}
-            </div>
-            @endif
         </div>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-3">
