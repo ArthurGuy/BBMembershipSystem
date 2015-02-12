@@ -25,6 +25,7 @@ class CreateEquipmentLogTable extends Migration {
 			$table->boolean('removed');
 			$table->boolean('billed');
 			$table->boolean('processed');
+			$table->string('reason', 20);
             $table->string('notes');
 			$table->timestamps();
 		});

@@ -23,7 +23,7 @@ class EquipmentLog extends Eloquent {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'key_fob_id', 'device', 'active', 'last_update', 'finished', 'notes'
+        'user_id', 'key_fob_id', 'device', 'active', 'last_update', 'finished', 'notes', 'reason'
     ];
 
     public function getDates()

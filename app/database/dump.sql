@@ -395,6 +395,7 @@ CREATE TABLE `equipment_log` (
   `removed` tinyint(1) NOT NULL,
   `billed` tinyint(1) NOT NULL,
   `processed` tinyint(1) NOT NULL,
+  `reason` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `notes` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -404,10 +405,10 @@ CREATE TABLE `equipment_log` (
 LOCK TABLES `equipment_log` WRITE;
 /*!40000 ALTER TABLE `equipment_log` DISABLE KEYS */;
 
-INSERT INTO `equipment_log` (`id`, `user_id`, `key_fob_id`, `device`, `active`, `started`, `last_update`, `finished`, `removed`, `billed`, `processed`, `notes`, `created_at`, `updated_at`)
+INSERT INTO `equipment_log` (`id`, `user_id`, `key_fob_id`, `device`, `active`, `started`, `last_update`, `finished`, `removed`, `billed`, `processed`, `reason`, `notes`, `created_at`, `updated_at`)
 VALUES
-	(1, 1, 1, 'laser', 0, '2014-12-13 15:45:10', NULL, '2014-12-13 15:50:50', 0, 0, 1, '', '2014-12-13 15:50:50', '2015-01-18 21:55:14'),
-	(3, 1, 1, 'laser', 0, '2014-12-25 21:54:09', NULL, '2014-12-25 21:54:20', 1, 0, 1, '', '2014-12-25 22:54:09', '2015-01-18 19:03:11');
+	(1, 1, 1, 'laser', 0, '2014-12-13 15:45:10', NULL, '2014-12-13 15:50:50', 0, 0, 1, '', '', '2014-12-13 15:50:50', '2015-01-18 21:55:14'),
+	(3, 1, 1, 'laser', 0, '2014-12-25 21:54:09', NULL, '2014-12-25 21:54:20', 1, 0, 1, '', '', '2014-12-25 22:54:09', '2015-01-18 19:03:11');
 
 /*!40000 ALTER TABLE `equipment_log` ENABLE KEYS */;
 UNLOCK TABLES;
