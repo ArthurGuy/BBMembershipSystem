@@ -55,6 +55,8 @@ Tools and Equipment
                 <th>Date</th>
                 <th>Used for</th>
                 <th>Member</th>
+                <th>Reason</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -63,6 +65,15 @@ Tools and Equipment
                 <td>{{ $log->present()->started }}</td>
                 <td>{{ $log->present()->timeUsed }}</td>
                 <td><a href="{{ route('members.show', $log->user->id) }}">{{ $log->user->name }}</a></td>
+                <td>{{ $log->present()->reason }}</td>
+                <td>
+                    @if (empty($log->reason))
+                    {{ Form::open(['method'=>'POST', 'route'=>['equipment.update-log', $log->id]]) }}
+                    {{ Form::select('reason', ['testing'=>'Testing', 'training'=>'Training'], $log->reason, ['class'=>'']) }}
+                    {{ Form::submit('Update', ['class'=>'btn btn-primary btn-xs']) }}
+                    {{ Form::close() }}
+                    @endif
+                </td>
             </tr>
         @endforeach
         </tbody>
