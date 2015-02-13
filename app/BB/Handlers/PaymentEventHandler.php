@@ -22,6 +22,7 @@ class PaymentEventHandler {
     public function subscribe($events)
     {
         $events->listen('payment.create', 'BB\Handlers\PaymentEventHandler@onCreate');
+        $events->listen('payment.delete', 'BB\Handlers\PaymentEventHandler@onDelete');
     }
 
 
@@ -48,6 +49,17 @@ class PaymentEventHandler {
             $this->updateBalance($userId);
         } else {
             
+        }
+    }
+
+    /**
+     * @param $userId
+     * @param $source
+     */
+    public function onDelete($userId, $source)
+    {
+        if ($source == 'balance') {
+            $this->updateBalance($userId);
         }
     }
 
