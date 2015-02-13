@@ -56,7 +56,9 @@ Tools and Equipment
                 <th>Used for</th>
                 <th>Member</th>
                 <th>Reason</th>
+                @if (Auth::user()->isAdmin())
                 <th></th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -66,6 +68,7 @@ Tools and Equipment
                 <td>{{ $log->present()->timeUsed }}</td>
                 <td><a href="{{ route('members.show', $log->user->id) }}">{{ $log->user->name }}</a></td>
                 <td>{{ $log->present()->reason }}</td>
+                @if (Auth::user()->isAdmin())
                 <td>
                     @if (empty($log->reason))
                     {{ Form::open(['method'=>'POST', 'route'=>['equipment.update-log', $log->id]]) }}
@@ -74,6 +77,7 @@ Tools and Equipment
                     {{ Form::close() }}
                     @endif
                 </td>
+                @endif
             </tr>
         @endforeach
         </tbody>
