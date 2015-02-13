@@ -135,11 +135,21 @@ class PaymentRepository extends DBRepository
             ->get();
     }
 
+    /**
+     * Get all payments with a specific reference
+     * @param $reference
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPaymentsByReference($reference)
+    {
+        return $this->model->where('reference', $reference)->get();
+    }
+
 
     /**
      * Return a paginated list of balance affecting payment for a user
      * @param $userId
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getBalancePaymentsPaginated($userId)
     {
@@ -172,6 +182,24 @@ class PaymentRepository extends DBRepository
     private function hasDateFilter()
     {
         return ($this->startDate && $this->endDate);
+    }
+
+    /**
+     * Delete a record
+     * @param $recordId
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete($recordId)
+    {
+        $payment = $this->getById($recordId);
+
+        $state = $payment->delete();
+
+        //Fire an event, allows the balance to get updated
+        \Event::fire('payment.delete', array($payment->user_id, $payment->source));
+
+        return $state;
     }
 
 } 
