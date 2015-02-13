@@ -3,7 +3,7 @@
 abstract class DBRepository {
 
     /**
-     * Eloquent model
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
 
@@ -46,6 +46,18 @@ abstract class DBRepository {
     public function create($data)
     {
         return $this->model->create($data);
+    }
+
+
+    /**
+     * Delete a record
+     * @param $recordId
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete($recordId)
+    {
+        $this->getById($recordId)->delete();
     }
 
 
