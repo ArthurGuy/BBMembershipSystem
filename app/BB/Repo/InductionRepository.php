@@ -3,7 +3,7 @@
 class InductionRepository extends DBRepository {
 
     /**
-     * @var Induction
+     * @var \Induction
      */
     protected $model;
 
@@ -39,6 +39,19 @@ class InductionRepository extends DBRepository {
     }
 
 
+    /**
+     * Get all the users who have been trained on a piece of equipment
+     * @param $deviceId
+     * @return mixed
+     */
+    public function getUsersForEquipment($deviceId)
+    {
+        return $this->model->with('user')->whereHas('user', function($q) {
+            $q->where('active', '=', true);
+        })->where('trained', '!=', '')->where('key', $deviceId)->get();
+    }
+
+    
     /**
      * @return array
      */
