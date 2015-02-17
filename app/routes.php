@@ -119,8 +119,8 @@ Route::get('stats', ['uses'=>'StatsController@index', 'before'=>'role:member', '
 
 
 #Notification Emails
-Route::get('notification_email/create', ['as' => 'notificationemail.create', 'uses' => 'NotificationEmailController@create', 'before'=>'role:admin']);
-Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 'NotificationEmailController@store', 'before'=>'role:admin']);
+Route::get('notification_email/create', ['as' => 'notificationemail.create', 'uses' => 'NotificationEmailController@create', 'before'=>'role:member']);
+Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 'NotificationEmailController@store', 'before'=>'role:member']);
 
 
 #Proposals

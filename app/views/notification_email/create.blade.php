@@ -12,12 +12,25 @@ Email Members
 
     <div class="row page-header">
         <div class="col-xs-12">
-            <p>Send an email to all the active members</p>
+            <p>
+                Send an email to all the active members or specific groups.<br />
+                If you manage a group you will only have permission to send to that group, only admins can email everyone.
+            </p>
         </div>
     </div>
 
     <div class="col-xs-12 col-md-12 col-lg-8">
         {{ Form::open(array('route' => 'notificationemail.store', 'class'=>'', 'method'=>'POST')) }}
+
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ Notification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
+                    {{ Form::label('recipient', 'Recipient') }}
+                    {{ Form::select('recipient', $recipients, null, ['class'=>'form-control']) }}
+                    {{ Notification::getErrorDetail('recipient') }}
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-xs-12 col-md-8">

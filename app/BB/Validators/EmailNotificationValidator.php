@@ -1,6 +1,7 @@
 <?php namespace BB\Validators;
 
-class EmailNotificationValidator extends FormValidator {
+class EmailNotificationValidator extends FormValidator
+{
 
     /**
      * Validation rules
@@ -8,8 +9,9 @@ class EmailNotificationValidator extends FormValidator {
      * @var array
      */
     protected $rules = [
-        'subject' => 'required',
-        'message' => 'required',
+        'subject'   => 'required',
+        'message'   => 'required',
+        'recipient' => 'required',
     ];
 
 } 
