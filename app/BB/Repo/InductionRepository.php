@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use Illuminate\Database\Eloquent\Collection;
+
 class InductionRepository extends DBRepository {
 
     /**
@@ -42,16 +44,23 @@ class InductionRepository extends DBRepository {
     /**
      * Get all the users who have been trained on a piece of equipment
      * @param $deviceId
-     * @return mixed
+     * @return Collection
      */
     public function getUsersForEquipment($deviceId)
     {
-        return $this->model->with('user')->whereHas('user', function($q) {
+        $users = new Collection();
+        $inductionUsers = $this->model->with('user')->whereHas('user', function($q) {
             $q->where('active', '=', true);
         })->where('trained', '!=', '')->where('key', $deviceId)->get();
+
+        //Extract the users from the inductions and place into a new collection
+        foreach ($inductionUsers as $inductedUser) {
+            $users->add($inductedUser->user);
+        }
+        return $users;
     }
 
-    
+
     /**
      * @return array
      */
