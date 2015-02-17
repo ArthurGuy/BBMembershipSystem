@@ -33,7 +33,6 @@ class Notification
     /**
      * @param       $message
      * @param MessageBag $details
-     * @internal param null $heading
      */
     public function success($message, MessageBag $details=null)
     {
@@ -43,7 +42,6 @@ class Notification
     /**
      * @param                                      $message
      * @param MessageBag $details
-     * @internal param string $heading
      */
     public function error($message, MessageBag $details=null)
     {
@@ -53,7 +51,6 @@ class Notification
     /**
      * @param                                      $message
      * @param MessageBag $details
-     * @internal param null $heading
      */
     public function overlay($message, MessageBag $details=null)
     {
@@ -64,7 +61,6 @@ class Notification
      * @param                                      $message
      * @param MessageBag $details
      * @param string                               $level
-     * @internal param $heading
      */
     public function message($message, MessageBag $details=null, $level = 'info')
     {
