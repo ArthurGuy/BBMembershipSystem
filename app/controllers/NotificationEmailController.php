@@ -33,7 +33,8 @@ class NotificationEmailController extends \BaseController {
 
     public function create()
     {
-        return View::make('notificationemail.create');
+        $recipients = ['all'=>'All Members', 'laser_induction_members'=>'Laser Induction Members'];
+        return View::make('notification_email.create')->with('recipients', $recipients);
     }
 
     public function store()

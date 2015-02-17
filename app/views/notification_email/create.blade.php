@@ -21,6 +21,16 @@ Email Members
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ Notification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
+                    {{ Form::label('recipient', 'Recipient') }}
+                    {{ Form::select('recipient', $recipients, null, ['class'=>'form-control']) }}
+                    {{ Notification::getErrorDetail('recipient') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ Notification::hasErrorDetail('subject', 'has-error has-feedback') }}">
                     {{ Form::label('subject', 'Subject') }}
                     {{ Form::text('subject', null, ['class'=>'form-control']) }}
