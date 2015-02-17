@@ -29,6 +29,9 @@ class NotificationEmailController extends \BaseController {
         $this->userRepository = $userRepository;
         $this->emailNotificationValidator = $emailNotificationValidator;
         $this->notifications = $notifications;
+        if (Auth::user()->roles()->get()->count() <= 0) {
+            throw new \BB\Exceptions\AuthenticationException("You don't have permission to be here");
+        }
     }
 
     public function create()
