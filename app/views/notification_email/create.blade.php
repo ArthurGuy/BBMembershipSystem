@@ -12,7 +12,10 @@ Email Members
 
     <div class="row page-header">
         <div class="col-xs-12">
-            <p>Send an email to all the active members</p>
+            <p>
+                Send an email to all the active members or specific groups.<br />
+                If you manage a group you will only have permission to send to that group, only admins can email everyone.
+            </p>
         </div>
     </div>
 
