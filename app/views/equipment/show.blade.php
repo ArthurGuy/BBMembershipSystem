@@ -56,7 +56,7 @@ Tools and Equipment
                 <th>Used for</th>
                 <th>Member</th>
                 <th>Reason</th>
-                @if (Auth::user()->isAdmin())
+                @if (Auth::user()->isAdmin() || Auth::user()->hasRole($equipmentId))
                 <th></th>
                 @endif
             </tr>
@@ -68,10 +68,10 @@ Tools and Equipment
                 <td>{{ $log->present()->timeUsed }}</td>
                 <td><a href="{{ route('members.show', $log->user->id) }}">{{ $log->user->name }}</a></td>
                 <td>{{ $log->present()->reason }}</td>
-                @if (Auth::user()->isAdmin())
+                @if (Auth::user()->isAdmin() || Auth::user()->hasRole($equipmentId))
                 <td>
                     @if (empty($log->reason))
-                    {{ Form::open(['method'=>'POST', 'route'=>['equipment.update-log', $log->id]]) }}
+                    {{ Form::open(['method'=>'POST', 'route'=>['equipment_log.update', $log->id]]) }}
                     {{ Form::select('reason', ['testing'=>'Testing', 'training'=>'Training'], $log->reason, ['class'=>'']) }}
                     {{ Form::submit('Update', ['class'=>'btn btn-primary btn-xs']) }}
                     {{ Form::close() }}

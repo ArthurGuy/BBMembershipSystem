@@ -21,18 +21,28 @@ class FunctionalHelper extends \Codeception\Module
     {
         $user = \User::find(1);
         \Auth::login($user);
+        return $user;
     }
 
     public function loginAdminMember()
     {
         $user = \User::find(3);
         \Auth::login($user);
+        return $user;
     }
 
     public function loginLeftMember()
     {
         $user = \User::find(2);
         \Auth::login($user);
+        return $user;
+    }
+
+    public function loginLaserTeamMember()
+    {
+        $user = \User::find(4);
+        \Auth::login($user);
+        return $user;
     }
 
     public function getActiveKeyholderMember()

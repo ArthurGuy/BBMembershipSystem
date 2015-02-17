@@ -8,43 +8,7 @@ class EquipmentLogPresenter extends Presenter
 
     public function reason()
     {
-        switch ($this->entity->reason) {
-            case 'subscription';
-                return 'Subscription';
-
-            case 'unknown';
-                return 'Unknown';
-
-            case 'induction';
-                return 'Equipment Access Fee';
-
-            case 'door-key';
-                return 'Key Deposit';
-
-            case 'storage-box';
-                return 'Storage Box Deposit';
-
-            case 'balance';
-                return 'Credit Top Up';
-
-            default;
-                return $this->entity->reason;
-        }
-    }
-
-    public function status()
-    {
-        switch ($this->entity->status) {
-            case 'pending';
-                return 'Pending Confirmation';
-
-            case 'paid';
-            case 'withdrawn';
-                return 'Paid';
-
-            default;
-                return $this->entity->status;
-        }
+        return ucfirst($this->entity->reason);
     }
 
     public function started()

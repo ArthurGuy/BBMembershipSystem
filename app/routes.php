@@ -75,7 +75,10 @@ Route::group(array('before' => 'role:admin'), function() {
 # Equipment
 Route::get('equipment', ['uses'=>'EquipmentController@index', 'before'=>'role:member', 'as'=>'equipment.index']);
 Route::get('equipment/{equipment}', ['uses'=>'EquipmentController@show', 'before'=>'role:member', 'as'=>'equipment.show']);
-Route::post('equipment/log/{logId}', ['uses'=>'EquipmentController@updateLogEntry', 'before'=>'role:member', 'as'=>'equipment.update-log']);
+
+
+# Equipment Log
+Route::post('equipment/log/{logId}', ['uses'=>'EquipmentLogController@update', 'before'=>'role:member', 'as'=>'equipment_log.update']);
 
 
 # Statements

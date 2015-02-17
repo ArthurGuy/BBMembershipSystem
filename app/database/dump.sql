@@ -198,6 +198,10 @@ CREATE TABLE `payments` (
   KEY `payments_user_id_index` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+INSERT INTO `payments` (`id`, `reason`, `reference`, `source`, `source_id`, `user_id`, `amount`, `fee`, `amount_minus_fee`, `status`, `created_at`, `updated_at`)
+VALUES
+	(60, 'equipment-fee', '4:laser', 'balance', '', 1, 0.28, 0.00, 0.28, 'paid', '2015-01-18 20:39:25', '2015-01-18 20:39:25');
+
 
 
 # Dump of table role_user
@@ -221,7 +225,10 @@ LOCK TABLES `role_user` WRITE;
 
 INSERT INTO `role_user` (`id`, `role_id`, `user_id`, `created_at`, `updated_at`)
 VALUES
-	(1,1,3,'2014-09-08 19:15:42','2014-09-08 19:15:42');
+	(1,1,3,'2014-09-08 19:15:42','2014-09-08 19:15:42'),
+	(2,2,3,'2014-09-08 19:15:42','2014-09-08 19:15:42'),
+	(3,2,1,'2014-09-08 19:15:42','2014-09-08 19:15:42'),
+	(4,2,4,'2014-09-08 19:15:42','2014-09-08 19:15:42');
 
 /*!40000 ALTER TABLE `role_user` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -247,7 +254,8 @@ LOCK TABLES `roles` WRITE;
 
 INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`)
 VALUES
-	(1,'admin','2014-09-08 19:15:42','2014-09-08 19:15:42');
+	(1,'admin','2014-09-08 19:15:42','2014-09-08 19:15:42'),
+	(2,'laser','2014-09-08 19:15:42','2014-09-08 19:15:42');
 
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -335,7 +343,8 @@ INSERT INTO `users` (`id`, `hash`, `given_name`, `family_name`, `import_match_st
 VALUES
 	(1,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Jon','Doe','','jondoe@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','Street','','Town','','PostCode','contact','',1,0,0,'active',1,1,2579,2582,1,'standing-order',30,10,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
 	(2,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Fred','Bloggs','','fredbloggs@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','Street','','Town','','PostCode','contact','',0,0,0,'left',1,1,NULL,NULL,1,'',30,20,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
-	(3,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Steve','Smith','','stevesmith@example.com',1,'','','Street','','Town','','PostCode','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00');
+	(3,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Steve','Smith','','stevesmith@example.com',1,'','','Street','','Town','','PostCode','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+	(4,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Laser','User','','laseruser@example.com',1,'','','Street','','Town','','PostCode','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00');
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -372,7 +381,8 @@ INSERT INTO `profile_data` (`id`, `user_id`, `twitter`, `facebook`, `google_plus
 VALUES
 	(1,1,'TwitterHandle',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1','2014-09-23 22:22:08','2014-09-23 22:22:08'),
 	(3,3,'ArthurGuy','ArthurGuy','ArthurGuy','ArthurGuy','','','Snappy tagline goes here','Description text here','[\"midi\",\"3dprinting\",\"arduino\",\"coding\",\"electronics\",\"laser-cutter\",\"welding\",\"wood-work\"]','0','2014-09-23 22:22:08','2014-09-27 12:53:45'),
-	(4,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','2014-09-23 22:27:04','2014-09-23 22:27:04');
+	(4,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','2014-09-23 22:27:04','2014-09-23 22:27:04'),
+	(5,4,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','2014-09-23 22:27:04','2014-09-23 22:27:04');
 
 /*!40000 ALTER TABLE `profile_data` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -408,7 +418,9 @@ LOCK TABLES `equipment_log` WRITE;
 INSERT INTO `equipment_log` (`id`, `user_id`, `key_fob_id`, `device`, `active`, `started`, `last_update`, `finished`, `removed`, `billed`, `processed`, `reason`, `notes`, `created_at`, `updated_at`)
 VALUES
 	(1, 1, 1, 'laser', 0, '2014-12-13 15:45:10', NULL, '2014-12-13 15:50:50', 0, 0, 1, '', '', '2014-12-13 15:50:50', '2015-01-18 21:55:14'),
-	(3, 1, 1, 'laser', 0, '2014-12-25 21:54:09', NULL, '2014-12-25 21:54:20', 1, 0, 1, '', '', '2014-12-25 22:54:09', '2015-01-18 19:03:11');
+	(2, 1, 1, 'laser', 0, '2014-12-25 21:54:09', NULL, '2014-12-25 21:54:20', 1, 0, 1, '', '', '2014-12-25 22:54:09', '2015-01-18 19:03:11'),
+	(3, 3, 1, 'laser', 0, '2014-12-25 21:54:09', NULL, '2014-12-25 21:54:20', 1, 0, 1, '', '', '2014-12-25 22:54:09', '2015-01-18 19:03:11'),
+	(4, 1, 1, 'laser', 0, '2014-12-25 21:54:09', NULL, '2014-12-25 21:54:20', 0, 1, 1, '', '', '2014-12-25 22:54:09', '2015-01-18 19:03:11');
 
 /*!40000 ALTER TABLE `equipment_log` ENABLE KEYS */;
 UNLOCK TABLES;
