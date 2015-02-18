@@ -48,11 +48,12 @@ class PaymentController extends \BaseController {
 
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
 
-        $dateRangeStart = \Carbon\Carbon::create(2009, 07, 01);
+        $dateRangeEarliest = \Carbon\Carbon::create(2009, 07, 01);
+        $dateRangeStart = \Carbon\Carbon::now();
         $dateRange = [];
-        while ($dateRangeStart->lt(\Carbon\Carbon::now())) {
+        while ($dateRangeStart->gt($dateRangeEarliest)) {
             $dateRange[$dateRangeStart->toDateString()] = $dateRangeStart->format('F Y');
-            $dateRangeStart->addMonth();
+            $dateRangeStart->subMonth();
         }
 
         return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange);
