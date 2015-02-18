@@ -55,12 +55,14 @@ class PaymentEventHandler {
     /**
      * @param $userId
      * @param $source
+     * @param $reason
      */
-    public function onDelete($userId, $source)
+    public function onDelete($userId, $source, $reason)
     {
-        if ($source == 'balance') {
+        if (($source == 'balance') || ($reason == 'balance')) {
             $this->updateBalance($userId);
         }
+
     }
 
 

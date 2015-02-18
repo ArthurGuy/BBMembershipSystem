@@ -63,6 +63,7 @@ class PaymentController extends \BaseController {
     /**
      * Start the creation of a new gocardless payment
      *   Details get posted into this method and the redirected to gocardless
+     * @depreciated
      * @param $userId
      * @throws \BB\Exceptions\AuthenticationException
      * @throws \BB\Exceptions\FormValidationException
@@ -146,6 +147,7 @@ class PaymentController extends \BaseController {
 
     /**
      * Confirm a gocardless payment and create a payment record
+     * @depreciated
      * @param $userId
      * @return mixed
      * @throws \BB\Exceptions\AuthenticationException
@@ -388,26 +390,37 @@ class PaymentController extends \BaseController {
 
 
 	/**
-	 * Update the specified resource in storage.
+	 * Update a payment
+     * Change where the money goes by altering the original record or creating a secondary payment
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function update($id)
 	{
-		//
+		$payment = $this->paymentRepository->getById($id);
 	}
 
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     * @throws \BB\Exceptions\ValidationException
+     */
 	public function destroy($id)
 	{
-		//
+        $payment = $this->paymentRepository->getById($id);
+
+        //we can only allow some records to get deleted, only cash payments can be removed, everything else must be refunded off
+        if ($payment->source != 'cash') {
+            throw new \BB\Exceptions\ValidationException('Only cash payments can be deleted');
+        }
+
+        //Depending on what the payment was used for things might need to be updated
+        $payment->reason;
+
 	}
 
 

@@ -197,7 +197,7 @@ class PaymentRepository extends DBRepository
         $state = $payment->delete();
 
         //Fire an event, allows the balance to get updated
-        \Event::fire('payment.delete', array($payment->user_id, $payment->source));
+        \Event::fire('payment.delete', array($payment->user_id, $payment->source, $payment->reason));
 
         return $state;
     }
