@@ -1,8 +1,18 @@
 <?php
 
 class RolesController extends \BaseController {
+    /**
+     * @var \BB\Repo\UserRepository
+     */
+    private $userRepository;
 
-	/**
+    function __construct(\BB\Repo\UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+
+    /**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
@@ -10,7 +20,7 @@ class RolesController extends \BaseController {
 	public function index()
 	{
         $roles = Role::with('Users')->get();
-        $memberList = User::dropdown(true);
+        $memberList = $this->userRepository->getAllAsDropdown();
 		return View::make('roles.index')->with('roles', $roles)->with('memberList', $memberList);
 	}
 
