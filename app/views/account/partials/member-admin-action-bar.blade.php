@@ -31,12 +31,7 @@
         @elseif ($user->trusted && !$user->key_deposit_payment_id)
         <div class="row">
             <div class="col-xs-12">
-                <p>A deposit needs to be paid before a key can be issued</p>
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id], 'class'=>'')) }}
-                {{ Form::hidden('reason', 'door-key') }}
-                {{ Form::hidden('source', 'manual') }}
-                {{ Form::submit('Key Deposit Paid', array('class'=>'btn btn-default btn-xs')) }}
-                {{ Form::close() }}
+                <p>A deposit needs to be paid before a key can be issued. Get the member to make this payment through their login.</p>
             </div>
         </div>
         @endif

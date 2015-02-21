@@ -34,10 +34,11 @@
                         From that page you can also choose to hide your photo from public view.
                     </p>
                 @elseif (!$user->key_deposit_payment_id)
-                    <p>If you would like a door key you need to pay a £10 deposit, this can be paid now or by cash at the space.</p>
+                    <p>If you would like a door key you need to pay a £10 deposit.</p>
 
                     @include('partials/payment-form', ['reason'=>'door-key', 'displayReason'=>'Door Key Deposit', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>10, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'stripe', 'balance']])
 
+                    <small>If you wan to pay using cash please find a trustee who can top up your balance.</small>
                 @else
                     You have paid the key deposit, please let a trustee know and they will issue you will a key.
                 @endif
