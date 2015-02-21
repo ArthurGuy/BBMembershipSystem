@@ -26,7 +26,8 @@ Payments
 <div class="row">
     <div class="col-xs-12 well">
         {{ Form::open(array('method'=>'GET', 'route' => ['payments.index'], 'class'=>'navbar-form navbar-left')) }}
-        {{ Form::select('date_filter', [''=>'All Time']+$dateRange, Request::get('date_filter', ''), ['class'=>'form-control']) }}
+        {{ Form::select('date_filter', [''=>'All Time']+$dateRange, Request::get('date_filter', ''), ['class'=>'form-control', 'style'=>'margin-right:10px; width:150px;']) }}
+        {{ Form::select('member_filter', [''=>'All Members']+$memberList, Request::get('member_filter', ''), ['class'=>'form-control', 'style'=>'margin-right:10px; width:150px;']) }}
         {{ Form::submit('Filter', array('class'=>'btn btn-default btn-sm')) }}
         {{ Form::close() }}
     </div>
@@ -42,6 +43,7 @@ Payments
             <th>{{ HTML::sortBy('source', 'Method', 'payments.index') }}</th>
             <th>{{ HTML::sortBy('amount', 'Amount', 'payments.index') }}</th>
             <th>Status</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -50,4 +52,10 @@ Payments
 </table>
 {{ HTML::sortablePaginatorLinks($payments) }}
 
+@stop
+
+@section('footer-js')
+    <script>
+        $(document).ready(function() { $("select").select2({dropdownAutoWidth:false}); });
+    </script>
 @stop

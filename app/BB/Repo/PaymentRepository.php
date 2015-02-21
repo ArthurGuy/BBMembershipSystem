@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use BB\Exceptions\NotImplementedException;
+
 class PaymentRepository extends DBRepository
 {
 
@@ -14,6 +16,7 @@ class PaymentRepository extends DBRepository
 
     protected $startDate = null;
     protected $endDate = null;
+    protected $memberId = null;
 
     /**
      * @param \Payment $model
@@ -31,6 +34,10 @@ class PaymentRepository extends DBRepository
 
         if ($this->hasDateFilter()) {
             $model = $model->where('created_at', '>=', $this->startDate)->where('created_at', '<=', $this->endDate);
+        }
+
+        if ($this->hasMemberFilter()) {
+            $model = $model->where('user_id', $this->memberId);
         }
 
         if ($this->isSortable($params)) {
@@ -197,9 +204,24 @@ class PaymentRepository extends DBRepository
         $state = $payment->delete();
 
         //Fire an event, allows the balance to get updated
-        \Event::fire('payment.delete', array($payment->user_id, $payment->source));
+        \Event::fire('payment.delete', array($payment->user_id, $payment->source, $payment->reason, $payment->id));
 
         return $state;
+    }
+
+    public function canDelete($recordId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public function memberFilter($memberFilter)
+    {
+        $this->memberId = $memberFilter;
+    }
+
+    public function hasMemberFilter()
+    {
+        return !is_null($this->memberId);
     }
 
 } 

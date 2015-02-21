@@ -46,15 +46,16 @@ Route::get('account/{account}/subscription/store', ['as' => 'account.subscriptio
 Route::resource('account.subscription', 'SubscriptionController', ['except' => ['store', 'update', 'edit', 'show', 'index']]);
 Route::post('gocardless/webhook', ['uses' => 'GoCardlessWebhookController@receive']);
 
-Route::resource('account.payment', 'PaymentController', ['only' => ['store', 'edit', 'update', 'destroy']]);
+Route::resource('account.payment', 'PaymentController', ['only' => ['store']]);
 Route::group(array('before' => 'role:admin'), function() {
-    Route::resource('payments', 'PaymentController', ['only' => ['index']]);
+    Route::resource('payments', 'PaymentController', ['only' => ['index', 'destroy', 'update']]);
     Route::get('payments/overview', ['uses'=>'PaymentController@overview', 'as'=>'payments.overview']);
 });
 Route::post('account/{account}/payment/create', ['as'=>'account.payment.create', 'uses' => 'PaymentController@create']);
 Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
 Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-payment', 'uses'=>'AccountController@updateSubscriptionAmount']);
 
+# Payment provider specific urls
 Route::post('account/{account}/payment/stripe/store', ['as'=>'account.payment.stripe.store', 'uses' => 'StripePaymentController@store']);
 Route::post('account/{account}/payment/gocardless/create', ['as'=>'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
 Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment.gocardless.store', 'uses' => 'GoCardlessPaymentController@store']);

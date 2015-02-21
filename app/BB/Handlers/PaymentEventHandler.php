@@ -1,5 +1,6 @@
 <?php namespace BB\Handlers;
 
+use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 
 class PaymentEventHandler {
@@ -8,10 +9,19 @@ class PaymentEventHandler {
      * @var UserRepository
      */
     private $userRepository;
+    /**
+     * @var InductionRepository
+     */
+    private $inductionRepository;
 
-    public function __construct(UserRepository $userRepository)
+    /**
+     * @param UserRepository      $userRepository
+     * @param InductionRepository $inductionRepository
+     */
+    public function __construct(UserRepository $userRepository, InductionRepository $inductionRepository)
     {
         $this->userRepository = $userRepository;
+        $this->inductionRepository = $inductionRepository;
     }
 
 
@@ -55,12 +65,26 @@ class PaymentEventHandler {
     /**
      * @param $userId
      * @param $source
+     * @param $reason
+     * @param $paymentId
      */
-    public function onDelete($userId, $source)
+    public function onDelete($userId, $source, $reason, $paymentId)
     {
-        if ($source == 'balance') {
+        if (($source == 'balance') || ($reason == 'balance')) {
             $this->updateBalance($userId);
         }
+        if ($reason == 'induction') {
+
+        }
+
+        if ($reason == 'storage-box') {
+
+        }
+
+        if ($reason == 'subscription') {
+
+        }
+
     }
 
 

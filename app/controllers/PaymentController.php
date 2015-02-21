@@ -18,19 +18,26 @@ class PaymentController extends \BaseController {
      * @var \BB\Repo\PaymentRepository
      */
     private $paymentRepository;
+    /**
+     * @var \BB\Repo\UserRepository
+     */
+    private $userRepository;
 
     function __construct(
             \BB\Helpers\GoCardlessHelper $goCardless,
             \BB\Repo\EquipmentRepository $equipmentRepository,
-            \BB\Repo\PaymentRepository $paymentRepository
+            \BB\Repo\PaymentRepository $paymentRepository,
+            \BB\Repo\UserRepository $userRepository
         )
     {
         $this->goCardless = $goCardless;
         $this->equipmentRepository = $equipmentRepository;
         $this->paymentRepository = $paymentRepository;
+        $this->userRepository = $userRepository;
 
         $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
         $this->beforeFilter('role:admin', array('only' => ['store']));
+
     }
 
 
@@ -39,11 +46,16 @@ class PaymentController extends \BaseController {
         $sortBy = Request::get('sortBy', 'created_at');
         $direction = Request::get('direction', 'desc');
         $dateFilter = Request::get('date_filter', '');
+        $memberFilter = Request::get('member_filter', '');
         $this->paymentRepository->setPerPage(50);
 
         if ($dateFilter) {
             $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dateFilter)->setTime(0,0,0);
             $this->paymentRepository->dateFilter($startDate, $startDate->copy()->addMonth());
+        }
+
+        if ($memberFilter) {
+            $this->paymentRepository->memberFilter($memberFilter);
         }
 
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
@@ -55,14 +67,17 @@ class PaymentController extends \BaseController {
             $dateRange[$dateRangeStart->toDateString()] = $dateRangeStart->format('F Y');
             $dateRangeStart->subMonth();
         }
+        
+        $memberList = $this->userRepository->getAllAsDropdown();
 
-        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange);
+        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)->with('memberList', $memberList);
     }
 
 
     /**
      * Start the creation of a new gocardless payment
      *   Details get posted into this method and the redirected to gocardless
+     * @depreciated
      * @param $userId
      * @throws \BB\Exceptions\AuthenticationException
      * @throws \BB\Exceptions\FormValidationException
@@ -146,6 +161,7 @@ class PaymentController extends \BaseController {
 
     /**
      * Confirm a gocardless payment and create a payment record
+     * @depreciated
      * @param $userId
      * @return mixed
      * @throws \BB\Exceptions\AuthenticationException
@@ -181,6 +197,8 @@ class PaymentController extends \BaseController {
         $details = explode(':',Input::get('state'));
         $reason = $details[0];
         $ref = $details[1];
+
+        Log::debug("Old PaymentController@confirmPayment method used. Reason: ".$reason);
 
         $payment = new Payment([
             'reason'            => $reason,
@@ -388,26 +406,42 @@ class PaymentController extends \BaseController {
 
 
 	/**
-	 * Update the specified resource in storage.
+	 * Update a payment
+     * Change where the money goes by altering the original record or creating a secondary payment
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function update($id)
 	{
-		//
+		$payment = $this->paymentRepository->getById($id);
 	}
 
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+    /**
+     * Remove the specified payment
+     *
+     * @param  int $id
+     * @return Response
+     * @throws \BB\Exceptions\ValidationException
+     */
 	public function destroy($id)
 	{
-		//
+        $payment = $this->paymentRepository->getById($id);
+
+        //we can only allow some records to get deleted, only cash payments can be removed, everything else must be refunded off
+        if ($payment->source != 'cash') {
+            throw new \BB\Exceptions\ValidationException('Only cash payments can be deleted');
+        }
+        if ($payment->reason != 'balance') {
+            throw new \BB\Exceptions\ValidationException('Currently only payments to the members balance can be deleted');
+        }
+
+        //The delete event will broadcast an event and allow related actions to occur
+        $this->paymentRepository->delete($id);
+
+        Notification::success("Payment deleted");
+        return Redirect::back();
 	}
 
 

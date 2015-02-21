@@ -107,4 +107,14 @@ class InductionRepository extends DBRepository {
             return false;
         }
     }
+
+    /**
+     * Fetch an induction record by its associated payment
+     * @param $paymentId
+     * @return mixed
+     */
+    public function getByPaymentId($paymentId)
+    {
+        return $this->model->where('payment_id', $paymentId)->first();
+    }
 } 
