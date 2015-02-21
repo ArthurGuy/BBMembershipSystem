@@ -415,6 +415,9 @@ class PaymentController extends \BaseController {
 	public function update($id)
 	{
 		$payment = $this->paymentRepository->getById($id);
+
+        Notification::success("Not yet implemented");
+        return Redirect::back();
 	}
 
 
