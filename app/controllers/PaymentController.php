@@ -419,7 +419,7 @@ class PaymentController extends \BaseController {
 
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified payment
      *
      * @param  int $id
      * @return Response
@@ -433,10 +433,15 @@ class PaymentController extends \BaseController {
         if ($payment->source != 'cash') {
             throw new \BB\Exceptions\ValidationException('Only cash payments can be deleted');
         }
+        if ($payment->reason != 'balance') {
+            throw new \BB\Exceptions\ValidationException('Currently only payments to the members balance can be deleted');
+        }
 
-        //Depending on what the payment was used for things might need to be updated
-        $payment->reason;
+        //The delete event will broadcast an event and allow related actions to occur
+        $this->paymentRepository->delete($id);
 
+        Notification::success("Payment deleted");
+        return Redirect::back();
 	}
 
 
