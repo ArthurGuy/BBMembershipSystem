@@ -11,7 +11,7 @@
                 Action <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                @if ($payment->source == 'cash')
+                @if (($payment->source == 'cash') && ($payment->reason == 'balance'))
                     <li>
                     {{ Form::open(array('method'=>'DELETE', 'route' => ['payments.destroy', $payment->id], 'class'=>'navbar-form navbar-left')) }}
                     {{ Form::submit('Delete', array('class'=>'btn btn-link')) }}
