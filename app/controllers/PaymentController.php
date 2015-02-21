@@ -198,6 +198,8 @@ class PaymentController extends \BaseController {
         $reason = $details[0];
         $ref = $details[1];
 
+        Log::debug("Old PaymentController@confirmPayment method used. Reason: ".$reason);
+
         $payment = new Payment([
             'reason'            => $reason,
             'source'            => 'gocardless',
