@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use BB\Exceptions\NotImplementedException;
+
 class PaymentRepository extends DBRepository
 {
 
@@ -202,9 +204,14 @@ class PaymentRepository extends DBRepository
         $state = $payment->delete();
 
         //Fire an event, allows the balance to get updated
-        \Event::fire('payment.delete', array($payment->user_id, $payment->source, $payment->reason));
+        \Event::fire('payment.delete', array($payment->user_id, $payment->source, $payment->reason, $payment->id));
 
         return $state;
+    }
+
+    public function canDelete($recordId)
+    {
+        throw new NotImplementedException();
     }
 
     public function memberFilter($memberFilter)
