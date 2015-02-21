@@ -54,5 +54,15 @@ class UserRepository extends DBRepository {
         return \DB::table('users')->join('profile_data', 'users.id', '=', 'profile_data.user_id')->where('key_holder', '1')->where('active', '1')->where('profile_data.profile_photo', 0)->get();
     }
 
+    public function getAllAsDropdown()
+    {
+        $members = $this->getActive();
+        $memberDropdown = [];
+        foreach ($members as $member) {
+            $memberDropdown[$member->id] = $member->name;
+        }
+        return $memberDropdown;
+    }
+
 
 }
