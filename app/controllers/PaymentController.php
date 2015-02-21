@@ -18,19 +18,26 @@ class PaymentController extends \BaseController {
      * @var \BB\Repo\PaymentRepository
      */
     private $paymentRepository;
+    /**
+     * @var \BB\Repo\UserRepository
+     */
+    private $userRepository;
 
     function __construct(
             \BB\Helpers\GoCardlessHelper $goCardless,
             \BB\Repo\EquipmentRepository $equipmentRepository,
-            \BB\Repo\PaymentRepository $paymentRepository
+            \BB\Repo\PaymentRepository $paymentRepository,
+            \BB\Repo\UserRepository $userRepository
         )
     {
         $this->goCardless = $goCardless;
         $this->equipmentRepository = $equipmentRepository;
         $this->paymentRepository = $paymentRepository;
+        $this->userRepository = $userRepository;
 
         $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
         $this->beforeFilter('role:admin', array('only' => ['store']));
+
     }
 
 
@@ -39,11 +46,16 @@ class PaymentController extends \BaseController {
         $sortBy = Request::get('sortBy', 'created_at');
         $direction = Request::get('direction', 'desc');
         $dateFilter = Request::get('date_filter', '');
+        $memberFilter = Request::get('member_filter', '');
         $this->paymentRepository->setPerPage(50);
 
         if ($dateFilter) {
             $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dateFilter)->setTime(0,0,0);
             $this->paymentRepository->dateFilter($startDate, $startDate->copy()->addMonth());
+        }
+
+        if ($memberFilter) {
+            $this->paymentRepository->memberFilter($memberFilter);
         }
 
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
@@ -55,8 +67,10 @@ class PaymentController extends \BaseController {
             $dateRange[$dateRangeStart->toDateString()] = $dateRangeStart->format('F Y');
             $dateRangeStart->subMonth();
         }
+        
+        $memberList = $this->userRepository->getAllAsDropdown();
 
-        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange);
+        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)->with('memberList', $memberList);
     }
 
 

@@ -74,7 +74,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     public function sortBy($column, $body, $route)
     {
         $direction = (\Request::get('direction') == 'asc') ? 'desc' : 'asc';
-        return link_to_route($route, $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page'), 'date_filter'=>\Request::get('date_filter')]);
+        return link_to_route($route, $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page'), 'date_filter'=>\Request::get('date_filter'),  'member_filter'=>\Request::get('member_filter')]);
     }
 
     public function userPaginatorLinks($userCollection)
