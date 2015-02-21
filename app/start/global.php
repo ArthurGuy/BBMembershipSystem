@@ -108,6 +108,13 @@ App::error(function(\BB\Exceptions\ValidationException $exception)
     }
 });
 
+App::error(function(\BB\Exceptions\NotImplementedException $exception)
+{
+    Notification::error("NotImplementedException: ".$exception->getMessage());
+    Log::warning($exception);
+    return Redirect::back()->withInput();
+});
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
