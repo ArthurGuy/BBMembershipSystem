@@ -123,6 +123,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $this->hasOne('ProfileData');
     }
 
+    public function address()
+    {
+        return $this->hasOne('\BB\Entities\Address')->orderBy('approved', 'asc');
+    }
+
 
     public function updateSubscription($paymentMethod, $paymentDay)
     {
