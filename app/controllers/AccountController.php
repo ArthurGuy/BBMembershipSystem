@@ -36,10 +36,6 @@ class AccountController extends \BaseController {
      */
     private $profileValidator;
     /**
-     * @var \BB\Validators\AddressValidator
-     */
-    private $addressValidator;
-    /**
      * @var \BB\Repo\AddressRepository
      */
     private $addressRepository;
@@ -56,7 +52,6 @@ class AccountController extends \BaseController {
         \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\UserRepository $userRepository,
         \BB\Validators\ProfileValidator $profileValidator,
-        \BB\Validators\AddressValidator $addressValidator,
         \BB\Repo\AddressRepository $addressRepository)
     {
         $this->userForm = $userForm;
@@ -69,7 +64,6 @@ class AccountController extends \BaseController {
         $this->equipmentRepository = $equipmentRepository;
         $this->userRepository = $userRepository;
         $this->profileValidator = $profileValidator;
-        $this->addressValidator = $addressValidator;
         $this->addressRepository = $addressRepository;
 
         //This tones down some validation rules for admins
