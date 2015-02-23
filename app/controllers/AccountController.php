@@ -73,7 +73,7 @@ class AccountController extends \BaseController {
         $this->addressRepository = $addressRepository;
 
         //This tones down some validation rules for admins
-        $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
+        $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->hasRole('admin'));
 
         $this->beforeFilter('role:member', array('except' => ['create', 'store']));
         $this->beforeFilter('role:admin', array('only' => ['index']));
@@ -124,13 +124,13 @@ class AccountController extends \BaseController {
 	 */
 	public function store()
 	{
-        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'new_profile_photo', 'profile_photo_private');
+        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'monthly_subscription', 'emergency_contact', 'new_profile_photo', 'profile_photo_private');
 
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);
 
 
-        $user = $this->userRepository->registerMember($input, Auth::user()->hasRole('admin'));
+        $user = $this->userRepository->registerMember($input, !Auth::guest() && Auth::user()->hasRole('admin'));
 
         if (Input::file('new_profile_photo'))
         {
