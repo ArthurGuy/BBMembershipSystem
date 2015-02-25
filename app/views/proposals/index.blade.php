@@ -7,21 +7,18 @@ Proposals
 Proposals
 @stop
 
+@section('page-action-buttons')
+    @if (!Auth::guest() && Auth::user()->isAdmin())
+    <a class="btn btn-secondary" href="{{ route('proposals.create') }}">Create a proposal</a>
+    @endif
+@stop
+
 @section('content')
 
 <div class="page-header">
     <h4>Have your say in what happens at Build Brighton</h4>
 </div>
 
-@if (!Auth::guest() && Auth::user()->isAdmin())
-<div class="row">
-    <div class="col-xs-12">
-        <p class="">
-            <a href="{{ route('proposals.create') }}" class="btn btn-info btn-sm">Create a proposal</a>
-        </p>
-    </div>
-</div>
-@endif
 
 <table class="table">
     <thead>
