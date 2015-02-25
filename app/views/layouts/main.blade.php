@@ -40,7 +40,9 @@
         <div class="titles">
             <span class="hidden-xs">@yield('page-key-image')</span>
             <h1 class="title">@yield('page-title')</h1>
+            <div class="pull-right action-buttons">@yield('page-action-buttons')</div>
         </div>
+
     </header>
 
     @yield('main-tab-bar')
