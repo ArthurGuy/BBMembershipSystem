@@ -8,6 +8,12 @@
 {{ $user->name }}
 @stop
 
+@section('page-action-buttons')
+    @if (!@Auth::guest() && $user->id == Auth::user()->id)
+    <a class="btn btn-secondary" href="{{ route('account.profile.edit', $user->id) }}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+    @endif
+@stop
+
 @section('content')
 <div class="row memberProfile">
     <div class="col-sm-12 col-md-10 col-md-offset-1">
@@ -16,10 +22,7 @@
             <div class="col-xs-12 col-sm-6 col-md-4">
 
                 {{ HTML::memberPhoto($profileData, $user->hash) }}
-
-                @if (!@Auth::guest() && $user->id == Auth::user()->id)
-                    <a href="{{ route('account.profile.edit', $user->id) }}" class="btn btn-info btn-xs editProfileLink">Edit Your Profile</a>
-                @endif
+                
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 pull-right">
                 <h3>{{ $profileData->present()->tagline }}</h3>
