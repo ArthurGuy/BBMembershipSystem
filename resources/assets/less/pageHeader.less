@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   top: 0;
-  z-index: 1;
+  z-index: 3;
   position: relative;
   min-height: 170px; //120
 
@@ -20,16 +20,25 @@
 
     .title {
       margin:10px 20px;
+      float:left;
     }
     img {
       float: left;
       margin: 10px 20px;
+      margin-right:0;
       transition: all .1s;
       margin-top: -50px;
+    }
+    .action-buttons {
+      margin-right: 20px;
+      transition: margin 0.2s;
     }
   }
 }
 
+.fixedHeader .action-buttons {
+  margin-top: -200px;
+}
 
 //On the home and register page don't render the title block
 body.home #pageTitle, body.register_login #pageTitle {

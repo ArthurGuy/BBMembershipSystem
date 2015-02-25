@@ -91,14 +91,7 @@ class AccountController extends \BaseController {
         $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft'));
         return View::make('account.index')->withUsers($users);
 	}
-
-
-    public function trustedMissingPhotos()
-    {
-        $users = $this->userRepository->getTrustedMissingPhotos();
-        return $users;
-    }
-
+    
 
 	/**
 	 * Show the form for creating a new resource.

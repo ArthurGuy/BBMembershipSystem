@@ -31,7 +31,7 @@
         @elseif ($user->trusted && !$user->key_deposit_payment_id)
         <div class="row">
             <div class="col-xs-12">
-                <p>A deposit needs to be paid before a key can be issued. Get the member to make this payment through their login.</p>
+                <p>A deposit needs to be paid before a key can be issued. Get the member to make this payment themselves.</p>
             </div>
         </div>
         @endif

@@ -8,6 +8,11 @@ Member List
 Members
 @stop
 
+@section('page-action-buttons')
+    <a class="btn btn-secondary" href="{{ route('account.create') }}">Create a new Member</a>
+    <a class="btn btn-secondary" href="{{ route('notificationemail.create') }}">Email Members</a>
+@stop
+
 @section('main-tab-bar')
 <nav id="mainTabBar">
     <ul class="" role="tablist">
@@ -22,15 +27,6 @@ Members
 @stop
 
 @section('content')
-
-<div class="row">
-    <div class="col-xs-12">
-        <p class="">
-            <a href="{{ route('account.create') }}" class="btn btn-info btn-sm">Create a new member</a>
-            <a href="{{ route('notificationemail.create') }}" class="btn btn-info btn-sm">Email Members</a>
-        </p>
-    </div>
-</div>
 
 {{ HTML::userPaginatorLinks($users) }}
 <table class="table memberList">
