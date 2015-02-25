@@ -13,6 +13,12 @@
     {{ HTML::memberPhoto($user->profile, $user->hash, 100, '') }}
 @stop
 
+
+@section('page-action-buttons')
+    <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+    <a class="btn btn-secondary" href="{{ route('members.show', [$user->id]) }}"><span class="glyphicon glyphicon-user"></span> View Profile</a>
+@stop
+
 @section('content')
 
 @include('account.partials.member-status-bar')
