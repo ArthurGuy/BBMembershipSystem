@@ -15,7 +15,7 @@
 
     @if ($user->active)
     <li>
-        <p class="navbar-text">{{ HTML::keyHolderLabel($user->key_holder) }}</p>
+        <p class="navbar-text">{{ HTML::keyHolderLabel($user->key_holder && $user->trusted) }}</p>
     </li>
     @endif
 
