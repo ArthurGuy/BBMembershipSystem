@@ -128,7 +128,7 @@ BB.SnackBar.boot();
                 //submit the form
 
                 $.ajax({
-                    type: "post",
+                    type: $(this).attr('method'),
                     dataType: "json",
                     data: $(this).serialize(),
                     url: $(this).attr('action')
