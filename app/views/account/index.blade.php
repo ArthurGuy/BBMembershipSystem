@@ -9,7 +9,7 @@ Members
 @stop
 
 @section('page-action-buttons')
-    <a class="btn btn-secondary" href="{{ route('account.create') }}">Create a new Member</a>
+    <!--<a class="btn btn-secondary" href="{{ route('account.create') }}">Create a new Member</a>-->
     <a class="btn btn-secondary" href="{{ route('notificationemail.create') }}">Email Members</a>
 @stop
 
