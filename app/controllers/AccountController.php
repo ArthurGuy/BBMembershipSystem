@@ -251,8 +251,13 @@ class AccountController extends \BaseController {
         }
 
         $user->save();
-        Notification::success("Details Updated");
-        return Redirect::route('account.show', $user->id);
+
+        if (Request::wantsJson()) {
+            return Response::json("Updated", 200);
+        } else {
+            Notification::success("Details Updated");
+            return Redirect::route('account.show', $user->id);
+        }
     }
 
 

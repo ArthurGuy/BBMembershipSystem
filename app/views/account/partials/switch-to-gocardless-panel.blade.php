@@ -6,11 +6,11 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <p class="lead">
-                    We would be really grateful if you could switch to a Direct Debit payment
+                    Will you switch to a Direct Debit payment?
                 </p>
                 <div>
-                    Dealing with bank transfers takes time each month and introduces delays while PayPal charges us large fees.<br />
-                    A monthly Direct Debit payment is quick and fully automated and if you need you have the ability to cancel the payment from here or from you bank.<br />
+                    Processing the standing order bank transfers each month takes time and introduces delays.<br />
+                    A monthly Direct Debit payment is quick and fully automated and if you need you have the ability to cancel the payment from here or from your bank.<br />
                     Switching only takes a minute, just follow the link below to the <a href="https://gocardless.com/security" target="_blank">GoCardless</a> website (our payment processor) and complete the form.<br />
                     <br />
                     <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
