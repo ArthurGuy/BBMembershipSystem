@@ -26,6 +26,7 @@ elixir(function(mix) {
         .scripts([
             'js/partials/payments.js',
             'js/partials/snackbar.js',
+            'js/partials/admin-forms.js',
             'js/lib/bootstrap.min.js',
             'js/lib/select2.min.js'
         ])

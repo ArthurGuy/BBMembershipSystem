@@ -1,18 +1,15 @@
 @if (Auth::user()->isAdmin())
-    <a href="#adminMemberPanel" data-toggle="collapse" class="btn btn-default btn-sm">Show/Hide Admin Controls</a>
-<div class="row well collapse" id="adminMemberPanel">
+    
+<div class="row well">
 
     <div class="col-xs-12 col-sm-6">
         <div class="row">
             <div class="col-xs-12">
-                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) }}
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) }}
                 <div class="form-group">
                     {{ Form::label('trusted', 'Trusted Member', ['class'=>'col-sm-4 control-label']) }}
-                    <div class="col-sm-5">
+                    <div class="col-sm-8">
                         {{ Form::select('trusted', ['0'=>'No', '1'=>'Yes'], $user->trusted, ['class'=>'form-control']) }}
-                    </div>
-                    <div class="col-sm-3">
-                        {{ Form::submit('Update', array('class'=>'btn btn-default')) }}
                     </div>
                 </div>
 
@@ -22,14 +19,11 @@
 
         <div class="row">
             <div class="col-xs-12">
-                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) }}
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) }}
                 <div class="form-group">
                     {{ Form::label('key_holder', 'Key Holder', ['class'=>'col-sm-4 control-label']) }}
-                    <div class="col-sm-5">
+                    <div class="col-sm-8">
                         {{ Form::select('key_holder', ['0'=>'No', '1'=>'Yes'], $user->key_holder, ['class'=>'form-control']) }}
-                    </div>
-                    <div class="col-sm-3">
-                        {{ Form::submit('Update', array('class'=>'btn btn-default')) }}
                     </div>
                 </div>
                 {{ Form::close() }}
@@ -68,14 +62,11 @@
     <div class="col-xs-12 col-sm-6">
         <div class="row">
             <div class="col-xs-12">
-                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) }}
+                {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) }}
                 <div class="form-group">
                     {{ Form::label('profile_photo_on_wall', 'Profile Photo On Wall', ['class'=>'col-sm-4 control-label']) }}
-                    <div class="col-sm-5">
+                    <div class="col-sm-8">
                         {{ Form::select('profile_photo_on_wall', ['0'=>'No', '1'=>'Yes'], $user->profile->profile_photo_on_wall, ['class'=>'form-control']) }}
-                    </div>
-                    <div class="col-sm-3">
-                        {{ Form::submit('Update', array('class'=>'btn btn-default')) }}
                     </div>
                 </div>
                 {{ Form::close() }}
@@ -85,14 +76,11 @@
 
     @if (!$user->induction_completed)
     <div class="col-xs-12 col-sm-6">
-        {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) }}
+        {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) }}
         <div class="form-group">
             {{ Form::label('induction_completed', 'Induction Completed', ['class'=>'col-sm-4 control-label']) }}
-            <div class="col-sm-5">
+            <div class="col-sm-8">
                 {{ Form::select('induction_completed', ['0'=>'No', '1'=>'Yes'], $user->induction_completed, ['class'=>'form-control']) }}
-            </div>
-            <div class="col-sm-3">
-                {{ Form::submit('Update', array('class'=>'btn btn-default')) }}
             </div>
         </div>
         {{ Form::close() }}
