@@ -175,7 +175,11 @@ class AccountController extends \BaseController {
             }
         }
 
-        return View::make('account.show')->withUser($user)->withInductions($inductions);
+
+        //get pending address if any
+        $newAddress = $this->addressRepository->getNewUserAddress($id);
+
+        return View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress);
 	}
 
 
@@ -220,7 +224,7 @@ class AccountController extends \BaseController {
     public function adminUpdate($id)
     {
         $user = User::findWithPermission($id);
-        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'photo_approved', 'profile_photo_on_wall');
+        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'photo_approved', 'profile_photo_on_wall', 'approve_new_address');
 
         //$this->userDetailsForm->validate($input, $user->id);
 
@@ -251,6 +255,16 @@ class AccountController extends \BaseController {
         }
 
         $user->save();
+
+        if (Input::has('approve_new_address')) {
+            if (Input::get('approve_new_address') == 'Approve') {
+                $this->addressRepository->approveMemberAddress($id);
+            } elseif (Input::get('approve_new_address') == 'Decline') {
+                $this->addressRepository->declineMemberAddress($id);
+            }
+        }
+
+
 
         if (Request::wantsJson()) {
             return Response::json("Updated", 200);

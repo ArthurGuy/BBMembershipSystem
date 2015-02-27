@@ -60,6 +60,7 @@ class AddressRepository extends DBRepository {
     }
 
     /**
+     * Fetch a members address that hasn't been approved yet
      * @param integer $userId
      * @return mixed
      */
@@ -75,6 +76,20 @@ class AddressRepository extends DBRepository {
     public function getActiveUserAddress($userId)
     {
         return $this->model->where('user_id', $userId)->where('approved', true)->first();
+    }
+
+    public function approveMemberAddress($userId)
+    {
+        $address = $this->getNewUserAddress($userId);
+        $oldAddress = $this->getActiveUserAddress($userId);
+        $oldAddress->delete();
+        $address->update(['approved'=>true]);
+    }
+
+    public function declineMemberAddress($userId)
+    {
+        $address = $this->getNewUserAddress($userId);
+        $address->delete();
     }
 
 }
