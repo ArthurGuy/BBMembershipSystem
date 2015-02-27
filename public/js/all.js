@@ -118,27 +118,23 @@ BB.SnackBar = {
 }
 BB.SnackBar.boot();
 
-(function(QuickUpdateForms, $){
+(function($){
 
     $(document).ready(function() {
 
         $('form.js-quick-update').each(function () {
-            $(this).on('change', function() {
-                console.log("form change");
-                //submit the form
+            $(this).find('select').on('change', function() {
+                var $form = $(this.form);
 
                 $.ajax({
-                    type: $(this).attr('method'),
+                    type: 'POST',
                     dataType: "json",
-                    data: $(this).serialize(),
-                    url: $(this).attr('action')
+                    data: $form.serialize(),
+                    url: $form.attr('action')
 
                 }).then(function(data) {
-                    console.log(data);
-                    console.log("Success");
                     BB.SnackBar.displayMessage(data);
                 }, function() {
-                    console.log("Error");
                     BB.SnackBar.displayMessage("There was an error");
                 })
             });
@@ -146,7 +142,7 @@ BB.SnackBar.boot();
     });
 
 
-})(window.BB.QuickUpdateForms = window.BB.QuickUpdateForms || {}, jQuery);
+})(jQuery);
 /*!
  * Bootstrap v3.2.0 (http://getbootstrap.com)
  * Copyright 2011-2014 Twitter, Inc.
