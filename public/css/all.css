@@ -6597,6 +6597,7 @@ body.register_login #pageTitle {
           transition-duration: .1s;
   -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-backface-visibility: hidden;
 }
 .snackBar ul {
   margin-bottom: 0;
