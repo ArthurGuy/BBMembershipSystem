@@ -258,9 +258,9 @@ class AccountController extends \BaseController {
 
         if (Input::has('approve_new_address')) {
             if (Input::get('approve_new_address') == 'Approve') {
-                $this->addressRepository->approveMemberAddress($id);
+                $this->addressRepository->approvePendingMemberAddress($id);
             } elseif (Input::get('approve_new_address') == 'Decline') {
-                $this->addressRepository->declineMemberAddress($id);
+                $this->addressRepository->declinePendingMemberAddress($id);
             }
         }
 

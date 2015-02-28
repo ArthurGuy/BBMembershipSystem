@@ -78,15 +78,24 @@ class AddressRepository extends DBRepository {
         return $this->model->where('user_id', $userId)->where('approved', true)->first();
     }
 
-    public function approveMemberAddress($userId)
+    /**
+     * Approve a members pending address and remove the old one
+     * @param $userId
+     */
+    public function approvePendingMemberAddress($userId)
     {
         $address = $this->getNewUserAddress($userId);
         $oldAddress = $this->getActiveUserAddress($userId);
         $oldAddress->delete();
-        $address->update(['approved'=>true]);
+        $address->approved = true;
+        $address->save();
     }
 
-    public function declineMemberAddress($userId)
+    /**
+     * Decline a members new address and delete it
+     * @param $userId
+     */
+    public function declinePendingMemberAddress($userId)
     {
         $address = $this->getNewUserAddress($userId);
         $address->delete();
