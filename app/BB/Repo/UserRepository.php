@@ -93,7 +93,7 @@ class UserRepository extends DBRepository {
         $user = $this->model->create($memberData);
         $this->profileDataRepository->createProfile($user->id);
 
-        $this->addressRepository->createUserAddress($user->id, $memberData['address'], $isAdminCreating);
+        $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
 
         return $user;
     }

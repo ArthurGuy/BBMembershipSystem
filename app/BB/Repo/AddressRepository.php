@@ -34,7 +34,7 @@ class AddressRepository extends DBRepository {
         if (!$address) {
             $address = $this->getNewUserAddress($userId);
             if (!$address) {
-                return $this->createUserAddress($userId, $addressFields, $isAdminUpdating);
+                return $this->saveUserAddress($userId, $addressFields, $isAdminUpdating);
             }
         }
 
@@ -47,7 +47,7 @@ class AddressRepository extends DBRepository {
      * @param bool    $isAdminCreating
      * @return mixed
      */
-    public function createUserAddress($userId, array $addressFields, $isAdminCreating)
+    public function saveUserAddress($userId, array $addressFields, $isAdminCreating)
     {
         $addressFields['user_id'] = $userId;
         $newRecord = $this->model->create($addressFields);
