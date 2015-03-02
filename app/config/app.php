@@ -129,6 +129,7 @@ return array(
         'Artdarek\Pusherer\PushererServiceProvider',
         'Laracasts\Utilities\UtilitiesServiceProvider',
         'BB\ServiceProviders\StripeServiceProvider',
+        'BB\ServiceProviders\ValidatorServiceProvider',
 	),
 
 	/*

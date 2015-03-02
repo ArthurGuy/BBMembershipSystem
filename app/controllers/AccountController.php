@@ -35,6 +35,10 @@ class AccountController extends \BaseController {
      * @var \BB\Validators\ProfileValidator
      */
     private $profileValidator;
+    /**
+     * @var \BB\Repo\AddressRepository
+     */
+    private $addressRepository;
 
 
     function __construct(
@@ -47,7 +51,8 @@ class AccountController extends \BaseController {
         \BB\Repo\InductionRepository $inductionRepository,
         \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\UserRepository $userRepository,
-        \BB\Validators\ProfileValidator $profileValidator)
+        \BB\Validators\ProfileValidator $profileValidator,
+        \BB\Repo\AddressRepository $addressRepository)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -59,9 +64,10 @@ class AccountController extends \BaseController {
         $this->equipmentRepository = $equipmentRepository;
         $this->userRepository = $userRepository;
         $this->profileValidator = $profileValidator;
+        $this->addressRepository = $addressRepository;
 
         //This tones down some validation rules for admins
-        $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->isAdmin());
+        $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->hasRole('admin'));
 
         $this->beforeFilter('role:member', array('except' => ['create', 'store']));
         $this->beforeFilter('role:admin', array('only' => ['index']));
@@ -91,7 +97,7 @@ class AccountController extends \BaseController {
         $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft'));
         return View::make('account.index')->withUsers($users);
 	}
-    
+
 
 	/**
 	 * Show the form for creating a new resource.
@@ -112,20 +118,13 @@ class AccountController extends \BaseController {
 	 */
 	public function store()
 	{
-        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'monthly_subscription', 'emergency_contact', 'new_profile_photo', 'profile_photo_private');
+        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'monthly_subscription', 'emergency_contact', 'new_profile_photo', 'profile_photo_private');
 
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);
 
-        if (empty($input['profile_photo_private']))
-            $input['profile_photo_private'] = false;
 
-        if (empty($input['password']))
-            unset($input['password']);
-
-        $user = User::create($input);
-        $this->profileRepo->createProfile($user->id);
-
+        $user = $this->userRepository->registerMember($input, !Auth::guest() && Auth::user()->hasRole('admin'));
 
         if (Input::file('new_profile_photo'))
         {
@@ -176,7 +175,11 @@ class AccountController extends \BaseController {
             }
         }
 
-        return View::make('account.show')->withUser($user)->withInductions($inductions);
+
+        //get pending address if any
+        $newAddress = $this->addressRepository->getNewUserAddress($id);
+
+        return View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress);
 	}
 
 
@@ -190,7 +193,10 @@ class AccountController extends \BaseController {
 	{
         $user = User::findWithPermission($id);
 
-        return View::make('account.edit')->withUser($user);
+        //We need to access the address here so its available in the view
+        $user->address;
+
+        return View::make('account.edit')->with('user', $user);
 	}
 
 
@@ -203,31 +209,11 @@ class AccountController extends \BaseController {
 	public function update($id)
 	{
         $user = User::findWithPermission($id);
-        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'address_postcode', 'emergency_contact', 'profile_private');
+        $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'emergency_contact', 'profile_private');
 
         $this->userForm->validate($input, $user->id);
 
-        if (empty($input['password']))
-        {
-            unset($input['password']);
-        }
-        $user->update($input);
-
-        /*
-        if (Input::file('profile_photo'))
-        {
-            try
-            {
-                $this->userImage->uploadPhoto($user->hash, Input::file('profile_photo')->getRealPath());
-
-                $user->profilePhoto(true);
-            }
-            catch (\Exception $e)
-            {
-                Log::error($e);
-            }
-        }
-        */
+        $this->userRepository->updateMember($id, $input, Auth::user()->hasRole('admin'));
 
         Notification::success("Details Updated");
         return Redirect::route('account.show', $user->id);
@@ -238,7 +224,7 @@ class AccountController extends \BaseController {
     public function adminUpdate($id)
     {
         $user = User::findWithPermission($id);
-        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'photo_approved', 'profile_photo_on_wall');
+        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'photo_approved', 'profile_photo_on_wall', 'approve_new_address');
 
         //$this->userDetailsForm->validate($input, $user->id);
 
@@ -269,6 +255,16 @@ class AccountController extends \BaseController {
         }
 
         $user->save();
+
+        if (Input::has('approve_new_address')) {
+            if (Input::get('approve_new_address') == 'Approve') {
+                $this->addressRepository->approvePendingMemberAddress($id);
+            } elseif (Input::get('approve_new_address') == 'Decline') {
+                $this->addressRepository->declinePendingMemberAddress($id);
+            }
+        }
+
+
 
         if (Request::wantsJson()) {
             return Response::json("Updated", 200);

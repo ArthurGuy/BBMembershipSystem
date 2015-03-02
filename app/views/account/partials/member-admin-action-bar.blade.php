@@ -160,5 +160,31 @@
         </div>
     @endif
 
+    @if ($newAddress)
+        <div class="col-xs-12 col-sm-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    {{ Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) }}
+
+                    <div class="form-group">
+                        {{ Form::label('approve_new_address', 'New Address', ['class'=>'col-sm-4 control-label']) }}
+                        <div class="col-sm-5">
+                            {{ $newAddress->line_1; }}<br />
+                            {{ $newAddress->line_2; }}<br />
+                            {{ $newAddress->line_3; }}<br />
+                            {{ $newAddress->line_4; }}<br />
+                            {{ $newAddress->postcode; }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ Form::submit('Approve', array('class'=>'btn btn-default', 'name'=>'approve_new_address')) }}
+                            {{ Form::submit('Decline', array('class'=>'btn btn-default', 'name'=>'approve_new_address')) }}
+                        </div>
+                    </div>
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+    @endif
+
 </div>
 @endif

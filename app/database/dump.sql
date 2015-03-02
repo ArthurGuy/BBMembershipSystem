@@ -473,6 +473,27 @@ CREATE TABLE `devices` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+CREATE TABLE `user_address` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `line_1` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `line_2` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `line_3` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `line_4` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `approved` tinyint(1) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `user_address` (`id`, `user_id`, `line_1`, `line_2`, `line_3`, `line_4`, `postcode`, `approved`, `created_at`, `updated_at`)
+VALUES
+	(2, 8, '192 Harold Rd', '', '', '', 'BN3 1AN', 0, '2015-02-21 19:48:48', '2015-02-21 19:48:48');
+
+
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

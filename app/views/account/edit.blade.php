@@ -62,30 +62,30 @@ Edit your details
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('address_line_1', 'has-error has-feedback') }}">
-            {{ Form::label('address_line_1', 'Address Line 1') }}
-            {{ Form::text('address_line_1', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-1']) }}
-            {{ Notification::getErrorDetail('address_line_1') }}
+        <div class="form-group {{ Notification::hasErrorDetail('address.line_1', 'has-error has-feedback') }}">
+            {{ Form::label('address[line_1]', 'Address Line 1') }}
+            {{ Form::text('address[line_1]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-1']) }}
+            {{ Notification::getErrorDetail('address.line_1') }}
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('address_line_2', 'has-error has-feedback') }}">
-            {{ Form::label('address_line_2', 'Address Line 2') }}
-            {{ Form::text('address_line_2', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-2']) }}
-            {{ Notification::getErrorDetail('address_line_2') }}
+        <div class="form-group {{ Notification::hasErrorDetail('address.line_2', 'has-error has-feedback') }}">
+            {{ Form::label('address[line_2]', 'Address Line 2') }}
+            {{ Form::text('address[line_2]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-2']) }}
+            {{ Notification::getErrorDetail('address.line_2') }}
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('address_line_3', 'has-error has-feedback') }}">
-            {{ Form::label('address_line_3', 'Address Line 3') }}
-            {{ Form::text('address_line_3', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-locality']) }}
-            {{ Notification::getErrorDetail('address_line_3') }}
+        <div class="form-group {{ Notification::hasErrorDetail('address.line_3', 'has-error has-feedback') }}">
+            {{ Form::label('address[line_3]', 'Address Line 3') }}
+            {{ Form::text('address[line_3]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-locality']) }}
+            {{ Notification::getErrorDetail('address.line_3') }}
         </div>
     </div>
 </div>
@@ -93,20 +93,20 @@ Edit your details
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('address_line_4', 'has-error has-feedback') }}">
-            {{ Form::label('address_line_4', 'Address Line 4') }}
-            {{ Form::text('address_line_4', null, ['class'=>'form-control', 'x-autocompletetype'=>'region']) }}
-            {{ Notification::getErrorDetail('address_line_4') }}
+        <div class="form-group {{ Notification::hasErrorDetail('address.line_4', 'has-error has-feedback') }}">
+            {{ Form::label('address[line_4]', 'Address Line 4') }}
+            {{ Form::text('address[line_4]', null, ['class'=>'form-control', 'x-autocompletetype'=>'region']) }}
+            {{ Notification::getErrorDetail('address.line_4') }}
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('address_postcode', 'has-error has-feedback') }}">
-            {{ Form::label('address_postcode', 'Post Code') }}
-            {{ Form::text('address_postcode', null, ['class'=>'form-control', 'x-autocompletetype'=>'postal-code']) }}
-            {{ Notification::getErrorDetail('address_postcode') }}
+        <div class="form-group {{ Notification::hasErrorDetail('address.postcode', 'has-error has-feedback') }}">
+            {{ Form::label('address[postcode]', 'Post Code') }}
+            {{ Form::text('address[postcode]', null, ['class'=>'form-control', 'x-autocompletetype'=>'postal-code']) }}
+            {{ Notification::getErrorDetail('address.postcode') }}
         </div>
     </div>
 </div>
