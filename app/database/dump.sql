@@ -303,6 +303,7 @@ CREATE TABLE `users` (
   `email_verified` tinyint(1) NOT NULL,
   `secondary_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
   `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
+  `phone` varchar(20) COLLATE utf8_unicode_ci DEFAULT '',
   `emergency_contact` varchar(250) COLLATE utf8_unicode_ci DEFAULT '',
   `notes` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
   `active` tinyint(1) NOT NULL,
@@ -334,12 +335,12 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 
-INSERT INTO `users` (`id`, `hash`, `given_name`, `family_name`, `import_match_string`, `email`, `email_verified`, `secondary_email`, `password`, `emergency_contact`, `notes`, `active`, `founder`, `director`, `status`, `trusted`, `key_holder`, `key_deposit_payment_id`, `storage_box_payment_id`, `induction_completed`, `payment_method`, `payment_day`, `monthly_subscription`, `subscription_id`, `last_subscription_payment`, `subscription_expires`, `banned_date`, `banned_reason`, `remember_token`, `created_at`, `updated_at`)
+INSERT INTO `users` (`id`, `hash`, `given_name`, `family_name`, `import_match_string`, `email`, `email_verified`, `secondary_email`, `password`, `phone`, `emergency_contact`, `notes`, `active`, `founder`, `director`, `status`, `trusted`, `key_holder`, `key_deposit_payment_id`, `storage_box_payment_id`, `induction_completed`, `payment_method`, `payment_day`, `monthly_subscription`, `subscription_id`, `last_subscription_payment`, `subscription_expires`, `banned_date`, `banned_reason`, `remember_token`, `created_at`, `updated_at`)
 VALUES
-	(1,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Jon','Doe','','jondoe@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','contact','',1,0,0,'active',1,1,2579,2582,1,'standing-order',30,10,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
-	(2,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Fred','Bloggs','','fredbloggs@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','contact','',0,0,0,'left',1,1,NULL,NULL,1,'',30,20,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
-	(3,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Steve','Smith','','stevesmith@example.com',1,'','','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
-	(4,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Laser','User','','laseruser@example.com',1,'','','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00');
+	(1,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Jon','Doe','','jondoe@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','','contact','',1,0,0,'active',1,1,2579,2582,1,'standing-order',30,10,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
+	(2,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Fred','Bloggs','','fredbloggs@example.com',1,'','$2y$10$eQ4MM5BO68zkBfTnPeTt0.SXqMfnXpOSrkYLPKK3Fc2bEIASoz5dm','','contact','',0,0,0,'left',1,1,NULL,NULL,1,'',30,20,'','2014-08-21','2014-10-01',NULL,'','L7dfKVtH1SbM2LFP0LcqTZJQbfZJLkWV7VgrTLxrPRrv8hXDfNwVWwpJ7VfI','2014-08-05 10:23:12','2014-09-16 13:55:56'),
+	(3,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Steve','Smith','','stevesmith@example.com',1,'','','','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+	(4,'nR35e6L9p1WCrxxqi7ZWLP3pBxnBdT','Laser','User','','laseruser@example.com',1,'','','','contact','',1,0,0,'active',0,0,NULL,NULL,0,'gocardless',1,10,'',NULL,'2014-10-01',NULL,'',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00');
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;

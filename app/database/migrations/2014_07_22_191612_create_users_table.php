@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration {
             $table->boolean('email_verified');
             $table->string('secondary_email')->nullable();
             $table->string('password')->nullable();
+            $table->string('phone', 20);
             $table->string('emergency_contact', 250)->nullable();
             $table->string('notes')->nullable();
             $table->boolean('active');
