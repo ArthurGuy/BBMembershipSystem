@@ -8,6 +8,7 @@
     <title>@yield('meta-title', 'Member System') | Build Brighton</title>
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,100' rel='stylesheet' type='text/css'>
+    <link href="/css/vendor.css" rel="stylesheet">
     <link href="/css/all.css" rel="stylesheet">
 
     <script src="//www.google.com/jsapi"></script>
