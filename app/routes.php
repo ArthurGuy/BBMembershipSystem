@@ -146,3 +146,6 @@ Route::group(array('before' => 'role:admin'), function() {
     Route::resource('roles', 'RolesController', []);
     Route::resource('roles.users', 'RoleUsersController', ['only' => ['destroy', 'store']]);
 });
+
+# Resources
+Route::get('resources', ['uses'=>'ResourcesController@index', 'before'=>'role:member', 'as'=>'resources.index']);
