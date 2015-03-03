@@ -12,6 +12,17 @@ Activity Log
 
 <div class="page-header">
     <h3>Door access to the main space - {{ $date->format('l jS \\of F'); }}</h3>
+
+    {{ Form::open(['route'=> 'activity.index', 'method'=>'GET', 'id'=>'activityDatePicker', 'class'=>'form-inline']) }}
+    <div class="input-group date">
+        <input name="date" type="text" class="date-input form-control" value="{{ $date->format('Y-m-d') }}">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+
+    {{ Form::close() }}
+
     <ul class="pager">
     @if ($previousDate)
         <li class="previous">{{ link_to_route('activity.index', $previousDate->format('d/m/y'). ' &larr; Previous', ['date'=>$previousDate->format('Y-m-d')]) }}</li>
@@ -58,4 +69,19 @@ Activity Log
     </div>
 </div>
 
+@stop
+
+@section('footer-js')
+    <script>
+    $('#activityDatePicker .date').datepicker({
+        format: "yyyy-mm-dd",
+        endDate: "{{ date('Y-m-d') }}}",
+        todayBtn: "linked",
+        autoclose: true,
+        todayHighlight: true
+    })
+    .on('hide', function(e){
+        $('#activityDatePicker').submit();
+    });
+    </script>
 @stop
