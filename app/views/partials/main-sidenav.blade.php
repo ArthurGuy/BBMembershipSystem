@@ -32,6 +32,7 @@
         {{ HTML::sideNavLink('Activity', 'activity.index') }}
         {{ HTML::sideNavLink('Stats', 'stats.index') }}
         {{ HTML::sideNavLink('Proposals', 'proposals.index') }}
+        {{ HTML::sideNavLink('Resources', 'resources.index') }}
         @if (!Auth::guest() && Auth::user()->isAdmin())
         {{ HTML::sideNavLink('Members (Admin)', 'account.index') }}
         {{ HTML::sideNavLink('Roles (Admin)', 'roles.index') }}
