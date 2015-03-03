@@ -20,6 +20,7 @@ $I->fillField('Email', 'jondoe2@example.com');
 $I->fillField('Password', '12345678');
 $I->fillField(['name'=>'address[line_1]'], 'Street Address');
 $I->fillField(['name'=>'address[postcode]'], 'BN3 1AN');
+$I->fillField('Phone', '0123456789');
 $I->fillField('Emergency Contact', 'Contact Details');
 $I->attachFile('Profile Photo', 'test-image.png');
 
