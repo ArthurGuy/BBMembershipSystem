@@ -14,6 +14,7 @@ class UserValidator extends FormValidator
         'email'                 => 'required|email|unique:users',
         'secondary_email'       => 'email|unique:users',
         'password'              => 'required|min:8',
+        'phone'                 => 'required|min:10',
         'address.line_1'        => 'required',
         'address.line_2'        => '',
         'address.line_3'        => '',
@@ -37,6 +38,7 @@ class UserValidator extends FormValidator
     protected $adminOverride = [
         'password'          => 'min:8',
         'emergency_contact' => '',
+        'phone'             => '',
     ];
 
 } 

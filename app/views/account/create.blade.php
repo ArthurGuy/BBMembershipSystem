@@ -79,7 +79,7 @@ Join Build Brighton
                 {{ Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'5', 'step'=>'1']) }}
             </div>
             {{ Notification::getErrorDetail('monthly_subscription') }}
-            <span class="help-block">How much do you want to contribute each month? We operate on a pay-what-you-can basis, most members pay between &pound;10 and &pound;30, the minimum is £5</span>
+            <span class="help-block">We operate on a pay-what-you-can basis, most members pay about &pound;20, the minimum is £5</span>
         </div>
     </div>
 
@@ -121,6 +121,14 @@ Join Build Brighton
         <div class="col-sm-9 col-lg-7">
             {{ Form::text('address[postcode]', null, ['class'=>'form-control', 'x-autocompletetype'=>'postal-code']) }}
             {{ Notification::getErrorDetail('address.postcode') }}
+        </div>
+    </div>
+
+    <div class="form-group {{ Notification::hasErrorDetail('phone', 'has-error has-feedback') }}">
+        {{ Form::label('phone', 'Phone', ['class'=>'col-sm-3 control-label']) }}
+        <div class="col-sm-9 col-lg-7">
+            {{ Form::input('tel', 'phone', null, ['class'=>'form-control', 'x-autocompletetype'=>'tel']) }}
+            {{ Notification::getErrorDetail('phone') }}
         </div>
     </div>
 

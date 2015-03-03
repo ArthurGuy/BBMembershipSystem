@@ -26,6 +26,11 @@ class AddressRepository extends DBRepository {
     {
         //If the user is an admin update the main address, otherwise create a temporary record so it can be approved
 
+        //Format the postcode
+        if (isset($addressFields['postcode'])) {
+            $addressFields['postcode'] = strtoupper($addressFields['postcode']);
+        }
+
         $address = null;
         if ($isAdminUpdating) {
             $address = $this->getActiveUserAddress($userId);
@@ -50,6 +55,12 @@ class AddressRepository extends DBRepository {
     public function saveUserAddress($userId, array $addressFields, $isAdminCreating)
     {
         $addressFields['user_id'] = $userId;
+
+        //Format the postcode
+        if (isset($addressFields['postcode'])) {
+            $addressFields['postcode'] = strtoupper($addressFields['postcode']);
+        }
+
         $newRecord = $this->model->create($addressFields);
 
         if ($isAdminCreating) {

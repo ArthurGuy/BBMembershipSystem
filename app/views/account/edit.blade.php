@@ -113,6 +113,16 @@ Edit your details
 
 <div class="row">
     <div class="col-xs-12 col-md-8">
+        <div class="form-group {{ Notification::hasErrorDetail('phone', 'has-error has-feedback') }}">
+            {{ Form::label('phone', 'Phone', ['class'=>'control-label']) }}
+                {{ Form::input('tel', 'phone', $user->present()->phone, ['class'=>'form-control', 'x-autocompletetype'=>'tel']) }}
+                {{ Notification::getErrorDetail('phone') }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('emergency_contact', 'has-error has-feedback') }}">
             {{ Form::label('emergency_contact', 'Emergency Contact') }}
             {{ Form::text('emergency_contact', null, ['class'=>'form-control']) }}
