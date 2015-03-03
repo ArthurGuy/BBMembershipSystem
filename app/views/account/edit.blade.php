@@ -115,7 +115,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('phone', 'has-error has-feedback') }}">
             {{ Form::label('phone', 'Phone', ['class'=>'control-label']) }}
-                {{ Form::input('tel', 'phone', null, ['class'=>'form-control', 'x-autocompletetype'=>'tel']) }}
+                {{ Form::input('tel', 'phone', $user->present()->phone, ['class'=>'form-control', 'x-autocompletetype'=>'tel']) }}
                 {{ Notification::getErrorDetail('phone') }}
         </div>
     </div>
