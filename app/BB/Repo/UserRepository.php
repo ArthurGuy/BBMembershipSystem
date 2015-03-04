@@ -80,7 +80,7 @@ class UserRepository extends DBRepository {
 
     /**
      * @param $memberData       array   The new members details
-     * @param $isAdminCreating  bool    Is the user making the change an admin
+     * @param boolean $isAdminCreating  bool    Is the user making the change an admin
      */
     public function registerMember(array $memberData, $isAdminCreating)
     {
@@ -99,7 +99,7 @@ class UserRepository extends DBRepository {
     }
 
     /**
-     * @param $userId           integer The ID of the user to be updated
+     * @param integer $userId           integer The ID of the user to be updated
      * @param $recordData       array   The data to be updated
      * @param $isAdminUpdating  bool    Is the user making the change an admin
      */

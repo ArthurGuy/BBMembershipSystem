@@ -43,7 +43,7 @@ class InductionRepository extends DBRepository {
 
     /**
      * Get all the users who have been trained on a piece of equipment
-     * @param $deviceId
+     * @param string $deviceId
      * @return Collection
      */
     public function getUsersForEquipment($deviceId)
@@ -95,7 +95,7 @@ class InductionRepository extends DBRepository {
 
     /**
      * @param $userId
-     * @param $device
+     * @param string $device
      * @return bool
      */
     public function isUserTrained($userId, $device)

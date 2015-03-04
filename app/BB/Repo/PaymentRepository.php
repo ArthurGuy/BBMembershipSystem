@@ -144,7 +144,7 @@ class PaymentRepository extends DBRepository
 
     /**
      * Get all payments with a specific reference
-     * @param $reference
+     * @param string $reference
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getPaymentsByReference($reference)

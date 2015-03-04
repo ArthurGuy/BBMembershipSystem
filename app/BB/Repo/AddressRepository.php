@@ -1,7 +1,6 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\Address;
-use Carbon\Carbon;
 
 class AddressRepository extends DBRepository {
 
