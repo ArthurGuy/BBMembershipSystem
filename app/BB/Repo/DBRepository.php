@@ -41,7 +41,7 @@ abstract class DBRepository {
     /**
      * Create a new record
      * @param $data
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function create($data)
     {
@@ -82,6 +82,9 @@ abstract class DBRepository {
         return isset($params['sortBy']) && isset($params['direction']) && $params['sortBy'] && $params['direction'];
     }
 
+    /**
+     * @param integer $perPage
+     */
     public function setPerPage($perPage)
     {
         $this->perPage = $perPage;

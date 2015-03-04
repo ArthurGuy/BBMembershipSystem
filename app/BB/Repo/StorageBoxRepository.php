@@ -26,7 +26,7 @@ class StorageBoxRepository extends DBRepository {
     /**
      * Return a collection of storage boxes belonging to the user
      *
-     * @param $userId
+     * @param integer $userId
      * @return mixed
      */
     public function getMemberBoxes($userId)
