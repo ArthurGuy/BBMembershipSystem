@@ -12,10 +12,7 @@
 */
 
 Artisan::add(new CheckMembershipStatus);
-//Artisan::add(new CreateMissingProfileRecords);
 Artisan::add(new RecalculateUserBalances);
-//Artisan::add(new MigrateProfilePhotoData);
 Artisan::add(new CalculateProposalVotes);
 Artisan::add(new CheckFixEquipmentLog);
 Artisan::add(new CalculateEquipmentFees);
-//Artisan::add(new MigrateAddresses);
