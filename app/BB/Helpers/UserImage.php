@@ -17,6 +17,14 @@ class UserImage {
         $tmpFilePath = storage_path("tmp")."/".$userId.".png";
         $tmpFilePathThumb = storage_path("tmp")."/".$userId."-thumb.png";
 
+
+        try {
+            $this->correctImageRotation($filePath);
+        } catch (\Exception $e) {
+            \Log::exception($e);
+            //Continue on - this isnt that important
+        }
+
         //Generate the thumbnail and larger image
         Image::make($filePath)->fit(500)->save($tmpFilePath);
         Image::make($filePath)->fit(200)->save($tmpFilePathThumb);
@@ -125,6 +133,41 @@ class UserImage {
     public static function anonymous()
     {
         return 'https://www.gravatar.com/avatar/foo?s=200&d=mm&f=y';
+    }
+
+    /**
+     * Check the rotation of images and correct them if needed
+     * @param $filePath
+     */
+    private function correctImageRotation($filePath)
+    {
+        $exif_data = @exif_read_data($filePath);
+
+        //Auto image rotation
+        if (array_key_exists('Orientation', $exif_data) && array_key_exists('MimeType', $exif_data)) {
+            $orientation = $exif_data['Orientation'];
+            if ($exif_data['MimeType'] == 'image/jpeg') {
+                if ($orientation == '1') {
+                    //Correct
+                } elseif ($orientation == '3') {
+                    //Upside down
+                    //rotate 180
+                    $source = imagecreatefromjpeg($filePath);
+                    $rotate = imagerotate($source, 180, 0);
+                    imagejpeg($rotate, $filePath, 98);
+                } elseif ($orientation == '6') {
+                    //rotate 90 cw
+                    $source = imagecreatefromjpeg($filePath);
+                    $rotate = imagerotate($source, 270, 0);
+                    imagejpeg($rotate, $filePath, 98);
+                } elseif ($orientation == '8') {
+                    //rotate 90 ccw
+                    $source = imagecreatefromjpeg($filePath);
+                    $rotate = imagerotate($source, 90, 0);
+                    imagejpeg($rotate, $filePath, 98);
+                }
+            }
+        }
     }
 
 } 
