@@ -2,6 +2,16 @@
 
 class DeviceCharge {
 
+    /**
+     * @var \BB\Repo\EquipmentLogRepository
+     */
+    protected $equipmentLogRepository;
+
+    /**
+     * @var \BB\Repo\PaymentRepository
+     */
+    protected $paymentRepository;
+
     public function __construct()
     {
         $this->equipmentLogRepository = \App::make('\BB\Repo\EquipmentLogRepository');
