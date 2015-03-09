@@ -1,10 +1,18 @@
 <?php
 
+use Michelf\Markdown;
+
 class ResourcesController extends \BaseController {
 
 
-    function __construct()
+    /**
+     * @var \BB\Repo\PolicyRepository
+     */
+    private $policyRepository;
+
+    function __construct(\BB\Repo\PolicyRepository $policyRepository)
     {
+        $this->policyRepository = $policyRepository;
     }
 
 	/**
@@ -16,5 +24,14 @@ class ResourcesController extends \BaseController {
 	{
         return View::make('resources.index');
 	}
+
+    public function viewPolicy($document)
+    {
+        $document = $this->policyRepository->getByName($document);
+
+        $htmlDocument = Markdown::defaultTransform($document);
+
+        return View::make('resources.policy')->with('document', $htmlDocument);
+    }
 
 }

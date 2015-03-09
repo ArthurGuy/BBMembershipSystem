@@ -46,6 +46,10 @@ Resources
                     <li><a href="http://buildbrighton.com/wiki/Code_of_Conduct">Code of Conduct</a></li>
                     <li><a href="http://buildbrighton.com/wiki/Trusted_member">Trusted Members</a></li>
                 </ul>
+                <p>We have started to improve some of the various polices that govern Build Brighton, as they are clarified and confirmed they will appear here.</p>
+                <ul>
+                    <li><a href="{{ route('resources.policy.view', '3-week-bins') }}">3 week bins</a></li>
+                </ul>
             </div>
         </div>
     </div>
