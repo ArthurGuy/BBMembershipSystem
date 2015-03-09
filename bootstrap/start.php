@@ -66,6 +66,12 @@ if (strpos($app['request']->path(), 'access-control/') === 0)
     $app['config']->set('session.driver', 'array');
 }
 
+//Disable sessions for requests to the /acs endpoint
+if ($app['request']->path() === 'acs')
+{
+    $app['config']->set('session.driver', 'array');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

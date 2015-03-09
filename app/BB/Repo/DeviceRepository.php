@@ -2,6 +2,7 @@
 
 use BB\Entities\Device;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DeviceRepository extends DBRepository {
 
@@ -13,6 +14,21 @@ class DeviceRepository extends DBRepository {
     function __construct(Device $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Fetch a record by name
+     *
+     * @param $device
+     * @return mixed
+     */
+    public function getByName($device)
+    {
+        $record = $this->model->where('device_id', $device)->first();
+        if (!$record) {
+            throw new ModelNotFoundException();
+        }
+        return $record;
     }
 
     public function logBoot($device)
