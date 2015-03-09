@@ -4,6 +4,7 @@
     <td>{{ $payment->present()->reason }}</td>
     <td>{{ $payment->present()->method }}</td>
     <td>{{ $payment->present()->amount }}</td>
+    <td>{{ $payment->present()->reference }}</td>
     <td>{{ $payment->present()->status }}</td>
     <td>
         <div class="btn-group">

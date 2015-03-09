@@ -43,6 +43,7 @@ Payments
             <th>{{ HTML::sortBy('reason', 'Reason', 'payments.index') }}</th>
             <th>{{ HTML::sortBy('source', 'Method', 'payments.index') }}</th>
             <th>{{ HTML::sortBy('amount', 'Amount', 'payments.index') }}</th>
+            <th>{{ HTML::sortBy('reference', 'Reference', 'payments.index') }}</th>
             <th>Status</th>
             <th></th>
         </tr>
