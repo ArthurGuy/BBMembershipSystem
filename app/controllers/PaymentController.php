@@ -47,6 +47,7 @@ class PaymentController extends \BaseController {
         $direction = Request::get('direction', 'desc');
         $dateFilter = Request::get('date_filter', '');
         $memberFilter = Request::get('member_filter', '');
+        $reasonFilter = Request::get('reason_filter', '');
         $this->paymentRepository->setPerPage(50);
 
         if ($dateFilter) {
@@ -56,6 +57,10 @@ class PaymentController extends \BaseController {
 
         if ($memberFilter) {
             $this->paymentRepository->memberFilter($memberFilter);
+        }
+
+        if ($reasonFilter) {
+            $this->paymentRepository->reasonFilter($reasonFilter);
         }
 
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
@@ -70,7 +75,16 @@ class PaymentController extends \BaseController {
         
         $memberList = $this->userRepository->getAllAsDropdown();
 
-        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)->with('memberList', $memberList);
+        $reasonList = [
+            'subscription' => 'Subscription',
+            'induction' => 'Equipment Access Fee',
+            'balance' => 'Balance',
+            'door-key' => 'Key Deposit',
+            'storage-box' => 'Storage Box Deposit',
+            'equipment-fee' => 'Equipment Costs'
+        ];
+
+        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)->with('memberList', $memberList)->with('reasonList', $reasonList);
     }
 
 

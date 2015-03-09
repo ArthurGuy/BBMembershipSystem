@@ -17,6 +17,7 @@ class PaymentRepository extends DBRepository
     protected $startDate = null;
     protected $endDate = null;
     protected $memberId = null;
+    protected $reason = null;
 
     /**
      * @param \Payment $model
@@ -38,6 +39,10 @@ class PaymentRepository extends DBRepository
 
         if ($this->hasMemberFilter()) {
             $model = $model->where('user_id', $this->memberId);
+        }
+
+        if ($this->hasReasonFilter()) {
+            $model = $model->where('reason', $this->reason);
         }
 
         if ($this->isSortable($params)) {
@@ -224,4 +229,13 @@ class PaymentRepository extends DBRepository
         return !is_null($this->memberId);
     }
 
+    public function reasonFilter($reasonFilter)
+    {
+        $this->reason = $reasonFilter;
+    }
+
+    public function hasReasonFilter()
+    {
+        return !is_null($this->reason);
+    }
 } 

@@ -28,6 +28,7 @@ Payments
         {{ Form::open(array('method'=>'GET', 'route' => ['payments.index'], 'class'=>'navbar-form navbar-left')) }}
         {{ Form::select('date_filter', [''=>'All Time']+$dateRange, Request::get('date_filter', ''), ['class'=>'form-control', 'style'=>'margin-right:10px; width:150px;']) }}
         {{ Form::select('member_filter', [''=>'All Members']+$memberList, Request::get('member_filter', ''), ['class'=>'form-control', 'style'=>'margin-right:10px; width:150px;']) }}
+        {{ Form::select('reason_filter', [''=>'All Reasons']+$reasonList, Request::get('reason_filter', ''), ['class'=>'form-control', 'style'=>'margin-right:10px; width:150px;']) }}
         {{ Form::submit('Filter', array('class'=>'btn btn-default btn-sm')) }}
         {{ Form::close() }}
     </div>
