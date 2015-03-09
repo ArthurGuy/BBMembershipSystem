@@ -18,6 +18,12 @@ class CheckFixEquipmentLog extends Command {
 	 * @var string
 	 */
 	protected $description = 'Fix equipment log entries';
+
+    /**
+     * @var \BB\Services\CombineEquipmentLogs
+     */
+    protected $combineEquipmentLogs;
+
     /**
      * @var EquipmentLogRepository
      */
@@ -32,6 +38,7 @@ class CheckFixEquipmentLog extends Command {
 	{
 		parent::__construct();
         $this->equipmentLogRepository = App::make('\BB\Repo\EquipmentLogRepository');
+        $this->combineEquipmentLogs = App::make('\BB\Services\CombineEquipmentLogs');
     }
 
 	/**
@@ -41,6 +48,7 @@ class CheckFixEquipmentLog extends Command {
 	 */
 	public function fire()
 	{
+        //Close records that were left open
         $records = $this->equipmentLogRepository->getActiveRecords();
         foreach ($records as $log)
         {
@@ -59,7 +67,12 @@ class CheckFixEquipmentLog extends Command {
 
             //We should also be merging records and perhaps deleting very short records
         }
+
+        //Combine logs that are very close to each other
+        $this->combineEquipmentLogs->run();
+
         $unProcessedRecords = $this->equipmentLogRepository->getUnprocessedRecords();
+
         foreach ($unProcessedRecords as $record)
         {
             if (!$record->active) {
