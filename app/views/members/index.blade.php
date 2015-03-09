@@ -20,12 +20,15 @@ Members
                     {{ HTML::memberPhoto($user->profile, $user->hash, 200) }}
                     <div class="memberDetails">
                         <strong>{{ $user->name }}</strong>
-                        <span class="memberFlags">
-                            @if ($user->keyholderStatus())
-                            <span class="glyphicon glyphicon-lock" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
-                            @endif
-                        </span>
                     </div>
+                    <span class="memberFlags">
+                    @if ($user->keyholderStatus())
+                        <span class="glyphicon glyphicon-lock" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
+                    @endif
+                    @if ($user->director)
+                        <span class="glyphicon glyphicon-asterisk" data-toggle="tooltip" data-placement="top" title="Trustee"></span>
+                    @endif
+                    </span>
                 </a>
             </div>
         </div>

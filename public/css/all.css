@@ -6538,10 +6538,16 @@ body.register_login #pageTitle {
   margin: 10px 5px;
   height: 40px;
   color: white;
+  position: relative;
 }
 .memberGrid .memberBlock .memberFlags {
   font-weight: normal;
-  padding-left: 4px;
+  position: absolute;
+  top: 0px;
+  right: 5px;
+  color: black;
+  background-color: white;
+  width: 20px;
 }
 .memberProfile .profilePhoto {
   min-width: 200px;
