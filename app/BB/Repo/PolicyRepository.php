@@ -1,8 +1,14 @@
 <?php namespace BB\Repo;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 class PolicyRepository {
 
     public function getByName($name) {
-        return file_get_contents(storage_path().'/polices/'.$name.'.md');
+        $file = @file_get_contents(storage_path().'/polices/'.$name.'.md');
+        if (!$file) {
+            throw new NotFoundHttpException();
+        }
+        return $file;
     }
 } 
