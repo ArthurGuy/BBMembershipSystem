@@ -52,6 +52,26 @@ class PaymentRepository extends DBRepository
     }
 
 
+    public function getTotalAmount()
+    {
+        $model = $this->model;
+
+        if ($this->hasDateFilter()) {
+            $model = $model->where('created_at', '>=', $this->startDate)->where('created_at', '<=', $this->endDate);
+        }
+
+        if ($this->hasMemberFilter()) {
+            $model = $model->where('user_id', $this->memberId);
+        }
+
+        if ($this->hasReasonFilter()) {
+            $model = $model->where('reason', $this->reason);
+        }
+
+        return $model->get()->sum('amount');
+    }
+
+
     /**
      * Record a payment against a user record
      * @param string $reason What was the reason. subscription, induction, etc...

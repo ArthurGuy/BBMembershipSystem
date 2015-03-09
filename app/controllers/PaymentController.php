@@ -65,6 +65,8 @@ class PaymentController extends \BaseController {
 
         $payments = $this->paymentRepository->getPaginated(compact('sortBy', 'direction'));
 
+        $paymentTotal = $this->paymentRepository->getTotalAmount();
+
         $dateRangeEarliest = \Carbon\Carbon::create(2009, 07, 01);
         $dateRangeStart = \Carbon\Carbon::now();
         $dateRange = [];
@@ -84,7 +86,7 @@ class PaymentController extends \BaseController {
             'equipment-fee' => 'Equipment Costs'
         ];
 
-        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)->with('memberList', $memberList)->with('reasonList', $reasonList);
+        return View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)->with('memberList', $memberList)->with('reasonList', $reasonList)->with('paymentTotal', $paymentTotal);
     }
 
 

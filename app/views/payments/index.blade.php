@@ -51,7 +51,15 @@ Payments
     <tbody>
         @each('payments.index-row', $payments, 'payment')
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" align="right">Total</td>
+            <td><strong>&pound;{{ number_format($paymentTotal, 2) }}</strong></td>
+            <td colspan="3"></td>
+        </tr>
+    </tfoot>
 </table>
+
 {{ HTML::sortablePaginatorLinks($payments) }}
 
 @stop
