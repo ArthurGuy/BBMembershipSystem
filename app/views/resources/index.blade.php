@@ -41,14 +41,19 @@ Resources
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">Rules and Policies</h3></div>
             <div class="panel-body">
-                <ul>
-                    <li><a href="http://www.buildbrighton.com/wiki/Rules">General Rules</a></li>
-                    <li><a href="http://buildbrighton.com/wiki/Code_of_Conduct">Code of Conduct</a></li>
-                    <li><a href="http://buildbrighton.com/wiki/Trusted_member">Trusted Members</a></li>
-                </ul>
                 <p>We have started to improve some of the various polices that govern Build Brighton, as they are clarified and confirmed they will appear here.</p>
+
+                <strong>Core Rules</strong>
                 <ul>
-                    <li><a href="{{ route('resources.policy.view', '3-week-bins') }}">3 week bins</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'rules') }}">Rules</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'code-of-conduct') }}">Code of Conduct</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'grievance-procedure') }}">Grievance Procedure</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'trusted-member') }}">Trusted Member</a></li>
+                </ul>
+
+                <strong>Policies</strong>
+                <ul>
+                    <li><a href="{{ route('resources.policy.view', '3-week-bins') }}">3 Week Bins</a></li>
                 </ul>
             </div>
         </div>
