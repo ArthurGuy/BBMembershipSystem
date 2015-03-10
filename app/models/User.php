@@ -358,4 +358,16 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     {
         return $this->auditFields;
     }
+
+    public function getAlerts()
+    {
+        $alerts = [];
+        if (!$this->profile->profile_photo && !$this->profile->new_profile_photo) {
+            $alerts[] = 'missing-profile-photo';
+        }
+        if (empty($this->phone)) {
+            $alerts[] = 'missing-phone';
+        }
+        return $alerts;
+    }
 }

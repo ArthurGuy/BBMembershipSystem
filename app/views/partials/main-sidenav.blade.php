@@ -10,7 +10,12 @@
         @if (!Auth::guest())
         <ul class="nav memberAccountLinks">
             <li class="withAction">
-                <a href="{{ route('account.show', [Auth::id()]) }}">Your Membership</a>
+                <a href="{{ route('account.show', [Auth::id()]) }}">
+                    Your Membership
+                    @if (count($user->getAlerts()) > 0)
+                    <span class="badge">{{ count($user->getAlerts()) }}</span>
+                    @endif
+                </a>
                 <a class="toggleSettings" href=""><span class="glyphicon glyphicon-cog"></span></a>
             </li>
             <ul class="nav nested-nav accountSettings">
@@ -18,7 +23,7 @@
                 {{ HTML::sideNavLink('Edit Your Profile', 'account.profile.edit', [Auth::id()]) }}
             </ul>
 
-                {{ HTML::sideNavLink('Manage Your Balance', 'account.balance.index', [Auth::id()]) }}
+            {{ HTML::sideNavLink('Manage Your Balance', 'account.balance.index', [Auth::id()]) }}
 
         </ul>
         @endif

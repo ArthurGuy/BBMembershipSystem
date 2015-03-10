@@ -25,6 +25,21 @@
 
 @include('account.partials.member-admin-action-bar')
 
+@if (count($user->getAlerts()) > 0)
+<div class="alert alert-warning" role="alert">
+    <ul>
+        @foreach ($user->getAlerts() as $alert)
+            @if ($alert == 'missing-profile-photo')
+                <li><strong>Missing profile photo</strong>, a photo is required for all trusted members - <a href="{{ route('account.profile.edit', [$user->id]) }}" class="alert-link">upload a photo</a></li>
+            @endif
+            @if ($alert == 'missing-phone')
+                <li><strong>No phone number</strong>, please enter a phone number - we need this in case we have to get in contact with you - <a href="{{ route('account.edit', [$user->id]) }}" class="alert-link">edit your profile</a></li>
+            @endif
+        @endforeach
+    </ul>
+</div>
+@endif
+
 @if ($user->trusted && !$user->key_holder)
 <div class="row">
     <div class="col-xs-12 col-md-8">
