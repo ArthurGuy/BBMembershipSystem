@@ -12,8 +12,8 @@
             <li class="withAction">
                 <a href="{{ route('account.show', [Auth::id()]) }}">
                     Your Membership
-                    @if (count($user->getAlerts()) > 0)
-                    <span class="badge">{{ count($user->getAlerts()) }}</span>
+                    @if (count(Auth::user()->getAlerts()) > 0)
+                    <span class="badge">{{ count(Auth::user()->getAlerts()) }}</span>
                     @endif
                 </a>
                 <a class="toggleSettings" href=""><span class="glyphicon glyphicon-cog"></span></a>
