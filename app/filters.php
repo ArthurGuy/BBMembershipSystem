@@ -17,7 +17,7 @@ App::before(function($request)
     //SSL Only
     if(!Request::secure())
     {
-        if (strpos(Request::path(), 'access-control/') !== 0)
+        if ((strpos(Request::path(), 'access-control/') !== 0) && (Request::path() !== 'acs'))
         {
             return Redirect::secure(Request::path());
         }
