@@ -32,6 +32,9 @@ class DeviceCharge {
             //How may seconds was the device in use
             $secondsActive = $record->finished->diffInSeconds($record->started);
 
+            //Charges are for a minimum of 5 minutes
+            $secondsActive = $this->roundUpSecondsActive($secondsActive);
+
             //How much did this session cost
             $incuredFee = (double)round(($feePerSecond * $secondsActive), 2);
 
@@ -45,6 +48,19 @@ class DeviceCharge {
             $record->billed = true;
             $record->save();
         }
+    }
+
+    /**
+     * Ensure the seconds are at least 300
+     * @param $seconds int
+     * @return int
+     */
+    private function roundUpSecondsActive($seconds)
+    {
+        if ($seconds < 300) {
+            $seconds = 300;
+        }
+        return $seconds;
     }
 
 }
