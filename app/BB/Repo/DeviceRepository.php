@@ -31,6 +31,9 @@ class DeviceRepository extends DBRepository {
         return $record;
     }
 
+    /**
+     * @param $device string
+     */
     public function logBoot($device)
     {
         $record = $this->model->where('device_id', $device)->first();
@@ -41,6 +44,9 @@ class DeviceRepository extends DBRepository {
         $record->save();
     }
 
+    /**
+     * @param $device string
+     */
     public function logHeartbeat($device)
     {
         $record = $this->model->where('device_id', $device)->first();
@@ -51,6 +57,10 @@ class DeviceRepository extends DBRepository {
         $record->save();
     }
 
+    /**
+     * @param $device string
+     * @return mixed
+     */
     private function createRecord($device)
     {
         $record = new $this->model();

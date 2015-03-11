@@ -32,10 +32,15 @@ class ACSController extends Controller
 
         $this->ACSValidator->validate($data);
 
-        Log::debug($data);
+        Log::debug(json_encode($data));
 
+        $device = $this->deviceRepository->getByName($data['device']);
 
-        //$device = $this->deviceRepository->getByName($data['device']);
+        if ($data['message'] == 'boot') {
+            $this->deviceRepository->logBoot($data['device']);
+        } elseif ($data['message'] == 'heartbeat') {
+            $this->deviceRepository->logHeartbeat($data['device']);
+        }
 
         $response = Response::json($data);
         $response->headers->set('Content-Length', strlen($response->getContent()));
