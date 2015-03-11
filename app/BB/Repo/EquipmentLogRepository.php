@@ -128,7 +128,7 @@ class EquipmentLogRepository extends DBRepository
      */
     public function getFinishedForEquipment($deviceKey)
     {
-        return $this->model->where('device', $deviceKey)->where('processed', true)->where('removed', false)->orderBy('created_at', 'DESC')->paginate($this->perPage);
+        return $this->model->where('device', $deviceKey)->where('active', false)->where('removed', false)->orderBy('created_at', 'DESC')->paginate($this->perPage);
     }
 
     /**
