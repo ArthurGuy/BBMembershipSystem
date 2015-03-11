@@ -1,5 +1,6 @@
 <?php namespace BB\Services;
 
+
 class DeviceCharge {
 
     /**
@@ -24,7 +25,7 @@ class DeviceCharge {
         foreach ($records as $record)
         {
             //How much does this device cost per hour
-            $fee = \BB\Services\Credit::getDeviceFee($record->device);
+            $fee = Credit::getDeviceFee($record->device);
 
             //How much does it cost per second
             $feePerSecond = $fee / (60*60);
