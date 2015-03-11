@@ -55,27 +55,6 @@ class Credit {
     }
 
     /**
-     * Can the user spend money they don't have and if so how much?
-     * @param $reason
-     * @return int
-     */
-    public function acceptableNegativeBalance($reason)
-    {
-        switch ($reason) {
-            case 'storage-box':
-                return 0;
-            case 'subscription':
-                return 0;
-            case 'induction':
-                return 0;
-            case 'equipment-fee':
-                return 5;
-            default:
-                return 0;
-        }
-    }
-
-    /**
      * Get the users balance
      * @return float
      */

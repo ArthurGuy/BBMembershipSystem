@@ -30,17 +30,17 @@ class DeviceSession extends KeyFobAccess {
      */
     private $equipmentLogRepository;
     /**
-     * @var Credit
+     * @var DeviceCharge
      */
-    private $bbCredit;
+    private $deviceCharge;
 
 
-    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository, \BB\Services\Credit $bbCredit)
+    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository, DeviceCharge $deviceCharge)
     {
         $this->equipmentRepository = $equipmentRepository;
         $this->inductionRepository = $inductionRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
-        $this->bbCredit = $bbCredit;
+        $this->deviceCharge = $deviceCharge;
     }
 
 
@@ -81,7 +81,7 @@ class DeviceSession extends KeyFobAccess {
 
 
         //Make sure the member has enough money on their account
-        $minimumBalance = $this->bbCredit->acceptableNegativeBalance('equipment-fee');
+        $minimumBalance = $this->deviceCharge->acceptableNegativeBalance('equipment-fee');
         if (($this->user->cash_balance + ($minimumBalance * 100)) <= 0) {
             throw new ValidationException("User doesn't have enough credit");
         }
