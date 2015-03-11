@@ -10,11 +10,16 @@ class CombineEquipmentLogs {
      */
     private $equipmentLogRepository;
 
+    /**
+     * @var mixed
+     */
+    private $logEntries;
+
     function __construct(EquipmentLogRepository $equipmentLogRepository)
     {
         $this->equipmentLogRepository = $equipmentLogRepository;
 
-        $this->logEntries = $this->equipmentLogRepository->getUnprocessedRecords();
+        $this->logEntries = $this->equipmentLogRepository->getUnbilledRecords();
     }
 
     public function run()
@@ -47,11 +52,6 @@ class CombineEquipmentLogs {
 
             //look all the subsequent records for related entries
 
-            //The following must be the same
-            $entry['user_id'];
-            $entry['device'];
-            $entry['reason'];
-
             //See if there is a record we can join with
             $nextRecord = $this->fetchNextRecord(
                 $entry['user_id'],
@@ -65,8 +65,8 @@ class CombineEquipmentLogs {
                 $this->equipmentLogRepository->update($entry['id'], ['finished' => $nextRecord['finished']]);
                 $this->equipmentLogRepository->delete($nextRecord['id']);
 
-                //The array is now dirty - refetch it and return to restart the check
-                $this->logEntries = $this->equipmentLogRepository->getUnprocessedRecords();
+                //The array is now dirty - re-fetch it and return to restart the check
+                $this->logEntries = $this->equipmentLogRepository->getUnbilledRecords();
                 return true;
             }
 

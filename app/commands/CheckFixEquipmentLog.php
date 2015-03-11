@@ -68,25 +68,24 @@ class CheckFixEquipmentLog extends Command {
             //We should also be merging records and perhaps deleting very short records
         }
 
-        //Combine logs that are very close to each other
+        //Combine logs that are very close to each other - this will run over all inactive records that haven't been billed
         $this->combineEquipmentLogs->run();
 
-        $unProcessedRecords = $this->equipmentLogRepository->getUnprocessedRecords();
 
-        foreach ($unProcessedRecords as $record)
+        //check through all the unbilled inactive records and remove the small ones
+        $unbilledRecords = $this->equipmentLogRepository->getUnbilledRecords();
+        foreach ($unbilledRecords as $record)
         {
-            if (!$record->active) {
-                $secondsActive = $record->finished->diffInSeconds($record->started);
+            $secondsActive = $record->finished->diffInSeconds($record->started);
 
-                //If the record is less than 60 seconds ignore it
-                if ($secondsActive <= 60) {
-                    $record->removed = true;
-                }
-
-                //Processing is finished
-                $record->processed = true;
-                $record->Save();
+            //If the record is less than 60 seconds ignore it
+            if ($secondsActive <= 60) {
+                $record->removed = true;
             }
+
+            //Processing is finished
+            //$record->processed = true;
+            $record->save();
         }
 	}
 

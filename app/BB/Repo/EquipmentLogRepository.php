@@ -155,7 +155,7 @@ class EquipmentLogRepository extends DBRepository
      */
     public function getFinishedUnbilledRecords()
     {
-        return $this->model->where('processed', true)->where('removed', false)->where('billed', false)->orderBy('created_at', 'DESC')->get();
+        return $this->model->where('active', false)->where('removed', false)->where('billed', false)->orderBy('created_at', 'DESC')->get();
     }
 
     /**
@@ -165,6 +165,15 @@ class EquipmentLogRepository extends DBRepository
     public function getUnprocessedRecords()
     {
         return $this->model->where('processed', false)->orderBy('created_at', 'DESC')->get();
+    }
+
+    /**
+     * Get all records that haven't been billed yet
+     * @return mixed
+     */
+    public function getUnbilledRecords()
+    {
+        return $this->model->where('active', false)->where('billed', false)->orderBy('created_at', 'DESC')->get();
     }
 
 } 

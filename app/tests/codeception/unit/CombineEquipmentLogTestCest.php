@@ -18,8 +18,8 @@ class CombineEquipmentLogTestCest
     public function confirmLogGetsCorrectlyUpdated(UnitTester $I)
     {
         $equipmentLogRepo = m::mock('BB\Repo\EquipmentLogRepository');
-        $equipmentLogRepo->shouldReceive('getUnprocessedRecords')->once()->andReturn($this->sampleData());
-        $equipmentLogRepo->shouldReceive('getUnprocessedRecords')->once()->andReturn($this->correctSampleData());
+        $equipmentLogRepo->shouldReceive('getUnbilledRecords')->once()->andReturn($this->sampleData());
+        $equipmentLogRepo->shouldReceive('getUnbilledRecords')->once()->andReturn($this->correctSampleData());
 
         $equipmentLogRepo->shouldReceive('update')->once()->withArgs([2, ['finished'=>'2014-12-13 16:57:10']]);
 
@@ -33,9 +33,9 @@ class CombineEquipmentLogTestCest
     public function confirmComplexLogGetsCorrectlyUpdated(UnitTester $I)
     {
         $equipmentLogRepo = m::mock('BB\Repo\EquipmentLogRepository');
-        $equipmentLogRepo->shouldReceive('getUnprocessedRecords')->once()->andReturn($this->complexSampleData());
-        $equipmentLogRepo->shouldReceive('getUnprocessedRecords')->once()->andReturn($this->complexMidCorrectSampleData());
-        $equipmentLogRepo->shouldReceive('getUnprocessedRecords')->once()->andReturn($this->complexCorrectSampleData());
+        $equipmentLogRepo->shouldReceive('getUnbilledRecords')->once()->andReturn($this->complexSampleData());
+        $equipmentLogRepo->shouldReceive('getUnbilledRecords')->once()->andReturn($this->complexMidCorrectSampleData());
+        $equipmentLogRepo->shouldReceive('getUnbilledRecords')->once()->andReturn($this->complexCorrectSampleData());
 
         $equipmentLogRepo->shouldReceive('update')->once()->withArgs([2, ['finished'=>'2014-12-13 16:57:10']]);
         $equipmentLogRepo->shouldReceive('delete')->once()->withArgs([4]);
