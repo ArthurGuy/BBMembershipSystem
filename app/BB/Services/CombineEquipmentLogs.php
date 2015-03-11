@@ -31,18 +31,6 @@ class CombineEquipmentLogs {
         }
     }
 
-    private function fetchNextRecord($userId, $device, $reason, \DateTime $finishedDate)
-    {
-        foreach ($this->logEntries as $entry) {
-            if (($entry['user_id'] == $userId) && ($entry['device'] == $device) && ($entry['reason'] == $reason)) {
-                if (($entry['started']->gt($finishedDate)) && ($entry['started']->diffInSeconds($finishedDate) <= 60)) {
-                    return $entry;
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * @return bool
      */
@@ -70,6 +58,25 @@ class CombineEquipmentLogs {
                 return true;
             }
 
+        }
+        return false;
+    }
+    
+    /**
+     * @param int       $userId
+     * @param string    $device
+     * @param string    $reason
+     * @param \DateTime $finishedDate
+     * @return bool
+     */
+    private function fetchNextRecord($userId, $device, $reason, \DateTime $finishedDate)
+    {
+        foreach ($this->logEntries as $entry) {
+            if (($entry['user_id'] == $userId) && ($entry['device'] == $device) && ($entry['reason'] == $reason)) {
+                if (($entry['started']->gt($finishedDate)) && ($entry['started']->diffInSeconds($finishedDate) <= 60)) {
+                    return $entry;
+                }
+            }
         }
         return false;
     }
