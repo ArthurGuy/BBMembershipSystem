@@ -25,8 +25,6 @@ class CheckFixEquipmentLog extends Command {
 
     /**
      * Create a new command instance.
-     *
-     * @return \CheckFixEquipmentLog
      */
 	public function __construct()
 	{

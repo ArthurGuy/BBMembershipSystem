@@ -49,7 +49,7 @@ class EquipmentLogRepository extends DBRepository
     public function recordStartCloseExisting($userId, $keyFobId, $deviceKey, $notes = '')
     {
         $existingSessionId = $this->findActiveDeviceSession($deviceKey);
-        if ($existingSessionId) {
+        if ($existingSessionId !== false) {
             $this->endSession($existingSessionId);
         }
         return $this->recordStart($userId, $keyFobId, $deviceKey, $notes);

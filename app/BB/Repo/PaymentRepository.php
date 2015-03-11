@@ -81,7 +81,7 @@ class PaymentRepository extends DBRepository
      * @param double $amount Amount received before a fee
      * @param string $status paid, pending, cancelled, refunded
      * @param double $fee The fee charged by the payment provider
-     * @param null   $ref
+     * @param string $ref
      * @return int  The ID of the payment record
      */
     public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref=null)

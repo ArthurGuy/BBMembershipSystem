@@ -21,7 +21,6 @@ class CheckMembershipStatus extends Command {
     /**
      * Create a new command instance.
      *
-     * @return \CheckMembershipStatus
      */
 	public function __construct()
 	{

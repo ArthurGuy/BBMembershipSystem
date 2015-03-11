@@ -120,7 +120,7 @@ class DeviceSession extends KeyFobAccess {
     private function processPingAction()
     {
         $sessionId = $this->equipmentLogRepository->findActiveUserSession($this->user->id, $this->deviceKey);
-        if ($sessionId) {
+        if ($sessionId !== false) {
             $this->equipmentLogRepository->recordActivity($sessionId);
         } else {
             //We don't have an active session, there could have been a network failure so start now
@@ -132,7 +132,7 @@ class DeviceSession extends KeyFobAccess {
     {
         //Close the session
         $sessionId = $this->equipmentLogRepository->findActiveUserSession($this->user->id, $this->deviceKey);
-        if ($sessionId) {
+        if ($sessionId !== false) {
             $this->equipmentLogRepository->endSession($sessionId);
         } else {
             $sessionId = $this->equipmentLogRepository->recordStartCloseExisting($this->user->id, $this->keyFob->id, $this->deviceKey, 'inaccurate start');

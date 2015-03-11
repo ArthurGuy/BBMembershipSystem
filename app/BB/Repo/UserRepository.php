@@ -111,7 +111,7 @@ class UserRepository extends DBRepository {
         }
 
         //Update the main user record
-        parent::update($userId, $recordData);
+        $this->update($userId, $recordData);
 
         //Update the user address
         if (isset($recordData['address']) && is_array($recordData['address'])) {

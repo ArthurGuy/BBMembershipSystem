@@ -30,7 +30,6 @@ class CalculateProposalVotes extends Command {
     /**
      * Create a new command instance.
      *
-     * @return \CalculateProposalVotes
      */
 	public function __construct()
 	{
