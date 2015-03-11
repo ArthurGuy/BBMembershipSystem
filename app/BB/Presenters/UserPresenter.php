@@ -2,6 +2,10 @@
 
 use Laracasts\Presenter\Presenter;
 
+/**
+ * @property string monthlySubscription
+ * @property string paymentMethod
+ */
 class UserPresenter extends Presenter
 {
 
