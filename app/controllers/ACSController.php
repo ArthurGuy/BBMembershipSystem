@@ -34,9 +34,12 @@ class ACSController extends Controller
 
         Log::debug($data);
 
-        $device = $this->deviceRepository->getByName($data['device']);
 
-        return Response::json($data);
+        //$device = $this->deviceRepository->getByName($data['device']);
+
+        $response = Response::json($data);
+        $response->headers->set('Content-Length', strlen($response->getContent()));
+        return $response;
     }
 
 } 
