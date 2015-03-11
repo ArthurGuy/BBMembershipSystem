@@ -35,8 +35,11 @@ class DeviceCharge {
             //How much did this session cost
             $incuredFee = (double)round(($feePerSecond * $secondsActive), 2);
 
-            //Create a payment against the user
-            $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '', $incuredFee, 'paid', 0, $record->id.':'.$record->device);
+            //If the reason is empty then its not a special case and should be billed
+            if (empty($record->reason)) {
+                //Create a payment against the user
+                $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '', $incuredFee, 'paid', 0, $record->id.':'.$record->device);
+            }
 
             //Mark this log as being billed and complete
             $record->billed = true;
