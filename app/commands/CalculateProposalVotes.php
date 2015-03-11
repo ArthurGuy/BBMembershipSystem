@@ -23,6 +23,11 @@ class CalculateProposalVotes extends Command {
     private $proposalRepository;
 
     /**
+     * @var \BB\Repo\ProposalVoteRepository
+     */
+    private $proposalVoteRepository;
+
+    /**
      * Create a new command instance.
      *
      * @return \CalculateProposalVotes

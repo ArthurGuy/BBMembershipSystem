@@ -26,7 +26,7 @@ class CashPaymentController extends \BaseController {
      */
 	public function store($userId)
     {
-        $user = User::findWithPermission($userId);
+        User::findWithPermission($userId);
 
         $amount      = Request::get('amount');
         $reason      = Request::get('reason');

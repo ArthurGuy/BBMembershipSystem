@@ -18,11 +18,15 @@ class RecalculateUserBalances extends Command {
 	 */
 	protected $description = 'Recalculate User Balances';
 
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
+    /**
+     * @var \BB\Repo\UserRepository
+     */
+    private $userRepo;
+
+    /**
+     * Create a new command instance.
+     *
+     */
 	public function __construct()
 	{
 		parent::__construct();

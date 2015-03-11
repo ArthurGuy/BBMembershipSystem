@@ -63,7 +63,6 @@ App::error(function(Exception $exception, $code)
 
 App::error(function(\BB\Exceptions\AuthenticationException $exception)
 {
-    $userString = null;
     if (Auth::guest()) {
         $userString = "A guest";
     } else {

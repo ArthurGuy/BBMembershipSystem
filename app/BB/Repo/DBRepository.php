@@ -21,7 +21,7 @@ abstract class DBRepository {
      * Fetch a record by id
      *
      * @param $id
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function getById($id)
     {
@@ -31,7 +31,7 @@ abstract class DBRepository {
     /**
      * Return all the records in the repo
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAll()
     {

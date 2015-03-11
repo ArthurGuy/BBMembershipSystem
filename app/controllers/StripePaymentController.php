@@ -26,7 +26,7 @@ class StripePaymentController extends \BaseController {
      */
 	public function store($userId)
     {
-        $user = User::findWithPermission($userId);
+        User::findWithPermission($userId);
 
         $stripeToken = Request::get('stripe_token');
         $amount      = Request::get('amount');
