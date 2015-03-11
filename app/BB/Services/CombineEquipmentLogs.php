@@ -61,7 +61,7 @@ class CombineEquipmentLogs {
         }
         return false;
     }
-    
+
     /**
      * @param int       $userId
      * @param string    $device
