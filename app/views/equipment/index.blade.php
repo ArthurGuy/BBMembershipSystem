@@ -26,35 +26,47 @@ Tools and Equipment
 <div class="tab-content">
 @foreach($equipment as $toolId => $tool)
     <div class="tab-pane fade" id="{{ $toolId }}">
+
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 col-lg-6">
                 <div class="well">
+                    <p>
                     @if ($tool->requires_training)
-                        Induction fee: &pound{{ $tool->cost }}<br />
+                        This piece of equipment requires that an access fee is paid, this goes towards maintenance.<br />
+                        Equipment access fee: &pound{{ $tool->cost }}<br />
                     @else
-                        No induction required<br />
+                        No fee required
                     @endif
+                    </p>
                     @if (!$tool->working)
-                        <span class="label label-danger">Out of action</span>
+                        <p><span class="label label-danger">Out of action</span></p>
                     @endif
-                    <br />
-                    <a href="{{ route('equipment.show', $toolId) }}">Activity Log</a>
+
+                    <a href="{{ route('equipment.show', $toolId) }}" class="btn btn-info">Activity Log</a>
+
                 </div>
             </div>
+
             @if ($tool->requires_training)
-                @if(isset($trainers[$toolId]))
-                    <div class="col-sm-12 col-md-6">
-                        <h4>Trainers</h4>
-                        <div class="list-group">
-                            @foreach($trainers[$toolId] as $trainer)
-                                <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
-                                    {{ HTML::memberPhoto($trainer->profile, $trainer->hash, 50, '') }}
-                                    {{ $trainer->name }}
-                                </a>
-                            @endforeach
-                        </div>
+                <div class="col-sm-12 col-md-6">
+                    <h4>Trainers</h4>
+                    @if(isset($trainers[$toolId]))
+                    <div class="list-group">
+                        @foreach($trainers[$toolId] as $trainer)
+                            <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
+                                {{ HTML::memberPhoto($trainer->profile, $trainer->hash, 25, '') }}
+                                {{ $trainer->name }}
+                            </a>
+                        @endforeach
                     </div>
-                @endif
+                    @endif
+                </div>
+            @endif
+        </div>
+
+
+        <div class="row">
+            @if ($tool->requires_training)
                 @if(isset($usersPendingInduction[$toolId]))
                     <div class="col-sm-12 col-md-6">
                         <h4>Members waiting for an Induction</h4>

@@ -22,10 +22,10 @@ Tools and Equipment
             <div class="col-md-12 col-lg-6">
                 <div class="well">
                     @if ($equipment->requires_training)
-                        This piece of equipment requires that an induction fee is paid, this goes towards maintaining the equipment.<br />
-                        Induction fee: &pound{{ $equipment->cost }}<br />
+                        This piece of equipment requires that an access fee is paid, this goes towards maintenance.<br />
+                        Equipment access fee: &pound{{ $equipment->cost }}<br />
                     @else
-                        No induction required
+                        No fee required
                     @endif
                     @if (!$equipment->working)
                         <span class="label label-danger">Out of action</span>
