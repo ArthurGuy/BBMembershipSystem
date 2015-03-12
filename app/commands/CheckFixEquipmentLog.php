@@ -18,6 +18,12 @@ class CheckFixEquipmentLog extends Command {
 	 * @var string
 	 */
 	protected $description = 'Fix equipment log entries';
+
+    /**
+     * @var \BB\Services\CombineEquipmentLogs
+     */
+    protected $combineEquipmentLogs;
+
     /**
      * @var EquipmentLogRepository
      */
@@ -30,6 +36,7 @@ class CheckFixEquipmentLog extends Command {
 	{
 		parent::__construct();
         $this->equipmentLogRepository = App::make('\BB\Repo\EquipmentLogRepository');
+        $this->combineEquipmentLogs = App::make('\BB\Services\CombineEquipmentLogs');
     }
 
 	/**
@@ -39,6 +46,7 @@ class CheckFixEquipmentLog extends Command {
 	 */
 	public function fire()
 	{
+        //Close records that were left open
         $records = $this->equipmentLogRepository->getActiveRecords();
         foreach ($records as $log)
         {
@@ -54,24 +62,26 @@ class CheckFixEquipmentLog extends Command {
                 //We don't know how long the user was active so record a minute
                 $this->equipmentLogRepository->endSession($log->id, $log->started->addMinute());
             }
-
-            //We should also be merging records and perhaps deleting very short records
         }
-        $unProcessedRecords = $this->equipmentLogRepository->getUnprocessedRecords();
-        foreach ($unProcessedRecords as $record)
+
+        //Combine logs that are very close to each other - this will run over all inactive records that haven't been billed
+        $this->combineEquipmentLogs->run();
+
+
+        //check through all the unbilled inactive records and remove the small ones
+        $unbilledRecords = $this->equipmentLogRepository->getUnbilledRecords();
+        foreach ($unbilledRecords as $record)
         {
-            if (!$record->active) {
-                $secondsActive = $record->finished->diffInSeconds($record->started);
+            $secondsActive = $record->finished->diffInSeconds($record->started);
 
-                //If the record is less than 60 seconds ignore it
-                if ($secondsActive <= 60) {
-                    $record->removed = true;
-                }
-
-                //Processing is finished
-                $record->processed = true;
-                $record->Save();
+            //If the record is less than 60 seconds ignore it
+            if ($secondsActive <= 60) {
+                $record->removed = true;
             }
+
+            //Processing is finished
+            //$record->processed = true;
+            $record->save();
         }
 	}
 

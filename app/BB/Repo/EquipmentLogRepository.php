@@ -128,7 +128,7 @@ class EquipmentLogRepository extends DBRepository
      */
     public function getFinishedForEquipment($deviceKey)
     {
-        return $this->model->where('device', $deviceKey)->where('processed', true)->where('removed', false)->orderBy('created_at', 'DESC')->paginate($this->perPage);
+        return $this->model->where('device', $deviceKey)->where('active', false)->where('removed', false)->orderBy('created_at', 'DESC')->paginate($this->perPage);
     }
 
     /**
@@ -141,30 +141,21 @@ class EquipmentLogRepository extends DBRepository
     }
 
     /**
-     * Return all records that have been checked over
-     * @return mixed
-     */
-    public function getFinishedRecords()
-    {
-        return $this->model->where('processed', true)->where('removed', false)->orderBy('created_at', 'DESC')->get();
-    }
-
-    /**
      * Return all records that have been checked over but not billed
      * @return mixed
      */
     public function getFinishedUnbilledRecords()
     {
-        return $this->model->where('processed', true)->where('removed', false)->where('billed', false)->orderBy('created_at', 'DESC')->get();
+        return $this->model->where('active', false)->where('removed', false)->where('billed', false)->orderBy('created_at', 'DESC')->get();
     }
 
     /**
-     * Get all records that haven't been checked yet
+     * Get all records that haven't been billed yet
      * @return mixed
      */
-    public function getUnprocessedRecords()
+    public function getUnbilledRecords()
     {
-        return $this->model->where('processed', false)->orderBy('created_at', 'DESC')->get();
+        return $this->model->where('active', false)->where('billed', false)->orderBy('created_at', 'DESC')->get();
     }
 
 } 
