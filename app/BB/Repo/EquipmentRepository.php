@@ -43,6 +43,12 @@ class EquipmentRepository {
                 'working' => 1,
                 'requires_training' => 0,
             ],
+            'band-saw' => (object)[
+                'name' => 'Band Saw',
+                'cost' => 0,
+                'working' => 1,
+                'requires_training' => 1,
+            ],
             '3dprinter' => (object)[
                 'name' => '3D Printer',
                 'cost' => '0',
