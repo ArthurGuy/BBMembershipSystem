@@ -1,5 +1,6 @@
 <?php namespace BB\Services;
 
+
 class DeviceCharge {
 
     /**
@@ -23,25 +24,60 @@ class DeviceCharge {
         $records = $this->equipmentLogRepository->getFinishedUnbilledRecords();
         foreach ($records as $record)
         {
-            //How much does this device cost per hour
-            $fee = \BB\Services\Credit::getDeviceFee($record->device);
+            $feePerHour = Credit::getDeviceFee($record->device);
 
-            //How much does it cost per second
-            $feePerSecond = $fee / (60*60);
+            $feePerSecond = $this->costPerSecond($feePerHour);
 
             //How may seconds was the device in use
             $secondsActive = $record->finished->diffInSeconds($record->started);
 
-            //How much did this session cost
-            $incuredFee = (double)round(($feePerSecond * $secondsActive), 2);
+            //Charges are for a minimum of 5 minutes
+            $secondsActive = $this->roundUpSecondsActive($secondsActive);
 
-            //Create a payment against the user
-            $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '', $incuredFee, 'paid', 0, $record->id.':'.$record->device);
+            $incurredFee = $this->sessionFee($feePerSecond, $secondsActive);
+
+            //If the reason is empty then its not a special case and should be billed
+            if (empty($record->reason)) {
+                //Create a payment against the user
+                $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '', $incurredFee, 'paid', 0, $record->id.':'.$record->device);
+            }
 
             //Mark this log as being billed and complete
             $record->billed = true;
             $record->save();
         }
+    }
+
+    /**
+     * Ensure the seconds are at least 300
+     * @param $seconds int
+     * @return int
+     */
+    private function roundUpSecondsActive($seconds)
+    {
+        if ($seconds < 300) {
+            $seconds = 300;
+        }
+        return $seconds;
+    }
+
+    /**
+     * @param $feePerHour
+     * @return float
+     */
+    private function costPerSecond($feePerHour)
+    {
+        return $feePerHour / (60 * 60);
+    }
+
+    /**
+     * @param $feePerSecond
+     * @param $secondsActive
+     * @return float
+     */
+    private function sessionFee($feePerSecond, $secondsActive)
+    {
+        return (double)round(($feePerSecond * $secondsActive), 2);
     }
 
 }

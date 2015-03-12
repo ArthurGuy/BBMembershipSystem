@@ -35,7 +35,7 @@ class DeviceSession extends KeyFobAccess {
     private $bbCredit;
 
 
-    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository, \BB\Services\Credit $bbCredit)
+    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository, Credit $bbCredit)
     {
         $this->equipmentRepository = $equipmentRepository;
         $this->inductionRepository = $inductionRepository;
