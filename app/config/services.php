@@ -28,4 +28,9 @@ return array(
 		'secret' => '',
 	),
 
+    'rollbar' => array(
+        'access_token' => $_SERVER['ROLLBAR_TOKEN'],
+        'level' => 'error'
+    ),
+
 );

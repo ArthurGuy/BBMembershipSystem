@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "83283b304f3e67ba97e4d3281e678b1c",
+    "hash": "3b946d3c3db82f53c69e3edae9b41524",
     "packages": [
         {
             "name": "artdarek/pusherer",
@@ -720,6 +720,56 @@
             "time": "2014-11-20 16:49:30"
         },
         {
+            "name": "jenssegers/rollbar",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jenssegers/laravel-rollbar.git",
+                "reference": "929814c1cb4a66d1e513ba7b07edf6e2100169e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jenssegers/laravel-rollbar/zipball/929814c1cb4a66d1e513ba7b07edf6e2100169e2",
+                "reference": "929814c1cb4a66d1e513ba7b07edf6e2100169e2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "4.*|5.*",
+                "php": ">=5.3",
+                "rollbar/rollbar": "0.9.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "*",
+                "orchestra/testbench": "3.0.*",
+                "satooshi/php-coveralls": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Jenssegers\\Rollbar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens Segers",
+                    "homepage": "http://jenssegers.be"
+                }
+            ],
+            "description": "Rollbar error monitoring integration for Laravel projects",
+            "keywords": [
+                "error",
+                "laravel",
+                "logging",
+                "monitoring",
+                "rollbar"
+            ],
+            "time": "2015-02-08 22:39:49"
+        },
+        {
             "name": "jeremeamia/SuperClosure",
             "version": "1.0.2",
             "source": {
@@ -1243,12 +1293,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuovo/spreadsheet-reader.git",
-                "reference": "ff46899419a6d70a75914ee2854f3f832e998ecb"
+                "reference": "18d60e84243418532b434ce05e9ef81a0a461481"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuovo/spreadsheet-reader/zipball/ff46899419a6d70a75914ee2854f3f832e998ecb",
-                "reference": "ff46899419a6d70a75914ee2854f3f832e998ecb",
+                "url": "https://api.github.com/repos/nuovo/spreadsheet-reader/zipball/18d60e84243418532b434ce05e9ef81a0a461481",
+                "reference": "18d60e84243418532b434ce05e9ef81a0a461481",
                 "shasum": ""
             },
             "require": {
@@ -1283,7 +1333,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2013-09-04 00:00:00"
+            "time": "2015-01-31 00:00:00"
         },
         {
             "name": "patchwork/utf8",
@@ -1700,6 +1750,48 @@
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
             "time": "2014-12-30 13:32:42"
+        },
+        {
+            "name": "rollbar/rollbar",
+            "version": "v0.9.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rollbar/rollbar-php.git",
+                "reference": "9b4c80cec8d9485fe0d7758cc98e820673ddea82"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rollbar/rollbar-php/zipball/9b4c80cec8d9485fe0d7758cc98e820673ddea82",
+                "reference": "9b4c80cec8d9485fe0d7758cc98e820673ddea82",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "rollbar.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rollbar, Inc.",
+                    "email": "support@rollbar.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Monitors errors and exceptions and reports them to Rollbar",
+            "homepage": "http://github.com/rollbar/rollbar-php",
+            "keywords": [
+                "debugging",
+                "errors",
+                "exceptions",
+                "logging",
+                "monitoring"
+            ],
+            "time": "2015-03-06 16:24:58"
         },
         {
             "name": "stack/builder",
@@ -2854,12 +2946,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "22cf2a451e15c8c736aabc83d29478383e2b616e"
+                "reference": "491dcbbf450ed41aeb78ccf5ea2d88ce5d457bd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/22cf2a451e15c8c736aabc83d29478383e2b616e",
-                "reference": "22cf2a451e15c8c736aabc83d29478383e2b616e",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/491dcbbf450ed41aeb78ccf5ea2d88ce5d457bd8",
+                "reference": "491dcbbf450ed41aeb78ccf5ea2d88ce5d457bd8",
                 "shasum": ""
             },
             "require": {
@@ -2868,8 +2960,7 @@
             },
             "require-dev": {
                 "hamcrest/hamcrest-php": "~1.1",
-                "phpunit/phpunit": "~4.0",
-                "satooshi/php-coveralls": "~0.7@dev"
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
             "extra": {
@@ -2898,7 +2989,7 @@
                     "homepage": "http://davedevelopment.co.uk"
                 }
             ],
-            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succint API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
+            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
             "homepage": "http://github.com/padraic/mockery",
             "keywords": [
                 "BDD",
@@ -2912,7 +3003,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2015-01-16 19:11:16"
+            "time": "2015-03-10 22:19:46"
         },
         {
             "name": "phpunit/php-code-coverage",

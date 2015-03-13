@@ -130,6 +130,7 @@ return array(
         'Laracasts\Utilities\UtilitiesServiceProvider',
         'BB\ServiceProviders\StripeServiceProvider',
         'BB\ServiceProviders\ValidatorServiceProvider',
+        'Jenssegers\Rollbar\RollbarServiceProvider',
 	),
 
 	/*
