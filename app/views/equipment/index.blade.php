@@ -30,14 +30,19 @@ Tools and Equipment
         <div class="row">
             <div class="col-md-12 col-lg-6">
                 <div class="well">
-                    <p>
+
                     @if ($tool->requires_training)
-                        This piece of equipment requires that an access fee is paid, this goes towards maintenance.<br />
-                        Equipment access fee: &pound{{ $tool->cost }}<br />
-                    @else
-                        No fee required
+                        <p>Requires training</p>
                     @endif
-                    </p>
+                    @if ($tool->cost > 0)
+                        <p>
+                            Equipment access fee: &pound{{ $tool->cost }}<br />
+                            The fee goes towards maintenance and repair.<br />
+                        </p>
+                    @else
+                        <p>No fee required</p>
+                    @endif
+
                     @if (!$tool->working)
                         <p><span class="label label-danger">Out of action</span></p>
                     @endif

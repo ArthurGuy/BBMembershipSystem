@@ -49,6 +49,8 @@ Tools and Equipment
         </div>
     </div>
 
+
+    <h3>Activity Log</h3>
     <table class="table">
         <thead>
             <tr>
