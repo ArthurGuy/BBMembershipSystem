@@ -10,7 +10,7 @@ class EquipmentRepository {
             'laser' => (object)[
                 'name' => 'Laser Cutter',
                 'cost' => '50',
-                'working' => 0,
+                'working' => 1,
                 'requires_training' => 1,
             ],
             'lathe' => (object)[
