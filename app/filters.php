@@ -83,9 +83,9 @@ Route::filter('role', function($route, $request, $role)
     {
         throw new \BB\Exceptions\AuthenticationException();
     }
-    elseif (Auth::user()->banned_date)
+    elseif (Auth::user()->isBanned())
     {
-        //throw new \BB\Exceptions\AuthenticationException();
+        throw new \BB\Exceptions\AuthenticationException();
     }
 });
 
