@@ -30,7 +30,7 @@ return array(
 
     'rollbar' => array(
         'access_token' => $_SERVER['ROLLBAR_TOKEN'],
-        'level' => 'error'
+        'level' => 'warning'
     ),
 
 );
