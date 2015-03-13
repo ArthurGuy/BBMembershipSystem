@@ -42,6 +42,8 @@ class ACSController extends Controller
             $this->deviceRepository->logHeartbeat($data['device']);
         }
 
+
+        $data['time'] = time();
         $response = Response::json($data);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
