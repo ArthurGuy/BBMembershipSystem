@@ -96,7 +96,7 @@ class AddressRepository extends DBRepository {
     {
         $address = $this->getNewUserAddress($userId);
         $oldAddress = $this->getActiveUserAddress($userId);
-        $oldAddress->delete();
+        if ($oldAddress) $oldAddress->delete();
         $address->approved = true;
         $address->save();
     }
