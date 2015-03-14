@@ -28,7 +28,9 @@ gulp.task('js', function() {
 
 
 //LESS
-var lessSources = 'resources/assets/less/application.less';
+var lessSources = [
+    'resources/assets/less/application.less'
+];
 
 gulp.task('less', function() {
     return gulp.src(lessSources)
