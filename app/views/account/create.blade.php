@@ -79,7 +79,7 @@ Join Build Brighton
                 {{ Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'5', 'step'=>'1']) }}
             </div>
             {{ Notification::getErrorDetail('monthly_subscription') }}
-            <span class="help-block">We operate on a pay-what-you-can basis, most members pay about &pound;20, the minimum is £5</span>
+            <span class="help-block"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#howMuchShouldIPayModal">How much should I pay?</button></span>
         </div>
     </div>
 
@@ -176,6 +176,48 @@ Join Build Brighton
 
 
     {{ Form::close() }}
+
+
+    <div class="modal fade" id="howMuchShouldIPayModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Subscription Suggestions</h4>
+                </div>
+                <div class="modal-body">
+                    <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
+
+                    &pound;5 a month:
+                    <ul>
+                        <li>You want to support the hackspace but will only be able to visit very infrequently</li>
+                        <li>You are a new member and want to find out whether the hackspace is right for you</li>
+                    </ul>
+
+                    &pound;10 - 15 a month:
+                    <ul>
+                        <li>You are planning to visit the hackspace regularly and are a student, retired, unemployed or on a limited income</li>
+                    </ul>
+
+                    &pound;20 - 25 a month:
+                    <ul>
+                        <li>You are planning to visit the hackspace regularly and are a professional / in full-time employment</li>
+                    </ul>
+
+                    &pound;30 a month and up:
+                    <ul>
+                        <li>You are planning to visit the hackspace regularly and would like to provide a little extra support (thank you!)</li>
+                        <li>You are a professional maker / small business and will be using the hackspace to produce prototypes or products for sale</li>
+                    </ul>
+
+                    <p>
+                        If you feel that the hackspace is worth more to you then please do adjust your subscription accordingly.
+                        You can also change your subscription amount at any time!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
