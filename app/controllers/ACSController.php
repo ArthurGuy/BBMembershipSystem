@@ -28,7 +28,7 @@ class ACSController extends Controller
 
     public function update()
     {
-        $data = Request::only('device', 'key_fob', 'message', 'type');
+        $data = Request::only('device', 'key_fob', 'message', 'type', 'time');
 
         $this->ACSValidator->validate($data);
 
