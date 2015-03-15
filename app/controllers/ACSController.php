@@ -28,14 +28,23 @@ class ACSController extends Controller
 
     public function update()
     {
-        $data = Request::only('device', 'key_fob', 'message');
+        $data = Request::only('device', 'key_fob', 'message', 'type');
 
         $this->ACSValidator->validate($data);
 
         Log::debug(json_encode($data));
 
-        $device = $this->deviceRepository->getByName($data['device']);
 
+        if ($data['type'] == 'door') {
+            $this->handleDoor($data);
+        } elseif ($data['type'] == 'equipment') {
+            $this->handleDevice($data);
+        }
+
+    }
+
+    private function handleDoor($data)
+    {
         $keyFob = null;
         if ($data['message'] == 'boot') {
             $this->deviceRepository->logBoot($data['device']);
@@ -51,12 +60,29 @@ class ACSController extends Controller
 
         $member = '';
         if ($keyFob) {
-            $member = 'valid';
+            $member = $keyFob->user_id;
+        }
+
+        $responseData = ['device'=>$data['device'], 'time'=>time(), 'member'=>$member];
+
+        $response = Response::json($responseData);
+        $response->headers->set('Content-Length', strlen($response->getContent()));
+        return $response;
+    }
+
+    private function handleDevice($data)
+    {
+        $device = $this->deviceRepository->getByName($data['device']);
+
+        if ($data['message'] == 'boot') {
+            $this->deviceRepository->logBoot($data['device']);
+        } elseif ($data['message'] == 'heartbeat') {
+            $this->deviceRepository->logHeartbeat($data['device']);
         }
 
         $deviceStatus = 'ok';
 
-        $responseData = ['device'=>$data['device'], 'time'=>time(), 'deviceStatus'=>$deviceStatus, 'member'=>$member];
+        $responseData = ['device'=>$data['device'], 'time'=>time(), 'deviceStatus'=>$deviceStatus];
 
         $response = Response::json($responseData);
         $response->headers->set('Content-Length', strlen($response->getContent()));

@@ -7,6 +7,7 @@ class ACSValidator extends FormValidator
         'device'  => 'required|max:50',
         'key_fob' => 'max:50',
         'message' => 'max:50',
+        'type'    => 'required',
     ];
 
 } 
