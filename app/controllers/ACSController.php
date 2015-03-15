@@ -58,17 +58,18 @@ class ACSController extends Controller
             }
         }
 
-        $member = '';
+        $memberName = '';
         $valid = '0';
         if ($keyFob) {
-            $member = $keyFob->user_id;
+            $member = $keyFob->user()->first();
+            $memberName = $member->given_name;
             $valid = '1';
         }
 
         $cmd = '';
         $cmd = 'refresh';
 
-        $responseData = ['time'=>time(), 'member'=>$member, 'valid'=>$valid, 'cmd'=>$cmd];
+        $responseData = ['time'=>time(), 'member'=>$memberName, 'valid'=>$valid, 'cmd'=>$cmd];
 
         $response = Response::json($responseData);
         $response->headers->set('Content-Length', strlen($response->getContent()));
