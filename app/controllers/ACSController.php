@@ -49,6 +49,7 @@ class ACSController extends Controller
             }
         }
 
+        $member = null;
         if ($keyFob) {
             $member = 'valid';
         }
