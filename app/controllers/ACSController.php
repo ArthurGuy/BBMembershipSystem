@@ -36,9 +36,9 @@ class ACSController extends Controller
 
 
         if ($data['type'] == 'door') {
-            $this->handleDoor($data);
+            return $this->handleDoor($data);
         } elseif ($data['type'] == 'equipment') {
-            $this->handleDevice($data);
+            return $this->handleDevice($data);
         }
 
     }
