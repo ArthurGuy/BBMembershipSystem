@@ -59,11 +59,16 @@ class ACSController extends Controller
         }
 
         $member = '';
+        $valid = '0';
         if ($keyFob) {
             $member = $keyFob->user_id;
+            $valid = '1';
         }
 
-        $responseData = ['device'=>$data['device'], 'time'=>time(), 'member'=>$member];
+        $cmd = '';
+        $cmd = 'refresh';
+
+        $responseData = ['time'=>time(), 'member'=>$member, 'valid'=>$valid, 'cmd'=>$cmd];
 
         $response = Response::json($responseData);
         $response->headers->set('Content-Length', strlen($response->getContent()));
@@ -82,7 +87,7 @@ class ACSController extends Controller
 
         $deviceStatus = 'ok';
 
-        $responseData = ['device'=>$data['device'], 'time'=>time(), 'deviceStatus'=>$deviceStatus];
+        $responseData = ['time'=>time(), 'deviceStatus'=>$deviceStatus];
 
         $response = Response::json($responseData);
         $response->headers->set('Content-Length', strlen($response->getContent()));
