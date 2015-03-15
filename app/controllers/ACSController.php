@@ -36,15 +36,28 @@ class ACSController extends Controller
 
         $device = $this->deviceRepository->getByName($data['device']);
 
+        $keyFob = null;
         if ($data['message'] == 'boot') {
             $this->deviceRepository->logBoot($data['device']);
         } elseif ($data['message'] == 'heartbeat') {
             $this->deviceRepository->logHeartbeat($data['device']);
+        } elseif ($data['message'] == 'lookup') {
+            try {
+                $keyFob = KeyFob::lookup($data['key_fob']);
+            } catch(\Exception $e) {
+
+            }
         }
 
+        if ($keyFob) {
+            $member = 'valid';
+        }
 
-        $data['time'] = time();
-        $response = Response::json($data);
+        $deviceStatus = 'ok';
+
+        $responseData = ['device'=>$data['device'], 'time'=>time(), 'deviceStatus'=>$deviceStatus, 'member'=>$member];
+
+        $response = Response::json($responseData);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
     }
