@@ -54,6 +54,7 @@ Resources
                 <strong>Policies</strong>
                 <ul>
                     <li><a href="{{ route('resources.policy.view', '3-week-bins') }}">3 Week Bins</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'member-storage') }}">Member Storage</a></li>
                 </ul>
             </div>
         </div>
