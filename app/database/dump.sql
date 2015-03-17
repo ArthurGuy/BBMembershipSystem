@@ -479,6 +479,7 @@ CREATE TABLE `user_address` (
   `line_4` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `postcode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `approved` tinyint(1) NOT NULL,
+  `hash` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
