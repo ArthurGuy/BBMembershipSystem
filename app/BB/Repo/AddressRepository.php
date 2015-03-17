@@ -30,9 +30,15 @@ class AddressRepository extends DBRepository {
             $addressFields['postcode'] = strtoupper($addressFields['postcode']);
         }
 
-        $address = null;
-        if ($isAdminUpdating) {
-            $address = $this->getActiveUserAddress($userId);
+        $address = $this->getActiveUserAddress($userId);
+
+        //If the hash hasn't changed then nothing has been updated
+        if ($address->hash == $this->generateHash($addressFields)) {
+            return true;
+        }
+
+        if (!$isAdminUpdating) {
+            $address = null;
         }
 
         if (!$address) {
@@ -53,6 +59,9 @@ class AddressRepository extends DBRepository {
      */
     public function saveUserAddress($userId, array $addressFields, $isAdminCreating)
     {
+        //Generate the hash
+        $addressFields['hash'] = $this->generateHash($addressFields);
+
         $addressFields['user_id'] = $userId;
 
         //Format the postcode
@@ -109,6 +118,15 @@ class AddressRepository extends DBRepository {
     {
         $address = $this->getNewUserAddress($userId);
         $address->delete();
+    }
+
+    /**
+     * @param array $addressFields
+     * @return string
+     */
+    private function generateHash(array $addressFields)
+    {
+        return md5(json_encode($addressFields));
     }
 
 }

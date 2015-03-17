@@ -16,7 +16,7 @@ class Address extends \Eloquent {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'line_1', 'line_2', 'line_3', 'line_4', 'postcode'
+        'user_id', 'line_1', 'line_2', 'line_3', 'line_4', 'postcode', 'hash'
     ];
 
 

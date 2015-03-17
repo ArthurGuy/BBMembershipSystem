@@ -22,6 +22,7 @@ class CreateAddressTable extends Migration {
             $table->string('line_4', 100)->nullable();
             $table->string('postcode', 10)->nullable();
             $table->boolean('approved');
+            $table->string('hash', 50)->nullable();
             $table->timestamps();
         });
 	}
