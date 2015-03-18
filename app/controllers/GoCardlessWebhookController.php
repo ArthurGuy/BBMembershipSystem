@@ -1,19 +1,27 @@
 <?php
 
 
+use BB\Helpers\GoCardlessHelper;
+use BB\Repo\PaymentRepository;
+use BB\Repo\SubscriptionChargeRepository;
 use \Carbon\Carbon;
 
 class GoCardlessWebhookController extends \BaseController {
 
     /**
-     * @var \BB\Repo\PaymentRepository
+     * @var PaymentRepository
      */
     private $paymentRepository;
+    /**
+     * @var SubscriptionChargeRepository
+     */
+    private $subscriptionChargeRepository;
 
-    public function __construct(\BB\Helpers\GoCardlessHelper $goCardless, \BB\Repo\PaymentRepository $paymentRepository)
+    public function __construct(GoCardlessHelper $goCardless, PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->goCardless = $goCardless;
         $this->paymentRepository = $paymentRepository;
+        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
     }
 
     public function receive()
@@ -52,6 +60,7 @@ class GoCardlessWebhookController extends \BaseController {
             //We have new bills/payment
             foreach ($bills as $bill)
             {
+                $paymentDate = new \Carbon\Carbon();
                 try {
                     if ($bill['source_type'] == 'subscription') {
                         //This is a monthly subscription payment
@@ -64,26 +73,25 @@ class GoCardlessWebhookController extends \BaseController {
                                 //Record their monthly payment
                                 $fee = ($bill['amount'] - $bill['amount_minus_fees']);
 
-                                $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['id'], $bill['amount'], $bill['status'], $fee);
-                                /*
-                                $payment = new Payment(
-                                    [
-                                        'reason'           => 'subscription',
-                                        'source'           => 'gocardless',
-                                        'source_id'        => $bill['id'],
-                                        'amount'           => $bill['amount'],
-                                        'amount_minus_fee' => $bill['amount_minus_fees'],
-                                        'fee'              => ($bill['amount'] - $bill['amount_minus_fees']),
-                                        'status'           => $bill['status']
-                                    ]
-                                );
-                                $user->payments()->save($payment);
-                                */
+                                $ref = null;
+
+                                $subCharge = $this->subscriptionChargeRepository->findCharge($user->id, $paymentDate);
+                                if ($subCharge) {
+                                    $ref = $subCharge->id;
+                                    if ($subCharge->amount == $bill['amount']) {
+                                        $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
+                                    } else {
+                                        //@TODO: Handle partial payments
+                                    }
+                                }
+
+                                $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['id'], $bill['amount'], $bill['status'], $fee, $ref);
+
                                 //Extend their monthly subscription
                                 $user->extendMembership('gocardless', \Carbon\Carbon::now()->addMonth());
                             } else {
                                 //Payment received but we cant match the user
-                                \Log::warning("GoCardless Payment notification for unmatched user. Bill ID: ".$bill['id']);
+                                \Log::error("GoCardless Payment notification for unmatched user. Bill ID: ".$bill['id']);
                             }
                         }
                     }
