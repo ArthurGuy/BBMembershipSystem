@@ -41,4 +41,30 @@ class SubscriptionChargeRepository extends DBRepository
         return false;
     }
 
+    /**
+     * Locate the next payment the user has to pay off
+     * @param $userId
+     * @param $paymentDate
+     * @return mixed
+     */
+    public function findCharge($userId, $paymentDate)
+    {
+        //find any existing payment that hasn't been paid
+        //Subscription payments will always be used to pay of bills
+
+        return $this->model->where('user_id', $userId)->where('status', ['draft', 'pending'])->orderBy('charge_date', 'ASC')->first();
+    }
+
+    /**
+     * @param $chargeId
+     * @param $paymentDate
+     */
+    public function markChargeAsPaid($chargeId, $paymentDate)
+    {
+        $subCharge = $this->getById($chargeId);
+        $subCharge->payment_date = $paymentDate;
+        $subCharge->status = 'paid';
+        $subCharge->save();
+    }
+
 }

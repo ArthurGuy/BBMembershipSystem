@@ -5,6 +5,16 @@ use BB\Helpers\PayPalConfig;
 class PaypalIPNController extends \BaseController
 {
 
+    /**
+     * @var \BB\Repo\SubscriptionChargeRepository
+     */
+    private $subscriptionChargeRepository;
+
+    function __construct(\BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository)
+    {
+        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+    }
+
     public function receiveNotification()
     {
         $ipnMessage = new \PayPal\IPN\PPIPNMessage('', PayPalConfig::getConfig());
@@ -30,6 +40,22 @@ class PaypalIPNController extends \BaseController
                 \Log::error("PayPal IPN Received for unknown email " . $ipnData['payer_email']);
                 return;
             }
+
+            $paymentDate = new \Carbon\Carbon();
+
+
+            //See if there is a subscription charge the user needs to pay for
+            $ref = null;
+            $subCharge = $this->subscriptionChargeRepository->findCharge($user->id, $paymentDate);
+            if ($subCharge) {
+                $ref = $subCharge->id;
+                if ($subCharge->amount == $ipnData['mc_gross']) {
+                    $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
+                } else {
+                    //@TODO: Handle partial payments
+                }
+            }
+
             Payment::create(
                 [
                     'reason'           => 'subscription',
@@ -39,11 +65,12 @@ class PaypalIPNController extends \BaseController
                     'amount'           => $ipnData['mc_gross'],
                     'fee'              => $ipnData['mc_fee'],
                     'amount_minus_fee' => ($ipnData['mc_gross'] - $ipnData['mc_fee']),
-                    'status'           => 'paid'
+                    'status'           => 'paid',
+                    'reference'        => $ref,
                 ]
             );
-            $date = new \Carbon\Carbon();
-            $user->extendMembership('paypal', $date->addMonth());
+
+            $user->extendMembership('paypal', $paymentDate->addMonth());
         } elseif (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_cancel')) {
             $user = User::where('email', $ipnData['payer_email'])->first();
             if ($user) {
