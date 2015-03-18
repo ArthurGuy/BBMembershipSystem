@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
 class CreateTodaysSubCharges extends Command {
 
@@ -50,7 +51,11 @@ class CreateTodaysSubCharges extends Command {
 	{
 		$users = $this->userRepository->getActive();
 
-        $targetDate = Carbon::now()->addDays(3);
+        $dayOffset = $this->argument('dayOffset');
+
+        $targetDate = Carbon::now()->addDays($dayOffset);
+
+        $this->info("Generating charges for ".$targetDate);
 
         foreach ($users as $user) {
             if (($user->payment_day == $targetDate->day) && (!$this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
@@ -59,4 +64,15 @@ class CreateTodaysSubCharges extends Command {
         }
 	}
 
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return array(
+            array('dayOffset', InputArgument::OPTIONAL, 'Day Offset', 3),
+        );
+    }
 }
