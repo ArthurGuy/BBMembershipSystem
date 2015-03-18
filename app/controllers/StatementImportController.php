@@ -1,11 +1,22 @@
 <?php
 
+use BB\Repo\SubscriptionChargeRepository;
+
 class StatementImportController extends \BaseController {
 
     protected $layout = 'layouts.main';
+    /**
+     * @var SubscriptionChargeRepository
+     */
+    private $subscriptionChargeRepository;
+
+    function __construct(SubscriptionChargeRepository $subscriptionChargeRepository)
+    {
+        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+    }
 
 
-	/**
+    /**
 	 * Show the form for creating a new resource.
 	 *
 	 * @return Response
@@ -141,6 +152,16 @@ class StatementImportController extends \BaseController {
 
             if (!$testProcess && $matchedUser)
             {
+                if ($subPayment) {
+                    $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
+                    $paymentReference = $subCharge->id;
+                    if ($subCharge->amount == $row[4]) {
+                        $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $date);
+                    } else {
+                        //@TODO: Handle partial payments
+                    }
+                }
+
                 Payment::create([
                     'created_at' => $date,
                     'reason' => $reasonString,
