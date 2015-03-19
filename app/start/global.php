@@ -12,6 +12,7 @@
 */
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 ClassLoader::addDirectories(array(
@@ -79,6 +80,10 @@ App::error(function(NotFoundHttpException $exception)
     return Response::view('errors.404', [], 404);
 });
 App::error(function(ModelNotFoundException $exception)
+{
+    return Response::view('errors.404', [], 404);
+});
+App::error(function(MethodNotAllowedHttpException $exception)
 {
     return Response::view('errors.404', [], 404);
 });
