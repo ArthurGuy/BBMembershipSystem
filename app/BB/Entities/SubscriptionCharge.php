@@ -1,6 +1,12 @@
 <?php namespace BB\Entities;
 
+use Laracasts\Presenter\PresentableTrait;
+
 class SubscriptionCharge extends \Eloquent {
+
+    use PresentableTrait;
+
+    protected $presenter = 'BB\Presenters\SubscriptionChargePresenter';
 
     /**
      * The database table used by the model.
@@ -21,7 +27,7 @@ class SubscriptionCharge extends \Eloquent {
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'charge_date');
+        return array('created_at', 'updated_at', 'charge_date', 'payment_date');
     }
 
 

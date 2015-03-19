@@ -67,4 +67,14 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge->save();
     }
 
+    /**
+     * Return a paginated list of member payments
+     * @param $userId
+     * @return mixed
+     */
+    public function getMemberChargesPaginated($userId)
+    {
+        return $this->model->where('user_id', $userId)->paginate();
+    }
+
 }

@@ -371,7 +371,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $alerts;
     }
 
-
+    /**
+     * @return bool
+     */
     public function isBanned()
     {
         return $this->banned;
