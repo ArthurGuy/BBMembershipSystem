@@ -159,6 +159,7 @@ class StatementImportController extends \BaseController {
                         $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $date);
                     } else {
                         //@TODO: Handle partial payments
+                        \Log::debug("Sub charge handling - bank statement partial payment");
                     }
                 }
 
