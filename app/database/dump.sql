@@ -491,6 +491,23 @@ VALUES
 
 
 
+CREATE TABLE `subscription_charge` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `charge_date` date NOT NULL,
+  `payment_date` date NOT NULL,
+  `amount` int(11) NOT NULL,
+  `status` enum('draft','pending','paid','cancelled') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'draft',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+INSERT INTO `subscription_charge` (`id`, `user_id`, `charge_date`, `payment_date`, `amount`, `status`, `created_at`, `updated_at`)
+VALUES
+	(1, 1, '2015-03-20', '0000-00-00', 10, 'draft', '2015-03-17 18:23:13', '2015-03-17 18:23:13'),
+	(2, 1, '2015-03-20', '0000-00-00', 10, 'draft', '2015-03-18 13:32:46', '2015-03-18 13:32:46');
+
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
