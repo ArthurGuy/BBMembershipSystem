@@ -52,7 +52,8 @@ class SubscriptionChargeRepository extends DBRepository
         //find any existing payment that hasn't been paid
         //Subscription payments will always be used to pay of bills
 
-        return $this->model->where('user_id', $userId)->where('status', ['draft', 'pending'])->orderBy('charge_date', 'ASC')->first();
+
+        return $this->model->where('user_id', $userId)->whereIn('status', ['draft', 'pending'])->orderBy('charge_date', 'ASC')->first();
     }
 
     /**
