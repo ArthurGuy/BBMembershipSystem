@@ -82,6 +82,7 @@ class GoCardlessWebhookController extends \BaseController {
                                         $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
                                     } else {
                                         //@TODO: Handle partial payments
+                                        \Log::debug("Sub charge handling - gocardless partial payment");
                                     }
                                 }
 
