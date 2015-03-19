@@ -39,6 +39,10 @@ class AccountController extends \BaseController {
      * @var \BB\Repo\AddressRepository
      */
     private $addressRepository;
+    /**
+     * @var \BB\Repo\SubscriptionChargeRepository
+     */
+    private $subscriptionChargeRepository;
 
 
     function __construct(
@@ -52,7 +56,8 @@ class AccountController extends \BaseController {
         \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\UserRepository $userRepository,
         \BB\Validators\ProfileValidator $profileValidator,
-        \BB\Repo\AddressRepository $addressRepository)
+        \BB\Repo\AddressRepository $addressRepository,
+        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -65,6 +70,7 @@ class AccountController extends \BaseController {
         $this->userRepository = $userRepository;
         $this->profileValidator = $profileValidator;
         $this->addressRepository = $addressRepository;
+        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->hasRole('admin'));
@@ -81,7 +87,6 @@ class AccountController extends \BaseController {
         ];
         View::share('paymentMethods', $paymentMethods);
         View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
-
     }
 
 	/**
@@ -179,7 +184,10 @@ class AccountController extends \BaseController {
         //get pending address if any
         $newAddress = $this->addressRepository->getNewUserAddress($id);
 
-        return View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress);
+        //Get the member subscription payments
+        $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($id);
+
+        return View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress)->with('subscriptionCharges', $subscriptionCharges);
 	}
 
 
