@@ -33,7 +33,7 @@ class AddressRepository extends DBRepository {
         $address = $this->getActiveUserAddress($userId);
 
         //If the hash hasn't changed then nothing has been updated
-        if ($address->hash == $this->generateHash($addressFields)) {
+        if ($address && $address->hash == $this->generateHash($addressFields)) {
             return true;
         }
 
@@ -90,7 +90,7 @@ class AddressRepository extends DBRepository {
 
     /**
      * @param integer $userId
-     * @return mixed
+     * @return Address|null
      */
     public function getActiveUserAddress($userId)
     {
