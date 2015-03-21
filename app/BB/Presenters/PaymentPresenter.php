@@ -40,6 +40,9 @@ class PaymentPresenter extends Presenter
             case 'pending';
                 return 'Pending Confirmation';
 
+            case 'cancelled';
+                return 'Cancelled';
+
             case 'paid';
             case 'withdrawn';
                 return 'Paid';
