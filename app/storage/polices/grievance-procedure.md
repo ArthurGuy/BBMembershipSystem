@@ -10,7 +10,7 @@ Throughout the process every effort will be made to keep clear and constructive 
 ####1. Introduction
 
 - This policy applies to both members and non-members who use Build Brighton.
-- A person may be banned from the space if they are in violation of the [[Rules | Rules]], if they are causing persistent annoyance, or if they have the potential to harm other users of the space.
+- A person may be banned from the space if they are in violation of the Rules, if they are causing persistent annoyance, or if they have the potential to harm other users of the space.
 - Before the formal banning procedure is entered into, the trustees must make every reasonable attempt to resolve the issue informally.
 - However, in the case of direct physical violence towards any person in the space, a member has the authority to immediately ban the offender for one month and refer the case to the trustees.
 
