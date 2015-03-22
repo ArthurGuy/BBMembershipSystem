@@ -130,6 +130,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function updateSubscription($paymentMethod, $paymentDay)
     {
+        //We might need to do something about the payment day to ensure its before the 28th
         $this->attributes['payment_method'] = $paymentMethod;
         $this->attributes['payment_day'] = $paymentDay;
 

@@ -113,6 +113,10 @@ class GoCardlessWebhookController extends \BaseController {
                 {
                     $existingPayment->status = $bill['status'];
                     $existingPayment->save();
+
+                    //We need to locate the sub charge and rollback its status
+
+
                 }
                 else
                 {
