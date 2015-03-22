@@ -58,7 +58,8 @@ class PaypalIPNController extends \BaseController
             } else {
                 //No sub charge exists
                 if ($user->status == 'setting-up') {
-                    $this->setupNewMember($user, $ipnData['mc_gross'], $paymentDate);
+                    $subCharge = $this->setupNewMember($user, $ipnData['mc_gross'], $paymentDate);
+                    $ref = $subCharge->id;
                 } else {
                     //member who cancelled and restarted
                     //  or changed their amount by cancelling and starting again
@@ -88,6 +89,8 @@ class PaypalIPNController extends \BaseController
                 if ($user->payment_method == 'paypal') {
                     $user->cancelSubscription();
                 }
+
+                //@TODO: Deal with any open sub payment records
             }
         }
     }
@@ -96,6 +99,7 @@ class PaypalIPNController extends \BaseController
      * @param $user
      * @param $amount
      * @param $paymentDate
+     * @return mixed
      */
     private function setupNewMember($user, $amount, $paymentDate)
     {
@@ -107,5 +111,7 @@ class PaypalIPNController extends \BaseController
 
         //Now mark it as paid
         $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
+
+        return $subCharge;
     }
 } 
