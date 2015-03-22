@@ -55,6 +55,15 @@ class PaypalIPNController extends \BaseController
                     //@TODO: Handle partial payments
                     \Log::debug("Sub charge handling - paypal partial payment");
                 }
+            } else {
+                //No sub charge exists
+                if ($user->status == 'setting-up') {
+                    $this->setupNewMember($user, $ipnData['mc_gross'], $paymentDate);
+                } else {
+                    //member who cancelled and restarted
+                    //  or changed their amount by cancelling and starting again
+                    \Log::debug("No pp charge found and status is not setting up. User ID: ".$user->id);
+                }
             }
 
             Payment::create(
@@ -81,5 +90,22 @@ class PaypalIPNController extends \BaseController
                 }
             }
         }
+    }
+
+    /**
+     * @param $user
+     * @param $amount
+     * @param $paymentDate
+     */
+    private function setupNewMember($user, $amount, $paymentDate)
+    {
+        //At this point the day of the month hasn't been set for the user, set it now
+        $user->updateSubscription('paypal', $paymentDate->day);
+
+        //if this is blank then the user hasn't been setup yet
+        $subCharge = $this->subscriptionChargeRepository->createCharge($user->id, $paymentDate, $amount);
+
+        //Now mark it as paid
+        $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
     }
 } 
