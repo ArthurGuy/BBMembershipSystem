@@ -26,6 +26,11 @@ class GoCardlessHelper {
         \GoCardless::set_account_details($this->account_details);
     }
 
+    public function newPreAuthUrl($paymentDetails)
+    {
+        return \GoCardless::new_pre_authorization_url($paymentDetails);
+    }
+
     public function newSubUrl($payment_details)
     {
         return \GoCardless::new_subscription_url($payment_details);
