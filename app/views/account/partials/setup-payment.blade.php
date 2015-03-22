@@ -23,7 +23,7 @@
         {{ Form::open(['method'=>'post', 'url'=>'https://www.paypal.com/cgi-bin/webscr']) }}
         {{ Form::submit('Setup a PayPal Subscription', ['class'=>'btn']) }}
         {{ Form::hidden('cmd', '_xclick-subscriptions') }}
-        {{ Form::hidden('business', 'info@buildbrighton.com') }}
+        {{ Form::hidden('business', 'board@buildbrighton.com') }}
         {{ Form::hidden('item_name', 'Build Brighton Membership') }}
         {{ Form::hidden('no_note', '1') }}
         {{ Form::hidden('bn', 'PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHostedGuest') }}
