@@ -28,6 +28,14 @@ class GoCardlessHelper {
 
     public function newPreAuthUrl($paymentDetails)
     {
+        $baseDetails = array(
+            'max_amount'        => 100,
+            'interval_length'   => 1,
+            'interval_unit'     => 'month',
+            //'name'              => 'BBSUB'.$user->id,
+            //'description'       => 'Build Brighton Monthly Subscription',
+        );
+        $paymentDetails = array_merge($baseDetails, $paymentDetails);
         return \GoCardless::new_pre_authorization_url($paymentDetails);
     }
 
@@ -64,5 +72,16 @@ class GoCardlessHelper {
             return $bills[0];
         }
         return false;
+    }
+
+    public function newBill($preauthId, $amount, $name = null, $description = null)
+    {
+        $preAuth = \GoCardless_PreAuthorization::find($preauthId);
+        $details = [
+            'amount' => $amount,
+            'name' => $name,
+            'description' => $description,
+        ];
+        return $preAuth->create_bill($details);
     }
 } 
