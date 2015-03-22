@@ -1,13 +1,20 @@
 <?php
 
+use BB\Repo\SubscriptionChargeRepository;
 use Carbon\Carbon;
 
 class SubscriptionController extends \BaseController {
 
 
-    function __construct(\BB\Helpers\GoCardlessHelper $goCardless)
+    /**
+     * @var SubscriptionChargeRepository
+     */
+    private $subscriptionChargeRepository;
+
+    function __construct(\BB\Helpers\GoCardlessHelper $goCardless, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->goCardless = $goCardless;
+        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
 
         $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
     }
@@ -84,9 +91,18 @@ class SubscriptionController extends \BaseController {
             $bill = false;
             if (isset($confirmed_resource->sub_resource_uris['bills']))
             {
+                $ref = null;
+
                 $bill = $this->goCardless->getSubscriptionFirstBill($confirmed_resource->id);
-                if ($bill)
-                {
+
+                if ($bill) {
+
+                    $subCharge = $this->subscriptionChargeRepository->createCharge($user->id, Carbon::now(), $bill->amount);
+                    $ref = $subCharge->id;
+
+                    $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, Carbon::now());
+
+
                     $payment = new Payment([
                         'reason'            => 'subscription',
                         'source'            => 'gocardless',
@@ -94,12 +110,15 @@ class SubscriptionController extends \BaseController {
                         'amount'            => $bill->amount,
                         'fee'               => $bill->gocardless_fees,
                         'amount_minus_fee'  => $bill->amount_minus_fees,
-                        'status'            => $bill->status
+                        'status'            => $bill->status,
+                        'reference'         => $ref,
                     ]);
                     $user = User::findOrFail($userId);
                     $user->payments()->save($payment);
                     $user->last_subscription_payment = Carbon::now();
                     $user->save();
+                } else {
+                    \Log::error("New Gocardless subscription, failed to locate first bill. User ID: ".$user->id);
                 }
             }
             $user->payment_day = Carbon::parse($confirmed_resource->next_interval_start)->day;
