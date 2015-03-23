@@ -194,7 +194,8 @@ class GoCardlessWebhookController extends \BaseController {
 
     private function processPreAuths()
     {
-        //Preauths aren't used
+        //Preauths are handled at creation
+        //@TODO: we probably need to catch cancellations here
     }
 
     private function processSubscriptions($subscriptions)
