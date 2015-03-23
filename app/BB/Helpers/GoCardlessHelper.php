@@ -76,12 +76,17 @@ class GoCardlessHelper {
 
     public function newBill($preauthId, $amount, $name = null, $description = null)
     {
-        $preAuth = \GoCardless_PreAuthorization::find($preauthId);
-        $details = [
-            'amount' => $amount,
-            'name' => $name,
-            'description' => $description,
-        ];
-        return $preAuth->create_bill($details);
+        try {
+            $preAuth = \GoCardless_PreAuthorization::find($preauthId);
+            $details = [
+                'amount'      => $amount,
+                'name'        => $name,
+                'description' => $description,
+            ];
+            return $preAuth->create_bill($details);
+        } catch (\GoCardless_ApiException $e) {
+            \Log::error($e);
+            return false;
+        }
     }
 } 
