@@ -61,6 +61,7 @@ class PaymentPresenter extends Presenter
     {
         switch ($this->entity->source) {
             case 'gocardless':
+            case 'gocardless-variable':
                 return 'Direct Debit';
 
             case 'stripe':
