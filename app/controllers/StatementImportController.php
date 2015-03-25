@@ -154,12 +154,14 @@ class StatementImportController extends \BaseController {
             {
                 if ($subPayment) {
                     $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
-                    $paymentReference = $subCharge->id;
-                    if ($subCharge->amount == $row[4]) {
-                        $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $date);
-                    } else {
-                        //@TODO: Handle partial payments
-                        \Log::debug("Sub charge handling - bank statement partial payment");
+                    if ($subCharge) {
+                        $paymentReference = $subCharge->id;
+                        if ($subCharge->amount == $row[4]) {
+                            $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $date);
+                        } else {
+                            //@TODO: Handle partial payments
+                            \Log::debug("Sub charge handling - bank statement partial payment");
+                        }
                     }
                 }
 
