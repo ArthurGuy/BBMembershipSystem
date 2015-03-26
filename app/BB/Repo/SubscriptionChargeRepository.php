@@ -69,6 +69,18 @@ class SubscriptionChargeRepository extends DBRepository
     }
 
     /**
+     * If a payment has failed update the sub charge to reflect this
+     * @param $chargeId
+     */
+    public function paymentFailed($chargeId)
+    {
+        $subCharge = $this->getById($chargeId);
+        $subCharge->payment_date = null;
+        $subCharge->status = 'pending';
+        $subCharge->save();
+    }
+
+    /**
      * Return a paginated list of member payments
      * @param $userId
      * @return mixed

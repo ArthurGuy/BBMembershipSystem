@@ -155,6 +155,13 @@ class GoCardlessWebhookController extends \BaseController {
                             }
 
                             $user->save();
+
+                            //Update the subscription charge to reflect the payment failure
+                            $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
+                            if ($subCharge) {
+                                $this->subscriptionChargeRepository->paymentFailed($subCharge->id);
+                            }
+
                         }
                         elseif ($existingPayment->reason == 'induction')
                         {
