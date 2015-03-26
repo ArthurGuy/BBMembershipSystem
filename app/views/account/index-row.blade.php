@@ -3,12 +3,12 @@
         {{ HTML::memberPhoto($user->profile, $user->hash, 100, 'img-circle profilePhoto') }}
     </td>
     <td>
-        <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
+        <a href="{{ route('account.show', $user->id) }}">{{{ $user->name }}}</a>
         @if ($user->hasRole('admin'))
         <span class="label label-danger">Admin</span>
         @endif
         <br />
-        {{ $user->email }}
+        {{{ $user->email }}}
     </td>
     <td>
         {{ HTML::statusLabel($user->status) }}

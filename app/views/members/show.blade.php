@@ -25,7 +25,7 @@
                 
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 pull-right">
-                <h3>{{ $profileData->present()->tagline }}</h3>
+                <h3>{{{ $profileData->present()->tagline }}}</h3>
                 <p class="lead">
                     {{ $profileData->present()->description }}
                 </p>
@@ -36,7 +36,7 @@
                     {{ HTML::profileSocialMediaListItem('Facebook', $profileData->present()->facebookLink) }}
                     {{ HTML::profileSocialMediaListItem('Website', $profileData->present()->website) }}
                     @if ($profileData->irc)
-                    <li>IRC - <a href="irc://irc.freenode.net/buildbrighton">irc://irc.freenode.net/buildbrighton</a> - {{ $profileData->irc }}</li>
+                    <li>IRC - <a href="irc://irc.freenode.net/buildbrighton">irc://irc.freenode.net/buildbrighton</a> - {{{ $profileData->irc }}}</li>
                     @endif
                 </ul>
             </div>
@@ -65,17 +65,4 @@
     </div>
 
 </div>
-@stop
-
-@section('footer-js')
-<!--
-<script>
-//$.fn.editable.defaults.mode = 'inline';
-$.fn.editable.defaults.pk = '{{ $user->id }}';
-$.fn.editable.defaults.url = '{{ route('account.profile.update', $user->id) }}';
-$(document).ready(function() {
-    $('.js-inline-edit').editable();
-});
-</script>
--->
 @stop

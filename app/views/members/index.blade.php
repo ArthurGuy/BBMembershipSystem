@@ -19,7 +19,7 @@ Members
                 <a href="{{ route('members.show', $user->id) }}">
                     {{ HTML::memberPhoto($user->profile, $user->hash, 200) }}
                     <div class="memberDetails">
-                        <strong>{{ $user->name }}</strong>
+                        <strong>{{{ $user->name }}}</strong>
                     </div>
                     <span class="memberFlags">
                     @if ($user->keyholderStatus())

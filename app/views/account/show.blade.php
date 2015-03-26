@@ -1,12 +1,12 @@
 @extends('layouts.main')
 
 @section('meta-title')
-{{ $user->name }} - Manage your membership
+{{{ $user->name }}} - Manage your membership
 @stop
 
 @section('page-title')
-    {{ $user->name }}<br />
-    <small>{{ $user->email }}</small>
+    {{{ $user->name }}}<br />
+    <small>{{{ $user->email }}}</small>
 @stop
 
 @section('page-key-image')
