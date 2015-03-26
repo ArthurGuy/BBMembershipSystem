@@ -25,6 +25,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function createCharge($userId, $date, $amount)
     {
+        //@TODO - check for existing payments first
         return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>'draft']);
     }
 

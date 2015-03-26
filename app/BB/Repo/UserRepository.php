@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use Carbon\Carbon;
+
 class UserRepository extends DBRepository {
 
     /**
@@ -14,13 +16,18 @@ class UserRepository extends DBRepository {
      * @var ProfileDataRepository
      */
     private $profileDataRepository;
+    /**
+     * @var SubscriptionChargeRepository
+     */
+    private $subscriptionChargeRepository;
 
-    function __construct(\User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository)
+    function __construct(\User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->model = $model;
         $this->perPage = 150;
         $this->addressRepository = $addressRepository;
         $this->profileDataRepository = $profileDataRepository;
+        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
     }
 
     public function getActive()
@@ -96,6 +103,20 @@ class UserRepository extends DBRepository {
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
 
         return $user;
+    }
+
+    /**
+     * The user has setup a payment method of some kind so they are now considered active
+     * @param $userId
+     */
+    public function startMembership($userId)
+    {
+        $user = $this->getById($userId);
+        $user->active = true;
+        $user->status = 'active';
+        $user->save();
+
+        $this->subscriptionChargeRepository->createCharge($userId, Carbon::now(), $user->monthly_subscription);
     }
 
     /**
