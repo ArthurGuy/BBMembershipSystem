@@ -24,7 +24,12 @@ class GoCardlessPaymentController extends \BaseController {
         $this->goCardless = $goCardless;
     }
 
-
+    /**
+     * Main entry point for all gocardless payments - not subscriptions
+     * @param $userId
+     * @return mixed
+     * @throws \BB\Exceptions\AuthenticationException
+     */
     public function create($userId)
     {
         $user = User::findWithPermission($userId);
@@ -33,25 +38,20 @@ class GoCardlessPaymentController extends \BaseController {
         $amount = Request::get('amount');
         $returnPath = Request::get('return_path');
         $ref = $this->getReference($reason);
-        $payment_details = array(
-            'amount'        => $amount,
-            'name'          => $this->getName($reason, $user->id),
-            'description'   => $this->getDescription($reason),
-            'redirect_uri'      => route('account.payment.gocardless.store', [$user->id]),
-            'user'              => [
-                'first_name'        =>  $user->given_name,
-                'last_name'         =>  $user->family_name,
-                'billing_address1'  =>  $user->address_line_1,
-                'billing_address2'  =>  $user->address_line_2,
-                'billing_town'      =>  $user->address_line_3,
-                'billing_postcode'  =>  $user->address_postcode,
-                'country_code'      => 'GB'
-            ],
-            'state'         => $reason.':'.$ref.':'.$returnPath
-        );
-        return Redirect::to($this->goCardless->newBillUrl($payment_details));
+
+        if ($user->payment_method == 'gocardless-variable') {
+            return $this->handleBill($amount, $reason, $user, $ref, $returnPath);
+        } else {
+            return $this->handleManualBill($amount, $reason, $user, $ref, $returnPath);
+        }
     }
 
+    /**
+     * Processes the return for old gocardless payments
+     * @param $userId
+     * @return mixed
+     * @throws \BB\Exceptions\AuthenticationException
+     */
     public function store($userId)
     {
         $user = User::findWithPermission($userId);
@@ -110,6 +110,74 @@ class GoCardlessPaymentController extends \BaseController {
         Notification::success("Payment made");
         return Redirect::to($returnPath);
     }
+
+    /**
+     * Process a manual gocardless payment
+     * @param $amount
+     * @param $reason
+     * @param $user
+     * @param $ref
+     * @param $returnPath
+     * @return mixed
+     * @throws \BB\Exceptions\NotImplementedException
+     */
+    private function handleManualBill($amount, $reason, $user, $ref, $returnPath)
+    {
+        $payment_details = array(
+            'amount'       => $amount,
+            'name'         => $this->getName($reason, $user->id),
+            'description'  => $this->getDescription($reason),
+            'redirect_uri' => route('account.payment.gocardless.store', [$user->id]),
+            'user'         => [
+                'first_name'       => $user->given_name,
+                'last_name'        => $user->family_name,
+                'billing_address1' => $user->address_line_1,
+                'billing_address2' => $user->address_line_2,
+                'billing_town'     => $user->address_line_3,
+                'billing_postcode' => $user->address_postcode,
+                'country_code'     => 'GB'
+            ],
+            'state'        => $reason . ':' . $ref . ':' . $returnPath
+        );
+        return Redirect::to($this->goCardless->newBillUrl($payment_details));
+    }
+
+    /**
+     * Process a direct debit payment when we have a preauth
+     *
+     * @param $amount
+     * @param $reason
+     * @param $user
+     * @param $ref
+     * @param $returnPath
+     * @return mixed
+     */
+    private function handleBill($amount, $reason, $user, $ref, $returnPath)
+    {
+        $bill = $this->goCardless->newBill($user->subscription_id, $amount);
+
+        if ($bill)
+        {
+            //Store the payment
+            $fee = ($bill->amount - $bill->amount_minus_fees);
+            $paymentSourceId = $bill->id;
+            $amount = $bill->amount;
+            $status = $bill->status;
+
+            //The record payment process will make the necessary record updates
+            $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
+
+            Notification::success("The payment was submitted successfully");
+        }
+        else
+        {
+            //something went wrong - we still have the pre auth though
+            Notification::error("There was a problem charging your account");
+        }
+
+        return Redirect::to($returnPath);
+    }
+
 
 
     private function getDescription($reason)
@@ -180,5 +248,4 @@ class GoCardlessPaymentController extends \BaseController {
         }
         return false;
     }
-
 }
