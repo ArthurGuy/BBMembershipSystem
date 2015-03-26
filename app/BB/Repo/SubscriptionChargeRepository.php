@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\SubscriptionCharge;
+use Carbon\Carbon;
 
 class SubscriptionChargeRepository extends DBRepository
 {
@@ -60,8 +61,11 @@ class SubscriptionChargeRepository extends DBRepository
      * @param $chargeId
      * @param $paymentDate
      */
-    public function markChargeAsPaid($chargeId, $paymentDate)
+    public function markChargeAsPaid($chargeId, $paymentDate=null)
     {
+        if (is_null($paymentDate)) {
+            $paymentDate = new Carbon();
+        }
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = $paymentDate;
         $subCharge->status = 'paid';
