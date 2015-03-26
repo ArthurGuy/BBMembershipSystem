@@ -60,7 +60,7 @@ Tools and Equipment
                         @foreach($trainers[$toolId] as $trainer)
                             <a href="{{ route('members.show', $trainer->id) }}" class="list-group-item">
                                 {{ HTML::memberPhoto($trainer->profile, $trainer->hash, 25, '') }}
-                                {{ $trainer->name }}
+                                {{{ $trainer->name }}}
                             </a>
                         @endforeach
                     </div>
@@ -79,7 +79,7 @@ Tools and Equipment
                         @foreach($usersPendingInduction[$toolId] as $user)
                             <a href="{{ route('members.show', $user->id) }}" class="list-group-item">
                                 {{ HTML::memberPhoto($user->profile, $user->hash, 25, '') }}
-                                {{ $user->name }}
+                                {{{ $user->name }}}
                             </a>
                         @endforeach
                         </div>
@@ -92,7 +92,7 @@ Tools and Equipment
                         @foreach($trainedUsers[$toolId] as $user)
                             <a href="{{ route('members.show', $user->id) }}" class="list-group-item">
                             {{ HTML::memberPhoto($user->profile, $user->hash, 25, '') }}
-                            {{ $user->name }}
+                            {{{ $user->name }}}
                             </a>
                         @endforeach
                         </div>

@@ -169,11 +169,11 @@
                     <div class="form-group">
                         {{ Form::label('approve_new_address', 'New Address', ['class'=>'col-sm-4 control-label']) }}
                         <div class="col-sm-5">
-                            {{ $newAddress->line_1; }}<br />
-                            {{ $newAddress->line_2; }}<br />
-                            {{ $newAddress->line_3; }}<br />
-                            {{ $newAddress->line_4; }}<br />
-                            {{ $newAddress->postcode; }}
+                            {{{ $newAddress->line_1 }}}<br />
+                            {{{ $newAddress->line_2 }}}<br />
+                            {{{ $newAddress->line_3 }}}<br />
+                            {{{ $newAddress->line_4 }}}<br />
+                            {{{ $newAddress->postcode }}}
                         </div>
                         <div class="col-sm-3">
                             {{ Form::submit('Approve', array('class'=>'btn btn-default', 'name'=>'approve_new_address')) }}

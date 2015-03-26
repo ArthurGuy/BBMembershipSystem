@@ -40,7 +40,7 @@ Tools and Equipment
                         @foreach($trainers as $trainer)
                             <a href="{{ route('members.show', $trainer->user->id) }}" class="list-group-item">
                                 {{ HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') }}
-                                {{ $trainer->user->name }}
+                                {{{ $trainer->user->name }}}
                             </a>
                         @endforeach
                     </div>
@@ -68,7 +68,7 @@ Tools and Equipment
             <tr>
                 <td>{{ $log->present()->started }}</td>
                 <td>{{ $log->present()->timeUsed }}</td>
-                <td><a href="{{ route('members.show', $log->user->id) }}">{{ $log->user->name }}</a></td>
+                <td><a href="{{ route('members.show', $log->user->id) }}">{{{ $log->user->name }}}</a></td>
                 <td>{{ $log->present()->reason }}</td>
                 @if (Auth::user()->isAdmin() || Auth::user()->hasRole($equipmentId))
                 <td>
