@@ -185,6 +185,19 @@ class GoCardlessWebhookController extends \BaseController {
 
 
                     }
+                    elseif (($bill['status'] == 'pending') && ($action == 'retried'))
+                    {
+                        //Failed payment is being retried
+                        $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
+                        if ($subCharge) {
+                            if ($subCharge->amount == $bill['amount']) {
+                                $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id);
+                            } else {
+                                //@TODO: Handle partial payments
+                                \Log::debug("Sub charge handling - gocardless partial payment");
+                            }
+                        }
+                    }
                     elseif ($bill['status'] == 'refunded')
                     {
                         //Payment refunded
