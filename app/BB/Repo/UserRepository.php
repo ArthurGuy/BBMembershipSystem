@@ -107,6 +107,7 @@ class UserRepository extends DBRepository {
 
     /**
      * The user has setup a payment method of some kind so they are now considered active
+     * This will kick off the automated member checking processes
      * @param $userId
      */
     public function startMembership($userId)

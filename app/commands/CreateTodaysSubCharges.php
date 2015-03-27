@@ -21,14 +21,9 @@ class CreateTodaysSubCharges extends Command {
 	protected $description = 'Create all the subscription changes for today';
 
     /**
-     * @var \BB\Repo\UserRepository
+     * @var \BB\Services\MemberSubscriptionCharges
      */
-    private $userRepository;
-
-    /**
-     * @var \BB\Repo\SubscriptionChargeRepository
-     */
-    private $subscriptionChargeRepository;
+    private $subscriptionChargeService;
 
     /**
 	 * Create a new command instance.
@@ -38,8 +33,7 @@ class CreateTodaysSubCharges extends Command {
 	{
 		parent::__construct();
 
-        $this->userRepository = App::make('\BB\Repo\UserRepository');
-        $this->subscriptionChargeRepository = App::make('\BB\Repo\SubscriptionChargeRepository');
+        $this->subscriptionChargeService = App::make('\BB\Services\MemberSubscriptionCharges');
 	}
 
 	/**
@@ -49,19 +43,13 @@ class CreateTodaysSubCharges extends Command {
 	 */
 	public function fire()
 	{
-		$users = $this->userRepository->getActive();
-
         $dayOffset = $this->argument('dayOffset');
 
         $targetDate = Carbon::now()->addDays($dayOffset);
 
         $this->info("Generating charges for ".$targetDate);
 
-        foreach ($users as $user) {
-            if (($user->payment_day == $targetDate->day) && (!$this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
-                $this->subscriptionChargeRepository->createCharge($user->id, $targetDate, $user->monthly_subscription);
-            }
-        }
+        $this->subscriptionChargeService->createSubscriptionCharges($targetDate);
 	}
 
     /**
