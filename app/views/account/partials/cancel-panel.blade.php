@@ -7,11 +7,17 @@
         If you're thinking of leaving we would love to hear from you first, please send us a message and we will see if we can help.<br />
         <a href="mailto:trustees@buildbrighton.com">Email the trustees</a>
         </p>
-        @if (($user->payment_method == 'gocardless') || ($user->payment_method == 'gocardless-variable'))
+        @if ($user->payment_method == 'gocardless')
 
         {{ Form::open(array('method'=>'DELETE', 'route' => ['account.subscription.destroy', $user->id, 1])) }}
         {{ Form::submit('Cancel Your Monthly Direct Debit', array('class'=>'btn btn-link')) }}
         {{ Form::close() }}
+
+        @elseif ($user->payment_method == 'gocardless-variable')
+
+            {{ Form::open(array('method'=>'DELETE', 'route' => ['account.subscription.destroy', $user->id, 1])) }}
+            {{ Form::submit('Cancel Your Direct Debit and Leave', array('class'=>'btn btn-link')) }}
+            {{ Form::close() }}
 
         @else
 

@@ -178,7 +178,9 @@ class SubscriptionController extends \BaseController {
                 $user->subscription_id = null;
                 $user->payment_method = '';
                 $user->save();
-                
+
+                $user->setLeaving();
+
                 Notification::success("Your direct debit has been cancelled");
                 return Redirect::back();
             }
