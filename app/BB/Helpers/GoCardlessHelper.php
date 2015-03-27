@@ -74,6 +74,14 @@ class GoCardlessHelper {
         return false;
     }
 
+    /**
+     * Create a new payment against a preauth
+     * @param      $preauthId
+     * @param      $amount
+     * @param null $name
+     * @param null $description
+     * @return bool
+     */
     public function newBill($preauthId, $amount, $name = null, $description = null)
     {
         try {
@@ -84,6 +92,18 @@ class GoCardlessHelper {
                 'description' => $description,
             ];
             return $preAuth->create_bill($details);
+        } catch (\GoCardless_ApiException $e) {
+            \Log::error($e);
+            return false;
+        }
+    }
+
+    public function cancelPreAuth($preauthId)
+    {
+        try {
+            $preAuth = \GoCardless_PreAuthorization::find($preauthId);
+            $preAuthStatus = $preAuth->cancel();
+            return ($preAuthStatus->status == 'cancelled');
         } catch (\GoCardless_ApiException $e) {
             \Log::error($e);
             return false;

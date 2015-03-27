@@ -148,7 +148,7 @@ class SubscriptionController extends \BaseController {
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return \Response
 	 */
 	public function destroy($userId, $id=null)
 	{
@@ -169,6 +169,14 @@ class SubscriptionController extends \BaseController {
                     Notification::success("Your subscription has been cancelled");
                     return Redirect::back();
                 }
+            }
+        }
+        elseif ($user->payment_method == 'gocardless-variable')
+        {
+            $status = $this->goCardless->cancelPreAuth($user->subscription_id);
+            if ($status) {
+                Notification::success("Your direct debit has been cancelled");
+                return Redirect::back();
             }
         }
         Notification::error("Sorry, we were unable to cancel your subscription, please get in contact");
