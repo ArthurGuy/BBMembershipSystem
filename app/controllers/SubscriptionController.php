@@ -175,6 +175,10 @@ class SubscriptionController extends \BaseController {
         {
             $status = $this->goCardless->cancelPreAuth($user->subscription_id);
             if ($status) {
+                $user->subscription_id = null;
+                $user->payment_method = '';
+                $user->save();
+                
                 Notification::success("Your direct debit has been cancelled");
                 return Redirect::back();
             }
