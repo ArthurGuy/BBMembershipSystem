@@ -1,6 +1,6 @@
 class_name: ApiTester
 modules:
-    enabled: [REST, ApiHelper, Laravel4, Db]
+    enabled: [REST, ApiHelper, Laravel4, Db, Asserts]
     config:
         Laravel4:
             cleanup: false
