@@ -99,17 +99,24 @@ Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
 
 
 # Access Control
+
+//Main Door
 Route::post('access-control/main-door', ['uses' => 'AccessControlController@mainDoor']);
+
+//Status endpoint - testing - not in production
 Route::post('access-control/status', ['uses' => 'AccessControlController@status']);
 Route::get('access-control/status', ['uses' => 'AccessControlController@status']);
-//Route::post('access-control/legacy', ['uses' => 'AccessControlController@legacy']);
-Route::get('access-control/main-door/list', ['uses' => 'AccessControl\MainDoorController@all']);
+
+//Device control
 Route::post('access-control/device', ['uses' => 'DeviceAccessControlController@device']);
+
 //Spark Core Testing
 Route::post('access-control/spark-status', ['uses' => 'AccessControlController@sparkStatus']);
 
+//New ACS System
 Route::post('acs', ['uses' => 'ACSController@update']);
 Route::get('acs', ['uses' => 'ACSController@get']);
+
 
 
 # Activity Page
