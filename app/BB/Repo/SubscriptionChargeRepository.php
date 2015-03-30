@@ -94,4 +94,9 @@ class SubscriptionChargeRepository extends DBRepository
         return $this->model->where('user_id', $userId)->paginate();
     }
 
+    public function getDraft()
+    {
+        return $this->model->where('status', 'draft')->get();
+    }
+
 }
