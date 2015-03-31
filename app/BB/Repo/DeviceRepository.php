@@ -68,4 +68,17 @@ class DeviceRepository extends DBRepository {
         $record->save();
         return $record;
     }
+
+    public function popCommand($device)
+    {
+        $record = $this->model->where('device_id', $device)->first();
+        $commandToSend = null;
+        if ($record) {
+            $commands = explode(',', $record->queued_command);
+            $commandToSend = array_shift($commands);
+            $record->queued_command = implode(',', $commands);
+            $record->save();
+        }
+        return $commandToSend;
+    }
 } 

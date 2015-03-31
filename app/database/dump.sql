@@ -462,6 +462,7 @@ VALUES
 CREATE TABLE `devices` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `device_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `queued_command` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `last_boot` datetime NOT NULL,
   `last_heartbeat` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',

@@ -69,8 +69,7 @@ class ACSController extends Controller
             $error = true;
         }
 
-        $cmd = '';
-        $cmd = 'refresh';
+        $cmd = $this->deviceRepository->popCommand($data['device']);
 
         if (!$error) {
             $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
@@ -118,8 +117,7 @@ class ACSController extends Controller
         }
 
         //The command comes from the database and will instruct the door entry system to clear its memory if set
-        $cmd = '';
-        $cmd = 'refresh';
+        $cmd = $this->deviceRepository->popCommand($device);
 
         //The status of the device attached to th acs - used to lock down/disable equipment
         $deviceStatus = '1';
