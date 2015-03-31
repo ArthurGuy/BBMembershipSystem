@@ -62,7 +62,7 @@ class ACSController extends Controller
         //Door entry is quite simple - this will just deal with lookups
 
         try {
-            $this->keyFobAccess->verifyForEntry($data['key_fob'], 'main-door');
+            $this->keyFobAccess->verifyForEntry($data['key_fob'], 'main-door', $data['time']);
 
             $this->keyFobAccess->logSuccess();
         } catch(\Exception $e) {

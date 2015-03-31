@@ -20,6 +20,9 @@ class BuildingAccess extends KeyFobAccess {
 
     public function decodeDeviceCommand($receivedData)
     {
+        //Needed for legacy reasons - the new requests will be setting this
+        $this->setAccessTime();
+
         if ($this->determinSystemMessage($receivedData)) {
 
             $this->systemMessage = true;

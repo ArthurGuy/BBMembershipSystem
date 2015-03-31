@@ -2,6 +2,7 @@
 
 use BB\Exceptions\ValidationException;
 use BB\Repo\AccessLogRepository;
+use Carbon\Carbon;
 
 class KeyFobAccess {
 
@@ -51,6 +52,11 @@ class KeyFobAccess {
 
 
     protected $memberName;
+
+    /**
+     * @var Carbon
+     */
+    protected $time;
 
 
     public function __construct(AccessLogRepository $accessLogRepository)
@@ -127,12 +133,15 @@ class KeyFobAccess {
      * Check a fob id is valid for door entry and return the member if it is
      * @param $keyId
      * @param $doorName
+     * @param $time
      * @return \User
      * @throws ValidationException
      */
-    public function verifyForEntry($keyId, $doorName)
+    public function verifyForEntry($keyId, $doorName, $time)
     {
         $this->keyFob = $this->lookupKeyFob($keyId);
+
+        $this->setAccessTime($time);
 
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
@@ -157,6 +166,9 @@ class KeyFobAccess {
         }
 
         $this->memberName = $this->user->given_name;
+
+
+        //Fetch any commands that need to be returned to the device
 
         return $this->keyFob->user;
     }
@@ -187,6 +199,7 @@ class KeyFobAccess {
         $log['service']    = 'main-door';
         $log['delayed']    = $this->messageDelayed;
         $log['response']   = 402;
+        $log['created_at'] = $this->time;
         $this->accessLogRepository->logAccessAttempt($log);
     }
 
@@ -197,7 +210,7 @@ class KeyFobAccess {
         $log['user_id']    = $this->user->id;
         $log['service']    = 'main-door';
         $log['delayed']    = $this->messageDelayed;
-
+        $log['created_at'] = $this->time;
         //OK
         $log['response']   = 200;
         $this->accessLogRepository->logAccessAttempt($log);
@@ -209,6 +222,19 @@ class KeyFobAccess {
     public function getMemberName()
     {
         return $this->memberName;
+    }
+
+    /**
+     * Set the time to a specific timestamp - the new entry system will be passing a local time with the requests
+     * @param null $time
+     */
+    protected function setAccessTime($time=null)
+    {
+        if (!empty($time)) {
+            $this->time = Carbon::createFromTimestamp($time);
+        } else {
+            $this->time = Carbon::now();
+        }
     }
 
 } 
