@@ -21,7 +21,7 @@ class ApiHelper extends \Codeception\Module
 
     public function getMemberKeyFob($userId)
     {
-        return \KeyFob::where('user_id', $userId)->first();
+        return \KeyFob::where('user_id', $userId)->first()->key_id;
     }
 
     public function seeExceptionThrown($exception, $function)
