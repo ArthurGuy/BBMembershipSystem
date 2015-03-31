@@ -74,7 +74,7 @@ class ACSController extends Controller
         if (!$error) {
             $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
         } else {
-            $responseData = ['valid' => '0'];
+            $responseData = ['valid' => '0', 'cmd' => $cmd];
         }
         return $this->sendResponse($responseData);
     }
