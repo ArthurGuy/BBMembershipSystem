@@ -32,7 +32,7 @@ class ACSCest
 
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'key_fob'=>$keyFob, 'message'=>'lookup', 'type'=>'door']);
+        $I->sendPOST('/acs', ['device'=>'main-door', 'key_fob'=>$keyFob->key_id, 'message'=>'lookup', 'type'=>'door']);
 
         $I->canSeeResponseCodeIs(200);
 

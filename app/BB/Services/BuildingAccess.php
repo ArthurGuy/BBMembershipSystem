@@ -5,8 +5,6 @@ use BB\Repo\AccessLogRepository;
 
 class BuildingAccess extends KeyFobAccess {
 
-    protected $messageDelayed = false;
-
     protected $systemMessage = false;
 
     /**
@@ -18,16 +16,7 @@ class BuildingAccess extends KeyFobAccess {
     private $systemDeviceActions = ['boot', 'heartbeat', 'tamper'];
 
     private $devices = ['main-door'];
-    /**
-     * @var AccessLogRepository
-     */
-    private $accessLogRepository;
 
-    public function __construct(AccessLogRepository $accessLogRepository)
-    {
-
-        $this->accessLogRepository = $accessLogRepository;
-    }
 
     public function decodeDeviceCommand($receivedData)
     {
@@ -149,30 +138,5 @@ class BuildingAccess extends KeyFobAccess {
             }
         }
     }
-
-    private function logFailure()
-    {
-        $log               = [];
-        $log['key_fob_id'] = $this->keyFob->id;
-        $log['user_id']    = $this->user->id;
-        $log['service']    = 'main-door';
-        $log['delayed']    = $this->messageDelayed;
-        $log['response']   = 402;
-        $this->accessLogRepository->logAccessAttempt($log);
-    }
-
-    public function logSuccess()
-    {
-        $log               = [];
-        $log['key_fob_id'] = $this->keyFob->id;
-        $log['user_id']    = $this->user->id;
-        $log['service']    = 'main-door';
-        $log['delayed']    = $this->messageDelayed;
-
-        //OK
-        $log['response']   = 200;
-        $this->accessLogRepository->logAccessAttempt($log);
-    }
-
 
 }

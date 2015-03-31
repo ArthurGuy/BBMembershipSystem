@@ -1,8 +1,9 @@
 <?php namespace BB\Services;
 
 use BB\Exceptions\ValidationException;
+use BB\Repo\AccessLogRepository;
 
-abstract class KeyFobAccess {
+class KeyFobAccess {
 
     /**
      * The key fob string
@@ -40,6 +41,22 @@ abstract class KeyFobAccess {
      */
     protected $user;
 
+    /**
+     * @var AccessLogRepository
+     */
+    protected $accessLogRepository;
+
+
+    protected $messageDelayed = false;
+
+
+    protected $memberName;
+
+
+    public function __construct(AccessLogRepository $accessLogRepository)
+    {
+        $this->accessLogRepository = $accessLogRepository;
+    }
 
 
     /**
@@ -106,6 +123,44 @@ abstract class KeyFobAccess {
         return $this->user;
     }
 
+    /**
+     * Check a fob id is valid for door entry and return the member if it is
+     * @param $keyId
+     * @param $doorName
+     * @return \User
+     * @throws ValidationException
+     */
+    public function verifyForEntry($keyId, $doorName)
+    {
+        $this->keyFob = $this->lookupKeyFob($keyId);
+
+        //Make sure the user is active
+        $this->user = $this->keyFob->user()->first();
+        if (!$this->user || !$this->user->active) {
+            $this->logFailure();
+            throw new ValidationException("Not a member");
+        }
+
+        if (!$this->user->trusted) {
+            $this->logFailure();
+            throw new ValidationException("Not a keyholder");
+        }
+
+        if (!$this->user->key_holder) {
+            $this->logFailure();
+            throw new ValidationException("Not a keyholder");
+        }
+
+        if (!($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
+            $this->logFailure();
+            throw new ValidationException("Member not trusted");
+        }
+
+        $this->memberName = $this->user->given_name;
+
+        return $this->keyFob->user;
+    }
+
 
     protected function lookupKeyFob($keyId)
     {
@@ -121,6 +176,39 @@ abstract class KeyFobAccess {
             }
             return $keyFob;
         }
+    }
+
+
+    public function logFailure()
+    {
+        $log               = [];
+        $log['key_fob_id'] = $this->keyFob->id;
+        $log['user_id']    = $this->user->id;
+        $log['service']    = 'main-door';
+        $log['delayed']    = $this->messageDelayed;
+        $log['response']   = 402;
+        $this->accessLogRepository->logAccessAttempt($log);
+    }
+
+    public function logSuccess()
+    {
+        $log               = [];
+        $log['key_fob_id'] = $this->keyFob->id;
+        $log['user_id']    = $this->user->id;
+        $log['service']    = 'main-door';
+        $log['delayed']    = $this->messageDelayed;
+
+        //OK
+        $log['response']   = 200;
+        $this->accessLogRepository->logAccessAttempt($log);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMemberName()
+    {
+        return $this->memberName;
     }
 
 } 

@@ -14,11 +14,16 @@ class ACSController extends Controller
      * @var ACSValidator
      */
     private $ACSValidator;
+    /**
+     * @var \BB\Services\KeyFobAccess
+     */
+    private $keyFobAccess;
 
-    function __construct(DeviceRepository $deviceRepository, ACSValidator $ACSValidator)
+    function __construct(DeviceRepository $deviceRepository, ACSValidator $ACSValidator, \BB\Services\KeyFobAccess $keyFobAccess)
     {
         $this->deviceRepository = $deviceRepository;
         $this->ACSValidator     = $ACSValidator;
+        $this->keyFobAccess     = $keyFobAccess;
     }
 
     public function get()
@@ -52,33 +57,23 @@ class ACSController extends Controller
 
     private function handleDoor($data)
     {
-        $keyFob = null;
-        $memberName = null;
-        $valid = '0';
         $error = false;
 
         //Door entry is quite simple - this will just deal with lookups
 
         try {
-            $keyFob = KeyFob::lookup($data['key_fob']);
+            $this->keyFobAccess->verifyForEntry($data['key_fob'], 'main-door');
+
+            $this->keyFobAccess->logSuccess();
         } catch(\Exception $e) {
             $error = true;
-        }
-
-        if ($keyFob) {
-            $member = $keyFob->user()->first();
-            $memberName = $member->given_name;
-            $valid = '1';
-
-            //@TODO: Verify member has access
-            //@TODO: Record access log
         }
 
         $cmd = '';
         $cmd = 'refresh';
 
         if (!$error) {
-            $responseData = ['member' => $memberName, 'valid' => $valid, 'cmd' => $cmd];
+            $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
         } else {
             $responseData = ['valid' => '0'];
         }
@@ -94,6 +89,8 @@ class ACSController extends Controller
         } elseif ($data['message'] == 'heartbeat') {
             $this->deviceRepository->logHeartbeat($data['device']);
         }
+
+        //$member = $this->keyFobAccess->verifyForDevice($data['key_fob'], 'laser');
 
         $deviceStatus = 'ok';
 
