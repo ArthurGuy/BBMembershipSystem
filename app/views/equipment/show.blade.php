@@ -22,8 +22,15 @@ Tools and Equipment
             <div class="col-md-12 col-lg-6">
                 <div class="well">
                     @if ($equipment->requires_training)
-                        This piece of equipment requires that an access fee is paid, this goes towards maintenance.<br />
+                        To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
                         Equipment access fee: &pound{{ $equipment->cost }}<br />
+                        <br />
+                        @if ($userInduction)
+                            Induction to be completed
+                        @else
+                            @include('partials/payment-form', ['reason'=>'induction', 'displayReason'=>'Equipment Access Fee', 'returnPath'=>route('equipment.show', [$equipmentId], false), 'amount'=>25, 'buttonLabel'=>'Pay Now', 'methods'=>['balance'], 'ref'=>$equipmentId])
+                        @endif
+
                     @else
                         No fee required
                     @endif
@@ -86,6 +93,36 @@ Tools and Equipment
     </table>
     <div class="panel-footer">
         <?php echo $equipmentLog->links(); ?>
+    </div>
+
+
+    <div class="row">
+        @if ($equipment->requires_training)
+            <div class="col-sm-12 col-md-6">
+                <h4>Trained Users</h4>
+                <ul>
+                    @foreach($trainedUsers as $trainedUser)
+                        <li>
+                            <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                                {{{ $trainedUser->user->name }}}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <h4>Members waiting for an Induction</h4>
+                <ul>
+                    @foreach($usersPendingInduction as $trainedUser)
+                        <li>
+                            <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                                {{{ $trainedUser->user->name }}}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </div>
 </div>
 

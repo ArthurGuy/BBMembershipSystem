@@ -52,12 +52,18 @@ class EquipmentController extends \BaseController {
 
         $userInduction = $this->inductionRepository->getUserForEquipment(Auth::user()->id, $equipmentId);
 
+        $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipmentId);
+
+        $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($equipmentId);
+
         return View::make('equipment.show')
                         ->with('equipmentId', $equipmentId)
                         ->with('equipment', $equipment)
                         ->with('trainers', $trainers)
                         ->with('equipmentLog', $equipmentLog)
-                        ->with('userInduction', $userInduction);
+                        ->with('userInduction', $userInduction)
+                        ->with('trainedUsers', $trainedUsers)
+                        ->with('usersPendingInduction', $usersPendingInduction);
     }
 
 } 
