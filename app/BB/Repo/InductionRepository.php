@@ -97,7 +97,10 @@ class InductionRepository extends DBRepository {
         return $users;
     }
 
-
+    /**
+     * @param string $device
+     * @return mixed
+     */
     public function getTrainedUsersForEquipment($device)
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->whereNotNull('trained')->where('key', $device)->get();
@@ -107,7 +110,10 @@ class InductionRepository extends DBRepository {
         });
     }
 
-
+    /**
+     * @param string $device
+     * @return mixed
+     */
     public function getUsersPendingInductionForEquipment($device)
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->where('key', $device)->whereNull('trained')->get();
