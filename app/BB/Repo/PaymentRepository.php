@@ -14,10 +14,11 @@ class PaymentRepository extends DBRepository
     static $INDUCTION = 'induction';
 
 
-    protected $startDate = null;
-    protected $endDate = null;
-    protected $memberId = null;
-    protected $reason = null;
+    private $startDate = null;
+    private $endDate = null;
+    private $memberId = null;
+    private $reason = null;
+    private $source = null;
 
     /**
      * @param \Payment $model
@@ -45,6 +46,10 @@ class PaymentRepository extends DBRepository
             $model = $model->where('reason', $this->reason);
         }
 
+        if ($this->hasSourceFilter()) {
+            $model = $model->where('source', $this->source);
+        }
+
         if ($this->isSortable($params)) {
             return $model->orderBy($params['sortBy'], $params['direction'])->paginate($this->perPage);
         }
@@ -66,6 +71,10 @@ class PaymentRepository extends DBRepository
 
         if ($this->hasReasonFilter()) {
             $model = $model->where('reason', $this->reason);
+        }
+
+        if ($this->hasSourceFilter()) {
+            $model = $model->where('source', $this->source);
         }
 
         return $model->get()->sum('amount');
@@ -239,23 +248,58 @@ class PaymentRepository extends DBRepository
         throw new NotImplementedException();
     }
 
+    /**
+     * Used for the getPaginated and getTotalAmount method
+     * @param $memberFilter
+     */
     public function memberFilter($memberFilter)
     {
         $this->memberId = $memberFilter;
     }
 
-    public function hasMemberFilter()
+    private function hasMemberFilter()
     {
         return !is_null($this->memberId);
     }
 
+    /**
+     * Used for the getPaginated and getTotalAmount method
+     * @param $reasonFilter
+     */
     public function reasonFilter($reasonFilter)
     {
         $this->reason = $reasonFilter;
     }
 
-    public function hasReasonFilter()
+    private function hasReasonFilter()
     {
         return !is_null($this->reason);
+    }
+
+    /**
+     * Used for the getPaginated and getTotalAmount method
+     * @param $sourceFilter
+     */
+    public function sourceFilter($sourceFilter)
+    {
+        $this->source = $sourceFilter;
+    }
+
+
+    private function hasSourceFilter()
+    {
+        return !is_null($this->source);
+    }
+
+    /**
+     * Used for the getPaginated and getTotalAmount method
+     */
+    public function resetFilters()
+    {
+        $this->source = null;
+        $this->reason = null;
+        $this->memberId = null;
+        $this->startDate = null;
+        $this->endDate = null;
     }
 } 

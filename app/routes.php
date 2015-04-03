@@ -50,9 +50,6 @@ Route::resource('account.payment', 'PaymentController', ['only' => ['store']]);
 Route::group(array('before' => 'role:admin'), function() {
     Route::resource('payments', 'PaymentController', ['only' => ['index', 'destroy', 'update']]);
     Route::get('payments/overview', ['uses'=>'PaymentOverviewController@index', 'as'=>'payments.overview']);
-    Route::get('payments/overview', function() {
-        throw new \BB\Exceptions\NotImplementedException("Feature not yet built");
-    });
 });
 Route::post('account/{account}/payment/create', ['as'=>'account.payment.create', 'uses' => 'PaymentController@create']);
 Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
