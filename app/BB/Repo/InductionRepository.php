@@ -37,7 +37,11 @@ class InductionRepository extends DBRepository {
      */
     public function getTrainersForEquipment($deviceId)
     {
-        return $this->model->with('user', 'user.profile')->where('is_trainer', true)->where('key', $deviceId)->get();
+        $trainers = $this->model->with('user', 'user.profile')->where('is_trainer', true)->where('key', $deviceId)->get();
+        return $trainers->filter(function($trainer)
+        {
+            return $trainer->user->active;
+        });
     }
 
 
