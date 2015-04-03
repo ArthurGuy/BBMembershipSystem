@@ -27,7 +27,7 @@ class EquipmentLogCest
 
         $I->see($otherUser->name);
 
-        $I->selectOption('reason', 'testing');
+        $I->selectOption('form[name=equipmentLog] select[name=reason]', 'testing');
         $I->click('Update');
     }
 
@@ -46,7 +46,7 @@ class EquipmentLogCest
 
         $I->see($user->name);
 
-        $I->selectOption('reason', 'testing');
+        $I->selectOption('form[name=equipmentLog] select[name=reason]', 'testing');
         $I->assertTrue(
             $I->seeExceptionThrown('BB\Exceptions\ValidationException', function() use ($I){
                 $I->click('Update');
@@ -70,7 +70,7 @@ class EquipmentLogCest
 
         $I->see($otherUser->name);
 
-        $I->selectOption('reason', 'testing');
+        $I->selectOption('form[name=equipmentLog] select[name=reason]', 'testing');
         $I->click('Update');
     }
 }

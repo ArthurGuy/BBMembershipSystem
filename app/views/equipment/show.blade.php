@@ -80,7 +80,7 @@ Tools and Equipment
                 @if (Auth::user()->isAdmin() || Auth::user()->hasRole($equipmentId))
                 <td>
                     @if (empty($log->reason))
-                    {{ Form::open(['method'=>'POST', 'route'=>['equipment_log.update', $log->id]]) }}
+                    {{ Form::open(['method'=>'POST', 'route'=>['equipment_log.update', $log->id], 'name'=>'equipmentLog']) }}
                     {{ Form::select('reason', ['testing'=>'Testing', 'training'=>'Training'], $log->reason, ['class'=>'']) }}
                     {{ Form::submit('Update', ['class'=>'btn btn-primary btn-xs']) }}
                     {{ Form::close() }}
