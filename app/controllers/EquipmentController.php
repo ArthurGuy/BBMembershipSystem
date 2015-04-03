@@ -63,7 +63,14 @@ class EquipmentController extends \BaseController {
 
         $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipmentId);
 
-        return View::make('equipment.show')->with('equipmentId', $equipmentId)->with('equipment', $equipment)->with('trainers', $trainers)->with('equipmentLog', $equipmentLog);
+        $userInduction = $this->inductionRepository->getUserForEquipment(Auth::user()->id, $equipmentId);
+
+        return View::make('equipment.show')
+                        ->with('equipmentId', $equipmentId)
+                        ->with('equipment', $equipment)
+                        ->with('trainers', $trainers)
+                        ->with('equipmentLog', $equipmentLog)
+                        ->with('userInduction', $userInduction);
     }
 
 } 

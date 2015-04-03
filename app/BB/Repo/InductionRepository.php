@@ -112,6 +112,21 @@ class InductionRepository extends DBRepository {
         }
     }
 
+
+    /**
+     * @param $userId
+     * @param string $device
+     * @return mixed
+     */
+    public function getUserForEquipment($userId, $device)
+    {
+        $record = $this->model->with('user', 'user.profile')->where('user_id', $userId)->where('key', $device)->first();
+        if ($record) {
+            return $record;
+        }
+        return false;
+    }
+
     /**
      * Fetch an induction record by its associated payment
      * @param $paymentId
