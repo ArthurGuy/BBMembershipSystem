@@ -1,6 +1,7 @@
 <?php namespace BB\Process;
 
 use BB\Helpers\MembershipPayments;
+use BB\Services\MemberSubscriptionCharges;
 
 /**
  * Loop through each member and look at their last subscription payment
@@ -9,6 +10,16 @@ use BB\Helpers\MembershipPayments;
  * @package BB\Process
  */
 class CheckMemberships {
+
+    /**
+     * @var MemberSubscriptionCharges
+     */
+    private $memberSubscriptionCharges;
+
+    function __construct(MemberSubscriptionCharges $memberSubscriptionCharges)
+    {
+        $this->memberSubscriptionCharges = $memberSubscriptionCharges;
+    }
 
     public function run()
     {
@@ -30,6 +41,7 @@ class CheckMemberships {
             if ($expired)
             {
                 $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
+                //$paidUntil = $this->memberSubscriptionCharges->lastUserChargeExpires($user->id);
                 if ($paidUntil)
                 {
                     if ($user->subscription_expires->lt($paidUntil))

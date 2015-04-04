@@ -4,6 +4,7 @@ use BB\Helpers\GoCardlessHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
+use Carbon\Carbon;
 
 class MemberSubscriptionCharges {
 
@@ -35,7 +36,7 @@ class MemberSubscriptionCharges {
     /**
      * Create the sub charge for each member, only do this for members with dates matching the supplied date
      *
-     * @param \Carbon\Carbon $targetDate
+     * @param Carbon $targetDate
      */
     public function createSubscriptionCharges($targetDate)
     {
@@ -117,4 +118,17 @@ class MemberSubscriptionCharges {
         */
     }
 
+    /**
+     * Get a users latest sub payment
+     * @param $userId
+     * @return bool
+     */
+    public function lastUserChargeExpires($userId)
+    {
+        $charge = $this->model->where('user_id', $userId)->where('status', ['processing', 'paid'])->orderBy('charge_date', 'DESC')->first();
+        if ($charge) {
+            return $charge->charge_date->addMonth();
+        }
+        return false;
+    }
 }
