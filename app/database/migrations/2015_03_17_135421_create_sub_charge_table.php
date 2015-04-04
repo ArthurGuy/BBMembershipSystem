@@ -19,7 +19,7 @@ class CreateSubChargeTable extends Migration {
             $table->date('charge_date');
             $table->date('payment_date');
             $table->integer('amount');
-            $table->enum('status', ['draft', 'pending', 'paid', 'cancelled']);
+            $table->enum('status', ['pending', 'due', 'processing', 'paid', 'cancelled']);
 			$table->timestamps();
 		});
 	}

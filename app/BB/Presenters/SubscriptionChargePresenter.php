@@ -8,11 +8,15 @@ class SubscriptionChargePresenter extends Presenter
     public function status()
     {
         switch ($this->entity->status) {
-            case 'draft';
-                return 'Draft';
 
             case 'pending';
                 return 'Pending';
+
+            case 'due';
+                return 'Due';
+
+            case 'processing';
+                return 'Processing';
 
             case 'paid';
                 return 'Paid';

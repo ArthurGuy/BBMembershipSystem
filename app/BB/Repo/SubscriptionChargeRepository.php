@@ -25,7 +25,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function createCharge($userId, $date, $amount)
     {
-        return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>'draft']);
+        return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>'pending']);
     }
 
     /**
@@ -54,7 +54,7 @@ class SubscriptionChargeRepository extends DBRepository
         //Subscription payments will always be used to pay of bills
 
 
-        return $this->model->where('user_id', $userId)->whereIn('status', ['draft', 'pending'])->orderBy('charge_date', 'ASC')->first();
+        return $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->orderBy('charge_date', 'ASC')->first();
     }
 
     /**
@@ -94,9 +94,35 @@ class SubscriptionChargeRepository extends DBRepository
         return $this->model->where('user_id', $userId)->paginate();
     }
 
-    public function getDraft()
+    /**
+     * Get all the charges which are due payment
+     *
+     * @return mixed
+     */
+    public function getDue()
     {
-        return $this->model->where('status', 'draft')->get();
+        return $this->model->where('status', 'due')->get();
+    }
+
+    /**
+     * Get charges that are newly created and pending
+     *
+     * @return mixed
+     */
+    public function getPending()
+    {
+        return $this->model->where('status', 'pending')->get();
+    }
+
+    /**
+     * Update a charge and mark it as due
+     * @param $chargeId
+     */
+    public function setDue($chargeId)
+    {
+        $subCharge = $this->getById($chargeId);
+        $subCharge->status = 'due';
+        $subCharge->save();
     }
 
 }

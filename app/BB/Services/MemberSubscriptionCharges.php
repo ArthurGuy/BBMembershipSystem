@@ -27,6 +27,8 @@ class MemberSubscriptionCharges {
     }
 
     /**
+     * Create the sub charge for each member, only do this for members with dates matching the supplied date
+     *
      * @param \Carbon\Carbon $targetDate
      */
     public function createSubscriptionCharges($targetDate)
@@ -39,9 +41,25 @@ class MemberSubscriptionCharges {
         }
     }
 
+    /**
+     * Locate all charges that are for today or the past and mark them as due
+     */
+    public function makeChargesDue()
+    {
+        $subCharges = $this->subscriptionChargeRepository->getPending();
+        foreach ($subCharges as $charge) {
+            if ($charge->payment_date->isToday() || $charge->payment_date->isPast()) {
+                $this->subscriptionChargeRepository->setDue($charge->id);
+            }
+        }
+    }
+
+    /**
+     * Bill members based on the sub charges that are due
+     */
     public function billMembers()
     {
-        $subCharges = $this->subscriptionChargeRepository->getDraft();
+        $subCharges = $this->subscriptionChargeRepository->getDue();
 
         foreach ($subCharges as $charge) {
             if ($charge->user->payment_method == 'gocardless-variable') {

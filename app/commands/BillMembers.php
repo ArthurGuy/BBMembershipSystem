@@ -42,6 +42,10 @@ class BillMembers extends Command {
 	 */
 	public function fire()
 	{
+        //Update the payments status from pending to due
+        $this->subscriptionChargeService->makeChargesDue();
+
+        //Bill the due charges
         $this->subscriptionChargeService->billMembers();
 	}
 
