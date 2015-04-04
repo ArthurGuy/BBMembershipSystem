@@ -47,6 +47,10 @@ class MembershipPayments
         if (is_null($refDate)) {
             $refDate = Carbon::now();
         }
+
+        //The time needs to be zeroed so that comparisons with pure dates work
+        $refDate->setTime(0,0,0);
+
         $standingOrderCutoff = $refDate->copy()->subMonth()->subDays(7);
         $paypalCutoff        = $refDate->copy()->subDays(7);
         $goCardlessCutoff    = $refDate->copy()->subDays(14);
