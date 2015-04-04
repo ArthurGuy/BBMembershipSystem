@@ -1,5 +1,6 @@
 <?php namespace BB\Process;
 
+use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
 use BB\Services\MemberSubscriptionCharges;
 
@@ -24,7 +25,7 @@ class CheckMemberships {
     public function run()
     {
 
-        $users = \User::active()->where('status', '=', 'active')->notSpecialCase()->get();
+        $users = User::active()->where('status', '=', 'active')->notSpecialCase()->get();
         foreach ($users as $user)
         {
             echo $user->name;

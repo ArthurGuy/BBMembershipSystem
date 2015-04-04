@@ -1,5 +1,6 @@
 <?php namespace BB\Process;
 
+use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
 use Carbon\Carbon;
 
@@ -12,7 +13,7 @@ class CheckPaymentWarnings
         $today = new Carbon();
 
         //Fetch and check over active users which have a status of leaving
-        $users = \User::paymentWarning()->get();
+        $users = User::paymentWarning()->get();
         foreach ($users as $user) {
             if ($user->subscription_expires->lt($today)) {
                 //User has passed their expiry date

@@ -1,5 +1,6 @@
 <?php namespace BB\Process;
 
+use BB\Entities\User;
 use Carbon\Carbon;
 
 class CheckLeavingUsers
@@ -11,7 +12,7 @@ class CheckLeavingUsers
         $today = new Carbon();
 
         //Fetch and check over active users which have a status of leaving
-        $users = \User::leaving()->notSpecialCase()->get();
+        $users = User::leaving()->notSpecialCase()->get();
         foreach ($users as $user) {
             if ($user->subscription_expires->lt($today)) {
                 //User has passed their expiry date
