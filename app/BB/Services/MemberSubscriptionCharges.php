@@ -40,7 +40,7 @@ class MemberSubscriptionCharges {
      */
     public function createSubscriptionCharges($targetDate)
     {
-        $users = $this->userRepository->getActive();
+        $users = $this->userRepository->getBillableActive();
         foreach ($users as $user) {
             if (($user->payment_day == $targetDate->day) && (!$this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
                 $this->subscriptionChargeRepository->createCharge($user->id, $targetDate, $user->monthly_subscription);

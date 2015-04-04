@@ -36,6 +36,11 @@ class UserRepository extends DBRepository {
         return $this->model->active()->get();
     }
 
+    public function getBillableActive()
+    {
+        return $this->model->active()->notSpecialCase()->get();
+    }
+
     public function getPaginated(array $params)
     {
         $model = $this->model->with('roles')->with('profile');
