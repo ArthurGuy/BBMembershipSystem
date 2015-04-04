@@ -1,7 +1,9 @@
 <?php namespace BB\Entities;
 
 
-class Induction extends \Eloquent {
+use Illuminate\Database\Eloquent\Model;
+
+class Induction extends Model {
 
 	/**
 	 * The database table used by the model.

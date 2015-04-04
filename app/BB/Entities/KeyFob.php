@@ -1,8 +1,9 @@
 <?php namespace BB\Entities;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class KeyFob extends \Eloquent
+class KeyFob extends Model
 {
 
     /**

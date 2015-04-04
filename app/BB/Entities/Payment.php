@@ -1,9 +1,10 @@
 <?php namespace BB\Entities;
 
 
+use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class Payment extends \Eloquent {
+class Payment extends Model {
 
     use PresentableTrait;
 

@@ -1,6 +1,8 @@
 <?php namespace BB\Entities;
 
-class AuditLog extends \Eloquent {
+use Illuminate\Database\Eloquent\Model;
+
+class AuditLog extends Model {
 
     /**
      * The database table used by the model.

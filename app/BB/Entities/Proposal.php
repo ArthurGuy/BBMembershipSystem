@@ -1,9 +1,10 @@
 <?php namespace BB\Entities;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class Proposal extends \Eloquent {
+class Proposal extends Model {
 
     use PresentableTrait;
 

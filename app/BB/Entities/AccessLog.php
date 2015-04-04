@@ -1,8 +1,9 @@
 <?php namespace BB\Entities;
 
 use BB\Observer\AccessLogObserver;
+use Illuminate\Database\Eloquent\Model;
 
-class AccessLog extends \Eloquent {
+class AccessLog extends Model {
 
     /**
      * The database table used by the model.

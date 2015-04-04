@@ -1,6 +1,8 @@
 <?php namespace BB\Entities;
 
-class Role extends \Eloquent {
+use Illuminate\Database\Eloquent\Model;
+
+class Role extends Model {
 
     /**
      * Fillable fields

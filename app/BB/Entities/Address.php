@@ -1,6 +1,8 @@
 <?php namespace BB\Entities;
 
-class Address extends \Eloquent {
+use Illuminate\Database\Eloquent\Model;
+
+class Address extends Model {
 
     /**
      * The database table used by the model.

@@ -1,8 +1,9 @@
 <?php namespace BB\Entities;
 
+use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class EquipmentLog extends \Eloquent {
+class EquipmentLog extends Model {
 
     use PresentableTrait;
 

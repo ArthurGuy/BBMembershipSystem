@@ -1,9 +1,10 @@
 <?php namespace BB\Entities;
 
 use BB\Observer\UserAuditObserver;
+use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class ProfileData extends \Eloquent {
+class ProfileData extends Model {
 
     use PresentableTrait;
 

@@ -1,6 +1,8 @@
 <?php namespace BB\Entities;
 
-class StorageBox extends \Eloquent
+use Illuminate\Database\Eloquent\Model;
+
+class StorageBox extends Model
 {
 
     /**

@@ -1,8 +1,9 @@
 <?php namespace BB\Entities;
 
+use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class SubscriptionCharge extends \Eloquent {
+class SubscriptionCharge extends Model {
 
     use PresentableTrait;
 
