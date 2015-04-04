@@ -27,7 +27,7 @@ class BBCreditController extends \BaseController {
 
         $userBalance = $this->bbCredit->getBalanceFormatted();
 
-        $payments = $this->bbCredit->getBalancePaymentsPaginated($userId);
+        $payments = $this->bbCredit->getBalancePaymentsPaginated();
 
         return View::make('account.bbcredit.index')->with('user', $user)->with('payments', $payments)->with('userBalance', $userBalance);
     }
