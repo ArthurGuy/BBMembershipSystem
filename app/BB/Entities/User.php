@@ -58,7 +58,7 @@ class User extends Model implements UserInterface, RemindableInterface {
         'founder'               => 0,
         'director'              => 0,
         'induction_completed'   => 0,
-        'payment_day'           => 1,
+        'payment_day'           => 0,
         'profile_private'       => 0,
         'cash_balance'          => 0,
     ];
@@ -279,7 +279,7 @@ class User extends Model implements UserInterface, RemindableInterface {
     /**
      * Fetch a user record, performs a permission check
      * @param null $id
-     * @return mixed
+     * @return User
      * @throws AuthenticationException
      */
     public static function findWithPermission($id = null)
