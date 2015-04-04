@@ -17,7 +17,7 @@ class StorageBoxRepository extends DBRepository {
     /**
      * Fetch a members box
      * @param $userId
-     * @return null|\StorageBox
+     * @return StorageBox|null
      */
     public function getMemberBox($userId)
     {

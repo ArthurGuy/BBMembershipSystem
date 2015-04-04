@@ -21,7 +21,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param integer   $userId
      * @param \DateTime $date
      * @param integer   $amount
-     * @return mixed
+     * @return SubscriptionCharge
      */
     public function createCharge($userId, $date, $amount)
     {
@@ -45,7 +45,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * Locate the next payment the user has to pay off
      * @param $userId
-     * @param $paymentDate
+     * @param Carbon $paymentDate
      * @return mixed
      */
     public function findCharge($userId, $paymentDate)
@@ -86,7 +86,7 @@ class SubscriptionChargeRepository extends DBRepository
 
     /**
      * Return a paginated list of member payments
-     * @param $userId
+     * @param integer $userId
      * @return mixed
      */
     public function getMemberChargesPaginated($userId)

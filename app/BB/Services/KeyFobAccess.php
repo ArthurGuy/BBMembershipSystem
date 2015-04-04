@@ -133,7 +133,7 @@ class KeyFobAccess {
     /**
      * Check a fob id is valid for door entry and return the member if it is
      * @param $keyId
-     * @param $doorName
+     * @param string $doorName
      * @param $time
      * @return \User
      * @throws ValidationException

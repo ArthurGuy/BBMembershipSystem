@@ -279,7 +279,7 @@ class PaymentRepository extends DBRepository
 
     /**
      * Used for the getPaginated and getTotalAmount method
-     * @param $sourceFilter
+     * @param string $sourceFilter
      */
     public function sourceFilter($sourceFilter)
     {

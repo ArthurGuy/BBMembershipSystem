@@ -26,6 +26,9 @@ class MemberSubscriptionCharges {
         $this->goCardless = $goCardless;
     }
 
+    /**
+     * @param \Carbon\Carbon $targetDate
+     */
     public function createSubscriptionCharges($targetDate)
     {
         $users = $this->userRepository->getActive();
