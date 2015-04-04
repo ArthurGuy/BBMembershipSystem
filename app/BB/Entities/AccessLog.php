@@ -1,6 +1,5 @@
 <?php namespace BB\Entities;
 
-use BB\Observer\AccessLogObserver;
 use Illuminate\Database\Eloquent\Model;
 
 class AccessLog extends Model {
@@ -21,14 +20,6 @@ class AccessLog extends Model {
     protected $fillable = [
         'user_id', 'key_fob_id', 'response', 'service', 'delayed'
     ];
-
-
-    public static function boot()
-    {
-        parent::boot();
-
-        self::observe(new AccessLogObserver());
-    }
 
 
     public function user()

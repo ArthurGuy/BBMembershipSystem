@@ -2,8 +2,6 @@
 
 use BB\Exceptions\AuthenticationException;
 use BB\Helpers\MembershipPayments;
-use BB\Observer\UserAuditObserver;
-use BB\Observer\UserObserver;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use DateTime;
@@ -69,17 +67,6 @@ class User extends Model implements UserInterface, RemindableInterface {
     public function getDates()
     {
         return array('created_at', 'updated_at', 'subscription_expires', 'banned_date');
-    }
-
-
-    public static function boot()
-    {
-        parent::boot();
-
-        //The welcome email gets fired from this observer
-        self::observe(new UserObserver());
-
-        self::observe(new UserAuditObserver());
     }
 
 

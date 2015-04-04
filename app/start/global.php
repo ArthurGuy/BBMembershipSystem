@@ -27,6 +27,21 @@ ClassLoader::addDirectories(array(
 
 Event::subscribe('BB\Handlers\PaymentEventHandler');
 
+
+/*
+|--------------------------------------------------------------------------
+| Model Observers
+|--------------------------------------------------------------------------
+|
+| Here we bind observers to the models
+|
+*/
+
+\BB\Entities\AccessLog::observe(new \BB\Observer\AccessLogObserver());
+\BB\Entities\User::observe(new \BB\Observer\UserObserver());
+\BB\Entities\User::observe(new \BB\Observer\UserAuditObserver());
+
+
 /*
 |--------------------------------------------------------------------------
 | Application Error Logger
