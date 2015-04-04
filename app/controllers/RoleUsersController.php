@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\Role;
+use BB\Entities\User;
 use BB\Validators\RoleUserValidator;
 
 class RoleUsersController extends \BaseController {

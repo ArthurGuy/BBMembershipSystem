@@ -4,24 +4,27 @@ namespace Codeception\Module;
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
 
+use BB\Entities\KeyFob;
+use BB\Entities\User;
+
 class ApiHelper extends \Codeception\Module
 {
 
     public function getActiveKeyholderMember()
     {
         //We know this is user 1 in the DB
-        return \User::findOrFail(1);
+        return User::findOrFail(1);
     }
 
     public function getInactiveKeyholderMember()
     {
-        return \User::findOrFail(2);
+        return User::findOrFail(2);
     }
 
 
     public function getMemberKeyFob($userId)
     {
-        return \KeyFob::where('user_id', $userId)->first();
+        return KeyFob::where('user_id', $userId)->first();
     }
 
     public function seeExceptionThrown($exception, $function)

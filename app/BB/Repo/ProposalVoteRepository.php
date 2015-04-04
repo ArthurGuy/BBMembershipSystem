@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\ProposalVote;
+
 class ProposalVoteRepository extends DBRepository {
 
 
@@ -8,7 +10,7 @@ class ProposalVoteRepository extends DBRepository {
      */
     protected $model;
 
-    function __construct(\ProposalVote $model)
+    function __construct(ProposalVote $model)
     {
         $this->model = $model;
     }

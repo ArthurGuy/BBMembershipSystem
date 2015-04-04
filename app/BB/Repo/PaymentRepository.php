@@ -1,12 +1,13 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\Payment;
 use BB\Exceptions\NotImplementedException;
 
 class PaymentRepository extends DBRepository
 {
 
     /**
-     * @var \Payment
+     * @var Payment
      */
     protected $model;
 
@@ -21,9 +22,9 @@ class PaymentRepository extends DBRepository
     private $source = null;
 
     /**
-     * @param \Payment $model
+     * @param Payment $model
      */
-    function __construct(\Payment $model)
+    function __construct(Payment $model)
     {
         $this->model = $model;
         $this->perPage = 10;

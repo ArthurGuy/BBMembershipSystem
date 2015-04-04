@@ -1,15 +1,16 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\Induction;
 use Illuminate\Database\Eloquent\Collection;
 
 class InductionRepository extends DBRepository {
 
     /**
-     * @var \Induction
+     * @var Induction
      */
     protected $model;
 
-    function __construct(\Induction $model)
+    function __construct(Induction $model)
     {
         $this->model = $model;
     }

@@ -1,5 +1,6 @@
 <?php
 
+use BB\Entities\User;
 use BB\Repo\SubscriptionChargeRepository;
 use Carbon\Carbon;
 

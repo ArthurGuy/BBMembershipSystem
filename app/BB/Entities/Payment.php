@@ -1,9 +1,9 @@
-<?php
+<?php namespace BB\Entities;
 
 
 use Laracasts\Presenter\PresentableTrait;
 
-class Payment extends Eloquent {
+class Payment extends \Eloquent {
 
     use PresentableTrait;
 
@@ -20,7 +20,6 @@ class Payment extends Eloquent {
 	 * @var array
 	 */
 	protected $hidden = array();
-
 
     /**
      * Fillable fields
@@ -43,7 +42,7 @@ class Payment extends Eloquent {
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     public function scopeSubscription($query)

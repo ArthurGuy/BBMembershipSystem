@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\User;
+
 class BalancePaymentController extends \BaseController {
 
 

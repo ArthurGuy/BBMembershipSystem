@@ -1,6 +1,8 @@
-<?php
+<?php namespace BB\Entities;
 
-class KeyFob extends Eloquent
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+class KeyFob extends \Eloquent
 {
 
     /**
@@ -22,7 +24,7 @@ class KeyFob extends Eloquent
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     public function markLost()
@@ -41,7 +43,7 @@ class KeyFob extends Eloquent
     {
         $record = self::where('key_id', '=', $fobId)->active()->first();
         if (!$record) {
-            throw new \Illuminate\Database\Eloquent\ModelNotFoundException;
+            throw new ModelNotFoundException;
         }
         return $record;
     }

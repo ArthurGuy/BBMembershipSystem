@@ -1,5 +1,9 @@
 <?php
 
+use BB\Entities\Induction;
+use BB\Entities\Payment;
+use BB\Entities\User;
+
 class PaymentController extends \BaseController {
 
 

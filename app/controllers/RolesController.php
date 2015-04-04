@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\Role;
+
 class RolesController extends \BaseController {
     /**
      * @var \BB\Repo\UserRepository

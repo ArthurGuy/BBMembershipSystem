@@ -1,8 +1,11 @@
-<?php 
+<?php namespace BB\Entities;
 
-class ProfileData extends Eloquent {
+use BB\Observer\UserAuditObserver;
+use Laracasts\Presenter\PresentableTrait;
 
-    use \Laracasts\Presenter\PresentableTrait;
+class ProfileData extends \Eloquent {
+
+    use PresentableTrait;
 
     protected $fillable = [
         'twitter', 'facebook', 'google_plus', 'github', 'irc', 'website', 'tagline', 'description', 'skills', 'profile_photo', 'profile_photo_private', 'new_profile_photo', 'profile_photo_on_wall'
@@ -19,7 +22,7 @@ class ProfileData extends Eloquent {
     {
         parent::boot();
 
-        self::observe(new \BB\Observer\UserAuditObserver());
+        self::observe(new UserAuditObserver());
     }
 
     public function setSkillsAttribute($skills)
@@ -39,7 +42,7 @@ class ProfileData extends Eloquent {
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     /**

@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+use BB\Entities\User;
 
 class ProfileController extends \BaseController {
 

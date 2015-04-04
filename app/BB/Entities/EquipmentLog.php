@@ -1,8 +1,8 @@
-<?php
+<?php namespace BB\Entities;
 
 use Laracasts\Presenter\PresentableTrait;
 
-class EquipmentLog extends Eloquent {
+class EquipmentLog extends \Eloquent {
 
     use PresentableTrait;
 
@@ -34,12 +34,12 @@ class EquipmentLog extends Eloquent {
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     public function keyFob()
     {
-        return $this->belongsTo('KeyFob');
+        return $this->belongsTo('\BB\Entities\KeyFob');
     }
 
 } 

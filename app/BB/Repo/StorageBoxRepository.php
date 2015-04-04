@@ -1,13 +1,15 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\StorageBox;
+
 class StorageBoxRepository extends DBRepository {
 
     /**
-     * @var \StorageBox
+     * @var StorageBox
      */
     protected $model;
 
-    function __construct(\StorageBox $model)
+    function __construct(StorageBox $model)
     {
         $this->model = $model;
     }

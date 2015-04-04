@@ -1,6 +1,8 @@
 <?php
 
 
+use BB\Entities\User;
+
 class AccountController extends \BaseController {
 
     protected $layout = 'layouts.main';

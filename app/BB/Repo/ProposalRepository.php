@@ -1,5 +1,6 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\Proposal;
 use Carbon\Carbon;
 
 class ProposalRepository extends DBRepository {
@@ -10,7 +11,7 @@ class ProposalRepository extends DBRepository {
      */
     protected $model;
 
-    function __construct(\Proposal $model)
+    function __construct(Proposal $model)
     {
         $this->model = $model;
     }

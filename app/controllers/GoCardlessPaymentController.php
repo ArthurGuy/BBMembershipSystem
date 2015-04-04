@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\User;
+
 class GoCardlessPaymentController extends \BaseController {
 
 

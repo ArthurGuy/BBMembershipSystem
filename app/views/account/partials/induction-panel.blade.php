@@ -52,7 +52,7 @@
             <td>
                 @if (Auth::user()->isAdmin() && $item->userInduction && !$item->userInduction->is_trained)
                 {{ Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) }}
-                {{ Form::select('trainer_user_id', Induction::trainersForDropdown($itemKey)) }}
+                {{ Form::select('trainer_user_id', \BB\Entities\Induction::trainersForDropdown($itemKey)) }}
                 {{ Form::hidden('mark_trained', '1') }}
                 {{ Form::submit('Inducted By', array('class'=>'btn btn-default btn-xs')) }}
                 {{ Form::close() }}

@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\User;
+
 class StripePaymentController extends \BaseController {
 
 

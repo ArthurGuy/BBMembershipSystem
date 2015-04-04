@@ -1,16 +1,17 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\EquipmentLog;
 use Carbon\Carbon;
 
 class EquipmentLogRepository extends DBRepository
 {
 
     /**
-     * @var \EquipmentLog
+     * @var EquipmentLog
      */
     protected $model;
 
-    function __construct(\EquipmentLog $model)
+    function __construct(EquipmentLog $model)
     {
         $this->model = $model;
         $this->perPage = 25;

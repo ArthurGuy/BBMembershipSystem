@@ -1,11 +1,12 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\User;
 use Carbon\Carbon;
 
 class UserRepository extends DBRepository {
 
     /**
-     * @var \User
+     * @var User
      */
     protected $model;
     /**
@@ -21,7 +22,7 @@ class UserRepository extends DBRepository {
      */
     private $subscriptionChargeRepository;
 
-    function __construct(\User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
+    function __construct(User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->model = $model;
         $this->perPage = 150;

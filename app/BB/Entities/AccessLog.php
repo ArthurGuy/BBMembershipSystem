@@ -1,6 +1,8 @@
-<?php 
+<?php namespace BB\Entities;
 
-class AccessLog extends Eloquent {
+use BB\Observer\AccessLogObserver;
+
+class AccessLog extends \Eloquent {
 
     /**
      * The database table used by the model.
@@ -24,18 +26,18 @@ class AccessLog extends Eloquent {
     {
         parent::boot();
 
-        self::observe(new \BB\Observer\AccessLogObserver());
+        self::observe(new AccessLogObserver());
     }
 
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     public function keyFob()
     {
-        return $this->belongsTo('KeyFob');
+        return $this->belongsTo('\BB\Entities\KeyFob');
     }
 
 } 

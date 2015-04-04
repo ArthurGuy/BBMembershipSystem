@@ -1,6 +1,6 @@
-<?php 
+<?php namespace BB\Entities;
 
-class AuditLog extends Eloquent {
+class AuditLog extends \Eloquent {
 
     /**
      * The database table used by the model.
@@ -22,12 +22,12 @@ class AuditLog extends Eloquent {
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     public function admin()
     {
-        return $this->belongsTo('User', 'admin_id');
+        return $this->belongsTo('\BB\Entities\User', 'admin_id');
     }
 
 

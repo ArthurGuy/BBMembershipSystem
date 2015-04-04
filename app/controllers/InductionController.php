@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\Induction;
+
 class InductionController extends \BaseController
 {
 

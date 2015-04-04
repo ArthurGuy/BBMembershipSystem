@@ -1,5 +1,6 @@
 <?php namespace BB\Services;
 
+use BB\Entities\KeyFob;
 use BB\Exceptions\ValidationException;
 use BB\Repo\AccessLogRepository;
 use Carbon\Carbon;
@@ -177,12 +178,12 @@ class KeyFobAccess {
     protected function lookupKeyFob($keyId)
     {
         try {
-            $keyFob = \KeyFob::lookup($keyId);
+            $keyFob = KeyFob::lookup($keyId);
             return $keyFob;
         } catch (\Exception $e) {
             $keyId = substr('BB'.$keyId, 0, 12);
             try {
-                $keyFob = \KeyFob::lookup($keyId);
+                $keyFob = KeyFob::lookup($keyId);
             } catch (\Exception $e) {
                 throw new ValidationException("Key fob ID not valid");
             }

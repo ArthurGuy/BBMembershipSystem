@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\KeyFob;
+
 class KeyFobController extends \BaseController {
 
 

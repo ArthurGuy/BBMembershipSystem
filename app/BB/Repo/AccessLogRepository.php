@@ -1,5 +1,7 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\AccessLog;
+
 class AccessLogRepository extends DBRepository {
 
 
@@ -8,7 +10,7 @@ class AccessLogRepository extends DBRepository {
      */
     protected $model;
 
-    function __construct(\AccessLog $model)
+    function __construct(AccessLog $model)
     {
         $this->model = $model;
     }

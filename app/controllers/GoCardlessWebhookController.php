@@ -1,6 +1,8 @@
 <?php
 
 
+use BB\Entities\Payment;
+use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;

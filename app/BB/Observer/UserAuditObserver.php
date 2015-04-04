@@ -1,5 +1,7 @@
 <?php namespace BB\Observer;
 
+use BB\Entities\AuditLog;
+
 class UserAuditObserver
 {
 
@@ -31,7 +33,7 @@ class UserAuditObserver
 
         //If there are changes to log create a new audit log entry with them in
         if (count($changedData) > 0) {
-            \AuditLog::create(
+            AuditLog::create(
                 [
                     'user_id'     => $user->id,
                     'admin_id'    => $adminId,

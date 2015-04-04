@@ -1,14 +1,21 @@
-<?php
+<?php namespace BB\Entities;
 
+use BB\Exceptions\AuthenticationException;
 use BB\Helpers\MembershipPayments;
+use BB\Observer\UserAuditObserver;
+use BB\Observer\UserObserver;
 use BB\Traits\UserRoleTrait;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Laracasts\Presenter\PresentableTrait;
+use Auth;
+use Hash;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends \Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait, UserRoleTrait, PresentableTrait;
 
@@ -69,9 +76,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         parent::boot();
 
         //The welcome email gets fired from this observer
-        self::observe(new \BB\Observer\UserObserver());
+        self::observe(new UserObserver());
 
-        self::observe(new \BB\Observer\UserAuditObserver());
+        self::observe(new UserAuditObserver());
     }
 
 
@@ -104,22 +111,22 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function payments()
     {
-        return $this->hasMany('Payment')->orderBy('created_at', 'desc');
+        return $this->hasMany('\BB\Entities\Payment')->orderBy('created_at', 'desc');
     }
 
     public function inductions()
     {
-        return $this->hasMany('Induction');
+        return $this->hasMany('\BB\Entities\Induction');
     }
 
     public function keyFob()
     {
-        return $this->hasMany('KeyFob')->where('active', true)->first();
+        return $this->hasMany('\BB\Entities\KeyFob')->where('active', true)->first();
     }
 
     public function profile()
     {
-        return $this->hasOne('ProfileData');
+        return $this->hasOne('\BB\Entities\ProfileData');
     }
 
     public function address()
@@ -285,7 +292,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      * Fetch a user record, performs a permission check
      * @param null $id
      * @return mixed
-     * @throws BB\Exceptions\AuthenticationException
+     * @throws AuthenticationException
      */
     public static function findWithPermission($id = null)
     {
@@ -309,7 +316,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             return $requestedUser;
         }
 
-        throw new \BB\Exceptions\AuthenticationException();
+        throw new AuthenticationException();
     }
 
 
@@ -317,7 +324,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     {
         if (empty($expiry))
         {
-            $expiry = \Carbon\Carbon::now()->addMonth();
+            $expiry = Carbon::now()->addMonth();
         }
         $this->status = 'active';
         $this->active = true;

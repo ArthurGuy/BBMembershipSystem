@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\AccessLog;
+use BB\Entities\KeyFob;
 use Illuminate\Support\Facades\Response;
 
 class AccessControlController extends Controller

@@ -1,6 +1,6 @@
-<?php
+<?php namespace BB\Entities;
 
-class StorageBox extends Eloquent
+class StorageBox extends \Eloquent
 {
 
     /**
@@ -25,7 +25,7 @@ class StorageBox extends Eloquent
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     /**

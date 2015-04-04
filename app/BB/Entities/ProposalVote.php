@@ -1,6 +1,6 @@
-<?php 
+<?php namespace BB\Entities;
 
-class ProposalVote extends Eloquent {
+class ProposalVote extends \Eloquent {
 
     /**
      * The database table used by the model.
@@ -11,12 +11,12 @@ class ProposalVote extends Eloquent {
 
     public function proposal()
     {
-        return $this->belongsTo('Proposal');
+        return $this->belongsTo('\BB\Entities\Proposal');
     }
 
     public function member()
     {
-        return $this->belongsTo('User', 'user_id');
+        return $this->belongsTo('\BB\Entities\User', 'user_id');
     }
 
 } 

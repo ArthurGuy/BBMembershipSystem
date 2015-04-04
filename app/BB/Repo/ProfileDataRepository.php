@@ -1,5 +1,6 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\ProfileData;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProfileDataRepository extends DBRepository {
@@ -9,7 +10,7 @@ class ProfileDataRepository extends DBRepository {
      */
     protected $model;
 
-    function __construct(\ProfileData $model)
+    function __construct(ProfileData $model)
     {
         $this->model = $model;
     }

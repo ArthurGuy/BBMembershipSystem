@@ -1,6 +1,6 @@
-<?php
+<?php namespace BB\Entities;
 
-class Role extends Eloquent {
+class Role extends \Eloquent {
 
     /**
      * Fillable fields
@@ -11,7 +11,7 @@ class Role extends Eloquent {
 
     public function users()
     {
-        return $this->belongsToMany('User')->withTimestamps();
+        return $this->belongsToMany('\BB\Entities\User')->withTimestamps();
     }
 
 }

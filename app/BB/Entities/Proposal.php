@@ -1,9 +1,9 @@
-<?php
+<?php namespace BB\Entities;
 
 use Carbon\Carbon;
 use Laracasts\Presenter\PresentableTrait;
 
-class Proposal extends Eloquent {
+class Proposal extends \Eloquent {
 
     use PresentableTrait;
 

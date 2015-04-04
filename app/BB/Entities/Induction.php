@@ -1,7 +1,7 @@
-<?php
+<?php namespace BB\Entities;
 
 
-class Induction extends Eloquent {
+class Induction extends \Eloquent {
 
 	/**
 	 * The database table used by the model.
@@ -46,17 +46,17 @@ class Induction extends Eloquent {
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     public function trainerUser()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
     public function payment()
     {
-        return $this->belongsTo('Payment');
+        return $this->belongsTo('\BB\Entities\Payment');
     }
 
     public static function findExisting($userId, $key)

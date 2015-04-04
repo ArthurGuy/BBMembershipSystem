@@ -1,5 +1,6 @@
 <?php namespace BB\Handlers;
 
+use BB\Entities\Induction;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 
@@ -107,7 +108,7 @@ class PaymentEventHandler {
     {
         /* @TODO: Replace with a repo */
         /* @TODO: Verify payment amount is valid - this could have been changed */
-        \Induction::create([
+        Induction::create([
             'user_id' => $userId,
             'key' => $ref,
             'paid' => true,

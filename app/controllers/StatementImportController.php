@@ -1,5 +1,7 @@
 <?php
 
+use BB\Entities\Payment;
+use BB\Entities\User;
 use BB\Repo\SubscriptionChargeRepository;
 
 class StatementImportController extends \BaseController {
