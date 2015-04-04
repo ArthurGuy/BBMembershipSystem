@@ -193,13 +193,11 @@
             </div>
         </div>
 
-        @if (Auth::user()->isAdmin())
         <div class="row">
             <div class="col-xs-12 col-lg-12 pull-left">
                 @include('account.partials.sub-charges')
             </div>
         </div>
-        @endif
 
 
         @if (($user->status != 'left') && ($user->status != 'leaving'))
