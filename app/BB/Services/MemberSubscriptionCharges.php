@@ -1,6 +1,7 @@
 <?php namespace BB\Services;
 
 use BB\Helpers\GoCardlessHelper;
+use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 
@@ -18,12 +19,17 @@ class MemberSubscriptionCharges {
      * @var GoCardlessHelper
      */
     private $goCardless;
+    /**
+     * @var PaymentRepository
+     */
+    private $paymentRepository;
 
-    function __construct(UserRepository $userRepository, SubscriptionChargeRepository $subscriptionChargeRepository, GoCardlessHelper $goCardless)
+    function __construct(UserRepository $userRepository, SubscriptionChargeRepository $subscriptionChargeRepository, GoCardlessHelper $goCardless, PaymentRepository $paymentRepository)
     {
         $this->userRepository = $userRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
         $this->goCardless = $goCardless;
+        $this->paymentRepository = $paymentRepository;
     }
 
     /**
@@ -65,6 +71,7 @@ class MemberSubscriptionCharges {
             if ($charge->user->payment_method == 'gocardless-variable') {
                 $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription);
                 if ($bill) {
+                    $this->paymentRepository->recordPayment('subscription', $charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
                     $this->subscriptionChargeRepository->markChargeAsPaid($charge->id);
                 }
             }
