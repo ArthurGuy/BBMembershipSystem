@@ -10,5 +10,5 @@ $paypalDate = \BB\Helpers\MembershipPayments::getSubGracePeriodDate('paypal');
 $I->assertEquals(get_parent_class($paypalDate), 'DateTime');
 
 //Confirm the date is what we expect
-$I->assertEquals(Carbon::now()->subDays(7), $paypalDate);
+$I->assertEquals(Carbon::now()->subDays(7)->setTime(0,0,0), $paypalDate);
 
