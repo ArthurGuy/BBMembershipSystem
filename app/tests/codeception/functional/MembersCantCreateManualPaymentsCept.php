@@ -1,4 +1,6 @@
-<?php 
+<?php
+use BB\Entities\User;
+
 $I = new FunctionalTester($scenario);
 $I->am('member');
 $I->wantTo('confirm I cant create manual payments');

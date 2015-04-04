@@ -1,4 +1,6 @@
 <?php
+use BB\Entities\User;
+
 $I = new FunctionalTester($scenario);
 $I->am('a member');
 $I->wantTo('confirm I cant see other peoples edit page');

@@ -1,4 +1,5 @@
 <?php
+use BB\Entities\User;
 use \FunctionalTester;
 
 class RolesCest

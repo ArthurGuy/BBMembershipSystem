@@ -1,4 +1,6 @@
-<?php 
+<?php
+use BB\Entities\User;
+
 $I = new FunctionalTester($scenario);
 $I->am('a guest');
 $I->wantTo('make sure I can\'t see private members in the member list');

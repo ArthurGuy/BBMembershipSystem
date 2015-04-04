@@ -1,5 +1,6 @@
 <?php
 use BB\Entities\Payment;
+use BB\Entities\User;
 
 $I = new UnitTester($scenario);
 $I->wantTo('confirm the payment helper fetches the correct payment date');

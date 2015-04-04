@@ -1,4 +1,6 @@
-<?php 
+<?php
+use BB\Entities\User;
+
 $I = new FunctionalTester($scenario);
 $I->am('a member');
 $I->wantTo('view the equipment training page');
