@@ -19,12 +19,28 @@ class CheckMembershipStatus extends Command {
 	protected $description = 'Check the membership expiry dates and disable or email users';
 
     /**
+     * @var \BB\Process\CheckMemberships
+     */
+    private $checkMemberships;
+    /**
+     * @var \BB\Process\CheckPaymentWarnings
+     */
+    private $checkPaymentWarnings;
+    /**
+     * @var \BB\Process\CheckLeavingUsers
+     */
+    private $checkLeavingUsers;
+
+    /**
      * Create a new command instance.
      *
      */
 	public function __construct()
 	{
 		parent::__construct();
+        $this->checkPaymentWarnings = App::make('\BB\Process\CheckPaymentWarnings');
+        $this->checkLeavingUsers = App::make('\BB\Process\CheckLeavingUsers');
+        $this->checkMemberships = App::make('\BB\Process\CheckMemberships');
 	}
 
 	/**
@@ -36,20 +52,17 @@ class CheckMembershipStatus extends Command {
 	{
         //Users with a status of payment warning
         $this->info("Checking users with payment warnings");
-        $paymentWarningProcess = new \BB\Process\CheckPaymentWarnings();
-        $paymentWarningProcess->run();
+        $this->checkPaymentWarnings->run();
 
 
         //Users with a status of leaving
         $this->info("Checking users with a leaving status");
-        $leavingProcess = new \BB\Process\CheckLeavingUsers();
-        $leavingProcess->run();
+        $this->checkLeavingUsers->run();
 
 
         //This should occur last as it gives people 24 hours with a payment warning
         $this->info("Checking users subscription payments");
-        $process = new \BB\Process\CheckMemberships();
-        $process->run();
+        $this->checkMemberships->run();
 	}
 
 
