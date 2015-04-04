@@ -80,7 +80,7 @@ class SubscriptionChargeRepository extends DBRepository
     {
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = null;
-        $subCharge->status = 'pending';
+        $subCharge->status = 'due';
         $subCharge->save();
     }
 

@@ -69,6 +69,14 @@ class MemberSubscriptionCharges {
 
         foreach ($subCharges as $charge) {
             if ($charge->user->payment_method == 'gocardless-variable') {
+
+                //Look the the previous attempts - there may be multiple failures
+                $existingPayments = $this->paymentRepository->getPaymentsByReference($charge->id);
+                if ($existingPayments->count() > 0) {
+                    //We will let the user retry the payment if it fails
+                    break;
+                }
+                
                 $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription);
                 if ($bill) {
                     $this->paymentRepository->recordPayment('subscription', $charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
