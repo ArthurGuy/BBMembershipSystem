@@ -34,7 +34,7 @@ class SubscriptionCharge extends Model {
 
     public function user()
     {
-        return $this->hasOne('\BB\Entities\User');
+        return $this->belongsTo('\BB\Entities\User');
     }
 
 } 
