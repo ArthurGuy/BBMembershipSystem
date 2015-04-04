@@ -17,6 +17,9 @@ Payments
         <li class="">
             {{ link_to_route('payments.overview', 'Overview') }}
         </li>
+        <li class="">
+            {{ link_to_route('payments.sub-charges', 'Subscription Charges') }}
+        </li>
     </ul>
 </nav>
 @stop

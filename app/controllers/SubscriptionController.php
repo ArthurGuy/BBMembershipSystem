@@ -191,4 +191,10 @@ class SubscriptionController extends \BaseController {
 	}
 
 
+    public function listCharges()
+    {
+        $charges = $this->subscriptionChargeRepository->getChargesPaginated();
+        return View::make('payments.sub-charges')->with('charges', $charges);
+    }
+
 }

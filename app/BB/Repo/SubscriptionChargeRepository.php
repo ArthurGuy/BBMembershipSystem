@@ -91,7 +91,16 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getMemberChargesPaginated($userId)
     {
-        return $this->model->where('user_id', $userId)->paginate();
+        return $this->model->where('user_id', $userId)->orderBy('charge_date', 'DESC')->paginate();
+    }
+
+    /**
+     * Return a paginated list of member payments
+     * @return mixed
+     */
+    public function getChargesPaginated()
+    {
+        return $this->model->orderBy('charge_date', 'DESC')->paginate();
     }
 
     /**
