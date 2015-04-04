@@ -1,14 +1,16 @@
 <?php namespace BB\Mailer;
 
+use BB\Entities\User;
+
 class UserMailer {
 
 
     /**
-     * @var \User
+     * @var User
      */
     private $user;
 
-    public function __construct(\User $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }
