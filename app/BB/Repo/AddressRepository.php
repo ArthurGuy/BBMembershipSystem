@@ -55,7 +55,7 @@ class AddressRepository extends DBRepository {
      * @param integer $userId
      * @param array   $addressFields
      * @param bool    $isAdminCreating
-     * @return mixed
+     * @return Address
      */
     public function saveUserAddress($userId, array $addressFields, $isAdminCreating)
     {

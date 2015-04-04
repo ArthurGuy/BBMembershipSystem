@@ -100,8 +100,8 @@ class PaypalIPNController extends \BaseController
     /**
      * @param $user
      * @param $amount
-     * @param $paymentDate
-     * @return mixed
+     * @param Carbon $paymentDate
+     * @return BB\Entities\SubscriptionCharge
      */
     private function setupNewMember($user, $amount, $paymentDate)
     {

@@ -3,7 +3,7 @@
 trait UserRoleTrait {
 
     /**
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
     {
@@ -41,7 +41,7 @@ trait UserRoleTrait {
      * Remove a role from a user
      *
      * @param $role
-     * @return mixed
+     * @return integer
      */
     public function removeRole($role)
     {

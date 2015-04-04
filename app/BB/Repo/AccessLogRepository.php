@@ -36,7 +36,7 @@ class AccessLogRepository extends DBRepository {
     /**
      * Record an access attempt
      * @param $data
-     * @return mixed
+     * @return AccessLog
      */
     public function logAccessAttempt($data)
     {
