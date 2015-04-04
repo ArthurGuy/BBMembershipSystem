@@ -87,8 +87,9 @@ class UserRepository extends DBRepository {
     }
 
     /**
-     * @param array   $memberData          The new members details
-     * @param boolean $isAdminCreating     Is the user making the change an admin
+     * @param array   $memberData The new members details
+     * @param boolean $isAdminCreating Is the user making the change an admin
+     * @return static
      */
     public function registerMember(array $memberData, $isAdminCreating)
     {
