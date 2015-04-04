@@ -30,7 +30,7 @@ class MembershipPayments
     {
         $date = self::lastUserPaymentDate($userId);
         if ($date) {
-            return $date->addMonth();
+            return $date->setTime(0,0,0)->addMonth();
         }
         return false;
     }
