@@ -1,6 +1,7 @@
 <?php namespace BB\Observer;
 
 use Artdarek\Pusherer\Facades\Pusherer;
+use BB\Entities\User;
 use BB\Helpers\UserImage;
 use Illuminate\Support\Facades\Log;
 
@@ -21,7 +22,7 @@ class AccessLogObserver
         try {
             $userName     = null;
             $userImageUrl = UserImage::anonymous();
-            $user         = \User::find($accessLog->user_id);
+            $user         = User::find($accessLog->user_id);
             if ($user) {
                 $userName = $user->name;
                 if ($user->profile->profile_photo) {
