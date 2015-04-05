@@ -55,7 +55,7 @@ class MemberSubscriptionCharges {
     {
         $subCharges = $this->subscriptionChargeRepository->getPending();
         foreach ($subCharges as $charge) {
-            if ($charge->payment_date->isToday() || $charge->payment_date->isPast()) {
+            if ($charge->charge_date->isToday() || $charge->charge_date->isPast()) {
                 $this->subscriptionChargeRepository->setDue($charge->id);
             }
         }
@@ -82,6 +82,7 @@ class MemberSubscriptionCharges {
                 if ($bill) {
                     $this->paymentRepository->recordPayment('subscription', $charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
                     $this->subscriptionChargeRepository->markChargeAsPaid($charge->id);
+                    //$charge->user->extendMembership('gocardless-variable', Carbon::now()->addMonth());
                 }
             }
         }
