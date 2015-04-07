@@ -159,3 +159,8 @@ Route::group(array('before' => 'role:admin'), function() {
 # Resources
 Route::get('resources', ['uses'=>'ResourcesController@index', 'before'=>'role:member', 'as'=>'resources.index']);
 Route::get('resources/policy/{title}', ['uses'=>'ResourcesController@viewPolicy', 'before'=>'', 'as'=>'resources.policy.view']);
+
+
+Route::any('camera/event/store', function() {
+    Log::debug('Camera: '.json_encode(Request::all()));
+});
