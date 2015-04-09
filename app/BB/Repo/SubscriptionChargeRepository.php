@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\SubscriptionCharge;
+use BB\Exceptions\InvalidDataException;
 use Carbon\Carbon;
 
 class SubscriptionChargeRepository extends DBRepository
@@ -48,7 +49,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param Carbon $paymentDate
      * @return mixed
      */
-    public function findCharge($userId, $paymentDate)
+    public function findCharge($userId, $paymentDate=null)
     {
         //find any existing payment that hasn't been paid
         //Subscription payments will always be used to pay of bills
@@ -69,6 +70,28 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = $paymentDate;
         $subCharge->status = 'paid';
+        $subCharge->save();
+    }
+
+    /**
+     * @param      $chargeId
+     * @param      $status
+     * @param null $paymentDate
+     * @throws InvalidDataException
+     */
+    public function updateChargeStatus($chargeId, $status, $paymentDate=null)
+    {
+        if (!in_array($status, ['paid', 'pending'])) {
+            throw new InvalidDataException("Status not supported");
+        }
+        if (is_null($paymentDate)) {
+            $paymentDate = new Carbon();
+        }
+        $subCharge = $this->getById($chargeId);
+        $subCharge->status = $status;
+        if ($status == 'paid') {
+            $subCharge->payment_date = $paymentDate;
+        }
         $subCharge->save();
     }
 

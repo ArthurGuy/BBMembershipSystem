@@ -77,11 +77,11 @@ class GoCardlessWebhookController extends \BaseController {
 
                                 $ref = null;
 
-                                $subCharge = $this->subscriptionChargeRepository->findCharge($user->id, $paymentDate);
+                                $subCharge = $this->subscriptionChargeRepository->findCharge($user->id);
                                 if ($subCharge) {
                                     $ref = $subCharge->id;
                                     if ($subCharge->amount == $bill['amount']) {
-                                        $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
+                                        $this->subscriptionChargeRepository->updateChargeStatus($subCharge->id, $bill['status'], $paymentDate);
                                     } else {
                                         //@TODO: Handle partial payments
                                         \Log::debug("Sub charge handling - gocardless partial payment");
@@ -116,9 +116,20 @@ class GoCardlessWebhookController extends \BaseController {
                     $existingPayment->status = $bill['status'];
                     $existingPayment->save();
 
-                    //We need to locate the sub charge and rollback its status
+                    if ($bill['source_type'] == 'subscription') {
 
+                        $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
 
+                        $paymentDate = new Carbon($bill['paid_at']);
+
+                        $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
+                        if (!$subCharge) {
+                            $subCharge = $this->subscriptionChargeRepository->findCharge($user->id);
+                        }
+                        if ($subCharge) {
+                            $this->subscriptionChargeRepository->updateChargeStatus($subCharge->id, $bill['status'], $paymentDate);
+                        }
+                    }
                 }
                 else
                 {
