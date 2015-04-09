@@ -81,7 +81,11 @@ class GoCardlessWebhookController extends \BaseController {
                                 if ($subCharge) {
                                     $ref = $subCharge->id;
                                     if ($subCharge->amount == $bill['amount']) {
-                                        $this->subscriptionChargeRepository->updateChargeStatus($subCharge->id, $bill['status'], $paymentDate);
+                                        $status = $bill['status'];
+                                        if ($bill['status'] == 'pending') {
+                                            $status = 'processing';
+                                        }
+                                        $this->subscriptionChargeRepository->updateChargeStatus($subCharge->id, $status, $paymentDate);
                                     } else {
                                         //@TODO: Handle partial payments
                                         \Log::debug("Sub charge handling - gocardless partial payment");
@@ -127,7 +131,11 @@ class GoCardlessWebhookController extends \BaseController {
                             $subCharge = $this->subscriptionChargeRepository->findCharge($user->id);
                         }
                         if ($subCharge) {
-                            $this->subscriptionChargeRepository->updateChargeStatus($subCharge->id, $bill['status'], $paymentDate);
+                            $status = $bill['status'];
+                            if ($bill['status'] == 'pending') {
+                                $status = 'processing';
+                            }
+                            $this->subscriptionChargeRepository->updateChargeStatus($subCharge->id, $status, $paymentDate);
                         }
                     }
                 }
@@ -204,7 +212,8 @@ class GoCardlessWebhookController extends \BaseController {
                         $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
                         if ($subCharge) {
                             if ($subCharge->amount == $bill['amount']) {
-                                $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id);
+                                $this->subscriptionChargeRepository->updateChargeStatus($subCharge->id, 'processing');
+                                //$this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id);
                             } else {
                                 //@TODO: Handle partial payments
                                 \Log::debug("Sub charge handling - gocardless partial payment");

@@ -81,7 +81,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function updateChargeStatus($chargeId, $status, $paymentDate=null)
     {
-        if (!in_array($status, ['paid', 'pending'])) {
+        if (!in_array($status, ['paid', 'processing'])) {
             throw new InvalidDataException("Status not supported");
         }
         if (is_null($paymentDate)) {
