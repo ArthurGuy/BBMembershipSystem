@@ -74,24 +74,12 @@ class SubscriptionChargeRepository extends DBRepository
     }
 
     /**
-     * @param      $chargeId
-     * @param      $status
-     * @param null $paymentDate
-     * @throws InvalidDataException
+     * @param $chargeId
      */
-    public function updateChargeStatus($chargeId, $status, $paymentDate=null)
+    public function markChargeAsProcessing($chargeId)
     {
-        if (!in_array($status, ['paid', 'processing'])) {
-            throw new InvalidDataException("Status not supported");
-        }
-        if (is_null($paymentDate)) {
-            $paymentDate = new Carbon();
-        }
         $subCharge = $this->getById($chargeId);
-        $subCharge->status = $status;
-        if ($status == 'paid') {
-            $subCharge->payment_date = $paymentDate;
-        }
+        $subCharge->status = 'processing';
         $subCharge->save();
     }
 

@@ -102,7 +102,7 @@ class SubscriptionController extends \BaseController {
                     $subCharge = $this->subscriptionChargeRepository->createCharge($user->id, Carbon::now(), $bill->amount);
                     $ref = $subCharge->id;
 
-                    $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, Carbon::now());
+                    $this->subscriptionChargeRepository->markChargeAsProcessing($subCharge->id);
 
 
                     $payment = new Payment([
