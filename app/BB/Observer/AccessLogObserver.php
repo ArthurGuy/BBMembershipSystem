@@ -43,7 +43,7 @@ class AccessLogObserver
                 )
             );
 
-            if (App::environment('production')) {
+            if (\App::environment('production')) {
                 \Slack::send($userName . ' has entered the space');
             }
 
