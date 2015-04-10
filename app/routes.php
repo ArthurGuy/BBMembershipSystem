@@ -166,9 +166,11 @@ Route::any('camera/event/store', function() {
     $newFilename = null;
     if (Request::hasFile('image')) {
         $file = Request::file('image');
+        $event = Request::get('textevent');
+        $time = Request::get('time');
         $s3 = AWS::get('s3');
         try {
-            $newFilename = \App::environment() . '/camera-photos/' . time() . '.jpg';
+            $newFilename = \App::environment() . '/camera-photos/' . $event . '/' . $time . '.jpg';
             $s3->putObject(array(
                 'Bucket'        => 'buildbrighton-bbms',
                 'Key'           => $newFilename,
@@ -181,5 +183,5 @@ Route::any('camera/event/store', function() {
             \Log::exception($e);
         }
     }
-    Log::debug('Camera: '.json_encode(Request::all()).' Path:'.$newFilename);
+    Log::debug('Camera: '.json_encode(Request::all()).' Path:https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
 });
