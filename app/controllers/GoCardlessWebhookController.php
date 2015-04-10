@@ -127,7 +127,8 @@ class GoCardlessWebhookController extends \BaseController {
                 $existingPayment->status = $bill['status'];
                 $existingPayment->save();
 
-                if ($bill['source_type'] == 'subscription') {
+                //Not sure if the section below will ever get hit
+                if (isset($bill['source_type']) && ($bill['source_type'] == 'subscription')) {
 
                     $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
 
