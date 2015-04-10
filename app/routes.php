@@ -190,12 +190,14 @@ Route::any('camera/event/store', function() {
     }
     if (Request::get('eventend') == 'true') {
 
+        $event = Request::get('textevent');
+
         $iterator = $s3->getIterator(
             'ListObjects',
             array(
                 'Bucket' => $s3Bucket,
-                //'Prefix' => \App::environment().'/camera-photos/'.$event,
-                'Prefix' => 'production/camera-photos/20150410222028',
+                'Prefix' => \App::environment().'/camera-photos/'.$event,
+                //'Prefix' => 'production/camera-photos/20150410222028',
             )
         );
 
