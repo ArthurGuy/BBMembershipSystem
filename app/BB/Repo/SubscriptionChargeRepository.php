@@ -136,6 +136,7 @@ class SubscriptionChargeRepository extends DBRepository
 
     /**
      * Update a charge and mark it as due
+     *
      * @param $chargeId
      */
     public function setDue($chargeId)
@@ -143,6 +144,17 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge = $this->getById($chargeId);
         $subCharge->status = 'due';
         $subCharge->save();
+    }
+
+    /**
+     * Cancel all outstanding (due and pending) charges for a user
+     * Used when leaving
+     *
+     * @param $userId
+     */
+    public function cancelOutstandingCharges($userId)
+    {
+        $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->update(['status'=>'cancelled']);
     }
 
 }

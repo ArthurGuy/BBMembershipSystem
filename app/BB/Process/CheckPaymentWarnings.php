@@ -2,10 +2,21 @@
 
 use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
+use BB\Repo\UserRepository;
 use Carbon\Carbon;
 
 class CheckPaymentWarnings
 {
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function run()
     {
@@ -31,7 +42,8 @@ class CheckPaymentWarnings
                 if (($paidUntil == false) || $cutOffDate->subDays(2)->gt($paidUntil))
                 {
                     //set the status to left and active to false
-                    $user->leave();
+                    //$user->leave();
+                    $this->userRepository->memberLeft($user->id);
                     echo $user->name . ' marked as having left'.PHP_EOL;
                 }
 

@@ -221,24 +221,7 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function setLeaving()
     {
-        //If their payment has run out mark them as left immediately otherwise set them as leaving
-        $cutOffDate = MembershipPayments::getSubGracePeriodDate($this->paument_method);
-        if ($this->subscription_expires->lt($cutOffDate))
-        {
-            $this->active = false;
-            $this->status = 'left';
-        }
-        else
-        {
-            $this->status = 'leaving';
-        }
-        $this->save();
-    }
-
-    public function leave()
-    {
-        $this->status = 'left';
-        $this->active = false;
+        $this->status = 'leaving';
         $this->save();
     }
 

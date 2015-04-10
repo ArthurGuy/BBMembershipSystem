@@ -89,4 +89,24 @@ class MemberCest
         //One final check
         $I->cantSeeInDatabase('payments', ['amount'=>4.69]);
     }
+
+    public function memberCanLeave(FunctionalTester $I)
+    {
+        $I->am('a member');
+        $I->wantTo('leave build brighton');
+
+        //Load and login a known member
+        $user = User::find(1);
+        Auth::login($user);
+
+        $I->haveEnabledFilters();
+
+        $I->amOnPage('/account/'.$user->id.'');
+
+        $I->canSee('Active');
+
+        $I->click("Leave Build Brighton");
+
+        $I->canSee('Leaving');
+    }
 }

@@ -148,5 +148,19 @@ class UserRepository extends DBRepository {
         }
     }
 
+    /**
+     * The member has left, disable their account and cancel any out stand sub charge records
+     *
+     * @param $userId
+     */
+    public function memberLeft($userId)
+    {
+        $user = $this->getById($userId);
+        $user->active = false;
+        $user->status = 'left';
+        $user->save();
+
+        $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
+    }
 
 }

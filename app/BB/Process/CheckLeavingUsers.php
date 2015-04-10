@@ -1,10 +1,21 @@
 <?php namespace BB\Process;
 
 use BB\Entities\User;
+use BB\Repo\UserRepository;
 use Carbon\Carbon;
 
 class CheckLeavingUsers
 {
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function run()
     {
@@ -18,7 +29,7 @@ class CheckLeavingUsers
                 //User has passed their expiry date
 
                 //set the status to left and active to false
-                $user->leave();
+                $this->userRepository->memberLeft($user->id);
 
                 //an email will be sent by the user observer
             }
