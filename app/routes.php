@@ -162,5 +162,24 @@ Route::get('resources/policy/{title}', ['uses'=>'ResourcesController@viewPolicy'
 
 
 Route::any('camera/event/store', function() {
-    Log::debug('Camera: '.json_encode(Request::all()));
+
+    $newFilename = null;
+    if (Request::hasFile('image')) {
+        $file = Request::file('image');
+        $s3 = AWS::get('s3');
+        try {
+            $newFilename = \App::environment() . '/camera-photos/' . time() . '.jpg';
+            $s3->putObject(array(
+                'Bucket'        => 'buildbrighton-bbms',
+                'Key'           => $newFilename,
+                'Body'          => file_get_contents($file),
+                'ACL'           => 'public-read',
+                'ContentType'   => 'image/jpg',
+                'ServerSideEncryption' => 'AES256',
+            ));
+        } catch(\Exception $e) {
+            \Log::exception($e);
+        }
+    }
+    Log::debug('Camera: '.json_encode(Request::all()).' Path:'.$newFilename);
 });
