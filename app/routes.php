@@ -186,7 +186,7 @@ Route::any('camera/event/store', function() {
         } catch(\Exception $e) {
             \Log::exception($e);
         }
-        Log::debug('Image saved :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
+        //Log::debug('Image saved :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
     }
     if (Request::get('eventend') == 'true') {
 
@@ -224,8 +224,11 @@ Route::any('camera/event/store', function() {
             )
         );
         Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
+
+
+
     }
 
 
-    Log::debug('Camera Data: '.json_encode(Request::all()));
+    //Log::debug('Camera Data: '.json_encode(Request::all()));
 });
