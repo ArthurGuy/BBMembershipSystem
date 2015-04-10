@@ -20,7 +20,8 @@
         "michelf/php-markdown": "1.4.*",
 		"guzzlehttp/guzzle": "~5.0",
 		"jenssegers/rollbar": "~1.4",
-		"maknz/slack": "~1.5"
+		"maknz/slack": "~1.5",
+		"sybio/gif-creator": "~1.0"
 	},
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

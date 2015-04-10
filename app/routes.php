@@ -2,6 +2,8 @@
 
 # Home
 
+use GifCreator\GifCreator;
+
 Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
 
 
@@ -163,16 +165,18 @@ Route::get('resources/policy/{title}', ['uses'=>'ResourcesController@viewPolicy'
 
 Route::any('camera/event/store', function() {
 
-    $newFilename = null;
+    $s3 = AWS::get('s3');
+    $s3Bucket = 'buildbrighton-bbms';
+
     if (Request::hasFile('image')) {
         $file = Request::file('image');
         $event = Request::get('textevent');
         $time = Request::get('time');
-        $s3 = AWS::get('s3');
+
         try {
             $newFilename = \App::environment() . '/camera-photos/' . $event . '/' . $time . '.jpg';
             $s3->putObject(array(
-                'Bucket'        => 'buildbrighton-bbms',
+                'Bucket'        => $s3Bucket,
                 'Key'           => $newFilename,
                 'Body'          => file_get_contents($file),
                 'ACL'           => 'public-read',
@@ -182,6 +186,44 @@ Route::any('camera/event/store', function() {
         } catch(\Exception $e) {
             \Log::exception($e);
         }
+        Log::debug('Image saved :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
     }
-    Log::debug('Camera: '.json_encode(Request::all()).' Path:https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
+    if (Request::get('eventend') == 'true') {
+
+        $iterator = $s3->getIterator(
+            'ListObjects',
+            array(
+                'Bucket' => $s3Bucket,
+                //'Prefix' => \App::environment().'/camera-photos/'.$event,
+                'Prefix' => 'production/camera-photos/20150410222028',
+            )
+        );
+
+        $images         = [];
+        $imageDurations = [];
+        foreach ($iterator as $object) {
+            $images[]         = 'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $object['Key'];
+            $imageDurations[] = 50;
+        }
+
+        $gc = new GifCreator();
+        $gc->create($images, $imageDurations, 0);
+        $gifBinary = $gc->getGif();
+
+        $newFilename = \App::environment() . '/camera-photos/' . $event . '.gif';
+        $s3->putObject(
+            array(
+                'Bucket'               => $s3Bucket,
+                'Key'                  => $newFilename,
+                'Body'                 => $gifBinary,
+                'ACL'                  => 'public-read',
+                'ContentType'          => 'image/gif',
+                'ServerSideEncryption' => 'AES256',
+            )
+        );
+        Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
+    }
+
+
+    Log::debug('Camera Data: '.json_encode(Request::all()));
 });
