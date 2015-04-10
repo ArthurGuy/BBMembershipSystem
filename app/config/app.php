@@ -131,6 +131,7 @@ return array(
         'BB\ServiceProviders\StripeServiceProvider',
         'BB\ServiceProviders\ValidatorServiceProvider',
         'Jenssegers\Rollbar\RollbarServiceProvider',
+        'Maknz\Slack\SlackServiceProvider',
 	),
 
 	/*
@@ -199,7 +200,8 @@ return array(
 		'View'              => 'Illuminate\Support\Facades\View',
         'AWS'               => 'Aws\Laravel\AwsFacade',
         'Image'             => 'Intervention\Image\Facades\Image',
-        'Notification'      => 'BB\Notifications\NotificationFacade'
+        'Notification'      => 'BB\Notifications\NotificationFacade',
+        'Slack'             => 'Maknz\Slack\Facades\Slack',
 	),
 
 );

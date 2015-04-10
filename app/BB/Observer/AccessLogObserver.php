@@ -42,6 +42,11 @@ class AccessLogObserver
                     'time'       => $accessLog->created_at->toTimeString()
                 )
             );
+
+            if (App::environment('production')) {
+                \Slack::send($userName . ' has entered the space');
+            }
+
         } catch (\Exception $e) {
             Log::error($e);
         }
