@@ -223,9 +223,9 @@ Route::any('camera/event/store', function() {
                 'ServerSideEncryption' => 'AES256',
             )
         );
-        Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
+        //Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
 
-
+        \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename, 'pretext'=>'Main door', 'colour'=>'warning'])->send('Movement detected');
 
     }
 
