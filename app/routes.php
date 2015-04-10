@@ -225,7 +225,7 @@ Route::any('camera/event/store', function() {
         );
         //Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
 
-        \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename, 'pretext'=>'Main door', 'colour'=>'warning'])->send('Movement detected');
+        \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename, 'color'=>'warning'])->send('Movement detected');
 
     }
 
