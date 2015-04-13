@@ -174,13 +174,14 @@ Route::any('camera/event/store', function() {
         $event = Request::get('textevent');
         $time = Request::get('time');
 
-        $fileData = Image::make($file)->encode('jpg', 75);
+        $fileData = Image::make($file)->encode('jpg', 70);
 
 
         $date = Carbon::createFromFormat('YmdHis', $event);
+        $folderName = $date->hour.':'.$date->minute.':'.$date->second;
 
         try {
-            $newFilename = \App::environment() . '/cctv/'.$date->year.'/'.$date->month.'/' . $event . '/' . $time . '.jpg';
+            $newFilename = \App::environment() . '/cctv/'.$date->year.'/'.$date->month.'/'.$date->day.'/' . $folderName . '/' . $time . '.jpg';
             $s3->putObject(array(
                 'Bucket'        => $s3Bucket,
                 'Key'           => $newFilename,
@@ -200,12 +201,13 @@ Route::any('camera/event/store', function() {
         $event = Request::get('textevent');
 
         $date = Carbon::createFromFormat('YmdHis', $event);
+        $folderName = $date->hour.':'.$date->minute.':'.$date->second;
 
         $iterator = $s3->getIterator(
             'ListObjects',
             array(
                 'Bucket' => $s3Bucket,
-                'Prefix' => \App::environment().'/cctv/'.$date->year.'/'.$date->month.'/'.$event,
+                'Prefix' => \App::environment().'/cctv/'.$date->year.'/'.$date->month.'/'.$date->day.'/'.$folderName,
                 //'Prefix' => 'production/camera-photos/20150410222028',
             )
         );
@@ -221,7 +223,7 @@ Route::any('camera/event/store', function() {
         $gc->create($images, $imageDurations, 0);
         $gifBinary = $gc->getGif();
 
-        $newFilename = \App::environment() . '/cctv/' . $date->year.'/'.$date->month.'/' . $event . '.gif';
+        $newFilename = \App::environment() . '/cctv/' . $date->year.'/'.$date->month.'/'.$date->day.'/' . $folderName . '.gif';
         $s3->putObject(
             array(
                 'Bucket'               => $s3Bucket,
