@@ -164,7 +164,7 @@ Route::get('resources', ['uses'=>'ResourcesController@index', 'before'=>'role:me
 Route::get('resources/policy/{title}', ['uses'=>'ResourcesController@viewPolicy', 'before'=>'', 'as'=>'resources.policy.view']);
 
 
-Route::any('camera/event/store', function() {
+Route::post('camera/event/store', function() {
 
     $s3 = AWS::get('s3');
     $s3Bucket = 'buildbrighton-bbms';
@@ -174,7 +174,7 @@ Route::any('camera/event/store', function() {
         $event = Request::get('textevent');
         $time = Request::get('time');
 
-        $fileData = Image::make($file)->encode('jpg', 70);
+        $fileData = Image::make($file)->encode('jpg', 80);
 
 
         $date = Carbon::createFromFormat('YmdHis', $event);
@@ -219,6 +219,19 @@ Route::any('camera/event/store', function() {
             $imageDurations[] = 50;
         }
 
+        if (count($images) <= 2) {
+            //only two images, probably two bad frames
+            //delete them
+            foreach ($iterator as $object) {
+                Log::debug("Deleting small event image ".$object['Key']);
+                $s3->deleteObject([
+                    'Bucket'    => $s3Bucket,
+                    'Key'       => $object['Key'],
+                ]);
+            }
+            return;
+        }
+
         $gc = new GifCreator();
         $gc->create($images, $imageDurations, 0);
         $gifBinary = $gc->getGif();
@@ -234,6 +247,17 @@ Route::any('camera/event/store', function() {
                 'ServerSideEncryption' => 'AES256',
             )
         );
+
+        //Delete the individual frames now we have the gif saved
+        foreach ($iterator as $object) {
+            Log::debug("Processed gif, deleting frame, ".$object['Key']);
+            $s3->deleteObject([
+                'Bucket'    => $s3Bucket,
+                'Key'       => $object['Key'],
+            ]);
+        }
+
+
         //Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
 
         \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename, 'color'=>'warning'])->send('Movement detected');
