@@ -236,6 +236,16 @@ Route::post('camera/event/store', function() {
         $gc->create($images, $imageDurations, 0);
         $gifBinary = $gc->getGif();
 
+        //Delete the individual frames now we have the gif
+        foreach ($iterator as $object) {
+            //Log::debug("Processed gif, deleting frame, ".$object['Key']);
+            $s3->deleteObject([
+                'Bucket'    => $s3Bucket,
+                'Key'       => $object['Key'],
+            ]);
+        }
+
+        //Save the gif
         $newFilename = \App::environment() . '/cctv/' . $date->year.'/'.$date->month.'/'.$date->day.'/' . $folderName . '.gif';
         $s3->putObject(
             array(
@@ -248,14 +258,7 @@ Route::post('camera/event/store', function() {
             )
         );
 
-        //Delete the individual frames now we have the gif saved
-        foreach ($iterator as $object) {
-            Log::debug("Processed gif, deleting frame, ".$object['Key']);
-            $s3->deleteObject([
-                'Bucket'    => $s3Bucket,
-                'Key'       => $object['Key'],
-            ]);
-        }
+
 
 
         //Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
