@@ -2,6 +2,7 @@
 
 # Home
 
+use Carbon\Carbon;
 use GifCreator\GifCreator;
 
 Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
@@ -175,8 +176,11 @@ Route::any('camera/event/store', function() {
 
         $fileData = Image::make($file)->encode('jpg', 75);
 
+
+        $date = Carbon::createFromFormat('YmdHis', $event);
+
         try {
-            $newFilename = \App::environment() . '/camera-photos/' . $event . '/' . $time . '.jpg';
+            $newFilename = \App::environment() . '/cctv/'.$date->year.'/'.$date->month.'/' . $event . '/' . $time . '.jpg';
             $s3->putObject(array(
                 'Bucket'        => $s3Bucket,
                 'Key'           => $newFilename,
@@ -195,11 +199,13 @@ Route::any('camera/event/store', function() {
 
         $event = Request::get('textevent');
 
+        $date = Carbon::createFromFormat('YmdHis', $event);
+
         $iterator = $s3->getIterator(
             'ListObjects',
             array(
                 'Bucket' => $s3Bucket,
-                'Prefix' => \App::environment().'/camera-photos/'.$event,
+                'Prefix' => \App::environment().'/cctv/'.$date->year.'/'.$date->month.'/'.$event,
                 //'Prefix' => 'production/camera-photos/20150410222028',
             )
         );
@@ -215,7 +221,7 @@ Route::any('camera/event/store', function() {
         $gc->create($images, $imageDurations, 0);
         $gifBinary = $gc->getGif();
 
-        $newFilename = \App::environment() . '/camera-photos/' . $event . '.gif';
+        $newFilename = \App::environment() . '/cctv/' . $date->year.'/'.$date->month.'/' . $event . '.gif';
         $s3->putObject(
             array(
                 'Bucket'               => $s3Bucket,
