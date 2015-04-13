@@ -173,12 +173,15 @@ Route::any('camera/event/store', function() {
         $event = Request::get('textevent');
         $time = Request::get('time');
 
+        $fileData = Image::make($file)->encode('jpg', 75);
+
         try {
             $newFilename = \App::environment() . '/camera-photos/' . $event . '/' . $time . '.jpg';
             $s3->putObject(array(
                 'Bucket'        => $s3Bucket,
                 'Key'           => $newFilename,
-                'Body'          => file_get_contents($file),
+                //'Body'          => file_get_contents($file),
+                'Body'          => $fileData,
                 'ACL'           => 'public-read',
                 'ContentType'   => 'image/jpg',
                 'ServerSideEncryption' => 'AES256',
