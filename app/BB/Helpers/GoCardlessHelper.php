@@ -54,9 +54,15 @@ class GoCardlessHelper {
         return \GoCardless_Subscription::find($id)->cancel();
     }
 
-    public function validateWebhook($webhook_array)
+    /**
+     * Accept the raw json response and validate it
+     * @param $webhook
+     * @return bool
+     */
+    public function validateWebhook($webhook)
     {
-        return \GoCardless::validate_webhook($webhook_array);
+        $webhook_array = json_decode($webhook, true);
+        return \GoCardless::validate_webhook($webhook_array['payload']);
     }
 
     public function newBillUrl($payment_details)
