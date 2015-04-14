@@ -23,6 +23,10 @@ Resources
                     <li><a href="https://groups.google.com/d/forum/brightonhackerspace">Public mailing list</a></li>
                     <li><a href="https://groups.google.com/d/forum/brighton-hackspace-members">Members mailing list</a></li>
                 </ul>
+                <p>
+                    Build Brighton also has a Slack account and a large number of members spend time over there,
+                    if you would like an invite please send us an email - <a href="trustees@buildbrighton.com">trustees@buildbrighton.com</a>
+                </p>
             </div>
         </div>
     </div>
