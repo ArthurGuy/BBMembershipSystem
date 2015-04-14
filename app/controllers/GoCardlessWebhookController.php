@@ -31,37 +31,48 @@ class GoCardlessWebhookController extends \BaseController {
         $request = Request::instance();
         $webhook = $request->getContent();
         $webhook_array = json_decode($webhook, true);
-        $webhook_array = $webhook_array['payload'];
-        $webhook_valid = $this->goCardless->validateWebhook($webhook_array);
+        $webhook_valid = $this->goCardless->validateWebhook($webhook_array['payload']);
 
         if ($webhook_valid == false) {
             return Response::make('', 403);
         }
 
-        if ($webhook_array['resource_type'] == 'bill')
-        {
-            switch ($webhook_array['action']) {
-                case 'created':
-                    $this->processNewBills($webhook_array['bills']);
-                    break;
-                case 'paid':
-                    $this->processPaidBills($webhook_array['bills']);
-                    break;
-                default:
-                    $this->processBills($webhook_array['action'], $webhook_array['bills']);
-            }
-        }
-        elseif ($webhook_array['resource_type'] == 'pre_authorization')
-        {
-            $this->processPreAuths();
-        }
-        elseif ($webhook_array['resource_type'] == 'subscription')
-        {
-            $this->processSubscriptions($webhook_array['subscriptions']);
+        $parser = new \BB\Services\Payment\GoCardlessWebhookParser();
+        $parser->parseResponse($webhook);
+
+        switch ($parser->getResourceType()) {
+            case 'bill':
+
+                switch ($parser->getAction()) {
+                    case 'created':
+
+                        $this->processNewBills($parser->getBills());
+
+                        break;
+                    case 'paid':
+
+                        $this->processPaidBills($parser->getBills());
+
+                        break;
+                    default:
+
+                        $this->processBills($parser->getAction(), $parser->getBills());
+                }
+
+                break;
+            case 'pre_authorization':
+
+                $this->processPreAuths();
+
+                break;
+            case 'subscription':
+
+                    $this->processSubscriptions($parser->getSubscriptions());
+
+                break;
         }
 
         return Response::make('Success', 200);
-
     }
 
 
@@ -118,27 +129,22 @@ class GoCardlessWebhookController extends \BaseController {
 
     private function processPaidBills(array $bills)
     {
-        //We don't need to do anything for paid bills, a pending bill is treated as good so nothing new happens as this stage
+        //When a bill is paid update the status on the local record and the connected sub charge (if there is one)
 
-        //Update the status of the local record
         foreach ($bills as $bill) {
-            $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $bill['id'])->first();
+            $existingPayment = $this->getPaymentUpdateStatus($bill['id'], $bill['status']);
             if ($existingPayment) {
-                $existingPayment->status = $bill['status'];
-                $existingPayment->save();
 
                 //Not sure if the section below will ever get hit
-                if (isset($bill['source_type']) && ($bill['source_type'] == 'subscription')) {
-
-                    $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
+                if ($bill['source_type'] == 'subscription') {
 
                     $paymentDate = new Carbon($bill['paid_at']);
 
                     $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
 
-                    //If we dont have a reference to the sub charge try and find it anothr way
+                    //If we dont have a reference to the sub charge try and find it another way
                     if (!$subCharge) {
-                        $subCharge = $this->subscriptionChargeRepository->findCharge($user->id);
+                        $subCharge = $this->subscriptionChargeRepository->findCharge($existingPayment->user_id);
                     }
                     if ($subCharge) {
                         if ($bill['status'] == 'pending') {
@@ -149,7 +155,7 @@ class GoCardlessWebhookController extends \BaseController {
                     }
                 }
             } else {
-                //Existing payment cant be found - payments we care about start in the system so this is alright
+                Log::info("GoCardless Webhook received for unknown payment: ".$bill['id']);
             }
         }
     }
@@ -158,12 +164,9 @@ class GoCardlessWebhookController extends \BaseController {
     {
         foreach ($bills as $bill)
         {
-            $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $bill['id'])->first();
+            $existingPayment = $this->getPaymentUpdateStatus($bill['id'], $bill['status']);
             if ($existingPayment)
             {
-                //Start by updating the local record
-                $existingPayment->status = $bill['status'];
-                $existingPayment->save();
                 if (($bill['status'] == 'failed') || ($bill['status'] == 'cancelled'))
                 {
                     //Payment failed or cancelled - either way we don't have the money!
@@ -204,14 +207,6 @@ class GoCardlessWebhookController extends \BaseController {
                     {
 
                     }
-                    //Email the user, perhaps after a day in case they are canceling and restarting a payment
-
-
-
-                    //Roll back the payment date field
-                    //last_subscription_payment
-
-
 
                 }
                 elseif (($bill['status'] == 'pending') && ($action == 'retried'))
@@ -236,6 +231,8 @@ class GoCardlessWebhookController extends \BaseController {
                 {
                     //Money taken out - not our concern
                 }
+            } else {
+                Log::info("GoCardless Webhook received for unknown payment: ".$bill['id']);
             }
         }
 
@@ -262,6 +259,20 @@ class GoCardlessWebhookController extends \BaseController {
                 }
             }
         }
+    }
+
+    /**
+     * @param $billId string
+     * @param $status string
+     * @return \BB\Entities\Payment|null
+     */
+    private function getPaymentUpdateStatus($billId, $status) {
+        $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $billId)->first();
+        if ($existingPayment) {
+            $existingPayment->status = $status;
+            $existingPayment->save();
+        }
+        return $existingPayment;
     }
 
 }
