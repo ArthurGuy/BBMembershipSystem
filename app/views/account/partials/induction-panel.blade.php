@@ -41,12 +41,7 @@
                 @elseif ($item->userInduction && $item->userInduction->paid)
                 Pending
                 @else
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id])) }}
-                {{ Form::hidden('induction_key', $itemKey) }}
-                {{ Form::hidden('reason', 'induction') }}
-                {{ Form::hidden('source', 'gocardless') }}
-                {{ Form::submit('Pay Now (Direct Debit)', array('class'=>'btn btn-primary btn-xs')) }}
-                {{ Form::close() }}
+                To pay the access fee please visit the equipment page
                 @endif
             </td>
             <td>

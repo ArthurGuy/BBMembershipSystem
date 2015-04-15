@@ -118,25 +118,18 @@ class PaymentController extends \BaseController {
             }
             elseif ($reason == 'induction')
             {
-                $name           = strtoupper("BBINDUCTION".$user->id.":".Input::get('induction_key'));
-                $description    = strtoupper(Input::get('induction_key')) . " Induction Fee";
-                $ref            = Input::get('induction_key');
-                ($item = $this->equipmentRepository->findByKey($ref)) || App::abort(404);
-                $amount         = $item->cost;
+                //Payments must go via the balance
+                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless induction payment");
             }
             elseif ($reason == 'door-key')
             {
-                $name           = strtoupper("BBDOORKEY".$user->id);
-                $description    = "Door Key Deposit";
-                $ref            = null;
-                $amount         = 10;
+                //Payments must go via the balance
+                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless door payment");
             }
             elseif ($reason == 'storage-box')
             {
-                $name           = strtoupper("BBSTORAGEBOX".$user->id);
-                $description    = "Storage Box Deposit";
-                $ref            = null;
-                $amount         = 5;
+                //Payments must go via the balance
+                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless storage box payment");
             }
             elseif ($reason == 'balance')
             {
@@ -239,22 +232,18 @@ class PaymentController extends \BaseController {
         }
         elseif ($reason == 'induction')
         {
-            Induction::create([
-                'user_id' => $user->id,
-                'key' => $ref,
-                'paid' => true,
-                'payment_id' => $payment->id
-            ]);
+            //Payments must go via the balance
+            throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless induction payment");
         }
         elseif ($reason == 'door-key')
         {
-            $user->key_deposit_payment_id = $payment->id;
-            $user->save();
+            //Payments must go via the balance
+            throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless dor key payment");
         }
         elseif ($reason == 'storage-box')
         {
-            $user->storage_box_payment_id = $payment->id;
-            $user->save();
+            //Payments must go via the balance
+            throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless storage box payment");
         }
         elseif ($reason == 'balance')
         {
