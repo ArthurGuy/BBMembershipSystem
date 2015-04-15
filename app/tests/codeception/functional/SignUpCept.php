@@ -33,3 +33,7 @@ $I->click('Join');
 
 //Make sure we are now on an account page with the new id
 $I->seeCurrentUrlMatches('^/account/(\d+)^');
+
+
+$user = \BB\Entities\User::where('email', 'jondoe2@example.com')->first();
+$I->assertNotEmpty($user->hash);
