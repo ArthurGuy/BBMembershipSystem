@@ -468,4 +468,45 @@ class PaymentController extends \BaseController {
 	}
 
 
+    /**
+     * This is a method for migrating user to the variable gocardless subscription
+     * It will cancel the existing direct debit and direct the user to setup a pre auth
+     *
+     * @return mixed
+     */
+    public function migrateDD()
+    {
+        $user = Auth::user();
+
+        //cancel the existing dd
+        try {
+            $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
+            if ($subscription->status != 'cancelled') {
+                Notification::error("Could not cancel the existing subscription");
+                return Redirect::back();
+            }
+        } catch (\GoCardless_ApiException $e) {
+
+        }
+
+        $user->payment_method = '';
+        $user->subscription_id = '';
+        $user->save();
+
+        $payment_details = array(
+            'redirect_uri'      => route('account.subscription.store', $user->id),
+            'user'              => [
+                'first_name'        =>  $user->given_name,
+                'last_name'         =>  $user->family_name,
+                'billing_address1'  =>  $user->address->line_1,
+                'billing_address2'  =>  $user->address->line_2,
+                'billing_town'      =>  $user->address->line_3,
+                'billing_postcode'  =>  $user->address->postcode,
+                'country_code'      => 'GB'
+            ]
+        );
+
+        return Redirect::to($this->goCardless->newPreAuthUrl($payment_details));
+    }
+
 }

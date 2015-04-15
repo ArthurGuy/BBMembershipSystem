@@ -69,6 +69,9 @@ Route::post('account/{account}/payment/balance/create', ['as'=>'account.payment.
 //Cash
 Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
 
+//DD Migration to variable payments
+Route::post('account/payment/migrate-direct-debit', ['as'=>'account.payment.gocardless-migrate', 'uses' => 'PaymentController@migrateDD', 'before'=>'role:member']);
+
 
 # Inductions
 Route::group(array('before' => 'role:admin'), function() {

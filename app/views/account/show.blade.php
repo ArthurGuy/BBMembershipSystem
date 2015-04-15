@@ -96,6 +96,20 @@
 
 @endif
 
+@if (Auth::user()->isAdmin() && ($user->payment_method == 'gocardless'))
+    <div class="row">
+        <div class="col-xs-12 col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.gocardless-migrate'])) }}
+                    {{ Form::submit('Migrate to a variable Direct Debit', array('class'=>'btn btn-primary')) }}
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 <!--
 <div class="row">
     <div class="col-xs-12 col-md-6 ">
