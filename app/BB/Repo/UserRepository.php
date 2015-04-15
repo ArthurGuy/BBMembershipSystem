@@ -124,7 +124,7 @@ class UserRepository extends DBRepository {
         $user->status = 'active';
         $user->save();
 
-        $this->subscriptionChargeRepository->createCharge($userId, Carbon::now(), $user->monthly_subscription);
+        $this->subscriptionChargeRepository->createCharge($userId, Carbon::now(), $user->monthly_subscription, 'due');
     }
 
     /**
@@ -150,14 +150,16 @@ class UserRepository extends DBRepository {
 
     /**
      * The member has left, disable their account and cancel any out stand sub charge records
+     * The payment day is also cleared so when they start again the payment is charge happens at restart time
      *
      * @param $userId
      */
     public function memberLeft($userId)
     {
         $user = $this->getById($userId);
-        $user->active = false;
-        $user->status = 'left';
+        $user->active       = false;
+        $user->status       = 'left';
+        $user->payment_day  = '';
         $user->save();
 
         $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
