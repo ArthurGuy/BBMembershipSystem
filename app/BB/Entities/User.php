@@ -90,12 +90,20 @@ class User extends Model implements UserInterface, RemindableInterface {
         // Find a better way to doing this
         $user->hash = str_random(30);
         $user->save();
-        
+
         return $user;
     }
 
 
-    # Relationships
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    |
+    | The connections between this model and others
+    |
+    */
 
     public function payments()
     {
@@ -122,28 +130,16 @@ class User extends Model implements UserInterface, RemindableInterface {
         return $this->hasOne('\BB\Entities\Address')->orderBy('approved', 'asc');
     }
 
-    /**
-     * @param $paymentMethod
-     * @param $paymentDay
-     * @depreciated
-     */
-    public function updateSubscription($paymentMethod, $paymentDay)
-    {
-        //We might need to do something about the payment day to ensure its before the 28th
-        $this->attributes['payment_method'] = $paymentMethod;
-        $this->attributes['payment_day'] = $paymentDay;
-
-        $this->save();
-    }
-
-    public function updateSubAmount($amount)
-    {
-        $this->attributes['monthly_subscription'] = $amount;
-        $this->save();
-    }
 
 
-    # Getters and Setters
+    /*
+    |--------------------------------------------------------------------------
+    | Attribute Getters and Setters and Model Extensions
+    |--------------------------------------------------------------------------
+    |
+    | Useful properties and methods to have on a user model
+    |
+    */
 
     public function getNameAttribute()
     {
@@ -155,7 +151,12 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->attributes['password'] = Hash::make($password);
     }
 
-    //Used for profile photos
+    /**
+     * Can the user see protected member photos?
+     * Only available to active members
+     * 
+     * @return bool
+     */
     public function shouldMemberSeeProtectedPhoto()
     {
         switch ($this->attributes['status']) {
@@ -169,7 +170,19 @@ class User extends Model implements UserInterface, RemindableInterface {
     }
 
     /**
+     * Is the user on a payment method that allows their subscription amount to be changed
+     *
+     * @return bool
+     */
+    public function canMemberChangeSubAmount()
+    {
+        return ($this->attributes['payment_method'] == 'gocardless-variable');
+    }
+
+    /**
      * Is this user considered a keyholder - can they use the space on their own
+     * This may have been replaced by a repo method which checks the photo as well
+     *
      * @return bool
      */
     public function keyholderStatus()
@@ -180,9 +193,62 @@ class User extends Model implements UserInterface, RemindableInterface {
         return false;
     }
 
+    /**
+     * Is the user part of the admin group
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return Auth::user()->hasRole('admin');
+    }
+
+    /**
+     * Should GoCardless be promoted to the user
+     *
+     * @return bool
+     */
+    public function promoteGoCardless()
+    {
+        if (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get an array of alerts for the user
+     *
+     * @return array
+     */
+    public function getAlerts()
+    {
+        $alerts = [];
+        if (!$this->profile->profile_photo && !$this->profile->new_profile_photo) {
+            $alerts[] = 'missing-profile-photo';
+        }
+        if (empty($this->phone)) {
+            $alerts[] = 'missing-phone';
+        }
+        return $alerts;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBanned()
+    {
+        return $this->banned;
+    }
 
 
-    # Scopes
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
 
     public function scopeActive($query)
     {
@@ -206,12 +272,35 @@ class User extends Model implements UserInterface, RemindableInterface {
 
 
 
-    # Methods
-
+    /*
+    |--------------------------------------------------------------------------
+    | Methods
+    |--------------------------------------------------------------------------
+    */
 
     public static function activePublicList()
     {
         return self::active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
+    }
+
+    /**
+     * @param $paymentMethod
+     * @param $paymentDay
+     * @depreciated
+     */
+    public function updateSubscription($paymentMethod, $paymentDay)
+    {
+        //We might need to do something about the payment day to ensure its before the 28th
+        $this->attributes['payment_method'] = $paymentMethod;
+        $this->attributes['payment_day'] = $paymentDay;
+
+        $this->save();
+    }
+
+    public function updateSubAmount($amount)
+    {
+        $this->attributes['monthly_subscription'] = $amount;
+        $this->save();
     }
 
     public function cancelSubscription()
@@ -248,20 +337,6 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->save();
     }
     */
-
-    public function isAdmin()
-    {
-        return Auth::user()->hasRole('admin');
-    }
-
-    public function promoteGoCardless()
-    {
-        if (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'))
-        {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Fetch a user record, performs a permission check
@@ -342,23 +417,5 @@ class User extends Model implements UserInterface, RemindableInterface {
         return $this->auditFields;
     }
 
-    public function getAlerts()
-    {
-        $alerts = [];
-        if (!$this->profile->profile_photo && !$this->profile->new_profile_photo) {
-            $alerts[] = 'missing-profile-photo';
-        }
-        if (empty($this->phone)) {
-            $alerts[] = 'missing-phone';
-        }
-        return $alerts;
-    }
 
-    /**
-     * @return bool
-     */
-    public function isBanned()
-    {
-        return $this->banned;
-    }
 }
