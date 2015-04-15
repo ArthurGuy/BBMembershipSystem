@@ -217,6 +217,12 @@ class User extends Model implements UserInterface, RemindableInterface {
         return false;
     }
 
+
+    public function promoteVariableGoCardless()
+    {
+        return ($this->payment_method == 'gocardless');
+    }
+
     /**
      * Get an array of alerts for the user
      *
