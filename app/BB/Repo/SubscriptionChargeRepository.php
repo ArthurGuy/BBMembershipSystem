@@ -22,11 +22,12 @@ class SubscriptionChargeRepository extends DBRepository
      * @param integer   $userId
      * @param \DateTime $date
      * @param integer   $amount
+     * @param string    $status
      * @return SubscriptionCharge
      */
-    public function createCharge($userId, $date, $amount)
+    public function createCharge($userId, $date, $amount, $status='pending')
     {
-        return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>'pending']);
+        return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>$status]);
     }
 
     /**
