@@ -163,4 +163,21 @@ class UserRepository extends DBRepository {
         $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
     }
 
+    /**
+     * Record the new gocardless preauth id against the user and make sure their payment method reflects this
+     *
+     * @param integer $userId
+     * @param string  $subscriptionId
+     */
+    public function recordGoCardlessVariableDetails($userId, $subscriptionId)
+    {
+        $user = $this->getById($userId);
+        if (empty($user->payment_day)) {
+            $user->payment_day    = Carbon::now()->day;
+        }
+        $user->subscription_id    = $subscriptionId;
+        $user->payment_method     = 'gocardless-variable';
+        $user->save();
+    }
+
 }
