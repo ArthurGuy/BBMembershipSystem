@@ -81,42 +81,11 @@ class MemberSubscriptionCharges {
                 $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription);
                 if ($bill) {
                     $this->paymentRepository->recordPayment('subscription', $charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
-                    $this->subscriptionChargeRepository->markChargeAsPaid($charge->id);
+                    $this->subscriptionChargeRepository->markChargeAsProcessing($charge->id);
                     //$charge->user->extendMembership('gocardless-variable', Carbon::now()->addMonth());
                 }
             }
         }
-
-
-        /*
-        if ($bill)
-        {
-            $payment = new Payment([
-                'reason'            => 'subscription',
-                'source'            => 'gocardless-variable',
-                'source_id'         => $bill->id,
-                'amount'            => $bill->amount,
-                'fee'               => $bill->gocardless_fees,
-                'amount_minus_fee'  => $bill->amount_minus_fees,
-                'status'            => $bill->status,
-                'reference'         => $subCharge->id,
-            ]);
-            $user->payments()->save($payment);
-            $user->last_subscription_payment = Carbon::now();
-            $user->save();
-
-            $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, Carbon::now());
-
-            $user->extendMembership('gocardless-variable', \Carbon\Carbon::now()->addMonth());
-
-            Notification::success("Your subscription has been setup, thank you");
-        }
-        else
-        {
-            //something went wrong - we still have the pre auth though
-            Notification::success("There was a problem setting up your subscription");
-        }
-        */
     }
 
     /**
