@@ -61,7 +61,7 @@
 
                     <small>If you want to pay using cash please find a trustee who can top up your balance.</small>
                 @else
-                    You have paid the key deposit, please let a trustee know and they will issue you will a key.
+                    You have paid the key deposit, please let a trustee know and they will issue you with a key.
                 @endif
             </div>
         </div>
