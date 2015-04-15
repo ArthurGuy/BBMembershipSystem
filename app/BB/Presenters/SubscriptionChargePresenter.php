@@ -29,6 +29,30 @@ class SubscriptionChargePresenter extends Presenter
         }
     }
 
+    public function rowClass()
+    {
+        switch ($this->entity->status) {
+
+            case 'pending';
+                return '';
+
+            case 'due';
+                return 'warning';
+
+            case 'processing';
+                return 'info';
+
+            case 'paid';
+                return 'success';
+
+            case 'cancelled';
+                return 'text-muted';
+
+            default;
+                return $this->entity->status;
+        }
+    }
+
     public function charge_date()
     {
         return $this->entity->charge_date->toFormattedDateString();

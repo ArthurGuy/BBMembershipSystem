@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         @foreach ($subscriptionCharges as $charge)
-        <tr>
+        <tr class="{{ $charge->present()->rowClass() }}">
             <td>{{ $charge->present()->charge_date }}</td>
             <td>{{ $charge->present()->amount }}</td>
             <td>{{ $charge->present()->status }}</td>
