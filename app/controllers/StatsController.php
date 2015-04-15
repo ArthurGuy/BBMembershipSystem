@@ -32,9 +32,10 @@ class StatsController extends \BaseController
     {
         $users         = $this->userRepository->getActive();
         $paymentMethodsNumbers = [
-            'gocardless'     => 0,
-            'paypal'         => 0,
-            'standing-order' => 0
+            'gocardless'            => 0,
+            'gocardless-variable'   => 0,
+            'paypal'                => 0,
+            'standing-order'        => 0
         ];
         foreach ($users as $user) {
             if (isset($paymentMethodsNumbers[$user->payment_method])) {
@@ -46,7 +47,7 @@ class StatsController extends \BaseController
                 'Payment Method', 'Number'
             ],
             [
-                'Direct Debit', $paymentMethodsNumbers['gocardless']
+                'Direct Debit', $paymentMethodsNumbers['gocardless'] + $paymentMethodsNumbers['gocardless-variable']
             ],
             [
                 'PayPal', $paymentMethodsNumbers['paypal']
