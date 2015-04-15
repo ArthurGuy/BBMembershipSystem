@@ -154,7 +154,7 @@ class User extends Model implements UserInterface, RemindableInterface {
     /**
      * Can the user see protected member photos?
      * Only available to active members
-     * 
+     *
      * @return bool
      */
     public function shouldMemberSeeProtectedPhoto()

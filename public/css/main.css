@@ -6928,6 +6928,23 @@ body.register_login #pageTitle {
 .memberActivityGrid .activityBlock a:hover {
   text-decoration: none;
 }
+@media screen and (min-width: 768px) {
+  .memberSubAmount p {
+    float: right !important;
+  }
+  .memberSubAmount form {
+    float: right !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  .memberSubAmount .input-group {
+    width: 50%;
+    float: left;
+  }
+  .memberSubAmount form {
+    margin-bottom: 10px;
+  }
+}
 .snackBar {
   padding: 15px;
   position: fixed;
