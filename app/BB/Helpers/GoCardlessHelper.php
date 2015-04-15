@@ -29,7 +29,7 @@ class GoCardlessHelper {
     public function newPreAuthUrl($paymentDetails)
     {
         $baseDetails = array(
-            'max_amount'        => 100,
+            'max_amount'        => 250,
             'interval_length'   => 1,
             'interval_unit'     => 'month',
             //'name'              => 'BBSUB'.$user->id,
