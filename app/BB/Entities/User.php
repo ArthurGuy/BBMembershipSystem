@@ -122,7 +122,11 @@ class User extends Model implements UserInterface, RemindableInterface {
         return $this->hasOne('\BB\Entities\Address')->orderBy('approved', 'asc');
     }
 
-
+    /**
+     * @param $paymentMethod
+     * @param $paymentDay
+     * @depreciated
+     */
     public function updateSubscription($paymentMethod, $paymentDay)
     {
         //We might need to do something about the payment day to ensure its before the 28th
