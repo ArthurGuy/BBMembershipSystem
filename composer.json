@@ -1,6 +1,12 @@
 {
 	"name": "ArthurGuy/BBMS",
 	"description": "Build Brighton Member System",
+    "authors": [
+        {
+            "name": "Arthur Guy",
+            "email": "arthur@arthurguy.co.uk"
+        }
+    ],
 	"keywords": ["laravel"],
 	"license": "MIT",
 	"require": {
