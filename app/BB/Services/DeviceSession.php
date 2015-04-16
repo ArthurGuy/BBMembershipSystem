@@ -72,7 +72,7 @@ class DeviceSession extends KeyFobAccess {
         }
 
         //Make sure the user is allowed to use the device
-        if ($this->device->requires_training) {
+        if ($this->device->requires_induction) {
             //Verify the user has training
             if (!$this->inductionRepository->isUserTrained($this->user->id, $this->deviceKey)) {
                 throw new ValidationException("User Not Trained");

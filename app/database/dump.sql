@@ -509,6 +509,47 @@ VALUES
 	(2, 1, '2015-03-20', '0000-00-00', 10, 'draft', '2015-03-18 13:32:46', '2015-03-18 13:32:46');
 
 
+CREATE TABLE `equipment` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `manufacturer` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `model_number` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `serial_number` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `colour` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `location` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `room` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `detail` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `key` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `device_key` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `help_text` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `owner_role_id` int(11) NOT NULL,
+  `requires_induction` tinyint(1) NOT NULL,
+  `working` tinyint(1) NOT NULL,
+  `permaloan` tinyint(1) NOT NULL,
+  `permaloan_user_id` int(11) NOT NULL,
+  `access_fee` int(11) NOT NULL,
+  `photo` tinyint(1) NOT NULL,
+  `archive` tinyint(1) NOT NULL,
+  `obtained_at` date NOT NULL,
+  `removed_at` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `equipment` (`id`, `name`, `manufacturer`, `model_number`, `serial_number`, `colour`, `location`, `room`, `detail`, `key`, `device_key`, `description`, `help_text`, `owner_role_id`, `requires_induction`, `working`, `permaloan`, `permaloan_user_id`, `access_fee`, `photo`, `archive`, `obtained_at`, `removed_at`, `created_at`, `updated_at`)
+VALUES
+	(1, 'Laser Cutter', '', '', '', '', '', '', '', 'laser', 'laser', '', '', 0, 1, 1, 0, 0, 50, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52'),
+	(2, 'Lathe', '', '', '', '', '', '', '', 'lathe', 'lathe', '', '', 0, 1, 1, 0, 0, 25, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52'),
+	(3, 'Mig Welder', '', '', '', '', '', '', '', 'welder', 'welder', '', '', 0, 1, 1, 0, 0, 20, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52'),
+	(4, 'CNC Router', '', '', '', '', '', '', '', 'cnc', 'cnc', '', '', 0, 1, 0, 0, 0, 25, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52'),
+	(5, 'Pillar Drill', '', '', '', '', '', '', '', 'pillar-drill', 'pillar-drill', '', '', 0, 0, 1, 0, 0, 0, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52'),
+	(6, 'Chop Saw', '', '', '', '', '', '', '', 'chop-saw', 'chop-saw', '', '', 0, 0, 1, 0, 0, 0, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52'),
+	(7, 'Band Saw', '', '', '', '', '', '', '', 'band-saw', 'band-saw', '', '', 0, 0, 1, 0, 0, 0, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52'),
+	(8, '3D Printer', '', '', '', '', '', '', '', '3d-printer', '3d-printer', '', '', 0, 0, 1, 0, 0, 0, 0, 0, '0000-00-00', '0000-00-00', '2015-04-16 21:26:52', '2015-04-16 21:26:52');
+
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -16,9 +16,9 @@ Tools and Equipment
 @section('content')
 
     <div class="list-group">
-        @foreach($equipment as $toolId => $tool)
+        @foreach($equipment as $tool)
 
-            <a href="{{ route('equipment.show', $toolId) }}" class="list-group-item">
+            <a href="{{ route('equipment.show', $tool->key) }}" class="list-group-item">
                 {{ $tool->name }}
                 @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
             </a>

@@ -1,9 +1,26 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\Equipment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class EquipmentRepository {
+class EquipmentRepository extends DBRepository {
 
+    /**
+     * @var Equipment
+     */
+    protected $model;
+
+    function __construct(Equipment $model)
+    {
+        $this->model = $model;
+    }
+
+    public function all()
+    {
+        return $this->model->all();
+    }
+
+    /*
     public function all()
     {
         return [
@@ -57,16 +74,11 @@ class EquipmentRepository {
             ]
         ];
     }
+    */
 
     public function allPaid()
     {
-        $equipment = $this->all();
-        foreach ($equipment as $id => $device) {
-            if ($device->cost == 0) {
-                unset($equipment[$id]);
-            }
-        }
-        return $equipment;
+        return $this->model->where('access_fee', '!=', 0)->get();
     }
 
     /**
@@ -76,9 +88,9 @@ class EquipmentRepository {
      */
     public function findByKey($key)
     {
-        $equipment = $this->all();
-        if (isset($equipment[$key])) {
-            return $equipment[$key];
+        $record = $this->model->where('key', $key)->first();
+        if ($record) {
+            return $record;
         }
         throw new ModelNotFoundException();
     }

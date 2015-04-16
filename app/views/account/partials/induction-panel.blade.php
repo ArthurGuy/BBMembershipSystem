@@ -34,7 +34,7 @@
         @foreach ($inductions as $itemKey=>$item)
         <tr>
             <td>{{ $item->name }}</td>
-            <td>&pound;{{ $item->cost }}</td>
+            <td>&pound;{{ $item->access_fee }}</td>
             <td>
                 @if ($item->userInduction && ($item->userInduction->is_trained))
                 {{ $item->userInduction->trained->toFormattedDateString() }}

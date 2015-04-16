@@ -21,14 +21,14 @@ Tools and Equipment
         <div class="row">
             <div class="col-md-12 col-lg-6">
                 <div class="well">
-                    @if ($equipment->requires_training)
+                    @if ($equipment->requires_induction)
                         To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
-                        Equipment access fee: &pound{{ $equipment->cost }}<br />
+                        Equipment access fee: &pound{{ $equipment->access_fee }}<br />
                         <br />
                         @if ($userInduction)
                             Induction to be completed
                         @else
-                            @include('partials/payment-form', ['reason'=>'induction', 'displayReason'=>'Equipment Access Fee', 'returnPath'=>route('equipment.show', [$equipmentId], false), 'amount'=>25, 'buttonLabel'=>'Pay Now', 'methods'=>['balance'], 'ref'=>$equipmentId])
+                            @include('partials/payment-form', ['reason'=>'induction', 'displayReason'=>'Equipment Access Fee', 'returnPath'=>route('equipment.show', [$equipmentId], false), 'amount'=>$equipment->access_fee, 'buttonLabel'=>'Pay Now', 'methods'=>['balance'], 'ref'=>$equipmentId])
                         @endif
 
                     @else
@@ -40,7 +40,7 @@ Tools and Equipment
                 </div>
             </div>
 
-            @if ($equipment->requires_training)
+            @if ($equipment->requires_induction)
                 <div class="col-sm-12 col-md-6">
                     <h4>Trainers</h4>
                     <div class="list-group">
@@ -97,7 +97,7 @@ Tools and Equipment
 
 
     <div class="row">
-        @if ($equipment->requires_training)
+        @if ($equipment->requires_induction)
             <div class="col-sm-12 col-md-6">
                 <h4>Trained Users</h4>
                 <ul>
