@@ -13,23 +13,27 @@ New members can join and create accounts, payments are tracked and managed throu
 ###Features
 * Member signup form which collects full name and address, emergency contact and profile photo.
 * Direct Debit setup and payment collection through GoCardless
-* Notifications of monthly Direct Debit payments are received and used to extend the users subscription
+* Regular monthly direct debit payment runs for each user
 * PayPal IPN notifications are also received and used to extend member subscriptions.
 * The ability for the user to edit all their details allowing for self management
 * Various user statuses to cater for active members, members who have left or been banned as well as tracking founders and honorary members
 * Handling of the induction/equipment training procedures and collection of payments.
 * Tracking of who trains who
-* Member grid to see who belongs to Build Brighton
-* The ability for members to cancel their subscription and leave Build Brighton (not that they would want to!)
-* Collect deposit payments for door keys and member storage boxes
-* Door entry control and tracking
-* Member credit for payment and member topup
-* Member storage box status and self assignment once payment is received
+* Member grid to see who is a member
+* The ability for members to cancel their subscription and leave
+* Collect deposit payments for door keys
+* Manage member storage box assignments and deposit payments
+* RFID door entry control and tracking
+* Member credit system for paying for various services
+* Member credit topup using direct debit payments and credit/debit card payments
 * Member role system for managing delegated duties
+* RFID access control for equipment and usage logging
+* Auto billing for equipment usage
+* Proposal system for member voting
 
 ###Upcomming Features
-* Equipment control and usage logging
-
+* Equipment/asset management
+* Member expense reimbursement
 
 
 ###Member Statuses
@@ -49,7 +53,7 @@ The system also has support for scanning and processing payments from bank state
 
 
 ###Seting It Up
-The system is build on the Laravel framework so familiarity with that would help.
+The system is build on the Laravel 4 framework so familiarity with that would help.
 
 A .env file needs to be setup, please take a look at the example one for the options that are needed.
 This file can be renamed by removing the .example from the end.
