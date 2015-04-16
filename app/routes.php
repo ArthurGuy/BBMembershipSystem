@@ -135,6 +135,7 @@ Route::put('storage_boxes/{id}', ['uses'=>'StorageBoxController@update', 'as'=>'
 
 # Stats
 Route::get('stats', ['uses'=>'StatsController@index', 'before'=>'role:member', 'as'=>'stats.index']);
+Route::get('stats/gocardless', ['uses'=>'StatsController@ddSwitch', 'before'=>'role:member', 'as'=>'stats.index']);
 
 
 #Notification Emails

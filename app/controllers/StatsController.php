@@ -124,5 +124,35 @@ class StatsController extends \BaseController
             ->with('numActiveUsersQuarter', $numActiveUsersQuarter);
     }
 
+    public function ddSwitch()
+    {
+        $users         = $this->userRepository->getActive();
+        $paymentMethodsNumbers = [
+            'gocardless'            => 0,
+            'gocardless-variable'   => 0,
+        ];
+        foreach ($users as $user) {
+            if (isset($paymentMethodsNumbers[$user->payment_method])) {
+                $paymentMethodsNumbers[$user->payment_method]++;
+            }
+        }
+        $paymentMethods = [
+            [
+                'GoCardless Type', 'Number'
+            ],
+            [
+                'Fixed', $paymentMethodsNumbers['gocardless']
+            ],
+            [
+                'Variable', $paymentMethodsNumbers['gocardless-variable']
+            ]
+        ];
+
+        JavaScript::put([
+            'paymentMethods' => $paymentMethods
+        ]);
+
+        return View::make('stats.dd-switch');
+    }
 
 }
