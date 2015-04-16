@@ -220,7 +220,7 @@ Route::post('camera/event/store', function() {
         $imageDurations = [];
         foreach ($iterator as $object) {
             $images[]         = 'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $object['Key'];
-            $imageDurations[] = 40;
+            $imageDurations[] = 35;
         }
 
         if (count($images) <= 2) {
