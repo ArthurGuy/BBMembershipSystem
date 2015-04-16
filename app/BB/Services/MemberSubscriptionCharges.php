@@ -78,7 +78,7 @@ class MemberSubscriptionCharges {
                     break;
                 }
                 
-                $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription);
+                $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->amount);
                 if ($bill) {
                     $this->paymentRepository->recordPayment('subscription', $charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
                     $this->subscriptionChargeRepository->markChargeAsProcessing($charge->id);
