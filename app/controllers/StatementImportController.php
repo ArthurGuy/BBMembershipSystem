@@ -138,10 +138,18 @@ class StatementImportController extends \BaseController {
             if ($matchedUser)
             {
                 echo '<td>'.$matchedUser->name.'</td>';
+                if ($subPayment) {
+                    $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
+                    if ($subCharge) {
+                        echo '<td>Sub Charge: '.$subCharge->amount.'</td>';
+                    } else {
+                        echo '<td>No Sub Charge</td>';
+                    }
+                }
             }
             else
             {
-                echo '<td>Unknown</td>';
+                echo '<td>Unknown</td><td></td>';
             }
 
             echo '<td>'.$row[2].'</td>';
@@ -155,7 +163,7 @@ class StatementImportController extends \BaseController {
             if (!$testProcess && $matchedUser)
             {
                 if ($subPayment) {
-                    $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
+                    //$subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
                     if ($subCharge) {
                         $paymentReference = $subCharge->id;
                         if ($subCharge->amount == $row[4]) {
@@ -180,13 +188,12 @@ class StatementImportController extends \BaseController {
                 ]);
                 if ($subPayment)
                 {
-                    $paymentMethod = 'standing-order';
-                    //If the user has switched to gocardless don't break the payment method
-                    if ($matchedUser->payment_method == 'gocardless') {
-                        $paymentMethod = 'gocardless';
+                    $matchedUser->extendMembership($matchedUser->payment_method, $date->addMonth());
+
+                    if ($matchedUser->payment_method == 'standing-order') {
+                        $matchedUser->monthly_subscription = $row[4];
                     }
-                    $matchedUser->extendMembership($paymentMethod, $date->addMonth());
-                    $matchedUser->monthly_subscription = $row[4];
+
                     $matchedUser->save();
                 }
             }
