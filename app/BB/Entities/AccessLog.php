@@ -18,7 +18,7 @@ class AccessLog extends Model {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'key_fob_id', 'response', 'service', 'delayed'
+        'user_id', 'key_fob_id', 'response', 'service', 'delayed', 'created_at'
     ];
 
 
