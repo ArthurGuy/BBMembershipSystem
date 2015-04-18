@@ -12,6 +12,7 @@ Activity Log
 
 <div class="page-header">
     <h3>Door access to the main space - {{ $date->format('l jS \\of F'); }}</h3>
+    Want to know if anyone's there now? Call the number at the space : 01273 603516
 
     {{ Form::open(['route'=> 'activity.index', 'method'=>'GET', 'id'=>'activityDatePicker', 'class'=>'form-inline']) }}
     <div class="input-group date">
