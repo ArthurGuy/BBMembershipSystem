@@ -63,7 +63,7 @@ class GoCardlessWebhookController extends \BaseController {
                 break;
             case 'pre_authorization':
 
-                $this->processPreAuths();
+                $this->processPreAuths($parser->getAction(), $parser->getPreAuthList());
 
                 break;
             case 'subscription':
@@ -166,10 +166,17 @@ class GoCardlessWebhookController extends \BaseController {
 
     }
 
-    private function processPreAuths()
+    private function processPreAuths($action, $preAuthList)
     {
         //Preauths are handled at creation
-        //@TODO: we probably need to catch cancellations here
+        foreach ($preAuthList as $preAuth) {
+            if ($preAuth['status'] == 'cancelled') {
+                $user = User::where('payment_method', 'gocardless')->where('subscription_id', $preAuth['id'])->first();
+                if ($user) {
+                    $user->cancelSubscription();
+                }
+            }
+        }
     }
 
     private function processSubscriptions($subscriptions)
