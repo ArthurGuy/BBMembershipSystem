@@ -32,6 +32,11 @@ class GoCardlessWebhookParser {
      */
     private $subscriptions = [];
 
+    /**
+     * @var array
+     */
+    private $preAuthList = [];
+
     public function parseResponse($paymentPaidPayload)
     {
         $this->rawResponse = $paymentPaidPayload;
@@ -44,6 +49,8 @@ class GoCardlessWebhookParser {
             $this->setBills($this->response['payload']['bills']);
         } else if ($this->resourceType == 'subscription') {
             $this->subscriptions = $this->response['payload']['subscriptions'];
+        } else if ($this->resourceType == 'pre_authorization') {
+            $this->preAuthList = $this->response['payload']['pre_authorizations'];
         }
     }
 
@@ -77,6 +84,14 @@ class GoCardlessWebhookParser {
     public function getSubscriptions()
     {
         return $this->subscriptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPreAuthList()
+    {
+        return $this->preAuthList;
     }
 
     private function setBills($bills)
