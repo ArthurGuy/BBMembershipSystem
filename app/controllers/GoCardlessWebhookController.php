@@ -264,7 +264,7 @@ class GoCardlessWebhookController extends \BaseController {
     }
 
     /**
-     * The bill has been calcelled or failed, update the user records to compensate
+     * The bill has been cancelled or failed, update the user records to compensate
      *
      * @param $existingPayment
      */
@@ -273,7 +273,7 @@ class GoCardlessWebhookController extends \BaseController {
         if ($existingPayment->reason == 'subscription') {
             //If the payment is a subscription payment then we need to take action and warn the user
             $user         = $existingPayment->user()->first();
-            $user->status = 'payment-warning';
+            $user->status = 'suspended';
 
             //Rollback the users subscription expiry date or set it to today
             $expiryDate = \BB\Helpers\MembershipPayments::lastUserPaymentExpires($user->id);

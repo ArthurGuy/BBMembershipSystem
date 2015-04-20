@@ -28,6 +28,7 @@ class CheckMemberships {
         $users = User::active()->where('status', '=', 'active')->notSpecialCase()->get();
         foreach ($users as $user)
         {
+            /** @var $user \BB\Entities\User */
             echo $user->name;
             $expired = false;
 
@@ -56,9 +57,8 @@ class CheckMemberships {
             }
             if ($expired)
             {
-                echo " - Expired";
-                $user->status = 'payment-warning';
-                $user->save();
+                $user->setSuspended();
+                echo " - Suspended";
             }
 
 

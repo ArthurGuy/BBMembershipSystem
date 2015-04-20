@@ -315,7 +315,7 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->payment_method = '';
         $this->subscription_id = '';
         $this->payment_day = '';
-        $this->status = 'payment-warning';
+        $this->status = 'leaving';
         $this->save();
     }
 
