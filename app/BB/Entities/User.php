@@ -76,6 +76,7 @@ class User extends Model implements UserInterface, RemindableInterface {
             'setting-up'        => 'Setting Up',
             'active'            => 'Active',
             'payment-warning'   => 'Payment Warning',
+            'suspended'         => 'Suspended',
             'leaving'           => 'Leaving',
             'on-hold'           => 'On Hold',
             'left'              => 'Left',
@@ -321,6 +322,12 @@ class User extends Model implements UserInterface, RemindableInterface {
     public function setLeaving()
     {
         $this->status = 'leaving';
+        $this->save();
+    }
+
+    public function setSuspended()
+    {
+        $this->status = 'suspended';
         $this->save();
     }
 

@@ -65,4 +65,14 @@ class UserMailer {
         });
     }
 
+    public function sendSuspendedMessage()
+    {
+        $user = $this->user;
+        \Mail::queue('emails.suspended', ['user'=>$user], function($message) use ($user)
+        {
+            $message->to($user->email, $user->email)->subject('Your Build Brighton membership has been suspended');
+
+        });
+    }
+
 } 

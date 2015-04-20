@@ -197,7 +197,7 @@
     </div>
     @endif
 
-    @if ($user->status == 'payment-warning')
+    @if (($user->status == 'payment-warning') || ($user->status == 'suspended'))
         <div class="row">
             <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
                 @include('account.partials.payment-problem-panel')

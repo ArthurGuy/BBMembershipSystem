@@ -24,6 +24,12 @@ class UserObserver {
             $this->paymentWarning($user);
         }
 
+        //User status changed to payment warning
+        if (($original['status'] != 'suspended') && ($user->status == 'suspended'))
+        {
+            $this->suspended($user);
+        }
+
         //User left
         if (($original['status'] != 'left') && ($user->status == 'left'))
         {
@@ -41,11 +47,16 @@ class UserObserver {
         $userMailer->sendWelcomeMessage();
     }
 
-
     private function paymentWarning($user)
     {
         $userMailer = new UserMailer($user);
         $userMailer->sendPaymentWarningMessage();
+    }
+
+    private function suspended($user)
+    {
+        $userMailer = new UserMailer($user);
+        $userMailer->sendSuspendedMessage();
     }
 
     private function userLeft($user)
