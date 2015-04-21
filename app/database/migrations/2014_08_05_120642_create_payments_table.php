@@ -28,6 +28,8 @@ class CreatePaymentsTable extends Migration {
             $table->index('status');
             $table->index('user_id');
 
+            $table->dateTime('paid_at');
+
 			$table->timestamps();
 		});
 	}

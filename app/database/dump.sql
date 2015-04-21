@@ -191,6 +191,7 @@ CREATE TABLE `payments` (
   `fee` double(10,2) NOT NULL,
   `amount_minus_fee` double(10,2) NOT NULL,
   `status` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `paid_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
@@ -198,9 +199,9 @@ CREATE TABLE `payments` (
   KEY `payments_user_id_index` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `payments` (`id`, `reason`, `reference`, `source`, `source_id`, `user_id`, `amount`, `fee`, `amount_minus_fee`, `status`, `created_at`, `updated_at`)
+INSERT INTO `payments` (`id`, `reason`, `reference`, `source`, `source_id`, `user_id`, `amount`, `fee`, `amount_minus_fee`, `status`, `paid_at`, `created_at`, `updated_at`)
 VALUES
-	(60, 'equipment-fee', '4:laser', 'balance', '', 1, 0.28, 0.00, 0.28, 'paid', '2015-01-18 20:39:25', '2015-01-18 20:39:25');
+	(60, 'equipment-fee', '4:laser', 'balance', '', 1, 0.28, 0.00, 0.28, 'paid', '2015-01-18 20:39:25', '2015-01-18 20:39:25', '2015-01-18 20:39:25');
 
 
 
