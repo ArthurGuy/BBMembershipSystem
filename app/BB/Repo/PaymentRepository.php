@@ -109,7 +109,7 @@ class PaymentRepository extends DBRepository
         $record->save();
 
         //Emit an event so that things like the balance updater can run
-        \Event::fire('payment.create', array($userId, $reason, $ref, $record->id));
+        \Event::fire('payment.create', array($userId, $reason, $ref, $record->id, $status));
 
         return $record->id;
     }
@@ -128,6 +128,21 @@ class PaymentRepository extends DBRepository
     public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref=null)
     {
         return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref);
+    }
+
+    /**
+     * Record a payment failure or cancellation
+     *
+     * @param int    $paymentId
+     * @param string $status
+     */
+    public function recordPaymentFailure($paymentId, $status='failed')
+    {
+        $this->update($paymentId, ['status' => $status]);
+
+        $payment = $this->getById($paymentId);
+
+        \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->ref, $status));
     }
 
     public function updateStatus($paymentId, $status)
@@ -302,5 +317,16 @@ class PaymentRepository extends DBRepository
         $this->memberId = null;
         $this->startDate = null;
         $this->endDate = null;
+    }
+
+    /**
+     * Fetch a payment record using the id provided by the payment provider
+     *
+     * @param $sourceId
+     * @return Payment
+     */
+    public function getPaymentBySourceId($sourceId)
+    {
+        return $this->model->where('source_id', $sourceId)->first();
     }
 } 
