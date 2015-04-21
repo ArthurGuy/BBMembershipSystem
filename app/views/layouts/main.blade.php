@@ -50,8 +50,6 @@
 
     <div class="container-fluid">
 
-        @include('partials/flash')
-
         <!-- This alert block shouldn't be used any more and can probably be removed -->
         <div class="top-alerts">
             @if($errors->any())
@@ -139,8 +137,22 @@
     </div>
     @endif
 
+    @if (!Auth::guest())
+        <script>
+            var paymentRoutes = {
+                stripe: '{{ route('account.payment.stripe.store', Auth::user()->id) }}',
+                gocardless: '{{ route('account.payment.gocardless.create', Auth::user()->id) }}',
+                balance: '{{ route('account.payment.balance.create', Auth::user()->id) }}'
+            };
+            var stripePublicKey = '@stripeKey()';
+            var memberEmail = '{{ Auth::user()->email }}';
+        </script>
+    @endif
 
+    <script src="https://checkout.stripe.com/checkout.js"></script>
     <script src="/js/main.js"></script>
+
+    @include('partials/flash')
 
     <!-- Inline for now - this will be fixed at some stage -->
     <script>
@@ -215,18 +227,8 @@
 
     @include('partials/page-js')
 
-    @if (!Auth::guest())
-        <script>
-        var paymentRoutes = {
-            stripe: '{{ route('account.payment.stripe.store', Auth::user()->id) }}',
-            gocardless: '{{ route('account.payment.gocardless.create', Auth::user()->id) }}',
-            balance: '{{ route('account.payment.balance.create', Auth::user()->id) }}'
-        };
-        var stripePublicKey = '@stripeKey()';
-        var memberEmail = '{{ Auth::user()->email }}';
-        </script>
-    @endif
-    <script src="https://checkout.stripe.com/checkout.js"></script>
+
+
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
 
     <script>
