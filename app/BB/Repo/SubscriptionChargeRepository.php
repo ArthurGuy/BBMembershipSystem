@@ -25,7 +25,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param string    $status
      * @return SubscriptionCharge
      */
-    public function createCharge($userId, $date, $amount, $status='pending')
+    public function createCharge($userId, \DateTime $date, $amount=0, $status='pending')
     {
         return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>$status]);
     }
@@ -156,6 +156,13 @@ class SubscriptionChargeRepository extends DBRepository
     public function cancelOutstandingCharges($userId)
     {
         $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->update(['status'=>'cancelled']);
+    }
+
+    public function updateAmount($chargeId, $newAmount)
+    {
+        $subCharge = $this->getById($chargeId);
+        $subCharge->amount = $newAmount;
+        $subCharge->save();
     }
 
 }
