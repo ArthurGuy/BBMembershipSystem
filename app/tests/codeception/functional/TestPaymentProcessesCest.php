@@ -19,7 +19,7 @@ class TestPaymentProcessesCest
      */
     public function testSubChargeFetching(FunctionalTester $I)
     {
-        $subChargeRepo = new \BB\Repo\SubscriptionChargeRepository(new \BB\Entities\SubscriptionCharge());
+        $subChargeRepo = App::make('\BB\Repo\SubscriptionChargeRepository');
 
         $subChargeRepo->createCharge(10, Carbon::now());
 
@@ -63,7 +63,7 @@ class TestPaymentProcessesCest
     {
         $I->haveInDatabase('users', ['id'=>13, 'active'=>1, 'status'=>'active', 'monthly_subscription'=>10]);
 
-        $subChargeRepo = new \BB\Repo\SubscriptionChargeRepository(new \BB\Entities\SubscriptionCharge());
+        $subChargeRepo = App::make('\BB\Repo\SubscriptionChargeRepository');
         $paymentRepo = new \BB\Repo\PaymentRepository(new \BB\Entities\Payment());
 
         $subCharge = $subChargeRepo->createCharge(13, Carbon::now(), 0, 'due');
@@ -92,7 +92,7 @@ class TestPaymentProcessesCest
     {
         $I->haveInDatabase('users', ['id'=>14, 'active'=>1, 'status'=>'active', 'monthly_subscription'=>10]);
 
-        $subChargeRepo = new \BB\Repo\SubscriptionChargeRepository(new \BB\Entities\SubscriptionCharge());
+        $subChargeRepo = App::make('\BB\Repo\SubscriptionChargeRepository');
         $paymentRepo = new \BB\Repo\PaymentRepository(new \BB\Entities\Payment());
 
         $subCharge1 = $subChargeRepo->createCharge(14, Carbon::now()->subMonth(), 0, 'due');
@@ -119,7 +119,7 @@ class TestPaymentProcessesCest
     {
         $I->haveInDatabase('users', ['id'=>15, 'active'=>0, 'status'=>'suspended', 'monthly_subscription'=>10, 'subscription_expires'=>'2015-01-01']);
 
-        $subChargeRepo = new \BB\Repo\SubscriptionChargeRepository(new \BB\Entities\SubscriptionCharge());
+        $subChargeRepo = App::make('\BB\Repo\SubscriptionChargeRepository');
         $paymentRepo = new \BB\Repo\PaymentRepository(new \BB\Entities\Payment());
 
         //Create a charge with a due date the same as the user expiry date
@@ -170,7 +170,7 @@ class TestPaymentProcessesCest
     {
         $I->haveInDatabase('users', ['id'=>17, 'active'=>1, 'status'=>'active', 'monthly_subscription'=>15]);
 
-        $subChargeRepo = new \BB\Repo\SubscriptionChargeRepository(new \BB\Entities\SubscriptionCharge());
+        $subChargeRepo = App::make('\BB\Repo\SubscriptionChargeRepository');
         $paymentRepo = new \BB\Repo\PaymentRepository(new \BB\Entities\Payment());
 
         $subChargeDate = Carbon::create(2015, 1, 10, 0, 0, 0);
