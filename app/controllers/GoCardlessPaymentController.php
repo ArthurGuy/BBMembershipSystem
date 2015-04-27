@@ -43,6 +43,8 @@ class GoCardlessPaymentController extends \BaseController {
 
         if ($user->payment_method == 'gocardless-variable') {
             return $this->handleBill($amount, $reason, $user, $ref, $returnPath);
+        } elseif ($user->payment_method == 'gocardless') {
+            return $this->ddMigratePrompt($returnPath);
         } else {
             return $this->handleManualBill($amount, $reason, $user, $ref, $returnPath);
         }
@@ -125,8 +127,6 @@ class GoCardlessPaymentController extends \BaseController {
      */
     private function handleManualBill($amount, $reason, $user, $ref, $returnPath)
     {
-        Notification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
-        return Redirect::to($returnPath);
         $payment_details = array(
             'amount'       => $amount,
             'name'         => $this->getName($reason, $user->id),
@@ -144,6 +144,13 @@ class GoCardlessPaymentController extends \BaseController {
             'state'        => $reason . ':' . $ref . ':' . $returnPath
         );
         return Redirect::to($this->goCardless->newBillUrl($payment_details));
+    }
+
+
+    private function ddMigratePrompt($returnPath)
+    {
+        Notification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
+        return Redirect::to($returnPath);
     }
 
     /**
