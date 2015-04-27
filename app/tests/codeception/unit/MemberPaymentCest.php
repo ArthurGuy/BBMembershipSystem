@@ -1,7 +1,7 @@
 <?php
 use \UnitTester;
 
-class MemberCest
+class MemberPaymentCest
 {
     public function _before(UnitTester $I)
     {

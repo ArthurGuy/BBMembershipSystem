@@ -35,7 +35,7 @@ class UserMailer {
         $user = $this->user;
         \Mail::queue('emails.payment-warning', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($user->email, $user->email)->subject('We have detected a payment problem')->cc('info@buildbrighton.com');
+            $message->to($user->email, $user->email)->subject('We have detected a payment problem');
         });
     }
 
@@ -50,7 +50,7 @@ class UserMailer {
 
         \Mail::queue('emails.user-left', ['user'=>$user, 'memberBox'=>$memberBox], function($message) use ($user)
         {
-            $message->to($user->email, $user->email)->subject('Sorry to see you go')->cc('info@buildbrighton.com');
+            $message->to($user->email, $user->email)->subject('Sorry to see you go');
         });
     }
 
@@ -70,8 +70,8 @@ class UserMailer {
         $user = $this->user;
         \Mail::queue('emails.suspended', ['user'=>$user], function($message) use ($user)
         {
+            $message->addReplyTo('trustees@buildbrighton.com', 'Build Brighton Trustees');
             $message->to($user->email, $user->email)->subject('Your Build Brighton membership has been suspended');
-
         });
     }
 

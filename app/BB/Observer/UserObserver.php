@@ -45,6 +45,10 @@ class UserObserver {
     {
         $userMailer = new UserMailer($user);
         $userMailer->sendWelcomeMessage();
+
+        if (\App::environment('production')) {
+            \Slack::to("#general")->send($user->name . ' has just joined Build Brighton');
+        }
     }
 
     private function paymentWarning($user)
@@ -57,11 +61,19 @@ class UserObserver {
     {
         $userMailer = new UserMailer($user);
         $userMailer->sendSuspendedMessage();
+
+        if (\App::environment('production')) {
+            \Slack::to("#trustees")->send($user->name . ' has been suspended for non payment');
+        }
     }
 
     private function userLeft($user)
     {
         $userMailer = new UserMailer($user);
         $userMailer->sendLeftMessage();
+
+        if (\App::environment('production')) {
+            \Slack::to("#trustees")->send($user->name . ' has left Build Brighton');
+        }
     }
 } 
