@@ -152,6 +152,15 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->attributes['password'] = Hash::make($password);
     }
 
+    public function setPaymentDayAttribute($value)
+    {
+        //Ensure the payment date will always exist on any monthpayment_date
+        if ($value > 28) {
+            $value = 1;
+        }
+        $this->attributes['payment_day'] = $value;
+    }
+
     /**
      * Can the user see protected member photos?
      * Only available to active members
