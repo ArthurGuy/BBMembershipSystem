@@ -103,8 +103,9 @@ class PaymentRepository extends DBRepository
         if ($paidDate == null) {
             $paidDate = new Carbon();
         }
+        //If we have an existing similer record dont create another, except for when there is no source id
         $existingRecord = $this->model->where('source', $source)->where('source_id', $sourceId)->where('user_id', $userId)->first();
-        if (!$existingRecord) {
+        if (!$existingRecord || empty($sourceId)) {
             $record                   = new $this->model;
             $record->user_id          = $userId;
             $record->reason           = $reason;
