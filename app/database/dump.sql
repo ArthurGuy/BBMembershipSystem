@@ -191,6 +191,7 @@ CREATE TABLE `payments` (
   `fee` double(10,2) NOT NULL,
   `amount_minus_fee` double(10,2) NOT NULL,
   `status` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `paid_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
@@ -198,9 +199,9 @@ CREATE TABLE `payments` (
   KEY `payments_user_id_index` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `payments` (`id`, `reason`, `reference`, `source`, `source_id`, `user_id`, `amount`, `fee`, `amount_minus_fee`, `status`, `created_at`, `updated_at`)
+INSERT INTO `payments` (`id`, `reason`, `reference`, `source`, `source_id`, `user_id`, `amount`, `fee`, `amount_minus_fee`, `status`, `paid_at`, `created_at`, `updated_at`)
 VALUES
-	(60, 'equipment-fee', '4:laser', 'balance', '', 1, 0.28, 0.00, 0.28, 'paid', '2015-01-18 20:39:25', '2015-01-18 20:39:25');
+	(60, 'equipment-fee', '4:laser', 'balance', '', 1, 0.28, 0.00, 0.28, 'paid', '0000-00-00 00:00:00', '2015-01-18 20:39:25', '2015-01-18 20:39:25');
 
 
 
@@ -498,15 +499,15 @@ CREATE TABLE `subscription_charge` (
   `charge_date` date NOT NULL,
   `payment_date` date NOT NULL,
   `amount` int(11) NOT NULL,
-  `status` enum('draft','pending','paid','cancelled') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'draft',
+  `status` enum('pending','due','processing','paid','cancelled') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO `subscription_charge` (`id`, `user_id`, `charge_date`, `payment_date`, `amount`, `status`, `created_at`, `updated_at`)
 VALUES
-	(1, 1, '2015-03-20', '0000-00-00', 10, 'draft', '2015-03-17 18:23:13', '2015-03-17 18:23:13'),
-	(2, 1, '2015-03-20', '0000-00-00', 10, 'draft', '2015-03-18 13:32:46', '2015-03-18 13:32:46');
+	(1, 1, '2015-03-20', '0000-00-00', 10, 'due', '2015-03-17 18:23:13', '2015-03-17 18:23:13'),
+	(2, 1, '2015-03-20', '0000-00-00', 10, 'due', '2015-03-18 13:32:46', '2015-03-18 13:32:46');
 
 
 CREATE TABLE `equipment` (

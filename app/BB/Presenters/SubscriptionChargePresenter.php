@@ -71,6 +71,9 @@ class SubscriptionChargePresenter extends Presenter
 
     public function amount()
     {
-        return '&pound;'.$this->entity->amount;
+        if (($this->entity->status == 'processing') || ($this->entity->status == 'paid')) {
+            return '&pound;' . $this->entity->amount;
+        }
+        return '';
     }
 } 

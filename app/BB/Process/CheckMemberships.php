@@ -28,11 +28,12 @@ class CheckMemberships {
         $users = User::active()->where('status', '=', 'active')->notSpecialCase()->get();
         foreach ($users as $user)
         {
+            /** @var $user \BB\Entities\User */
             echo $user->name;
             $expired = false;
 
             $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
-            if ($user->subscription_expires->lt($cutOffDate))
+            if (!$user->subscription_expires || $user->subscription_expires->lt($cutOffDate))
             {
                 //echo "- Expired";
                 $expired = true;
@@ -45,7 +46,7 @@ class CheckMemberships {
                 //$paidUntil = $this->memberSubscriptionCharges->lastUserChargeExpires($user->id);
                 if ($paidUntil)
                 {
-                    if ($user->subscription_expires->lt($paidUntil))
+                    if ($user->subscription_expires && $user->subscription_expires->lt($paidUntil))
                     {
                         $user->extendMembership($user->payment_method, $paidUntil);
 
@@ -56,9 +57,8 @@ class CheckMemberships {
             }
             if ($expired)
             {
-                echo " - Expired";
-                $user->status = 'payment-warning';
-                $user->save();
+                $user->setSuspended();
+                echo " - Suspended";
             }
 
 

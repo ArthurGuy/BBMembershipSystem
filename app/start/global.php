@@ -26,6 +26,7 @@ ClassLoader::addDirectories(array(
 
 
 Event::subscribe('BB\Handlers\PaymentEventHandler');
+Event::subscribe('BB\Handlers\SubChargeEventHandler');
 
 
 /*

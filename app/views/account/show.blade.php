@@ -40,7 +40,7 @@
 </div>
 @endif
 
-@if ($user->trusted && !$user->key_holder)
+@if ($user->promoteGetAKey())
 <div class="row">
     <div class="col-xs-12 col-md-8">
         <div class="panel panel-default">
@@ -197,7 +197,7 @@
     </div>
     @endif
 
-    @if ($user->status == 'payment-warning')
+    @if ($user->isSuspended())
         <div class="row">
             <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
                 @include('account.partials.payment-problem-panel')
@@ -205,20 +205,16 @@
         </div>
     @endif
 
-
+    @if (!$user->isSuspended())
     <div class="row">
         <div class="col-xs-12 col-lg-12">
             @include('account.partials.induction-panel')
         </div>
     </div>
+    @endif
 
 
     @if ($user->status != 'honorary')
-        <div class="row">
-            <div class="col-xs-12 col-lg-12 pull-left">
-                @include('account.partials.payments-panel')
-            </div>
-        </div>
 
         <div class="row">
             <div class="col-xs-12 col-lg-12 pull-left">
@@ -226,6 +222,11 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-xs-12 col-lg-12 pull-left">
+                @include('account.partials.payments-panel')
+            </div>
+        </div>
 
         @if (($user->status != 'left') && ($user->status != 'leaving'))
         <div class="row">

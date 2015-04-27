@@ -30,6 +30,10 @@ class CheckMembershipStatus extends Command {
      * @var \BB\Process\CheckLeavingUsers
      */
     private $checkLeavingUsers;
+    /**
+     * @var \BB\Process\CheckSuspendedUsers
+     */
+    private $checkSuspendedUsers;
 
     /**
      * Create a new command instance.
@@ -39,6 +43,7 @@ class CheckMembershipStatus extends Command {
 	{
 		parent::__construct();
         $this->checkPaymentWarnings = App::make('\BB\Process\CheckPaymentWarnings');
+        $this->checkSuspendedUsers = App::make('\BB\Process\CheckSuspendedUsers');
         $this->checkLeavingUsers = App::make('\BB\Process\CheckLeavingUsers');
         $this->checkMemberships = App::make('\BB\Process\CheckMemberships');
 	}
@@ -53,6 +58,10 @@ class CheckMembershipStatus extends Command {
         //Users with a status of payment warning
         $this->info("Checking users with payment warnings");
         $this->checkPaymentWarnings->run();
+
+
+        $this->info("Checking users with suspended status");
+        $this->checkSuspendedUsers->run();
 
 
         //Users with a status of leaving

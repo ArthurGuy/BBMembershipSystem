@@ -115,16 +115,26 @@ class UserRepository extends DBRepository {
     /**
      * The user has setup a payment method of some kind so they are now considered active
      * This will kick off the automated member checking processes
+     *
      * @param $userId
      */
-    public function startMembership($userId)
+    public function ensureMembershipActive($userId)
     {
         $user = $this->getById($userId);
+
+        //user needs to have a recent sub charge and one that was paid or is due
+
         $user->active = true;
         $user->status = 'active';
         $user->save();
 
-        $this->subscriptionChargeRepository->createCharge($userId, Carbon::now(), $user->monthly_subscription, 'due');
+        $outstandingCharges = $this->subscriptionChargeRepository->hasOutstandingCharges($userId);
+
+        //If the user doesn't have any charges currently processing or they dont have an expiry date or are past their expiry data create a charge
+        if (!$outstandingCharges && (!$user->subscription_expires || $user->subscription_expires->lt(Carbon::now()))) {
+            //create a charge
+            $this->subscriptionChargeRepository->createChargeAndBillDD($userId, Carbon::now(), $user->monthly_subscription, 'due', $user->subscription_id);
+        }
     }
 
     /**

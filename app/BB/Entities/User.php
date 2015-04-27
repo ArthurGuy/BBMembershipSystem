@@ -76,6 +76,7 @@ class User extends Model implements UserInterface, RemindableInterface {
             'setting-up'        => 'Setting Up',
             'active'            => 'Active',
             'payment-warning'   => 'Payment Warning',
+            'suspended'         => 'Suspended',
             'leaving'           => 'Leaving',
             'on-hold'           => 'On Hold',
             'left'              => 'Left',
@@ -220,7 +221,12 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function promoteVariableGoCardless()
     {
-        return ($this->payment_method == 'gocardless');
+        return (($this->status == 'active') && ($this->payment_method == 'gocardless'));
+    }
+
+    public function promoteGetAKey()
+    {
+        return ($this->trusted && !$this->key_holder && ($this->status == 'active'));
     }
 
     /**
@@ -246,6 +252,14 @@ class User extends Model implements UserInterface, RemindableInterface {
     public function isBanned()
     {
         return $this->banned;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuspended()
+    {
+        return ($this->status == 'suspended');
     }
 
 
@@ -276,6 +290,10 @@ class User extends Model implements UserInterface, RemindableInterface {
         return $query->where('status', '=', 'payment-warning');
     }
 
+    public function scopeSuspended($query)
+    {
+        return $query->where('status', '=', 'suspended');
+    }
 
 
     /*
@@ -314,13 +332,20 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->payment_method = '';
         $this->subscription_id = '';
         $this->payment_day = '';
-        $this->status = 'payment-warning';
+        $this->status = 'leaving';
         $this->save();
     }
 
     public function setLeaving()
     {
         $this->status = 'leaving';
+        $this->save();
+    }
+
+    public function setSuspended()
+    {
+        $this->status = 'suspended';
+        $this->active = false;
         $this->save();
     }
 
@@ -376,7 +401,7 @@ class User extends Model implements UserInterface, RemindableInterface {
     }
 
 
-    public function extendMembership($paymentMethod, DateTime $expiry = null)
+    public function extendMembership($paymentMethod = null, DateTime $expiry = null)
     {
         if (empty($expiry))
         {
@@ -384,7 +409,9 @@ class User extends Model implements UserInterface, RemindableInterface {
         }
         $this->status = 'active';
         $this->active = true;
-        $this->payment_method = $paymentMethod;
+        if ($paymentMethod) {
+            $this->payment_method = $paymentMethod;
+        }
         $this->subscription_expires = $expiry;
         $this->save();
     }

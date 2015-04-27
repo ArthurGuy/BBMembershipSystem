@@ -7,26 +7,24 @@
             @if (!empty($user->subscription_id))
             <p>
                 Your direct debit payment has failed and we need you to make a manual payment.<br />
-                You will have a week to do this or your access to the space will be revoked.
+                Please start by migrating to our new direct debit system
             </p>
             <p>
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.create', $user->id])) }}
-                {{ Form::hidden('reason', 'subscription') }}
-                {{ Form::hidden('source', 'gocardless') }}
-                {{ Form::submit('Make a one off direct debit payment for &pound;'.round($user->monthly_subscription), array('class'=>'btn btn-primary')) }}
+                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.gocardless-migrate'])) }}
+                {{ Form::submit('Setup a variable Direct Debit', array('class'=>'btn btn-primary')) }}
                 {{ Form::close() }}
-            </p>
-            <p>
-                We still have a record of a Direct Debit being setup, this may have been cancelled as well but we haven't yet been notified.
-            </p>
-            <p>
-                If you want to make a cash payment instead please contact a trustee
             </p>
             @else
             <p>
                 Something odd is going on as you shouldn't see this message. Please let a trustee know there is an issue with your membership.
             </p>
             @endif
+        @elseif ($user->payment_method == 'gocardless-variable')
+            <p>
+                Your latest subscription payment has failed and your account has been temporarily suspended.<br />
+                You can retry your direct debit payment now.
+                @include('partials/payment-form', ['reason'=>'subscription', 'displayReason'=>'Retry payment', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>round($user->monthly_subscription), 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'balance', 'stripe']])
+            </p>
         @else
         <p>
             There is a problem with your subscription payment,

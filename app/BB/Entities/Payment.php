@@ -37,6 +37,11 @@ class Payment extends Model {
         'fee' => 0,
     ];
 
+    public function getDates()
+    {
+        return array('created_at', 'updated_at', 'paid_at');
+    }
+
 
     protected $presenter = 'BB\Presenters\PaymentPresenter';
 

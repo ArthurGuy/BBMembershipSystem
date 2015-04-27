@@ -125,6 +125,8 @@ class GoCardlessPaymentController extends \BaseController {
      */
     private function handleManualBill($amount, $reason, $user, $ref, $returnPath)
     {
+        Notification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
+        return Redirect::to($returnPath);
         $payment_details = array(
             'amount'       => $amount,
             'name'         => $this->getName($reason, $user->id),

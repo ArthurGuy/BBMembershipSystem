@@ -21,6 +21,8 @@ class HtmlBuilder extends IlluminateHtmlBuilder
             return '<span class="label label-default">Left</span>';
         } elseif ($status == 'honorary') {
             return '<span class="label label-default">Honorary</span>';
+        } elseif ($status == 'suspended') {
+            return '<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Your payment has failed, please make a manual payment to reactivate your account.">Suspended</span>';
         }
     }
 

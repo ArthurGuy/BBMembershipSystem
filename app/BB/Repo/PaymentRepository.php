@@ -2,6 +2,8 @@
 
 use BB\Entities\Payment;
 use BB\Exceptions\NotImplementedException;
+use Carbon\Carbon;
+use DateTime;
 
 class PaymentRepository extends DBRepository
 {
@@ -84,38 +86,53 @@ class PaymentRepository extends DBRepository
 
     /**
      * Record a payment against a user record
-     * @param string $reason What was the reason. subscription, induction, etc...
-     * @param int    $userId The users ID
-     * @param string $source gocardless, paypal
-     * @param string $sourceId A reference for the source
-     * @param double $amount Amount received before a fee
-     * @param string $status paid, pending, cancelled, refunded
-     * @param double $fee The fee charged by the payment provider
-     * @param string $ref
-     * @return int  The ID of the payment record
+     *
+     * @param string   $reason What was the reason. subscription, induction, etc...
+     * @param int      $userId The users ID
+     * @param string   $source gocardless, paypal
+     * @param string   $sourceId A reference for the source
+     * @param double   $amount Amount received before a fee
+     * @param string   $status paid, pending, cancelled, refunded
+     * @param double   $fee The fee charged by the payment provider
+     * @param string   $ref
+     * @param Carbon $paidDate
+     * @return int The ID of the payment record
      */
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref=null)
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref='', Carbon $paidDate=null)
     {
-        $record                   = new $this->model;
-        $record->user_id          = $userId;
-        $record->reason           = $reason;
-        $record->source           = $source;
-        $record->source_id        = $sourceId;
-        $record->amount           = $amount;
-        $record->amount_minus_fee = ($amount - $fee);
-        $record->fee              = $fee;
-        $record->status           = $status;
-        $record->reference        = $ref;
-        $record->save();
+        if ($paidDate == null) {
+            $paidDate = new Carbon();
+        }
+        //If we have an existing similer record dont create another, except for when there is no source id
+        $existingRecord = $this->model->where('source', $source)->where('source_id', $sourceId)->where('user_id', $userId)->first();
+        if (!$existingRecord || empty($sourceId)) {
+            $record                   = new $this->model;
+            $record->user_id          = $userId;
+            $record->reason           = $reason;
+            $record->source           = $source;
+            $record->source_id        = $sourceId;
+            $record->amount           = $amount;
+            $record->amount_minus_fee = ($amount - $fee);
+            $record->fee              = $fee;
+            $record->status           = $status;
+            $record->reference        = $ref;
+            if ($status == 'paid') {
+                $record->paid_at = $paidDate;
+            }
+            $record->save();
+        } else {
+            $record = $existingRecord;
+        }
 
         //Emit an event so that things like the balance updater can run
-        \Event::fire('payment.create', array($userId, $reason, $ref, $record->id));
+        \Event::fire('payment.create', array($userId, $reason, $ref, $record->id, $status));
 
         return $record->id;
     }
 
     /**
      * Record a subscription payment
+     *
      * @param int    $userId The users ID
      * @param string $source gocardless, paypal
      * @param string $sourceId A reference for the source
@@ -123,11 +140,43 @@ class PaymentRepository extends DBRepository
      * @param string $status paid, pending, cancelled, refunded
      * @param double $fee The fee charged by the payment provider
      * @param null   $ref
+     * @param Carbon $paidDate
      * @return int  The ID of the payment record
      */
-    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref=null)
+    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref='', Carbon $paidDate=null)
     {
-        return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref);
+        return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref, $paidDate);
+    }
+
+    /**
+     * An existing payment has been set to paid
+     *
+     * @param $paymentId
+     * @param $paidDate
+     */
+    public function markPaymentPaid($paymentId, $paidDate)
+    {
+        $payment = $this->getById($paymentId);
+        $payment->status = 'paid';
+        $payment->paid_at = $paidDate;
+        $payment->save();
+
+        \Event::fire('payment.paid', array($payment->user_id, $paymentId, $payment->reason, $payment->reference, $paidDate));
+    }
+
+    /**
+     * Record a payment failure or cancellation
+     *
+     * @param int    $paymentId
+     * @param string $status
+     */
+    public function recordPaymentFailure($paymentId, $status='failed')
+    {
+        $this->update($paymentId, ['status' => $status]);
+
+        $payment = $this->getById($paymentId);
+
+        \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->ref, $status));
     }
 
     public function updateStatus($paymentId, $status)
@@ -302,5 +351,16 @@ class PaymentRepository extends DBRepository
         $this->memberId = null;
         $this->startDate = null;
         $this->endDate = null;
+    }
+
+    /**
+     * Fetch a payment record using the id provided by the payment provider
+     *
+     * @param $sourceId
+     * @return Payment
+     */
+    public function getPaymentBySourceId($sourceId)
+    {
+        return $this->model->where('source_id', $sourceId)->first();
     }
 } 

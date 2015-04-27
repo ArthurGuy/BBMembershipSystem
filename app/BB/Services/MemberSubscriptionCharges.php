@@ -43,7 +43,7 @@ class MemberSubscriptionCharges {
         $users = $this->userRepository->getBillableActive();
         foreach ($users as $user) {
             if (($user->payment_day == $targetDate->day) && (!$this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
-                $this->subscriptionChargeRepository->createCharge($user->id, $targetDate, $user->monthly_subscription);
+                $this->subscriptionChargeRepository->createCharge($user->id, $targetDate);
             }
         }
     }
@@ -78,11 +78,12 @@ class MemberSubscriptionCharges {
                     break;
                 }
                 
-                $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->amount);
+                $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription);
                 if ($bill) {
-                    $this->paymentRepository->recordPayment('subscription', $charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
-                    $this->subscriptionChargeRepository->markChargeAsProcessing($charge->id);
-                    //$charge->user->extendMembership('gocardless-variable', Carbon::now()->addMonth());
+                    $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
+
+                    //$this->subscriptionChargeRepository->markChargeAsProcessing($charge->id);
+                    //$this->subscriptionChargeRepository->updateAmount($charge->id, $bill->amount);
                 }
             }
         }

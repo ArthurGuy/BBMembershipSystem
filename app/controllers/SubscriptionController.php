@@ -214,12 +214,8 @@ class SubscriptionController extends \BaseController {
 
         $this->userRepository->recordGoCardlessVariableDetails($user->id, $confirmed_resource->id);
 
-
-        //If the user isn't active yet activate the account
-        if ($user->active == false) {
-            //This process will also create the first sub charge
-            $this->userRepository->startMembership($user->id);
-        }
+        //all we need for a valid member is an active dd so make sure the user account is active
+        $this->userRepository->ensureMembershipActive($user->id);
 
         return Redirect::route('account.show', $user->id);
     }
@@ -265,6 +261,8 @@ class SubscriptionController extends \BaseController {
                 $user->save();
 
                 $user->setLeaving();
+
+                $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
 
                 Notification::success("Your direct debit has been cancelled");
                 return Redirect::back();
