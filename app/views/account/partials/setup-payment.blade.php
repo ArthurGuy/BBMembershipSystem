@@ -1,25 +1,17 @@
 
 
 
-        <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
-        <small><a href="#" class="js-show-alter-subscription-amount">Change your monthly amount</a></small>
-        {{ Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) }}
-        <div class="input-group">
-            <div class="input-group-addon">&pound;</div>
-            {{ Form::text('monthly_subscription', round($user->monthly_subscription), ['class'=>'form-control']) }}
-        </div>
-        {{ Form::submit('Update', array('class'=>'btn btn-default')) }}
-        {{ Form::close() }}
+        <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit</a>
         <br /><br />
     <p>
-        The direct debit date will be the day you complete this process<br />
-        You can cancel the direct debit at any point through this website, the <a href="https://gocardless.com/security" target="_blank">GoCardless</a>
-        website (our payment processor) or your bank giving you full control over the payments. By switching you will also protected by the
-        <a href="https://gocardless.com/direct-debit/guarantee/" target="_blank">direct debit guarantee.</a>
+        Your subscription payments will be taken on the day you complete this process unless stated otherwise on this page.<br />
+        You can cancel the Direct Debit at any point through this website or your bank giving you full control over the payments.
+        It will also protected by the <a href="https://gocardless.com/direct-debit/guarantee/" target="_blank">Direct Debit guarantee.</a>
     </p>
     <p>
         You can also setup a PayPal subscription, this costs us a lot more so please only do this if you don't have a UK bank account.<br />
-        Your PayPal email address <strong>must</strong> be known to us, if its not the one you used when registering please <a href="{{ route('account.edit', $user->id) }}">enter an alternate email address</a>.
+        Your PayPal email address <strong>must</strong> be known to us, if its not the one you used when registering
+        please <a href="{{ route('account.edit', $user->id) }}">enter an alternate email address</a>.
         {{ Form::open(['method'=>'post', 'url'=>'https://www.paypal.com/cgi-bin/webscr']) }}
         {{ Form::submit('Setup a PayPal Subscription', ['class'=>'btn']) }}
         {{ Form::hidden('cmd', '_xclick-subscriptions') }}
@@ -35,7 +27,7 @@
         {{ Form::hidden('hosted_button_i', '3H4YABLMVW6RC') }}
         {{ Form::close() }}
     </p>
-    <p>
+    <p class="hidden">
         If neither of these options are suitable please send us an email explaining the situation <a href="mailto:trustees@buildbrighton.com">trustees@buildbrighton.com</a>
     </p>
     @if (Auth::user()->isAdmin())

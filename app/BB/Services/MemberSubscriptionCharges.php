@@ -80,10 +80,10 @@ class MemberSubscriptionCharges {
                 
                 $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription);
                 if ($bill) {
-                    $this->paymentRepository->recordPayment('subscription', $charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
-                    $this->subscriptionChargeRepository->markChargeAsProcessing($charge->id);
-                    $this->subscriptionChargeRepository->updateAmount($charge->id, $bill->amount);
-                    //$charge->user->extendMembership('gocardless-variable', Carbon::now()->addMonth());
+                    $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
+
+                    //$this->subscriptionChargeRepository->markChargeAsProcessing($charge->id);
+                    //$this->subscriptionChargeRepository->updateAmount($charge->id, $bill->amount);
                 }
             }
         }

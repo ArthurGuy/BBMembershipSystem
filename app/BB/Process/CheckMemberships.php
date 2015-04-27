@@ -33,7 +33,7 @@ class CheckMemberships {
             $expired = false;
 
             $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
-            if ($user->subscription_expires->lt($cutOffDate))
+            if (!$user->subscription_expires || $user->subscription_expires->lt($cutOffDate))
             {
                 //echo "- Expired";
                 $expired = true;
@@ -46,7 +46,7 @@ class CheckMemberships {
                 //$paidUntil = $this->memberSubscriptionCharges->lastUserChargeExpires($user->id);
                 if ($paidUntil)
                 {
-                    if ($user->subscription_expires->lt($paidUntil))
+                    if ($user->subscription_expires && $user->subscription_expires->lt($paidUntil))
                     {
                         $user->extendMembership($user->payment_method, $paidUntil);
 

@@ -3,6 +3,7 @@
 
 use BB\Entities\Payment;
 use BB\Entities\User;
+use BB\Exceptions\PaymentException;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
@@ -77,46 +78,58 @@ class GoCardlessWebhookController extends \BaseController {
     }
 
 
+    /**
+     * A Bill has been created, these will always start within the system except for subscription payments
+     *
+     * @param array $bills
+     */
     private function processNewBills(array $bills)
     {
         //We have new bills/payment
         foreach ($bills as $bill)
         {
+            //Ignore non subscription payment creations
+            if ($bill['source_type'] != 'subscription') {
+                break;
+            }
             try {
-                $this->recordNewSubscriptionPayment($bill);
+
+                //Locate the user through their subscription id
+                $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
+
+                if (!$user) {
+                    Log::warning("GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['id']);
+                }
+
+                $ref = null;
+
+                $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['id'], $bill['amount'], $bill['status'], ($bill['amount'] - $bill['amount_minus_fees']), $ref);
+
+
             } catch (\Exception $e) {
                 \Log::error($e);
             }
         }
     }
 
+
     private function processPaidBills(array $bills)
     {
         //When a bill is paid update the status on the local record and the connected sub charge (if there is one)
 
         foreach ($bills as $bill) {
-            $existingPayment = $this->getPaymentUpdateStatus($bill['id'], $bill['status']);
+
+            $existingPayment = $this->paymentRepository->getPaymentBySourceId($bill['id']);
             if ($existingPayment) {
 
-                //Not sure if the section below will ever get hit
-                if ($bill['source_type'] == 'subscription') {
-
+                if ($bill['paid_at']) {
                     $paymentDate = new Carbon($bill['paid_at']);
-
-                    $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
-
-                    //If we dont have a reference to the sub charge try and find it another way
-                    if (!$subCharge) {
-                        $subCharge = $this->subscriptionChargeRepository->findCharge($existingPayment->user_id);
-                    }
-                    if ($subCharge) {
-                        if ($bill['status'] == 'pending') {
-                            $this->subscriptionChargeRepository->markChargeAsProcessing($subCharge->id);
-                        } elseif ($bill['status'] == 'paid') {
-                            $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
-                        }
-                    }
+                } else {
+                    $paymentDate = new Carbon();
                 }
+
+                $this->paymentRepository->markPaymentPaid($existingPayment->id, $paymentDate);
+
             } else {
                 Log::info("GoCardless Webhook received for unknown payment: ".$bill['id']);
             }
@@ -127,14 +140,16 @@ class GoCardlessWebhookController extends \BaseController {
     {
         foreach ($bills as $bill)
         {
-            $existingPayment = $this->getPaymentUpdateStatus($bill['id'], $bill['status']);
+            $existingPayment = $this->paymentRepository->getPaymentBySourceId($bill['id']);
             if ($existingPayment)
             {
                 if (($bill['status'] == 'failed') || ($bill['status'] == 'cancelled'))
                 {
                     //Payment failed or cancelled - either way we don't have the money!
                     //We need to retrieve the payment from the user somehow but don't want to cancel the subscription.
-                    $this->handleFailedCancelledBill($existingPayment);
+                    //$this->handleFailedCancelledBill($existingPayment);
+
+                    $this->paymentRepository->recordPaymentFailure($existingPayment->id, $bill['status']);
 
                 }
                 elseif (($bill['status'] == 'pending') && ($action == 'retried'))
@@ -179,6 +194,7 @@ class GoCardlessWebhookController extends \BaseController {
         }
     }
 
+
     private function processSubscriptions($subscriptions)
     {
         foreach ($subscriptions as $sub)
@@ -197,79 +213,11 @@ class GoCardlessWebhookController extends \BaseController {
     }
 
     /**
-     * @param $billId string
-     * @param $status string
-     * @return \BB\Entities\Payment|null
-     */
-    private function getPaymentUpdateStatus($billId, $status) {
-        $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $billId)->first();
-        if ($existingPayment) {
-            $existingPayment->status = $status;
-            $existingPayment->save();
-        }
-        return $existingPayment;
-    }
-
-    /**
-     * Process the regular monthly notifications for users on the old subscription service
-     *
-     * @param $bill
-     * @throws Exception
-     */
-    private function recordNewSubscriptionPayment($bill)
-    {
-
-        if ($bill['source_type'] != 'subscription') {
-
-            //All other payments start in the system - this is just about recording the gocardless initiated sub payments
-            return;
-        }
-
-        $paymentDate = new \Carbon\Carbon();
-
-
-        $existingPayment = Payment::where('source', 'gocardless')->where('source_id', $bill['id'])->first();
-        if ($existingPayment) {
-
-            //If we have the payment already then this isn't necessary
-            return;
-        }
-
-        //Locate the user through their subscription id
-        $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
-
-        if (!$user) {
-            throw new \Exception("GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['id']);
-        }
-
-
-        $ref = null;
-
-        $subCharge = $this->subscriptionChargeRepository->findCharge($user->id);
-        if ($subCharge) {
-            $ref = $subCharge->id;
-            $this->subscriptionChargeRepository->updateAmount($subCharge->id, $bill['amount']);
-            if ($bill['status'] == 'pending') {
-                $this->subscriptionChargeRepository->markChargeAsProcessing($subCharge->id);
-            } elseif ($bill['status'] == 'paid') {
-                $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
-            }
-        }
-
-        $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['id'], $bill['amount'], $bill['status'], ($bill['amount'] - $bill['amount_minus_fees']), $ref);
-
-        //Extend their monthly subscription
-        $user->extendMembership('gocardless', \Carbon\Carbon::now()->addMonth());
-
-
-    }
-
-    /**
      * The bill has been cancelled or failed, update the user records to compensate
      *
      * @param $existingPayment
      */
-    private function handleFailedCancelledBill($existingPayment)
+    private function handleFailedCancelledBill(Payment $existingPayment)
     {
         if ($existingPayment->reason == 'subscription') {
             //If the payment is a subscription payment then we need to take action and warn the user

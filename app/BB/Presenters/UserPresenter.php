@@ -1,5 +1,6 @@
 <?php namespace BB\Presenters;
 
+use Carbon\Carbon;
 use Laracasts\Presenter\Presenter;
 
 /**
@@ -52,7 +53,14 @@ class UserPresenter extends Presenter
         if ($this->entity->status == 'setting-up') {
             return '';
         }
-        return ''.$this->monthlySubscription.' a month by '.$this->paymentMethod.'';
+        return ''.$this->monthlySubscription.' a month by '.$this->paymentMethod.' taken on the '.$this->dayOfMonth();
+    }
+
+    public function dayOfMonth()
+    {
+        $date = Carbon::now();
+        $date->day = $this->entity->payment_day;
+        return $date->format('jS');
     }
 
 } 

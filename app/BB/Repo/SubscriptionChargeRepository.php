@@ -2,6 +2,7 @@
 
 use BB\Entities\SubscriptionCharge;
 use BB\Exceptions\InvalidDataException;
+use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 
 class SubscriptionChargeRepository extends DBRepository
@@ -12,10 +13,20 @@ class SubscriptionChargeRepository extends DBRepository
      * @var SubscriptionCharge
      */
     protected $model;
+    /**
+     * @var PaymentRepository
+     */
+    private $paymentRepository;
+    /**
+     * @var GoCardlessHelper
+     */
+    private $goCardless;
 
-    function __construct(SubscriptionCharge $model)
+    function __construct(SubscriptionCharge $model, PaymentRepository $paymentRepository, GoCardlessHelper $goCardless)
     {
         $this->model = $model;
+        $this->paymentRepository = $paymentRepository;
+        $this->goCardless = $goCardless;
     }
 
     /**
@@ -28,6 +39,27 @@ class SubscriptionChargeRepository extends DBRepository
     public function createCharge($userId, \DateTime $date, $amount=0, $status='pending')
     {
         return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>$status]);
+    }
+
+    /**
+     * Create a charge and immediately bill it through the direct debit process
+     *
+     * @param integer   $userId
+     * @param \DateTime $date
+     * @param integer   $amount
+     * @param string    $status
+     * @param string    $DDAuthId
+     * @return SubscriptionCharge
+     */
+    public function createChargeAndBillDD($userId, $date, $amount, $status, $DDAuthId)
+    {
+        $charge = $this->createCharge($userId, $date, $amount, $status);
+
+        $bill = $this->goCardless->newBill($DDAuthId, $amount);
+        if ($bill) {
+            $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id,
+                $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
+        }
     }
 
     /**
@@ -46,6 +78,7 @@ class SubscriptionChargeRepository extends DBRepository
 
     /**
      * Locate the next payment the user has to pay off
+     *
      * @param $userId
      * @param Carbon $paymentDate
      * @return mixed
@@ -54,7 +87,6 @@ class SubscriptionChargeRepository extends DBRepository
     {
         //find any existing payment that hasn't been paid
         //Subscription payments will always be used to pay of bills
-
 
         return $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->orderBy('charge_date', 'ASC')->first();
     }
@@ -72,6 +104,8 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge->payment_date = $paymentDate;
         $subCharge->status = 'paid';
         $subCharge->save();
+
+        \Event::fire('sub-charge.paid', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
     }
 
     /**
@@ -82,10 +116,13 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge = $this->getById($chargeId);
         $subCharge->status = 'processing';
         $subCharge->save();
+
+        \Event::fire('sub-charge.processing', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
     }
 
     /**
      * If a payment has failed update the sub charge to reflect this
+     *
      * @param $chargeId
      */
     public function paymentFailed($chargeId)
@@ -93,11 +130,15 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = null;
         $subCharge->status = 'due';
+        $subCharge->amount = 0;
         $subCharge->save();
+
+        \Event::fire('sub-charge.payment-failed', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
     }
 
     /**
      * Return a paginated list of member payments
+     *
      * @param integer $userId
      * @return mixed
      */
@@ -108,6 +149,18 @@ class SubscriptionChargeRepository extends DBRepository
 
     /**
      * Return a paginated list of member payments
+     *
+     * @param integer $userId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMemberCharges($userId)
+    {
+        return $this->model->where('user_id', $userId)->orderBy('charge_date', 'DESC')->get();
+    }
+
+    /**
+     * Return a paginated list of member payments
+     *
      * @return mixed
      */
     public function getChargesPaginated()
@@ -118,7 +171,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * Get all the charges which are due payment
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getDue()
     {
@@ -156,6 +209,17 @@ class SubscriptionChargeRepository extends DBRepository
     public function cancelOutstandingCharges($userId)
     {
         $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->update(['status'=>'cancelled']);
+    }
+
+    /**
+     * Does the user have any active or outstanding charges
+     *
+     * @param $userId
+     * @return bool
+     */
+    public function hasOutstandingCharges($userId)
+    {
+        return ($this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due', 'processing'])->count() > 0);
     }
 
     public function updateAmount($chargeId, $newAmount)

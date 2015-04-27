@@ -26,18 +26,24 @@ class PaymentController extends \BaseController {
      * @var \BB\Repo\UserRepository
      */
     private $userRepository;
+    /**
+     * @var \BB\Repo\SubscriptionChargeRepository
+     */
+    private $subscriptionChargeRepository;
 
     function __construct(
             \BB\Helpers\GoCardlessHelper $goCardless,
             \BB\Repo\EquipmentRepository $equipmentRepository,
             \BB\Repo\PaymentRepository $paymentRepository,
-            \BB\Repo\UserRepository $userRepository
+            \BB\Repo\UserRepository $userRepository,
+            \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository
         )
     {
         $this->goCardless = $goCardless;
         $this->equipmentRepository = $equipmentRepository;
         $this->paymentRepository = $paymentRepository;
         $this->userRepository = $userRepository;
+        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
 
         $this->beforeFilter('role:member', array('only' => ['create', 'destroy']));
         $this->beforeFilter('role:admin', array('only' => ['store']));
@@ -111,10 +117,8 @@ class PaymentController extends \BaseController {
             $reason = Input::get('reason');
             if ($reason == 'subscription')
             {
-                $name = strtoupper("BBSUB".$user->id.":MANUAL");
-                $description = "Monthly Subscription Fee - Manual";
-                $amount = $user->monthly_subscription;
-                $ref = null;
+                //must go via the gocardless payment controller
+                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless subscription payment");
             }
             elseif ($reason == 'induction')
             {
