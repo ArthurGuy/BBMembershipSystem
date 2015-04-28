@@ -66,17 +66,20 @@ require $framework.'/Illuminate/Foundation/start.php';
 |--------------------------------------------------------------------------
 */
 
+$acsCall = false;
 
 //Disable sessions for requests to the /access-control endpoint
 if (strpos($app['request']->path(), 'access-control/') === 0)
 {
     $app['config']->set('session.driver', 'array');
+    $acsCall = true;
 }
 
 //Disable sessions for requests to the /acs endpoint
 if ($app['request']->path() === 'acs')
 {
     $app['config']->set('session.driver', 'array');
+    $acsCall = true;
 }
 
 
@@ -86,7 +89,11 @@ if ($app['request']->path() === 'acs')
 |--------------------------------------------------------------------------
 */
 
-$app->middleware('Illuminate\Http\FrameGuard');
+//The frameguard adds X-Frame-Options: SAMEORIGIN to the headers
+
+if (!$acsCall) {
+    $app->middleware('Illuminate\Http\FrameGuard');
+}
 
 
 /*
