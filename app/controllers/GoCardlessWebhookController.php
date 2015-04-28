@@ -99,6 +99,8 @@ class GoCardlessWebhookController extends \BaseController {
 
                 if (!$user) {
                     Log::warning("GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['id']);
+
+                    break;
                 }
 
                 $ref = null;
