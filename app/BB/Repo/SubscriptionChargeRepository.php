@@ -128,10 +128,15 @@ class SubscriptionChargeRepository extends DBRepository
     public function paymentFailed($chargeId)
     {
         $subCharge = $this->getById($chargeId);
-        $subCharge->payment_date = null;
-        $subCharge->status = 'due';
-        $subCharge->amount = 0;
-        $subCharge->save();
+        //If the charge has already been cancelled dont touch it
+        if ($subCharge->status != 'cancelled') {
+            $subCharge->payment_date = null;
+            $subCharge->status       = 'due';
+            $subCharge->amount       = 0;
+            $subCharge->save();
+        } else {
+            \Log::debug("Sub charge not updated after payment failure, already cancelled. Charge ID: ".$chargeId);
+        }
 
         \Event::fire('sub-charge.payment-failed', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
     }
