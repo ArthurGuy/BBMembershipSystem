@@ -185,7 +185,7 @@ CREATE TABLE `payments` (
   `reason` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `reference` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `source` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `source_id` varchar(128) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `source_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `user_id` int(11) NOT NULL,
   `amount` double(10,2) NOT NULL,
   `fee` double(10,2) NOT NULL,

@@ -18,7 +18,7 @@ class CreatePaymentsTable extends Migration {
             $table->string('reason', 20);       //subscription, induction, other
             $table->string('reference', 50);
             $table->string('source', 20);       //gocardless, paypal, bank-transfer, etc...
-            $table->string('source_id', 128)->nullable();   //source payment reference
+            $table->string('source_id', 255)->nullable();   //source payment reference
             $table->integer('user_id');
             $table->double('amount', 10, 2);
             $table->double('fee', 10, 2);
