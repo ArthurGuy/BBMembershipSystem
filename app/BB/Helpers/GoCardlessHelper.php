@@ -115,4 +115,20 @@ class GoCardlessHelper {
             return false;
         }
     }
+
+    public function getNameFromReason($reason)
+    {
+        switch($reason) {
+            case 'subscription':
+                return 'Monthly subscription';
+            case 'balance':
+                return "Balance top up";
+            case 'equipment-fee':
+                return 'Equipment access fee';
+            case 'door-key':
+                return 'Door key';
+        }
+
+        return null;
+    }
 } 

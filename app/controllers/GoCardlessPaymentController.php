@@ -165,7 +165,7 @@ class GoCardlessPaymentController extends \BaseController {
      */
     private function handleBill($amount, $reason, $user, $ref, $returnPath)
     {
-        $bill = $this->goCardless->newBill($user->subscription_id, $amount);
+        $bill = $this->goCardless->newBill($user->subscription_id, $amount, $this->goCardless->getNameFromReason($reason));
 
         if ($bill)
         {
