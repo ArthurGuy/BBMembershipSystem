@@ -43,6 +43,7 @@ class PaymentEventHandler {
 
     /**
      * Subscribe to the payment events
+     *
      * @param $events
      */
     public function subscribe($events)
