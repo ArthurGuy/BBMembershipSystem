@@ -53,7 +53,17 @@ class UserPresenter extends Presenter
         if ($this->entity->status == 'setting-up') {
             return '';
         }
-        return ''.$this->monthlySubscription.' a month by '.$this->paymentMethod.' taken on the '.$this->dayOfMonth();
+        $string = ''.$this->monthlySubscription.' a month ';
+
+        if ($this->paymentMethod) {
+            $string .= 'by ' . $this->paymentMethod;
+        }
+
+        if ($this->entity->payment_day) {
+            $string .= ' taken on the ' . $this->dayOfMonth();
+        }
+
+        return $string;
     }
 
     public function dayOfMonth()
