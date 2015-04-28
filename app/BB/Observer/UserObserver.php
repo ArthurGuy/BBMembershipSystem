@@ -73,7 +73,7 @@ class UserObserver {
 
     /**
      * Send a notification to slack
-     * 
+     *
      * @param string $channel
      * @param string $message
      */

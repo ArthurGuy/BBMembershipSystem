@@ -131,6 +131,10 @@ class PaymentEventHandler {
     public function onCancel($paymentId, $userId, $reason, $ref, $status)
     {
         if ($reason == 'subscription') {
+            if (empty($ref)) {
+                \Log::warning("Subscription payment failure, no sub charge id. Payment ID: ".$paymentId);
+                return;
+            }
             $this->subscriptionChargeRepository->paymentFailed($ref);
         }
     }
