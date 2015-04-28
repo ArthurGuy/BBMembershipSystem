@@ -55,4 +55,14 @@ class Payment extends Model {
     {
         return $query->whereReason('subscription');
     }
+
+    /**
+     * Allow the ref property to be used instead of reference.
+     *
+     * @return string
+     */
+    public function getRefAttribute()
+    {
+        return $this->attributes['reference'];
+    }
 }

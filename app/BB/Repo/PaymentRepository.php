@@ -176,7 +176,7 @@ class PaymentRepository extends DBRepository
 
         $payment = $this->getById($paymentId);
 
-        \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->ref, $status));
+        \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->reference, $status));
     }
 
     public function updateStatus($paymentId, $status)
