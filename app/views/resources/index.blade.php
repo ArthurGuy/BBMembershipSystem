@@ -53,6 +53,7 @@ Resources
                     <li><a href="{{ route('resources.policy.view', 'code-of-conduct') }}">Code of Conduct</a></li>
                     <li><a href="{{ route('resources.policy.view', 'grievance-procedure') }}">Grievance Procedure</a></li>
                     <li><a href="{{ route('resources.policy.view', 'trusted-member') }}">Trusted Member</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'permaloan') }}">Permaloan</a></li>
                 </ul>
 
                 <strong>Policies</strong>
