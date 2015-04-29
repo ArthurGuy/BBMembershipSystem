@@ -1,20 +1,24 @@
 <?php
 
+use BB\Repo\EquipmentLogRepository;
+use BB\Repo\EquipmentRepository;
+use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
+use BB\Validators\EquipmentValidator;
 
 class EquipmentController extends \BaseController
 {
 
     /**
-     * @var \BB\Repo\InductionRepository
+     * @var InductionRepository
      */
     private $inductionRepository;
     /**
-     * @var \BB\Repo\EquipmentRepository
+     * @var EquipmentRepository
      */
     private $equipmentRepository;
     /**
-     * @var \BB\Repo\EquipmentLogRepository
+     * @var EquipmentLogRepository
      */
     private $equipmentLogRepository;
     /**
@@ -26,27 +30,32 @@ class EquipmentController extends \BaseController
      */
     private $userRepository;
     /**
-     * @var \BB\Validators\EquipmentValidator
+     * @var EquipmentValidator
      */
     private $equipmentValidator;
 
     /**
-     * @param \BB\Repo\InductionRepository    $inductionRepository
-     * @param \BB\Repo\EquipmentRepository    $equipmentRepository
-     * @param \BB\Repo\EquipmentLogRepository $equipmentLogRepository
+     * @param InductionRepository      $inductionRepository
+     * @param EquipmentRepository      $equipmentRepository
+     * @param EquipmentLogRepository   $equipmentLogRepository
+     * @param UserRepository                    $userRepository
+     * @param EquipmentValidator $equipmentValidator
      */
     function __construct(
-        \BB\Repo\InductionRepository $inductionRepository,
-        \BB\Repo\EquipmentRepository $equipmentRepository,
-        \BB\Repo\EquipmentLogRepository $equipmentLogRepository,
+        InductionRepository $inductionRepository,
+        EquipmentRepository $equipmentRepository,
+        EquipmentLogRepository $equipmentLogRepository,
         UserRepository $userRepository,
-        \BB\Validators\EquipmentValidator $equipmentValidator
+        EquipmentValidator $equipmentValidator
     ) {
         $this->inductionRepository    = $inductionRepository;
         $this->equipmentRepository    = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
         $this->userRepository         = $userRepository;
         $this->equipmentValidator = $equipmentValidator;
+
+        //Only members of the equipment group can create/update records
+        $this->beforeFilter('role:equipment', array('except' => ['index', 'show']));
     }
 
     /**

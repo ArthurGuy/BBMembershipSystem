@@ -126,7 +126,7 @@ Tools and Equipment
             </div>
         </div>
     @endif
-    
+
 </div>
 
 @stop
