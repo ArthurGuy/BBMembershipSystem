@@ -150,7 +150,7 @@
     <div class="form-group {{ Notification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
         {{ Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('obtained_at', null, ['class'=>'form-control', 'placeholder'=>'YYYY-MM-DD']) }}
+            {{ Form::text('obtained_at', null, ['class'=>'form-control date-select']) }}
             {{ Notification::getErrorDetail('obtained_at') }}
         </div>
     </div>
@@ -158,7 +158,7 @@
     <div class="form-group {{ Notification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
         {{ Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('removed_at', null, ['class'=>'form-control', 'placeholder'=>'YYYY-MM-DD']) }}
+            {{ Form::text('removed_at', null, ['class'=>'form-control date-select']) }}
             {{ Notification::getErrorDetail('removed_at') }}
         </div>
     </div>
