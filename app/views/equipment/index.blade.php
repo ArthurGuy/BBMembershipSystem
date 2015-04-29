@@ -12,6 +12,12 @@ Tools and Equipment
 
 @stop
 
+@section('page-action-buttons')
+    @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
+        <a class="btn btn-secondary" href="{{ route('equipment.create') }}">Record a new item</a>
+    @endif
+@stop
+
 
 @section('content')
 
