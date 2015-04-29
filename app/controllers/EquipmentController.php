@@ -76,13 +76,14 @@ class EquipmentController extends \BaseController
         $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($equipmentId);
 
         return View::make('equipment.show')
-                        ->with('equipmentId', $equipmentId)
-                        ->with('equipment', $equipment)
-                        ->with('trainers', $trainers)
-                        ->with('equipmentLog', $equipmentLog)
-                        ->with('userInduction', $userInduction)
-                        ->with('trainedUsers', $trainedUsers)
-                        ->with('usersPendingInduction', $usersPendingInduction);
+            ->with('equipmentId', $equipmentId)
+            ->with('equipment', $equipment)
+            ->with('trainers', $trainers)
+            ->with('equipmentLog', $equipmentLog)
+            ->with('userInduction', $userInduction)
+            ->with('trainedUsers', $trainedUsers)
+            ->with('usersPendingInduction', $usersPendingInduction);
+    }
     }
 
 } 
