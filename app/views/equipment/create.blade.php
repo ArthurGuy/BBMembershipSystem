@@ -164,7 +164,7 @@
     </div>
 
     <div class="form-group {{ Notification::hasErrorDetail('photo', 'has-error has-feedback') }}">
-        {{ Form::label('photo', 'Profile Photo', ['class'=>'col-sm-3 control-label']) }}
+        {{ Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
             {{ Form::file('photo', null, ['class'=>'form-control']) }}
             {{ Notification::getErrorDetail('photo') }}

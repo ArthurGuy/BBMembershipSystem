@@ -1,5 +1,6 @@
 <?php
 
+use BB\Exceptions\ImageFailedException;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
@@ -111,6 +112,8 @@ class EquipmentController extends \BaseController
      * Store a newly created resource in storage.
      *
      * @return Response
+     * @throws ImageFailedException
+     * @throws \BB\Exceptions\FormValidationException
      */
     public function store()
     {
@@ -121,7 +124,36 @@ class EquipmentController extends \BaseController
         ]);
         $this->equipmentValidator->validate($data);
 
-        $this->equipmentRepository->create($data);
+        $equipment = $this->equipmentRepository->create($data);
+
+        if (Input::file('photo'))
+        {
+            $filePath = Input::file('photo')->getRealPath();
+            $tmpFilePath = storage_path("tmp")."/equipment/".$equipment->id.".png";
+            Image::make($filePath)->fit(1000)->save($tmpFilePath);
+
+            $newFilename = $equipment->getPhotoPath(1);
+
+            $s3 = \AWS::get('s3');
+            try {
+                $s3->putObject(array(
+                    'Bucket'        => getenv('S3_BUCKET'),
+                    'Key'           => $newFilename,
+                    'Body'          => file_get_contents($tmpFilePath),
+                    'ACL'           => 'public-read',
+                    'ContentType'   => 'image/png',
+                    'ServerSideEncryption' => 'AES256',
+                ));
+                File::delete($tmpFilePath);
+
+                $equipment->photos = 1;
+                $equipment->save();
+
+            } catch(\Exception $e) {
+                \Log::exception($e);
+                throw new ImageFailedException();
+            }
+        }
 
         return Redirect::route('equipment.index');
     }

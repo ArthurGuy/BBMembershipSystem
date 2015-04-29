@@ -16,7 +16,7 @@ class EquipmentValidator extends FormValidator
         'colour'             => '',
         'room'               => 'required',
         'detail'             => '',
-        'key'                => 'required',
+        'key'                => 'required|unique:equipment,key',
         'device_key'         => '',
         'description'        => '',
         'help_text'          => '',
@@ -26,19 +26,10 @@ class EquipmentValidator extends FormValidator
         'permaloan'          => 'boolean',
         'permaloan_user_id'  => 'exists:users,id',
         'access_fee'         => 'integer',
-        'photo'              => '',
+        'photo'              => 'image',
         'archive'            => 'boolean',
         'obtained_at'        => 'date_format:Y-m-d|before:tomorrow',
         'removed_at'         => 'date_format:Y-m-d|before:tomorrow',
-    ];
-
-
-    //During an update these rules will override the ones above
-    protected $updateRules = [
-        'email'                => 'required|email|unique:users,email,{id}',
-        'secondary_email'      => 'email|unique:users,secondary_email,{id}',
-        'password'             => 'min:8',
-        'monthly_subscription' => ''
     ];
 
 } 
