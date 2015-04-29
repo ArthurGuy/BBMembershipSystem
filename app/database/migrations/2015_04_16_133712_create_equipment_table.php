@@ -32,7 +32,7 @@ class CreateEquipmentTable extends Migration {
             $table->boolean('permaloan')->default(0);
             $table->integer('permaloan_user_id')->nullable();
             $table->integer('access_fee')->default(0);
-            $table->boolean('photo')->nullable();
+            $table->integer('photos')->default(0);
             $table->boolean('archive')->default(0);
             $table->date('obtained_at');
             $table->date('removed_at');
