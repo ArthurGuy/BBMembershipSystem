@@ -1,8 +1,13 @@
 <?php namespace BB\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
 
 class Equipment extends Model {
+
+    use PresentableTrait;
+
+    protected $presenter = 'BB\Presenters\EquipmentPresenter';
 
     /**
      * The database table used by the model.
@@ -58,6 +63,11 @@ class Equipment extends Model {
         return (bool)$this->photos;
     }
 
+    public function isPermaloan()
+    {
+        return (bool)$this->permaloan;
+    }
+
     /**
      * Generate the filename for the image, this will depend on which in the sequence it is
      *
@@ -66,7 +76,7 @@ class Equipment extends Model {
      */
     public function getPhotoPath($num = 1)
     {
-        $filename = \App::environment() . '/equipment-images/' . md5($this->id) . '-'.$num.'.png';
+        $filename = \App::environment() . '/equipment-images/' . md5($this->key) . '-'.$num.'.png';
 
         return $filename;
     }
