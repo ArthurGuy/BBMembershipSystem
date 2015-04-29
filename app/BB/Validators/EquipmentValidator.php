@@ -24,7 +24,7 @@ class EquipmentValidator extends FormValidator
         'requires_induction' => 'boolean',
         'working'            => 'boolean',
         'permaloan'          => 'boolean',
-        'permaloan_user_id'  => 'exists:users,id',
+        'permaloan_user_id'  => 'exists:users,id|required_id:permaloan,1',
         'access_fee'         => 'integer',
         'photo'              => 'image',
         'archive'            => 'boolean',
