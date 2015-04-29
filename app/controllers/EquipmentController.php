@@ -93,6 +93,72 @@ class EquipmentController extends \BaseController
             ->with('trainedUsers', $trainedUsers)
             ->with('usersPendingInduction', $usersPendingInduction);
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $memberList = $this->userRepository->getAllAsDropdown();
+
+        return View::make('equipment.create')->with('memberList', $memberList);
     }
 
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        $data = Request::only([
+            'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
+            'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'photo', 'obtained_at', 'removed_at',
+        ]);
+        $this->equipmentValidator->validate($data);
+
+        $this->equipmentRepository->create($data);
+
+        return Redirect::route('equipment.index');
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        //
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
 } 
