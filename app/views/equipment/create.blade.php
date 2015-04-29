@@ -131,7 +131,7 @@
     <div class="form-group {{ Notification::hasErrorDetail('permaloan_user_id', 'has-error has-feedback') }}">
         {{ Form::label('permaloan_user_id', 'Permaloan Owner', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::select('permaloan_user_id', [''=>'']+$memberList, null, ['class'=>'form-control', 'style'=>'margin-right:10px; width:150px;']) }}
+            {{ Form::select('permaloan_user_id', [''=>'']+$memberList, null, ['class'=>'form-control advanced-dropdown']) }}
             {{ Notification::getErrorDetail('permaloan_user_id') }}
         </div>
     </div>
@@ -182,11 +182,4 @@
 
 </div>
 
-@stop
-
-
-@section('footer-js')
-    <script>
-        $(document).ready(function() { $("select").select2({dropdownAutoWidth:false}); });
-    </script>
 @stop
