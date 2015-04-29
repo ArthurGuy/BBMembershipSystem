@@ -4,7 +4,7 @@ php:
 
 before_script:
   - travis_retry composer self-update
-  - travis_retry composer install --prefer-source --no-interaction --dev
+  - travis_retry composer install --prefer-source --no-interaction
   - mysql -e 'create database bbms_acceptance_testing;'
 
 script: vendor/bin/codecept run
