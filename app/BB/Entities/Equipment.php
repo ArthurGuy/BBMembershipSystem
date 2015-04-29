@@ -63,6 +63,9 @@ class Equipment extends Model {
         return (bool)$this->photos;
     }
 
+    /**
+     * @return bool
+     */
     public function isPermaloan()
     {
         return (bool)$this->permaloan;
@@ -71,7 +74,7 @@ class Equipment extends Model {
     /**
      * Generate the filename for the image, this will depend on which in the sequence it is
      *
-     * @param $num
+     * @param int $num
      * @return string
      */
     public function getPhotoPath($num = 1)
@@ -81,8 +84,19 @@ class Equipment extends Model {
         return $filename;
     }
 
+    /**
+     * Get the full url to a product image
+     *
+     * @param int $num
+     * @return string
+     */
     public function getPhotoUrl($num = 1)
     {
         return 'https://s3-eu-west-1.amazonaws.com/'.getenv('S3_BUCKET').'/'.$this->getPhotoPath($num);
+    }
+
+    public function setKeyAttribute($value)
+    {
+        $this->attributes['key'] = strtolower($value);
     }
 } 

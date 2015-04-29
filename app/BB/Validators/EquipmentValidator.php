@@ -16,7 +16,7 @@ class EquipmentValidator extends FormValidator
         'colour'             => '',
         'room'               => 'required',
         'detail'             => '',
-        'key'                => 'required|unique:equipment,key',
+        'key'                => 'required|alpha_dash|unique:equipment,key',
         'device_key'         => '',
         'description'        => '',
         'help_text'          => '',
