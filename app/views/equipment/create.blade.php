@@ -129,7 +129,7 @@
     </div>
 
     <div class="form-group {{ Notification::hasErrorDetail('permaloan_user_id', 'has-error has-feedback') }}">
-        {{ Form::label('permaloan_user_id', 'Permaloan User', ['class'=>'col-sm-3 control-label']) }}
+        {{ Form::label('permaloan_user_id', 'Permaloan Owner', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
             {{ Form::select('permaloan_user_id', [''=>'']+$memberList, null, ['class'=>'form-control', 'style'=>'margin-right:10px; width:150px;']) }}
             {{ Notification::getErrorDetail('permaloan_user_id') }}
@@ -150,7 +150,7 @@
     <div class="form-group {{ Notification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
         {{ Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('obtained_at', null, ['class'=>'form-control']) }}
+            {{ Form::text('obtained_at', null, ['class'=>'form-control', 'placeholder'=>'YYYY-MM-DD']) }}
             {{ Notification::getErrorDetail('obtained_at') }}
         </div>
     </div>
@@ -158,7 +158,7 @@
     <div class="form-group {{ Notification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
         {{ Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('removed_at', null, ['class'=>'form-control']) }}
+            {{ Form::text('removed_at', null, ['class'=>'form-control', 'placeholder'=>'YYYY-MM-DD']) }}
             {{ Notification::getErrorDetail('removed_at') }}
         </div>
     </div>
