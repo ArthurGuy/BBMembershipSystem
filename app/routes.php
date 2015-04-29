@@ -90,8 +90,9 @@ Route::post('equipment/log/{logId}', ['uses'=>'EquipmentLogController@update', '
 
 
 # Statements
-Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy'], 'before'=>'role:admin']);
-
+Route::group(array('before' => 'role:admin'), function() {
+    Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy']]);
+});
 
 # KeyFobs
 Route::group(array('before' => 'role:admin'), function() {
