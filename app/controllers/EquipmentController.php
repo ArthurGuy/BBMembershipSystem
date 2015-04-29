@@ -1,6 +1,9 @@
-<?php 
+<?php
 
-class EquipmentController extends \BaseController {
+use BB\Repo\UserRepository;
+
+class EquipmentController extends \BaseController
+{
 
     /**
      * @var \BB\Repo\InductionRepository
@@ -18,17 +21,32 @@ class EquipmentController extends \BaseController {
      * @var \BB\Repo\PaymentRepository
      */
     private $paymentRepository;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+    /**
+     * @var \BB\Validators\EquipmentValidator
+     */
+    private $equipmentValidator;
 
     /**
      * @param \BB\Repo\InductionRepository    $inductionRepository
      * @param \BB\Repo\EquipmentRepository    $equipmentRepository
      * @param \BB\Repo\EquipmentLogRepository $equipmentLogRepository
      */
-    function __construct(\BB\Repo\InductionRepository $inductionRepository, \BB\Repo\EquipmentRepository $equipmentRepository, \BB\Repo\EquipmentLogRepository $equipmentLogRepository)
-    {
-        $this->inductionRepository = $inductionRepository;
-        $this->equipmentRepository = $equipmentRepository;
+    function __construct(
+        \BB\Repo\InductionRepository $inductionRepository,
+        \BB\Repo\EquipmentRepository $equipmentRepository,
+        \BB\Repo\EquipmentLogRepository $equipmentLogRepository,
+        UserRepository $userRepository,
+        \BB\Validators\EquipmentValidator $equipmentValidator
+    ) {
+        $this->inductionRepository    = $inductionRepository;
+        $this->equipmentRepository    = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
+        $this->userRepository         = $userRepository;
+        $this->equipmentValidator = $equipmentValidator;
     }
 
     /**
@@ -38,15 +56,16 @@ class EquipmentController extends \BaseController {
      */
     public function index()
     {
-        $equipment = $this->equipmentRepository->all();
+        $requiresInduction = $this->equipmentRepository->getRequiresInduction();
+        $doesntRequireInduction = $this->equipmentRepository->getDoesntRequireInduction();
 
-        return View::make('equipment.index')->with('equipment', $equipment);
+        return View::make('equipment.index')->with('requiresInduction', $requiresInduction)->with('doesntRequireInduction', $doesntRequireInduction);
     }
 
     public function show($equipmentId)
     {
         $equipment = $this->equipmentRepository->findByKey($equipmentId);
-        $trainers = $this->inductionRepository->getTrainersForEquipment($equipmentId);
+        $trainers  = $this->inductionRepository->getTrainersForEquipment($equipmentId);
 
         $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipmentId);
 

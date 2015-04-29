@@ -57,6 +57,7 @@ Tools and Equipment
     </div>
 
 
+    @if ($equipment->hasActivity())
     <h3>Activity Log</h3>
     <table class="table">
         <thead>
@@ -94,10 +95,11 @@ Tools and Equipment
     <div class="panel-footer">
         <?php echo $equipmentLog->links(); ?>
     </div>
+    @endif
 
 
-    <div class="row">
-        @if ($equipment->requires_induction)
+    @if ($equipment->requiresInduction())
+        <div class="row">
             <div class="col-sm-12 col-md-6">
                 <h4>Trained Users</h4>
                 <ul>
@@ -122,8 +124,9 @@ Tools and Equipment
                     @endforeach
                 </ul>
             </div>
-        @endif
-    </div>
+        </div>
+    @endif
+    
 </div>
 
 @stop
