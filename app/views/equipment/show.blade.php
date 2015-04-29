@@ -21,7 +21,13 @@ Tools and Equipment
         <div class="row">
             <div class="col-md-12 col-lg-6">
                 <div class="well">
-                    @if ($equipment->requires_induction)
+
+                    @if ($equipment->hasPhoto())
+                        <img src="{{ $equipment->getPhotoUrl(1) }}" class="img-responsive" />
+                    @endif
+
+
+                    @if ($equipment->requiresInduction())
                         To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
                         Equipment access fee: &pound{{ $equipment->access_fee }}<br />
                         <br />
@@ -34,13 +40,13 @@ Tools and Equipment
                     @else
                         No fee required
                     @endif
-                    @if (!$equipment->working)
+                    @if (!$equipment->isWorking())
                         <span class="label label-danger">Out of action</span>
                     @endif
                 </div>
             </div>
 
-            @if ($equipment->requires_induction)
+            @if ($equipment->requiresInduction())
                 <div class="col-sm-12 col-md-6">
                     <h4>Trainers</h4>
                     <div class="list-group">

@@ -35,10 +35,44 @@ class Equipment extends Model {
     /**
      * Does the equipment need an induction to use it
      *
-     * @return mixed
+     * @return bool
      */
     public function requiresInduction()
     {
-        return $this->requires_induction;
+        return (bool)$this->requires_induction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWorking()
+    {
+        return (bool)$this->working;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPhoto()
+    {
+        return (bool)$this->photos;
+    }
+
+    /**
+     * Generate the filename for the image, this will depend on which in the sequence it is
+     *
+     * @param $num
+     * @return string
+     */
+    public function getPhotoPath($num = 1)
+    {
+        $filename = \App::environment() . '/equipment-images/' . md5($this->id) . '-'.$num.'.png';
+
+        return $filename;
+    }
+
+    public function getPhotoUrl($num = 1)
+    {
+        return 'https://s3-eu-west-1.amazonaws.com/'.getenv('S3_BUCKET').'/'.$this->getPhotoPath($num);
     }
 } 
