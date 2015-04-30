@@ -97,7 +97,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
     {{ Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">
-        {{ Form::select('requires_induction', [1=>'Yes', 0=>'No'], 0, ['class'=>'form-control']) }}
+        {{ Form::select('requires_induction', [1=>'Yes', 0=>'No'], null, ['class'=>'form-control']) }}
         {{ Notification::getErrorDetail('requires_induction') }}
     </div>
 </div>
@@ -105,7 +105,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('working', 'has-error has-feedback') }}">
     {{ Form::label('working', 'Working', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">
-        {{ Form::select('working', [1=>'Yes', 0=>'No'], 1, ['class'=>'form-control']) }}
+        {{ Form::select('working', [1=>'Yes', 0=>'No'], null, ['class'=>'form-control']) }}
         <p class="help-block">Is the equipment ready for use?</p>
         {{ Notification::getErrorDetail('working') }}
     </div>
@@ -114,7 +114,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('permaloan', 'has-error has-feedback') }}">
     {{ Form::label('permaloan', 'Permaloan', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">
-        {{ Form::select('permaloan', [1=>'Yes', 0=>'No'], 0, ['class'=>'form-control']) }}
+        {{ Form::select('permaloan', [1=>'Yes', 0=>'No'], null, ['class'=>'form-control']) }}
         <p class="help-block">Is this item on <a href="{{ route('resources.policy.view', 'permaloan') }}">permanent loan</a> from a member?</p>
         {{ Notification::getErrorDetail('permaloan') }}
     </div>
