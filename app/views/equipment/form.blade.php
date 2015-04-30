@@ -134,7 +134,7 @@
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {{ Form::input('number', 'access_fee', 0, ['class'=>'form-control', 'min'=>'0', 'step'=>'1']) }}
+            {{ Form::input('number', 'access_fee', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1']) }}
         </div>
         <p class="help-block">Is an access fee being charged?</p>
         {{ Notification::getErrorDetail('access_fee') }}
