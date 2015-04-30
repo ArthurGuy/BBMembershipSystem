@@ -34,15 +34,6 @@
         </div>
     </div>
 
-    <div class="form-group {{ Notification::hasErrorDetail('photo', 'has-error has-feedback') }}">
-        {{ Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) }}
-        <div class="col-sm-9 col-lg-7">
-            {{ Form::file('photo', null, ['class'=>'form-control']) }}
-            <p class="help-block">Do you have a photo? More can be uploaded later</p>
-            {{ Notification::getErrorDetail('photo') }}
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
             {{ Form::submit('Save', array('class'=>'btn btn-primary')) }}

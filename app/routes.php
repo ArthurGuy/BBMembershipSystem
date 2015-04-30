@@ -83,6 +83,7 @@ Route::group(array('before' => 'role:admin'), function() {
 # Equipment
 Route::group(array('before' => 'role:member'), function() {
     Route::resource('equipment', 'EquipmentController');
+    Route::post('equipment/{id}/photo', ['uses'=>'EquipmentController@addPhoto', 'as'=>'equipment.photo.store']);
 });
 
 # Equipment Log

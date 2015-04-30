@@ -32,7 +32,8 @@ Tools and Equipment
                         <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
                     </td>
                     <td>
-                        @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
+                        @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
+                        @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
                     <td>
                         @if (!Auth::guest() && Auth::user()->hasRole('equipment'))

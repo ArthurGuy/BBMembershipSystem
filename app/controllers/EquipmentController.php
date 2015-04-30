@@ -34,26 +34,33 @@ class EquipmentController extends \BaseController
      * @var EquipmentValidator
      */
     private $equipmentValidator;
+    /**
+     * @var \BB\Validators\EquipmentPhotoValidator
+     */
+    private $equipmentPhotoValidator;
 
     /**
-     * @param InductionRepository      $inductionRepository
-     * @param EquipmentRepository      $equipmentRepository
-     * @param EquipmentLogRepository   $equipmentLogRepository
-     * @param UserRepository                    $userRepository
-     * @param EquipmentValidator $equipmentValidator
+     * @param InductionRepository                    $inductionRepository
+     * @param EquipmentRepository                    $equipmentRepository
+     * @param EquipmentLogRepository                 $equipmentLogRepository
+     * @param UserRepository                         $userRepository
+     * @param EquipmentValidator                     $equipmentValidator
+     * @param \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
      */
     function __construct(
         InductionRepository $inductionRepository,
         EquipmentRepository $equipmentRepository,
         EquipmentLogRepository $equipmentLogRepository,
         UserRepository $userRepository,
-        EquipmentValidator $equipmentValidator
+        EquipmentValidator $equipmentValidator,
+        \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
     ) {
         $this->inductionRepository    = $inductionRepository;
         $this->equipmentRepository    = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
         $this->userRepository         = $userRepository;
         $this->equipmentValidator = $equipmentValidator;
+        $this->equipmentPhotoValidator = $equipmentPhotoValidator;
 
         //Only members of the equipment group can create/update records
         $this->beforeFilter('role:equipment', array('except' => ['index', 'show']));
@@ -120,40 +127,11 @@ class EquipmentController extends \BaseController
         $data = Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
             'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working',
-            'permaloan', 'permaloan_user_id', 'access_fee', 'photo', 'obtained_at', 'removed_at',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at',
         ]);
         $this->equipmentValidator->validate($data);
 
-        $equipment = $this->equipmentRepository->create($data);
-
-        if (Input::file('photo'))
-        {
-            $filePath = Input::file('photo')->getRealPath();
-            $tmpFilePath = storage_path("tmp")."/equipment/".$equipment->id.".png";
-            Image::make($filePath)->fit(1000)->save($tmpFilePath);
-
-            $newFilename = $equipment->getPhotoPath(1);
-
-            $s3 = \AWS::get('s3');
-            try {
-                $s3->putObject(array(
-                    'Bucket'        => getenv('S3_BUCKET'),
-                    'Key'           => $newFilename,
-                    'Body'          => file_get_contents($tmpFilePath),
-                    'ACL'           => 'public-read',
-                    'ContentType'   => 'image/png',
-                    'ServerSideEncryption' => 'AES256',
-                ));
-                File::delete($tmpFilePath);
-
-                $equipment->photos = 1;
-                $equipment->save();
-
-            } catch(\Exception $e) {
-                \Log::exception($e);
-                throw new ImageFailedException();
-            }
-        }
+        $this->equipmentRepository->create($data);
 
         return Redirect::route('equipment.index');
     }
@@ -187,7 +165,7 @@ class EquipmentController extends \BaseController
         $data = Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail',
             'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working',
-            'permaloan', 'permaloan_user_id', 'access_fee', 'photo', 'obtained_at', 'removed_at',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at',
         ]);
         $this->equipmentValidator->validate($data, $equipment->id);
 
@@ -206,5 +184,45 @@ class EquipmentController extends \BaseController
     public function destroy($id)
     {
         //
+    }
+
+    public function addPhoto($equipmentId)
+    {
+        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+
+        $data = Request::only(['photo']);
+
+        $this->equipmentPhotoValidator->validate($data);
+
+        if (Input::file('photo'))
+        {
+            $filePath = Input::file('photo')->getRealPath();
+            $tmpFilePath = storage_path("tmp")."/equipment/".$equipment->id.".png";
+            Image::make($filePath)->fit(1000)->save($tmpFilePath);
+
+            $newFilename = $equipment->getPhotoPath($equipment->photos + 1);
+
+            $s3 = \AWS::get('s3');
+            try {
+                $s3->putObject(array(
+                    'Bucket'        => getenv('S3_BUCKET'),
+                    'Key'           => $newFilename,
+                    'Body'          => file_get_contents($tmpFilePath),
+                    'ACL'           => 'public-read',
+                    'ContentType'   => 'image/png',
+                    'ServerSideEncryption' => 'AES256',
+                ));
+                File::delete($tmpFilePath);
+
+                $equipment->photos = $equipment->photos + 1;
+                $equipment->save();
+
+            } catch(\Exception $e) {
+                \Log::exception($e);
+                throw new ImageFailedException();
+            }
+        }
+
+        return Redirect::route('equipment.show', $equipmentId);
     }
 } 
