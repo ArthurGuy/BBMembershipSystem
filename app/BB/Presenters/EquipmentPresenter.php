@@ -37,5 +37,10 @@ class EquipmentPresenter extends Presenter
         return $this->entity->obtained_at->toFormattedDateString();
     }
 
+    public function accessFee()
+    {
+        return '&pound' . number_format($this->entity->access_fee, 0);
+    }
+
 
 } 
