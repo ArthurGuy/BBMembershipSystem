@@ -32,4 +32,9 @@ class EquipmentValidator extends FormValidator
         'removed_at'         => 'date_format:Y-m-d|before:tomorrow',
     ];
 
+    //During an update these rules will override the ones above
+    protected $updateRules = [
+        'key'                => '',
+    ];
+
 } 
