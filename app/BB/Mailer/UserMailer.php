@@ -24,7 +24,7 @@ class UserMailer {
         $user = $this->user;
         \Mail::queue('emails.welcome', ['user'=>$user], function($message) use ($user)
         {
-            $message->to($user->email, $user->name)->subject('Welcome to Build Brighton!')->cc('info@buildbrighton.com');
+            $message->to($user->email, $user->name)->subject('Welcome to Build Brighton!');
         });
     }
 
