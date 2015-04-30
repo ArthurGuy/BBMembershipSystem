@@ -1,5 +1,6 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
@@ -98,5 +99,21 @@ class Equipment extends Model {
     public function setKeyAttribute($value)
     {
         $this->attributes['key'] = strtolower($value);
+    }
+
+    public function getObtainedAtAttribute()
+    {
+        if ($this->attributes['obtained_at'] == '0000-00-00') {
+            return null;
+        }
+        return new Carbon($this->attributes['obtained_at']);
+    }
+
+    public function getRemovedAtAttribute()
+    {
+        if ($this->attributes['removed_at'] == '0000-00-00') {
+            return null;
+        }
+        return new Carbon($this->attributes['removed_at']);
     }
 } 
