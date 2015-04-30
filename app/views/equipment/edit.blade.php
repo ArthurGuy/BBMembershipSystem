@@ -1,21 +1,22 @@
 @extends('layouts.main')
 
 @section('meta-title')
-    Record a new piece of equipment
+    Edit a piece of equipment
 @stop
 
 @section('page-title')
-    Record a new piece of equipment
+    Edit a piece of equipment
 @stop
 
 @section('content')
 
 <div class="col-xs-12">
 
-    {{ Form::open(array('route' => 'equipment.store', 'class'=>'form-horizontal', 'files'=>true)) }}
-
+    {{ Form::model($equipment, array('route' => ['equipment.update', $equipment->key], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'PUT')) }}
+    
     @include('equipment/form')
 
+    @if (!$equipment->obtained_at)
     <div class="form-group {{ Notification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
         {{ Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
@@ -24,7 +25,9 @@
             {{ Notification::getErrorDetail('obtained_at') }}
         </div>
     </div>
+    @endif
 
+    @if (!$equipment->removed_at)
     <div class="form-group {{ Notification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
         {{ Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
@@ -33,6 +36,8 @@
             {{ Notification::getErrorDetail('removed_at') }}
         </div>
     </div>
+    @endif
+
 
     <div class="form-group {{ Notification::hasErrorDetail('photo', 'has-error has-feedback') }}">
         {{ Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) }}
@@ -45,7 +50,7 @@
 
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-            {{ Form::submit('Save', array('class'=>'btn btn-primary')) }}
+            {{ Form::submit('Update', array('class'=>'btn btn-primary')) }}
         </div>
     </div>
 

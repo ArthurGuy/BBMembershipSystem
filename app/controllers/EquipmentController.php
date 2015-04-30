@@ -162,24 +162,38 @@ class EquipmentController extends \BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  string $equipmentId
      * @return Response
      */
-    public function edit($id)
+    public function edit($equipmentId)
     {
-        //
+        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $memberList = $this->userRepository->getAllAsDropdown();
+
+        return View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList);
     }
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int $id
+     * @param  string $equipmentId
      * @return Response
      */
-    public function update($id)
+    public function update($equipmentId)
     {
-        //
+        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+
+        $data = Request::only([
+            'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail',
+            'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'photo', 'obtained_at', 'removed_at',
+        ]);
+        $this->equipmentValidator->validate($data, $equipment->id);
+
+        $this->equipmentRepository->update($equipment->id, $data);
+
+        return Redirect::route('equipment.show', $equipmentId);
     }
 
 
