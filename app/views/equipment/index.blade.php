@@ -21,28 +21,51 @@ Tools and Equipment
 
 @section('content')
 
-    <h3>Equipment requiring an induction</h3>
-    <div class="list-group">
-        @foreach($requiresInduction as $tool)
-
-            <a href="{{ route('equipment.show', $tool->key) }}" class="list-group-item">
-                {{ $tool->name }}
-                @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
-            </a>
-
-        @endforeach
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Equipment requiring an induction</h3>
+        </div>
+        <table class="table">
+            @foreach($requiresInduction as $tool)
+                <tr>
+                    <td>
+                        <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
+                    </td>
+                    <td>
+                        @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
+                    </td>
+                    <td>
+                        @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
+                            <span class="pull-right"><a href="{{ route('equipment.edit', $tool->key) }}" class="btn-sm">Edit</a></span>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </table>
     </div>
 
-    <h3>Equipment ready to use</h3>
-    <div class="list-group">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Equipment ready to use</h3>
+        </div>
+        <table class="table">
         @foreach($doesntRequireInduction as $tool)
-
-            <a href="{{ route('equipment.show', $tool->key) }}" class="list-group-item">
-                {{ $tool->name }}
-                @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
-            </a>
-
+            <tr>
+                <td>
+                    <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
+                </td>
+                <td>
+                    @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
+                </td>
+                <td>
+                    @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
+                        <span class="pull-right"><a href="{{ route('equipment.edit', $tool->key) }}" class="btn-sm">Edit</a></span>
+                    @endif
+                </td>
+            </tr>
         @endforeach
+        </table>
     </div>
 
 @stop

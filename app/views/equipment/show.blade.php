@@ -22,9 +22,36 @@ Tools and Equipment
             <div class="col-md-12 col-lg-6">
                 <div class="well">
 
-                    @if ($equipment->hasPhoto())
-                        <img src="{{ $equipment->getPhotoUrl(1) }}" class="img-responsive" />
+                    <div class="row">
+                        <div class="col-md-12 col-lg-6">
+
+                            Make: {{ $equipment->present()->manufacturerModel }}<br />
+                            Colour: {{ $equipment->colour }}<br />
+                            Lives in: {{ $equipment->present()->livesIn }}<br />
+                            Purchased: {{ $equipment->present()->purchaseDate }}<br />
+
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+
+                            @if ($equipment->hasPhoto())
+                                <img src="{{ $equipment->getPhotoUrl(1) }}" class="img-thumbnail pull-right" width="200" />
+                            @endif
+
+                        </div>
+                    </div>
+
+
+
+                    <br />
+
+                    {{ $equipment->present()->description }}<br />
+
+                    @if ($equipment->isPermaloan())
+                        <span class="label label-warning">Permaloan</span>
                     @endif
+
+
+
 
 
                     @if ($equipment->requiresInduction())
@@ -46,8 +73,10 @@ Tools and Equipment
                 </div>
             </div>
 
-            @if ($equipment->requiresInduction())
-                <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-lg-6">
+
+                @if ($equipment->requiresInduction())
+                    <div class="row">
                     <h4>Trainers</h4>
                     <div class="list-group">
                         @foreach($trainers as $trainer)
@@ -57,8 +86,9 @@ Tools and Equipment
                             </a>
                         @endforeach
                     </div>
-                </div>
-            @endif
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 
