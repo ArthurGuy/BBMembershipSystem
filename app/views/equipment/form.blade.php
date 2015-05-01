@@ -102,6 +102,15 @@
     </div>
 </div>
 
+<div class="form-group {{ Notification::hasErrorDetail('induction_category', 'has-error has-feedback') }}">
+    {{ Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label']) }}
+    <div class="col-sm-9 col-lg-7">
+        {{ Form::text('induction_category', null, ['class'=>'form-control']) }}
+        <p class="help-block">By getting inducted on this piece of equipment they are inducted to this category meaning they have access to any other piece of equipment in the same category. i.e. access to all 3D Printers.</p>
+        {{ Notification::getErrorDetail('induction_category') }}
+    </div>
+</div>
+
 <div class="form-group {{ Notification::hasErrorDetail('working', 'has-error has-feedback') }}">
     {{ Form::label('working', 'Working', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">

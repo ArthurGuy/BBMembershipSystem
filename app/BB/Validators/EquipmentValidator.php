@@ -22,6 +22,7 @@ class EquipmentValidator extends FormValidator
         'help_text'          => '',
         'owner_role_id'      => '',
         'requires_induction' => 'boolean',
+        'induction_category' => 'required_if:requires_induction,1',
         'working'            => 'boolean',
         'permaloan'          => 'boolean',
         'permaloan_user_id'  => 'exists:users,id|required_id:permaloan,1',

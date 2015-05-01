@@ -28,6 +28,7 @@ class CreateEquipmentTable extends Migration {
             $table->longText('help_text')->nullable();
             $table->integer('owner_role_id')->nullable();
             $table->boolean('requires_induction')->default(0);
+            $table->string('induction_category')->nullable();
             $table->boolean('working')->default(1);
             $table->boolean('permaloan')->default(0);
             $table->integer('permaloan_user_id')->nullable();
