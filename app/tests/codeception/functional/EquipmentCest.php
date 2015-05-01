@@ -118,6 +118,6 @@ class EquipmentCest
         $equipment->addPhoto('foo.png');
 
         $equipment = \BB\Entities\Equipment::findOrFail(2);
-        $I->assertEquals($equipment->getPhotoBasePath().'foo.png', $equipment->getPhotoPath(1));
+        $I->assertEquals($equipment->getPhotoBasePath().'foo.png', $equipment->getPhotoPath(0));
     }
 }
