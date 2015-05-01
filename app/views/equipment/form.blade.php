@@ -150,4 +150,13 @@
     </div>
 </div>
 
+<div class="form-group {{ Notification::hasErrorDetail('asset_tag_id', 'has-error has-feedback') }}">
+    {{ Form::label('asset_tag_id', 'Asset Tag ID', ['class'=>'col-sm-3 control-label']) }}
+    <div class="col-sm-9 col-lg-7">
+        {{ Form::text('asset_tag_id', null, ['class'=>'form-control']) }}
+        <p class="help-block">If an asset tag is being placed onto this piece of equipment whats the ID?</p>
+        {{ Notification::getErrorDetail('asset_tag_id') }}
+    </div>
+</div>
+
 

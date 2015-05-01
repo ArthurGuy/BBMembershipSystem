@@ -127,7 +127,7 @@ class EquipmentController extends \BaseController
         $data = Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
             'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working',
-            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id',
         ]);
         $this->equipmentValidator->validate($data);
 
@@ -165,7 +165,7 @@ class EquipmentController extends \BaseController
         $data = Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail',
             'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working',
-            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id',
         ]);
         $this->equipmentValidator->validate($data, $equipment->id);
 

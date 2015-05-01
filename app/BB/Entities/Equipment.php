@@ -20,7 +20,7 @@ class Equipment extends Model {
     protected $fillable = [
         'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'location', 'room', 'detail', 'key',
         'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'induction_category', 'working',
-        'permaloan', 'permaloan_user_id', 'access_fee', 'photos', 'archive', 'obtained_at', 'removed_at',
+        'permaloan', 'permaloan_user_id', 'access_fee', 'photos', 'archive', 'obtained_at', 'removed_at', 'asset_tag_id',
     ];
 
     public function getDates()

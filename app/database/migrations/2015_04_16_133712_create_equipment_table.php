@@ -28,13 +28,14 @@ class CreateEquipmentTable extends Migration {
             $table->longText('help_text')->nullable();
             $table->integer('owner_role_id')->nullable();
             $table->boolean('requires_induction')->default(0);
-            $table->string('induction_category')->nullable();
+            $table->string('induction_category', 20)->nullable();
             $table->boolean('working')->default(1);
             $table->boolean('permaloan')->default(0);
             $table->integer('permaloan_user_id')->nullable();
             $table->integer('access_fee')->default(0);
             $table->integer('photos')->default(0);
             $table->boolean('archive')->default(0);
+            $table->string('asset_tag_id', 50)->nullable();
             $table->date('obtained_at');
             $table->date('removed_at');
 			$table->timestamps();

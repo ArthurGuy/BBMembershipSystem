@@ -29,6 +29,7 @@ class EquipmentValidator extends FormValidator
         'access_fee'         => 'integer',
         'photo'              => 'image',
         'archive'            => 'boolean',
+        'asset_tag_id'       => '',
         'obtained_at'        => 'date_format:Y-m-d|before:tomorrow',
         'removed_at'         => 'date_format:Y-m-d|before:tomorrow',
     ];
