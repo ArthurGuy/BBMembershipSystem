@@ -40,7 +40,7 @@ Tools and Equipment
                         <div class="col-md-12 col-lg-6">
 
                             @if ($equipment->hasPhoto())
-                                <img src="{{ $equipment->getPhotoUrl(1) }}" class="img-thumbnail pull-right" width="200" />
+                                <img src="{{ $equipment->getPhotoUrl(0) }}" class="img-thumbnail pull-right" width="200" />
                             @endif
 
                         </div>

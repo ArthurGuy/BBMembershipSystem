@@ -61,7 +61,7 @@ class Equipment extends Model {
      */
     public function hasPhoto()
     {
-        return (bool)$this->photos;
+        return (bool)count($this->photos);
     }
 
     /**
@@ -78,11 +78,32 @@ class Equipment extends Model {
      * @param int $num
      * @return string
      */
-    public function getPhotoPath($num = 1)
+    public function getPhotoPath($num = 0)
     {
-        $filename = \App::environment() . '/equipment-images/' . md5($this->key) . '-'.$num.'.png';
+        return $this->getPhotoBasePath() . $this->photos[$num]['path'];
+    }
 
-        return $filename;
+    /**
+     * Get the base path all the equipment images live under
+     *
+     * @return string
+     */
+    public function getPhotoBasePath()
+    {
+        return \App::environment() . '/equipment-images/';
+    }
+
+    /**
+     * Add a photo name to the photos array
+     *
+     * @param $fileName
+     */
+    public function addPhoto($fileName)
+    {
+        $photos = $this->photos;
+        array_push($photos, ['path' => $fileName]);
+        $this->photos = $photos;
+        $this->save();
     }
 
     /**
@@ -94,6 +115,34 @@ class Equipment extends Model {
     public function getPhotoUrl($num = 1)
     {
         return 'https://s3-eu-west-1.amazonaws.com/'.getenv('S3_BUCKET').'/'.$this->getPhotoPath($num);
+    }
+
+    public function getNumPhotos()
+    {
+        return count($this->photos);
+    }
+
+    public function setPhotosAttribute(array $value)
+    {
+        if (empty($value)) {
+            $value = [];
+        }
+        $this->attributes['photos'] = json_encode($value);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPhotosAttribute()
+    {
+        if (empty($this->attributes['photos'])) {
+            return [];
+        }
+        $photos = json_decode($this->attributes['photos'], true);
+        if ($photos === null) {
+            return [];
+        }
+        return $photos;
     }
 
     public function setKeyAttribute($value)

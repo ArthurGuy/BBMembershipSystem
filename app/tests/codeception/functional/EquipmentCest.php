@@ -89,4 +89,35 @@ class EquipmentCest
         );
         */
     }
+
+    public function canRecordPhoto(FunctionalTester $I)
+    {
+        $I->am('a developer');
+        $I->wantTo('ensure photos get recorded in the db');
+
+        $equipment = \BB\Entities\Equipment::findOrFail(2);
+        $I->assertTrue(is_array($equipment->photos), "The photos element is an array");
+        $I->assertEquals(0, count($equipment->photos), 'Should have no photos');
+
+        $equipment->addPhoto('foo.png');
+        $equipment = \BB\Entities\Equipment::findOrFail(2);
+        $I->assertEquals(1, count($equipment->photos), 'Should have 1 photo');
+
+        $equipment->addPhoto('bar.png');
+        $equipment = \BB\Entities\Equipment::findOrFail(2);
+        $I->assertEquals(2, count($equipment->photos), 'Should have 2 photos');
+        $I->assertEquals([['path'=>'foo.png'],['path'=>'bar.png']], $equipment->photos, 'Should contain photo paths');
+    }
+
+    public function canFetchPhoto(FunctionalTester $I)
+    {
+        $I->am('a developer');
+        $I->wantTo('ensure photos can be fetched');
+
+        $equipment = \BB\Entities\Equipment::findOrFail(2);
+        $equipment->addPhoto('foo.png');
+
+        $equipment = \BB\Entities\Equipment::findOrFail(2);
+        $I->assertEquals($equipment->getPhotoBasePath().'foo.png', $equipment->getPhotoPath(1));
+    }
 }

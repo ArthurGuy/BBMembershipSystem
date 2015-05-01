@@ -196,17 +196,19 @@ class EquipmentController extends \BaseController
 
         if (Input::file('photo'))
         {
+            //@TODO Deal with jpg images as well
+
             $filePath = Input::file('photo')->getRealPath();
             $tmpFilePath = storage_path("tmp")."/equipment/".$equipment->id.".png";
             Image::make($filePath)->fit(1000)->save($tmpFilePath);
 
-            $newFilename = $equipment->getPhotoPath($equipment->photos + 1);
+            $newFilename = str_random().'.png';
 
             $s3 = \AWS::get('s3');
             try {
                 $s3->putObject(array(
                     'Bucket'        => getenv('S3_BUCKET'),
-                    'Key'           => $newFilename,
+                    'Key'           => $equipment->getPhotoBasePath() . $newFilename,
                     'Body'          => file_get_contents($tmpFilePath),
                     'ACL'           => 'public-read',
                     'ContentType'   => 'image/png',
@@ -214,8 +216,7 @@ class EquipmentController extends \BaseController
                 ));
                 File::delete($tmpFilePath);
 
-                $equipment->photos = $equipment->photos + 1;
-                $equipment->save();
+                $equipment->addPhoto($newFilename);
 
             } catch(\Exception $e) {
                 \Log::exception($e);
@@ -224,5 +225,11 @@ class EquipmentController extends \BaseController
         }
 
         return Redirect::route('equipment.show', $equipmentId);
+    }
+
+    public function destroyPhoto($equipmentId, $photoId)
+    {
+        //photos need to be moved down
+        //the files need to be renamed, the photo count reduced and the old file deleted
     }
 } 

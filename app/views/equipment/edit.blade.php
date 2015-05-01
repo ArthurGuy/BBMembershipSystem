@@ -56,12 +56,18 @@
 
         <div class="well">
 
-            <h4>Photos</h4>
-
             @if ($equipment->hasPhoto())
-                @for($i=1; $i <= $equipment->photos; $i++)
-                <img src="{{ $equipment->getPhotoUrl($i) }}" class="img-thumbnail" width="200" />
+                <h4>Photos</h4>
+                <div class="row">
+                @for($i=0; $i < $equipment->getNumPhotos(); $i++)
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                    <img src="{{ $equipment->getPhotoUrl($i) }}" class="img-thumbnail" width="200" />
+                    {{ Form::open(array('route' => ['equipment.photo.destroy', $equipment->key, $i], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'DELETE')) }}
+                    {{ Form::submit('Delete', array('class'=>'btn btn-primary')) }}
+                    {{ Form::close() }}
+                    </div>
                 @endfor
+                </div>
             @endif
 
 

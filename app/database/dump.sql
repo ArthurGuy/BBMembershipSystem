@@ -533,7 +533,7 @@ CREATE TABLE `equipment` (
   `permaloan` tinyint(1) NOT NULL DEFAULT '0',
   `permaloan_user_id` int(11) DEFAULT NULL,
   `access_fee` int(11) NOT NULL DEFAULT '0',
-  `photos` int(10) NOT NULL DEFAULT '0',
+  `photos` text COLLATE utf8_unicode_ci,
   `archive` tinyint(1) NOT NULL DEFAULT '0',
   `asset_tag_id` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `obtained_at` date NOT NULL,
@@ -545,17 +545,17 @@ CREATE TABLE `equipment` (
 
 INSERT INTO `equipment` (`id`, `name`, `manufacturer`, `model_number`, `serial_number`, `colour`, `room`, `detail`, `key`, `device_key`, `description`, `help_text`, `owner_role_id`, `requires_induction`, `induction_category`, `working`, `permaloan`, `permaloan_user_id`, `access_fee`, `photos`, `archive`, `asset_tag_id`, `obtained_at`, `removed_at`, `created_at`, `updated_at`)
 VALUES
-	(2, 'Laser Cutter', '', '', '', 'blue/white', 'workshop', '', 'laser', 'laser', '', '', NULL, 1, NULL, 1, 0, 0, 10, 3, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-05-01 00:00:25'),
-	(3, 'Lathe', NULL, NULL, NULL, NULL, NULL, NULL, 'lathe', 'lathe', NULL, NULL, NULL, 1, NULL, 1, 0, NULL, 25, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
-	(4, 'Mig Welder', NULL, NULL, NULL, NULL, NULL, NULL, 'welder', 'welder', NULL, NULL, NULL, 1, NULL, 1, 0, NULL, 20, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
-	(5, 'CNC Router', NULL, NULL, NULL, NULL, NULL, NULL, 'cnc', 'cnc', NULL, NULL, NULL, 1, NULL, 0, 0, NULL, 25, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
-	(6, 'Pillar Drill', NULL, NULL, NULL, NULL, NULL, NULL, 'pillar-drill', 'pillar-drill', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
-	(7, 'Chop Saw', NULL, NULL, NULL, NULL, NULL, NULL, 'chop-saw', 'chop-saw', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
-	(8, 'Band Saw', NULL, NULL, NULL, NULL, NULL, NULL, 'band-saw', 'band-saw', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
-	(9, '3D Printer', NULL, NULL, NULL, NULL, NULL, NULL, '3d-printer', '3d-printer', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
-	(10, 'Cordless Drill', 'Hitachi', '', '', 'green / black', 'workshop', 'equipment shelves', 'cordless-drill-1', '', 'its a dill', 'press the button', NULL, 0, NULL, 1, 0, 0, 0, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 13:36:46', '2015-04-29 13:36:46'),
-	(16, 'drill', '', '', '', '', 'workshop', '', 'cordless-drill-2', '', '', '', NULL, 0, NULL, 1, 0, 0, 0, 0, 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 22:11:21', '2015-04-29 22:11:31'),
-	(20, 'Saw', '', '', '', 'yellow', 'workshop', 'on the wall', 'saw', '', '', '', NULL, 0, NULL, 1, 0, 0, 0, 1, 0, NULL, '2014-04-01', '0000-00-00', '2015-04-29 22:54:21', '2015-04-29 22:54:36');
+	(2, 'Laser Cutter', '', '', '', 'blue/white', 'workshop', '', 'laser', 'laser', '', '', NULL, 1, NULL, 1, 0, 0, 10, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-05-01 00:00:25'),
+	(3, 'Lathe', NULL, NULL, NULL, NULL, NULL, NULL, 'lathe', 'lathe', NULL, NULL, NULL, 1, NULL, 1, 0, NULL, 25, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
+	(4, 'Mig Welder', NULL, NULL, NULL, NULL, NULL, NULL, 'welder', 'welder', NULL, NULL, NULL, 1, NULL, 1, 0, NULL, 20, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
+	(5, 'CNC Router', NULL, NULL, NULL, NULL, NULL, NULL, 'cnc', 'cnc', NULL, NULL, NULL, 1, NULL, 0, 0, NULL, 25, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
+	(6, 'Pillar Drill', NULL, NULL, NULL, NULL, NULL, NULL, 'pillar-drill', 'pillar-drill', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
+	(7, 'Chop Saw', NULL, NULL, NULL, NULL, NULL, NULL, 'chop-saw', 'chop-saw', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
+	(8, 'Band Saw', NULL, NULL, NULL, NULL, NULL, NULL, 'band-saw', 'band-saw', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
+	(9, '3D Printer', NULL, NULL, NULL, NULL, NULL, NULL, '3d-printer', '3d-printer', NULL, NULL, NULL, 0, NULL, 1, 0, NULL, 0, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),
+	(10, 'Cordless Drill', 'Hitachi', '', '', 'green / black', 'workshop', 'equipment shelves', 'cordless-drill-1', '', 'its a dill', 'press the button', NULL, 0, NULL, 1, 0, 0, 0, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 13:36:46', '2015-04-29 13:36:46'),
+	(16, 'drill', '', '', '', '', 'workshop', '', 'cordless-drill-2', '', '', '', NULL, 0, NULL, 1, 0, 0, 0, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 22:11:21', '2015-04-29 22:11:31'),
+	(20, 'Saw', '', '', '', 'yellow', 'workshop', 'on the wall', 'saw', '', '', '', NULL, 0, NULL, 1, 0, 0, 0, '', 0, NULL, '2014-04-01', '0000-00-00', '2015-04-29 22:54:21', '2015-04-29 22:54:36');
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
