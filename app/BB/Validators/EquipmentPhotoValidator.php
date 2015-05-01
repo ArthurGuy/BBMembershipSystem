@@ -9,7 +9,7 @@ class EquipmentPhotoValidator extends FormValidator
      * @var array
      */
     protected $rules = [
-        'photo'              => 'image',
+        'photo'              => 'image|mimes:jpeg,png',
     ];
 
 } 

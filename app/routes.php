@@ -84,6 +84,7 @@ Route::group(array('before' => 'role:admin'), function() {
 Route::group(array('before' => 'role:member'), function() {
     Route::resource('equipment', 'EquipmentController');
     Route::post('equipment/{id}/photo', ['uses'=>'EquipmentController@addPhoto', 'as'=>'equipment.photo.store']);
+    Route::delete('equipment/{id}/photo/{key}', ['uses'=>'EquipmentController@destroyPhoto', 'as'=>'equipment.photo.destroy']);
 });
 
 # Equipment Log

@@ -199,10 +199,12 @@ class EquipmentController extends \BaseController
             //@TODO Deal with jpg images as well
 
             $filePath = Input::file('photo')->getRealPath();
-            $tmpFilePath = storage_path("tmp")."/equipment/".$equipment->id.".png";
+            $ext = Input::file('photo')->guessClientExtension();
+            $mimeType = Input::file('photo')->getMimeType();
+            $tmpFilePath = storage_path("tmp")."/equipment/".$equipment->id.".".$ext;
             Image::make($filePath)->fit(1000)->save($tmpFilePath);
 
-            $newFilename = str_random().'.png';
+            $newFilename = str_random().'.'.$ext;
 
             $s3 = \AWS::get('s3');
             try {
@@ -211,7 +213,7 @@ class EquipmentController extends \BaseController
                     'Key'           => $equipment->getPhotoBasePath() . $newFilename,
                     'Body'          => file_get_contents($tmpFilePath),
                     'ACL'           => 'public-read',
-                    'ContentType'   => 'image/png',
+                    'ContentType'   => $mimeType,
                     'ServerSideEncryption' => 'AES256',
                 ));
                 File::delete($tmpFilePath);
@@ -224,12 +226,23 @@ class EquipmentController extends \BaseController
             }
         }
 
-        return Redirect::route('equipment.show', $equipmentId);
+        Notification::success("Image added");
+        return Redirect::route('equipment.edit', $equipmentId);
     }
 
     public function destroyPhoto($equipmentId, $photoId)
     {
-        //photos need to be moved down
-        //the files need to be renamed, the photo count reduced and the old file deleted
+        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $photo = $equipment->photos[$photoId];
+        $equipment->removePhoto($photoId);
+
+        //delete photo
+        $s3 = \AWS::get('s3');
+        $result = $s3->deleteObject(array(
+            'Bucket' => getenv('S3_BUCKET'),
+            'Key'    => $equipment->getPhotoBasePath().$photo['path']
+        ));
+        Notification::success("Image deleted");
+        return Redirect::route('equipment.edit', $equipmentId);
     }
 } 

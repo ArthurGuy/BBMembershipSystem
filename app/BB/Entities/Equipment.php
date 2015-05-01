@@ -106,6 +106,14 @@ class Equipment extends Model {
         $this->save();
     }
 
+    public function removePhoto($id)
+    {
+        $photos = $this->photos;
+        unset($photos[$id]);
+        $this->photos = array_values($photos);
+        $this->save();
+    }
+
     /**
      * Get the full url to a product image
      *
