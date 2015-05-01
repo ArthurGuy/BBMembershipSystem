@@ -48,6 +48,13 @@ class FunctionalHelper extends \Codeception\Module
         return $user;
     }
 
+    public function loginEquipmentTeamMember()
+    {
+        $user = User::find(4);
+        \Auth::login($user);
+        return $user;
+    }
+
     public function getActiveKeyholderMember()
     {
         //We know this is user 1 in the DB
