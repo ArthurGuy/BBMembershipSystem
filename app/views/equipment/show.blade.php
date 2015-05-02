@@ -72,7 +72,7 @@ Tools and Equipment
                         Equipment access fee: &pound{{ $equipment->access_fee }}<br />
                         <br />
                         @if ($userInduction)
-                            Access fee paid, induction to be completed
+                            <!--Access fee paid, induction to be completed-->
                         @else
                             @include('partials/payment-form', ['reason'=>'induction', 'displayReason'=>'Equipment Access Fee', 'returnPath'=>route('equipment.show', [$equipmentId], false), 'amount'=>$equipment->access_fee, 'buttonLabel'=>'Pay Now', 'methods'=>['balance'], 'ref'=>$equipmentId])
                         @endif
