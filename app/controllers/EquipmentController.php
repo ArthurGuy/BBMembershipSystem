@@ -110,8 +110,9 @@ class EquipmentController extends \BaseController
     public function create()
     {
         $memberList = $this->userRepository->getAllAsDropdown();
+        $roleList = \BB\Entities\Role::lists('title', 'id');
 
-        return View::make('equipment.create')->with('memberList', $memberList);
+        return View::make('equipment.create')->with('memberList', $memberList)->with('roleList', $roleList);
     }
 
 
@@ -126,7 +127,7 @@ class EquipmentController extends \BaseController
     {
         $data = Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
-            'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
+            'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
             'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id',
         ]);
         $this->equipmentValidator->validate($data);
@@ -147,8 +148,9 @@ class EquipmentController extends \BaseController
     {
         $equipment = $this->equipmentRepository->findByKey($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
+        $roleList = \BB\Entities\Role::lists('title', 'id');
 
-        return View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList);
+        return View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList)->with('roleList', $roleList);
     }
 
 
@@ -164,7 +166,7 @@ class EquipmentController extends \BaseController
 
         $data = Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail',
-            'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
+            'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
             'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id',
         ]);
         $this->equipmentValidator->validate($data, $equipment->id);

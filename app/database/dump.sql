@@ -526,7 +526,7 @@ CREATE TABLE `equipment` (
   `device_key` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `help_text` longtext COLLATE utf8_unicode_ci,
-  `owner_role_id` int(11) DEFAULT NULL,
+  `managing_role_id` int(11) DEFAULT NULL,
   `requires_induction` tinyint(1) NOT NULL DEFAULT '0',
   `induction_category` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `working` tinyint(1) NOT NULL DEFAULT '1',
@@ -545,7 +545,7 @@ CREATE TABLE `equipment` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `equipment` (`id`, `name`, `manufacturer`, `model_number`, `serial_number`, `colour`, `room`, `detail`, `key`, `device_key`, `description`, `help_text`, `owner_role_id`, `requires_induction`, `induction_category`, `working`, `permaloan`, `permaloan_user_id`, `access_fee`, `photos`, `archive`, `asset_tag_id`, `obtained_at`, `removed_at`, `created_at`, `updated_at`)
+INSERT INTO `equipment` (`id`, `name`, `manufacturer`, `model_number`, `serial_number`, `colour`, `room`, `detail`, `key`, `device_key`, `description`, `help_text`, `managing_role_id`, `requires_induction`, `induction_category`, `working`, `permaloan`, `permaloan_user_id`, `access_fee`, `photos`, `archive`, `asset_tag_id`, `obtained_at`, `removed_at`, `created_at`, `updated_at`)
 VALUES
 	(2, 'Laser Cutter', '', '', '', 'blue/white', 'workshop', '', 'laser', 'laser', '', '', NULL, 1, NULL, 1, 0, 0, 10, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-05-01 00:00:25'),
 	(3, 'Lathe', NULL, NULL, NULL, NULL, NULL, NULL, 'lathe', 'lathe', NULL, NULL, NULL, 1, NULL, 1, 0, NULL, 25, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29'),

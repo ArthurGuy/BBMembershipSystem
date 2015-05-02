@@ -73,6 +73,7 @@
     {{ Form::label('device_key', 'Device Key', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">
         {{ Form::text('device_key', null, ['class'=>'form-control']) }}
+        <p class="help-block">The id of a ACS device already setup in the database</p>
         {{ Notification::getErrorDetail('device_key') }}
     </div>
 </div>
@@ -91,6 +92,15 @@
         {{ Form::textarea('help_text', null, ['class'=>'form-control']) }}
         <p class="help-block">A lot of text can go in here, useful for things like safety or maintenance information</p>
         {{ Notification::getErrorDetail('help_text') }}
+    </div>
+</div>
+
+<div class="form-group {{ Notification::hasErrorDetail('managing_role_id', 'has-error has-feedback') }}">
+    {{ Form::label('managing_role_id', 'Managing Group', ['class'=>'col-sm-3 control-label']) }}
+    <div class="col-sm-9 col-lg-7">
+        {{ Form::select('managing_role_id', [''=>'']+$roleList, null, ['class'=>'form-control advanced-dropdown']) }}
+        <p class="help-block">Is a group is responsible for this piece of equipment?</p>
+        {{ Notification::getErrorDetail('managing_role_id') }}
     </div>
 </div>
 
