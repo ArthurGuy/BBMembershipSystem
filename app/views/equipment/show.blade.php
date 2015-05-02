@@ -41,6 +41,9 @@ Tools and Equipment
                             @if ($equipment->hasUsageCharge())
                             Usage Cost: {{ $equipment->present()->usageCost() }}<br />
                             @endif
+                            @if ($equipment->isManagedByGroup())
+                                Managed By: {{ $equipment->role->title }}
+                            @endif
 
                             @if (!$equipment->isWorking())<span class="label label-danger">Out of action</span>@endif
                             @if ($equipment->isPermaloan())<span class="label label-warning">Permaloan</span>@endif

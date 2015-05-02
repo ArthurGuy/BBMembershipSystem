@@ -29,6 +29,11 @@ class Equipment extends Model {
         return array('created_at', 'updated_at', 'obtained_at', 'removed_at');
     }
 
+    public function role()
+    {
+        return $this->belongsTo('\BB\Entities\Role', 'managing_role_id');
+    }
+
     /**
      * Does the equipment have activity recorded against it
      *
@@ -76,6 +81,11 @@ class Equipment extends Model {
     public function isPermaloan()
     {
         return (bool)$this->permaloan;
+    }
+
+    public function isManagedByGroup()
+    {
+        return (bool)$this->managing_role_id;
     }
 
     /**
