@@ -21,6 +21,7 @@ class Equipment extends Model {
         'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'location', 'room', 'detail', 'key',
         'device_key', 'description', 'help_text', 'owner_role_id', 'requires_induction', 'induction_category', 'working',
         'permaloan', 'permaloan_user_id', 'access_fee', 'photos', 'archive', 'obtained_at', 'removed_at', 'asset_tag_id',
+        'usage_cost', 'usage_cost_per'
     ];
 
     public function getDates()
@@ -173,4 +174,16 @@ class Equipment extends Model {
         }
         return new Carbon($this->attributes['removed_at']);
     }
+
+    public function getUsageCostAttribute()
+    {
+        return $this->attributes['usage_cost'] / 100;
+    }
+
+    public function setUsageCostAttribute($value)
+    {
+        $this->attributes['usage_cost'] = $value * 100;
+    }
+
+
 } 

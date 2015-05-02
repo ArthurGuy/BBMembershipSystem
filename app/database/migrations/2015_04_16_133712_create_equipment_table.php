@@ -33,6 +33,8 @@ class CreateEquipmentTable extends Migration {
             $table->boolean('permaloan')->default(0);
             $table->integer('permaloan_user_id')->nullable();
             $table->integer('access_fee')->default(0);
+            $table->integer('usage_cost')->default(0);
+            $table->enum('usage_cost_per', ['hour', 'gram']);
             $table->text('photos');
             $table->boolean('archive')->default(0);
             $table->string('asset_tag_id', 50)->nullable();

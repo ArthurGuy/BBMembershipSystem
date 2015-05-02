@@ -150,6 +150,21 @@
     </div>
 </div>
 
+<div class="form-group {{ Notification::hasErrorDetail('usage_cost', 'has-error has-feedback') }}">
+    {{ Form::label('usage_cost', 'Usage Cost', ['class'=>'col-sm-3 control-label']) }}
+    <div class="col-sm-9 col-lg-7">
+        <div class="input-group">
+            <div class="input-group-addon">&pound;</div>
+            {{ Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'.1']) }}
+            <div class="input-group-addon">
+            Per {{ Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram'], null, ['class'=>'']) }}
+            </div>
+        </div>
+        <p class="help-block">Does the equipment cost anything to use?</p>
+        {{ Notification::getErrorDetail('usage_cost') }}
+    </div>
+</div>
+
 <div class="form-group {{ Notification::hasErrorDetail('asset_tag_id', 'has-error has-feedback') }}">
     {{ Form::label('asset_tag_id', 'Asset Tag ID', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">

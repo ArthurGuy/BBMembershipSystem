@@ -26,12 +26,22 @@ Tools and Equipment
             <h3 class="panel-title">Equipment requiring an induction</h3>
         </div>
         <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Induction Cost</th>
+                <th>Usage Cost</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
             @foreach($requiresInduction as $tool)
                 <tr>
                     <td>
                         <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
                     </td>
                     <td>{{ $tool->present()->accessFee() }}</td>
+                    <td>{{ $tool->present()->usageCost() }}</td>
                     <td>
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
