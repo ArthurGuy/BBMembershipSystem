@@ -165,7 +165,7 @@
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {{ Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'.1']) }}
+            {{ Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01']) }}
             <div class="input-group-addon">
             Per {{ Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram'], null, ['class'=>'']) }}
             </div>
