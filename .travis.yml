@@ -7,6 +7,7 @@ before_script:
 - mysql -e 'create database bbms_acceptance_testing;'
 script: vendor/bin/codecept run
 notifications:
+  email: false
   webhooks:
     urls:
     - https://forge.laravel.com/servers/6535/sites/13543/deploy/http?token=xQRcFZIu84lgF0M4td5w6fj5vqmyDpCY3KY8SBcT
