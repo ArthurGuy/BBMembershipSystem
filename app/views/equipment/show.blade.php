@@ -31,10 +31,10 @@ Tools and Equipment
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
 
-                            Make: {{ $equipment->present()->manufacturerModel }}<br />
-                            Colour: {{ $equipment->colour }}<br />
-                            Lives in: {{ $equipment->present()->livesIn }}<br />
-                            Purchased: {{ $equipment->present()->purchaseDate }}<br />
+                            @if ($equipment->present()->manufacturerModel) Make: {{ $equipment->present()->manufacturerModel }}<br />@endif
+                            @if ($equipment->colour) Colour: {{ $equipment->colour }}<br />@endif
+                            @if ($equipment->present()->livesIn) Lives in: {{ $equipment->present()->livesIn }}<br />@endif
+                            @if ($equipment->present()->purchaseDate) Purchased: {{ $equipment->present()->purchaseDate }}<br />@endif
                             @if ($equipment->requiresInduction())
                             Access Fee: {{ $equipment->present()->accessFee() }}<br />
                             @endif
