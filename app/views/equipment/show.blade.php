@@ -35,6 +35,15 @@ Tools and Equipment
                             Colour: {{ $equipment->colour }}<br />
                             Lives in: {{ $equipment->present()->livesIn }}<br />
                             Purchased: {{ $equipment->present()->purchaseDate }}<br />
+                            @if ($equipment->requiresInduction())
+                            Access Fee: {{ $equipment->present()->accessFee() }}<br />
+                            @endif
+                            @if ($equipment->hasUsageCharge())
+                            Usage Cost: {{ $equipment->present()->usageCost() }}<br />
+                            @endif
+
+                            @if (!$equipment->isWorking())<span class="label label-danger">Out of action</span>@endif
+                            @if ($equipment->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
 
                         </div>
                         <div class="col-md-12 col-lg-6">
@@ -52,11 +61,6 @@ Tools and Equipment
 
                     {{ $equipment->present()->description }}<br />
 
-                    @if ($equipment->isPermaloan())
-                        <span class="label label-warning">Permaloan</span>
-                    @endif
-
-
 
 
 
@@ -65,7 +69,7 @@ Tools and Equipment
                         Equipment access fee: &pound{{ $equipment->access_fee }}<br />
                         <br />
                         @if ($userInduction)
-                            Induction to be completed
+                            Access fee paid, induction to be completed
                         @else
                             @include('partials/payment-form', ['reason'=>'induction', 'displayReason'=>'Equipment Access Fee', 'returnPath'=>route('equipment.show', [$equipmentId], false), 'amount'=>$equipment->access_fee, 'buttonLabel'=>'Pay Now', 'methods'=>['balance'], 'ref'=>$equipmentId])
                         @endif
@@ -73,9 +77,8 @@ Tools and Equipment
                     @else
                         No fee required
                     @endif
-                    @if (!$equipment->isWorking())
-                        <span class="label label-danger">Out of action</span>
-                    @endif
+
+
                 </div>
             </div>
 

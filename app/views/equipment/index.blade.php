@@ -29,7 +29,7 @@ Tools and Equipment
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Induction Cost</th>
+                <th>Access Fee</th>
                 <th>Usage Cost</th>
                 <th></th>
                 <th></th>

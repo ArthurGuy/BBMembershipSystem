@@ -49,6 +49,11 @@ class Equipment extends Model {
         return (bool)$this->requires_induction;
     }
 
+    public function hasUsageCharge()
+    {
+        return (bool)$this->usageCost;
+    }
+
     /**
      * @return bool
      */
