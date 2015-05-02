@@ -102,7 +102,7 @@
     <script src="/js/main.js"></script>
 
     @include('partials/flash-message')
-    
+
 
     @yield('footer-js')
 

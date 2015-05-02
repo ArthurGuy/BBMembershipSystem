@@ -62,11 +62,20 @@ Tools and Equipment
             <h3 class="panel-title">Equipment ready to use</h3>
         </div>
         <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Usage Cost</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
         @foreach($doesntRequireInduction as $tool)
             <tr>
                 <td>
                     <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
                 </td>
+                <td>{{ $tool->present()->usageCost() }}</td>
                 <td>
                     @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
                 </td>
