@@ -31,7 +31,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($inductions as $itemKey=>$item)
+        @foreach ($inductions as $item)
         <tr>
             <td>{{ $item->name }}</td>
             <td>&pound;{{ $item->access_fee }}</td>
