@@ -39,6 +39,7 @@ class EquipmentValidator extends FormValidator
     //During an update these rules will override the ones above
     protected $updateRules = [
         'key'                => '',
+        'asset_tag_id'       => 'unique:equipment,asset_tag_id,{id}',
     ];
 
 } 
