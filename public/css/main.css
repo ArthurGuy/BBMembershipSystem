@@ -6728,6 +6728,9 @@ body {
   margin: 10px 20px;
   float: left;
 }
+#pageTitle .titles .title a {
+  color: #FFF;
+}
 #pageTitle .titles img {
   float: left;
   margin: 10px 20px;

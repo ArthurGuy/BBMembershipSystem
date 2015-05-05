@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('page-title')
-Tools &amp; Equipment > {{ $equipment->name }}
+<a href="{{ route('equipment.index') }}">Tools &amp; Equipment</a> > {{ $equipment->name }}
 @stop
 
 @section('meta-title')

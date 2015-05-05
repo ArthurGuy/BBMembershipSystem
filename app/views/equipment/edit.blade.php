@@ -5,7 +5,7 @@
 @stop
 
 @section('page-title')
-    Edit a piece of equipment
+    <a href="{{ route('equipment.index') }}">Tools &amp; Equipment</a> > <a href="{{ route('equipment.show', $equipment->key) }}">{{ $equipment->name }}</a> > Edit
 @stop
 
 @section('content')
