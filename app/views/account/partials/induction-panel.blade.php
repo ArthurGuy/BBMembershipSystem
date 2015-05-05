@@ -17,14 +17,14 @@
             <th>Cost</th>
             <th></th>
             <th>
+                @if (Auth::user()->isAdmin())
                 Inducted By
-            </th>
-            <th>
-                Can Induct Members
+                <span class="label label-danger">Admin</span>
+                @endif
             </th>
             <th>
                 @if (Auth::user()->isAdmin())
-                Payment
+                Can Induct Members
                 <span class="label label-danger">Admin</span>
                 @endif
             </th>
@@ -47,7 +47,7 @@
             <td>
                 @if (Auth::user()->isAdmin() && $item->userInduction && !$item->userInduction->is_trained)
                 {{ Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) }}
-                {{ Form::select('trainer_user_id', \BB\Entities\Induction::trainersForDropdown($itemKey)) }}
+                {{ Form::select('trainer_user_id', \BB\Entities\Induction::trainersForDropdown($item->key)) }}
                 {{ Form::hidden('mark_trained', '1') }}
                 {{ Form::submit('Inducted By', array('class'=>'btn btn-default btn-xs')) }}
                 {{ Form::close() }}
@@ -63,16 +63,6 @@
                 {{ Form::close() }}
                 @elseif ($item->userInduction && $item->userInduction->is_trained && $item->userInduction->is_trainer)
                 Yes
-                @endif
-            </td>
-            <td>
-                @if (Auth::user()->isAdmin() && (!$item->userInduction || ($item->userInduction && !$item->userInduction->paid)))
-                {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.store', $user->id])) }}
-                {{ Form::hidden('induction_key', $itemKey) }}
-                {{ Form::hidden('reason', 'induction') }}
-                {{ Form::hidden('source', 'manual') }}
-                {{ Form::submit('Mark Paid', array('class'=>'btn btn-default btn-xs')) }}
-                {{ Form::close() }}
                 @endif
             </td>
         </tr>
