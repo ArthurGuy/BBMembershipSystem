@@ -77,8 +77,8 @@
             <div class="form-group {{ Notification::hasErrorDetail('photo', 'has-error has-feedback') }}">
                 {{ Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) }}
                 <div class="col-sm-9 col-lg-7">
-                    {{ Form::file('photo', null, ['class'=>'form-control']) }}
-                    <p class="help-block">Do you have a photo? More can be uploaded later</p>
+                    <input name="photo" class="form-control" type="file" accept="image/*" capture="camera" id="inputPhoto">
+                    <p class="help-block">Do you have a photo?</p>
                     {{ Notification::getErrorDetail('photo') }}
                 </div>
             </div>
