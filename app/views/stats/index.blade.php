@@ -60,7 +60,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 
     google.setOnLoadCallback(drawPaymentMethodsChart);
     function drawPaymentMethodsChart() {
-        var data = google.visualization.arrayToDataTable(paymentMethods);
+        var data = google.visualization.arrayToDataTable(BB.chartData.paymentMethods);
 
         var options = {
             //title: 'Payment Methods',
@@ -75,7 +75,7 @@ google.load("visualization", "1", {packages:["corechart"]});
     google.setOnLoadCallback(drawChart);
     function drawChart() {
 
-        var data = google.visualization.arrayToDataTable(monthlyAmounts);
+        var data = google.visualization.arrayToDataTable(BB.chartData.monthlyAmounts);
 
         var options = {
             //title: 'Monthly Subscription Amounts',

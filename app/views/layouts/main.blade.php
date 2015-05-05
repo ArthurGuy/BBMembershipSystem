@@ -85,17 +85,7 @@
 
     @include('partials/feedback-widget')
 
-    @if (!Auth::guest())
-        <script>
-            var paymentRoutes = {
-                stripe: '{{ route('account.payment.stripe.store', Auth::user()->id) }}',
-                gocardless: '{{ route('account.payment.gocardless.create', Auth::user()->id) }}',
-                balance: '{{ route('account.payment.balance.create', Auth::user()->id) }}'
-            };
-            var stripePublicKey = '@stripeKey()';
-            var memberEmail = '{{ Auth::user()->email }}';
-        </script>
-    @endif
+    @include('partials/js-data')
 
     <script src="https://checkout.stripe.com/checkout.js"></script>
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
