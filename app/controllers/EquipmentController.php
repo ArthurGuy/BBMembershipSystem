@@ -198,27 +198,24 @@ class EquipmentController extends \BaseController
 
         if (Input::file('photo'))
         {
-            //@TODO Deal with jpg images as well
-
-            $filePath = Input::file('photo')->getRealPath();
-            $ext = Input::file('photo')->guessClientExtension();
-            $mimeType = Input::file('photo')->getMimeType();
-            $tmpFilePath = storage_path("tmp")."/equipment/".$equipment->id.".".$ext;
-            Image::make($filePath)->fit(1000)->save($tmpFilePath);
-
-            $newFilename = str_random().'.'.$ext;
-
-            $s3 = \AWS::get('s3');
             try {
+                $filePath = Input::file('photo')->getRealPath();
+                $ext = Input::file('photo')->guessClientExtension();
+                $mimeType = Input::file('photo')->getMimeType();
+                $fileData = Image::make($filePath)->fit(1000)->encode($ext);
+
+                $newFilename = str_random().'.'.$ext;
+
+
+                $s3 = \AWS::get('s3');
                 $s3->putObject(array(
                     'Bucket'        => getenv('S3_BUCKET'),
                     'Key'           => $equipment->getPhotoBasePath() . $newFilename,
-                    'Body'          => file_get_contents($tmpFilePath),
+                    'Body'          => $fileData,
                     'ACL'           => 'public-read',
                     'ContentType'   => $mimeType,
                     'ServerSideEncryption' => 'AES256',
                 ));
-                File::delete($tmpFilePath);
 
                 $equipment->addPhoto($newFilename);
 
