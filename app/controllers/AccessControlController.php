@@ -24,8 +24,6 @@ class AccessControlController extends Controller
 
     public function mainDoor()
     {
-        $message = null;
-
         $receivedData = trim(Input::get('data'));
 
         //Log::debug("New System. Entry message received: ".$receivedData);
@@ -153,7 +151,7 @@ class AccessControlController extends Controller
         $user = $keyFob->user()->first();
 
         $client = new GuzzleHttp\Client();
-        $response = $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
+        $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
             'body' => [
                 'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance/100), 2), 'success'=>true]),
                 'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
