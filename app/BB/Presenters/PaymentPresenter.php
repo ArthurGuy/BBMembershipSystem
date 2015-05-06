@@ -8,28 +8,21 @@ class PaymentPresenter extends Presenter
     public function reason()
     {
         switch ($this->entity->reason) {
-            case 'subscription';
+            case 'subscription':
                 return 'Subscription';
-
-            case 'unknown';
+            case 'unknown':
                 return 'Unknown';
-
-            case 'induction';
+            case 'induction':
                 return 'Equipment Access Fee';
-
-            case 'door-key';
+            case 'door-key':
                 return 'Key Deposit';
-
-            case 'storage-box';
+            case 'storage-box':
                 return 'Storage Box Deposit';
-
-            case 'balance';
+            case 'balance':
                 return 'Balance Top Up';
-
             case 'equipment-fee':
                 return 'Equipment Costs';
-
-            default;
+            default:
                 return $this->entity->reason;
         }
     }
@@ -37,17 +30,14 @@ class PaymentPresenter extends Presenter
     public function status()
     {
         switch ($this->entity->status) {
-            case 'pending';
+            case 'pending':
                 return 'Pending Confirmation';
-
-            case 'cancelled';
+            case 'cancelled':
                 return 'Cancelled';
-
-            case 'paid';
-            case 'withdrawn';
+            case 'paid':
+            case 'withdrawn':
                 return 'Paid';
-
-            default;
+            default:
                 return $this->entity->status;
         }
     }
@@ -63,44 +53,36 @@ class PaymentPresenter extends Presenter
             case 'gocardless':
             case 'gocardless-variable':
                 return 'Direct Debit';
-
             case 'stripe':
                 return 'Credit/Debit Card';
-
             case 'paypal':
                 return 'PayPal';
-
             case 'standing-order':
                 return 'Standing Order';
-
             case 'manual':
                 return 'Manual';
-
             case 'cash':
                 return 'Cash';
-
             case 'other':
                 return 'Other';
-
             case 'balance':
                 return 'BB Balance';
-
-            default;
+            default:
                 return $this->entity->source;
         }
     }
 
     public function amount()
     {
-        return '&pound;'.$this->entity->amount;
+        return '&pound;' . $this->entity->amount;
     }
 
     public function balanceAmount()
     {
         if ($this->entity->source == 'balance') {
-            return '-&pound;'.$this->entity->amount;
+            return '-&pound;' . $this->entity->amount;
         } elseif ($this->entity->reason == 'balance') {
-            return '&pound;'.$this->entity->amount;
+            return '&pound;' . $this->entity->amount;
         }
     }
 
