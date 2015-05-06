@@ -1,5 +1,6 @@
 <?php namespace BB\Services;
 
+use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
@@ -94,7 +95,7 @@ class MemberSubscriptionCharges
      */
     public function lastUserChargeExpires($userId)
     {
-        $charge = $this->model->where('user_id', $userId)->where('status', ['processing', 'paid'])->orderBy('charge_date', 'DESC')->first();
+        $charge = User::where('user_id', $userId)->where('status', ['processing', 'paid'])->orderBy('charge_date', 'DESC')->first();
         if ($charge) {
             return $charge->charge_date->addMonth();
         }
