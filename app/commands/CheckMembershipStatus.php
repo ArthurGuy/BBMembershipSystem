@@ -2,7 +2,8 @@
 
 use Illuminate\Console\Command;
 
-class CheckMembershipStatus extends Command {
+class CheckMembershipStatus extends Command
+{
 
 	/**
 	 * The console command name.

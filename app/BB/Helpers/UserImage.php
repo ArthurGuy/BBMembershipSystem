@@ -3,7 +3,8 @@
 use BB\Exceptions\UserImageFailedException;
 use Intervention\Image\Facades\Image;
 
-class UserImage {
+class UserImage
+{
 
     protected static $bucket = 'buildbrighton-bbms';
 
@@ -74,7 +75,8 @@ class UserImage {
      * Delete an old profile image and replace it with a new one.
      * @param $userId
      */
-    public function approveNewImage($userId) {
+    public function approveNewImage($userId)
+    {
 
         $sourceFilename      = \App::environment() . '/user-photo/' . md5($userId) . '-new.png';
         $sourceThumbFilename = \App::environment() . '/user-photo/' . md5($userId) . '-thumb-new.png';

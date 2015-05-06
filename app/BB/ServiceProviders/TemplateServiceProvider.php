@@ -3,7 +3,8 @@
 use BB\Validators\CustomValidator;
 use Illuminate\Support\ServiceProvider;
 
-class TemplateServiceProvider extends ServiceProvider {
+class TemplateServiceProvider extends ServiceProvider
+{
 
 
     public function boot()

@@ -1,6 +1,7 @@
 <?php namespace BB\Helpers;
 
-class GoCardlessHelper {
+class GoCardlessHelper
+{
 
     private $account_details;
 
@@ -19,8 +20,7 @@ class GoCardlessHelper {
         );
 
         // Initialize GoCardless
-        if (\App::environment() == 'production')
-        {
+        if (\App::environment() == 'production') {
             \GoCardless::$environment = 'production';
         }
         \GoCardless::set_account_details($this->account_details);
@@ -73,8 +73,7 @@ class GoCardlessHelper {
     public function getSubscriptionFirstBill($id)
     {
         $bills = \GoCardless_Merchant::find($this->account_details['merchant_id'])->bills(array('source_id' => $id));
-        if (count($bills) > 0)
-        {
+        if (count($bills) > 0) {
             return $bills[0];
         }
         return false;

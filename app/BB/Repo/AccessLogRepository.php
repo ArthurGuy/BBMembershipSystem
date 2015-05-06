@@ -2,7 +2,8 @@
 
 use BB\Entities\AccessLog;
 
-class AccessLogRepository extends DBRepository {
+class AccessLogRepository extends DBRepository
+{
 
 
     /**

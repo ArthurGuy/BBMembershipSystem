@@ -78,8 +78,7 @@ class Notification
 
     private function loadData()
     {
-        if ($this->session->has('notification_data'))
-        {
+        if ($this->session->has('notification_data')) {
             $properties = ($this->session->get('notification_data'));
             $this->message = $properties['message'];
             $this->details = $properties['details'];
@@ -94,8 +93,7 @@ class Notification
 
     public function hasErrorDetail($detail, $response=null)
     {
-        if ($this->details && $this->details->has($detail))
-        {
+        if ($this->details && $this->details->has($detail)) {
             if ($response) {
                 return $response;
             } else {
@@ -107,8 +105,7 @@ class Notification
 
     public function getErrorDetail($detail, $responseFormat='<span class="help-block">:message</span>')
     {
-        if ($this->hasErrorDetail($detail))
-        {
+        if ($this->hasErrorDetail($detail)) {
             return $this->details->first($detail, $responseFormat);
         }
     }

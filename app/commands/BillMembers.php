@@ -4,7 +4,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class BillMembers extends Command {
+class BillMembers extends Command
+{
 
 	/**
 	 * The console command name.

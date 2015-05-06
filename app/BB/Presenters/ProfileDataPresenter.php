@@ -2,7 +2,8 @@
 
 use Laracasts\Presenter\Presenter;
 
-class ProfileDataPresenter extends Presenter {
+class ProfileDataPresenter extends Presenter
+{
 
 
     public function gitHubLink()

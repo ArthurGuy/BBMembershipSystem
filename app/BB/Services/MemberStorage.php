@@ -3,7 +3,8 @@
 use BB\Repo\PaymentRepository;
 use BB\Repo\StorageBoxRepository;
 
-class MemberStorage {
+class MemberStorage
+{
 
     /**
      * @var int

@@ -3,7 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class SubscriptionCharge extends Model {
+class SubscriptionCharge extends Model
+{
 
     use PresentableTrait;
 

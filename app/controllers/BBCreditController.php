@@ -2,7 +2,8 @@
 
 use BB\Entities\User;
 
-class BBCreditController extends \BaseController {
+class BBCreditController extends \BaseController
+{
 
     /**
      * @var \BB\Repo\UserRepository

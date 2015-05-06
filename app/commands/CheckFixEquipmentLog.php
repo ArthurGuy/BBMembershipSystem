@@ -3,7 +3,8 @@
 use BB\Repo\EquipmentLogRepository;
 use Illuminate\Console\Command;
 
-class CheckFixEquipmentLog extends Command {
+class CheckFixEquipmentLog extends Command
+{
 
 	/**
 	 * The console command name.
@@ -48,8 +49,7 @@ class CheckFixEquipmentLog extends Command {
 	{
         //Close records that were left open
         $records = $this->equipmentLogRepository->getActiveRecords();
-        foreach ($records as $log)
-        {
+        foreach ($records as $log) {
             if ($log->last_update && $log->last_update->lt(\Carbon\Carbon::now()->subHour())) {
                 //Last update received over an hour ago
 
@@ -70,8 +70,7 @@ class CheckFixEquipmentLog extends Command {
 
         //check through all the unbilled inactive records and remove the small ones
         $unbilledRecords = $this->equipmentLogRepository->getUnbilledRecords();
-        foreach ($unbilledRecords as $record)
-        {
+        foreach ($unbilledRecords as $record) {
             $secondsActive = $record->finished->diffInSeconds($record->started);
 
             //If the record is less than 60 seconds ignore it

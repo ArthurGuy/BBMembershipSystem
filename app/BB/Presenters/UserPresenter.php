@@ -31,10 +31,11 @@ class UserPresenter extends Presenter
 
     public function subscriptionExpiryDate()
     {
-        if ($this->entity->subscription_expires && $this->entity->subscription_expires->year > 0)
-            return $this->entity->subscription_expires->toFormattedDateString();
-        else
-            return '-';
+        if ($this->entity->subscription_expires && $this->entity->subscription_expires->year > 0) {
+                    return $this->entity->subscription_expires->toFormattedDateString();
+        } else {
+                    return '-';
+        }
 
     }
 

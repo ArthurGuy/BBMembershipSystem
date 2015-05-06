@@ -3,7 +3,8 @@
 use BB\Entities\User;
 use Carbon\Carbon;
 
-class UserRepository extends DBRepository {
+class UserRepository extends DBRepository
+{
 
     /**
      * @var User
@@ -98,11 +99,13 @@ class UserRepository extends DBRepository {
      */
     public function registerMember(array $memberData, $isAdminCreating)
     {
-        if (empty($memberData['profile_photo_private']))
-            $memberData['profile_photo_private'] = false;
+        if (empty($memberData['profile_photo_private'])) {
+                    $memberData['profile_photo_private'] = false;
+        }
 
-        if (empty($memberData['password']))
-            unset($memberData['password']);
+        if (empty($memberData['password'])) {
+                    unset($memberData['password']);
+        }
 
         $user = $this->model->create($memberData);
         $this->profileDataRepository->createProfile($user->id);

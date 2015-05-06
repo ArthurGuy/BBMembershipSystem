@@ -3,7 +3,8 @@
 use Laracasts\Presenter\Presenter;
 use Michelf\Markdown;
 
-class ProposalPresenter extends Presenter {
+class ProposalPresenter extends Presenter
+{
 
     public function start_date()
     {

@@ -1,6 +1,7 @@
 <?php namespace BB\Services\Payment;
 
-class GoCardlessWebhookParser {
+class GoCardlessWebhookParser
+{
 
     /**
      * @var string

@@ -3,7 +3,8 @@
 use BB\Entities\Proposal;
 use Carbon\Carbon;
 
-class ProposalRepository extends DBRepository {
+class ProposalRepository extends DBRepository
+{
 
 
     /**

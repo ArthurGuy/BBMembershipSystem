@@ -2,7 +2,8 @@
 
 use BB\Entities\StorageBox;
 
-class StorageBoxRepository extends DBRepository {
+class StorageBoxRepository extends DBRepository
+{
 
     /**
      * @var StorageBox

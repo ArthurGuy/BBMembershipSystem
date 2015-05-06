@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
-abstract class DBRepository {
+abstract class DBRepository
+{
 
     /**
      * @var \Illuminate\Database\Eloquent\Model

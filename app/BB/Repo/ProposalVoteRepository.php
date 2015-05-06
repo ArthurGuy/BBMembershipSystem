@@ -2,7 +2,8 @@
 
 use BB\Entities\ProposalVote;
 
-class ProposalVoteRepository extends DBRepository {
+class ProposalVoteRepository extends DBRepository
+{
 
 
     /**

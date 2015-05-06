@@ -1,7 +1,8 @@
 <?php namespace BB\Services;
 
 
-class DeviceCharge {
+class DeviceCharge
+{
 
     /**
      * @var \BB\Repo\EquipmentLogRepository
@@ -22,8 +23,7 @@ class DeviceCharge {
     public function calculatePendingDeviceFees()
     {
         $records = $this->equipmentLogRepository->getFinishedUnbilledRecords();
-        foreach ($records as $record)
-        {
+        foreach ($records as $record) {
             $feePerHour = Credit::getDeviceFee($record->device);
 
             $feePerSecond = $this->costPerSecond($feePerHour);

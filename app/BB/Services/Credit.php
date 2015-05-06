@@ -4,7 +4,8 @@ use BB\Exceptions\NotImplementedException;
 use BB\Repo\PaymentRepository;
 use BB\Repo\UserRepository;
 
-class Credit {
+class Credit
+{
 
     private $userId;
     /**

@@ -10,7 +10,8 @@ use BB\Services\MemberSubscriptionCharges;
  * Class CheckMemberships
  * @package BB\Process
  */
-class CheckMemberships {
+class CheckMemberships
+{
 
     /**
      * @var MemberSubscriptionCharges
@@ -26,28 +27,23 @@ class CheckMemberships {
     {
 
         $users = User::active()->where('status', '=', 'active')->notSpecialCase()->get();
-        foreach ($users as $user)
-        {
+        foreach ($users as $user) {
             /** @var $user \BB\Entities\User */
             echo $user->name;
             $expired = false;
 
             $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
-            if (!$user->subscription_expires || $user->subscription_expires->lt($cutOffDate))
-            {
+            if (!$user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
                 //echo "- Expired";
                 $expired = true;
             }
 
             //Check for payments first
-            if ($expired)
-            {
+            if ($expired) {
                 $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
                 //$paidUntil = $this->memberSubscriptionCharges->lastUserChargeExpires($user->id);
-                if ($paidUntil)
-                {
-                    if ($user->subscription_expires && $user->subscription_expires->lt($paidUntil))
-                    {
+                if ($paidUntil) {
+                    if ($user->subscription_expires && $user->subscription_expires->lt($paidUntil)) {
                         $user->extendMembership($user->payment_method, $paidUntil);
 
                         //This may not be true but it simplifies things now and tomorrows process will deal with it
@@ -55,8 +51,7 @@ class CheckMemberships {
                     }
                 }
             }
-            if ($expired)
-            {
+            if ($expired) {
                 $user->setSuspended();
                 echo " - Suspended";
             }

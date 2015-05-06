@@ -6,7 +6,8 @@ use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
 
-class MemberSubscriptionCharges {
+class MemberSubscriptionCharges
+{
 
     /**
      * @var UserRepository

@@ -35,10 +35,8 @@ class CheckSuspendedUsers
                 //When did their last sub payment expire
                 $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
 
-                if ($paidUntil)
-                {
-                    if (!$user->subscription_expires || $user->subscription_expires->lt($paidUntil))
-                    {
+                if ($paidUntil) {
+                    if (!$user->subscription_expires || $user->subscription_expires->lt($paidUntil)) {
                         $user->extendMembership(null, $paidUntil);
                     }
                 }

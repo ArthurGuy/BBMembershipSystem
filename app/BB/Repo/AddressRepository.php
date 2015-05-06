@@ -2,7 +2,8 @@
 
 use BB\Entities\Address;
 
-class AddressRepository extends DBRepository {
+class AddressRepository extends DBRepository
+{
 
 
     /**
@@ -105,7 +106,9 @@ class AddressRepository extends DBRepository {
     {
         $address = $this->getNewUserAddress($userId);
         $oldAddress = $this->getActiveUserAddress($userId);
-        if ($oldAddress) $oldAddress->delete();
+        if ($oldAddress) {
+            $oldAddress->delete();
+        }
         $address->approved = true;
         $address->save();
     }

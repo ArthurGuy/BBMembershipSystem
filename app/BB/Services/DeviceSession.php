@@ -6,7 +6,8 @@ use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DeviceSession extends KeyFobAccess {
+class DeviceSession extends KeyFobAccess
+{
 
 
 
