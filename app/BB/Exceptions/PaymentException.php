@@ -1,5 +1,6 @@
 <?php namespace BB\Exceptions;
 
-class PaymentException extends \Exception {
+class PaymentException extends \Exception
+{
 
 }

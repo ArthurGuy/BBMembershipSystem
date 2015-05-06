@@ -27,7 +27,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     }
 
 
-    public function memberPhoto($profileData, $userHash, $size=250, $class='profilePhoto')
+    public function memberPhoto($profileData, $userHash, $size = 250, $class = 'profilePhoto')
     {
         if ($profileData->profile_photo) {
             if (\Auth::guest() && $profileData->profile_photo_private) {
@@ -76,7 +76,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     public function sortBy($column, $body, $route)
     {
         $direction = (\Request::get('direction') == 'asc') ? 'desc' : 'asc';
-        return link_to_route($route, $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page'), 'date_filter'=>\Request::get('date_filter'),  'member_filter'=>\Request::get('member_filter'),  'reason_filter'=>\Request::get('reason_filter')]);
+        return link_to_route($route, $body, ['sortBy'=>$column, 'direction'=>$direction, 'page'=>\Request::get('page'), 'date_filter'=>\Request::get('date_filter'), 'member_filter'=>\Request::get('member_filter'), 'reason_filter'=>\Request::get('reason_filter')]);
     }
 
     public function userPaginatorLinks($userCollection)
@@ -89,12 +89,12 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         return $collection->appends(['sortBy'=>\Request::get('sortBy'), 'direction'=>\Request::get('direction'), 'date_filter'=>\Request::get('date_filter')])->links();
     }
 
-    public function sideNavLink($name, $route, $routeParams=[])
+    public function sideNavLink($name, $route, $routeParams = [])
     {
         return '<li><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
     }
 
-    function paymentFormMethodDropdown($methods=[])
+    function paymentFormMethodDropdown($methods = [])
     {
         $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card', 'balance'=>'Pay using your Balance'];
         if (!empty($methods)) {

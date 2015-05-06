@@ -32,8 +32,8 @@ class BalancePaymentController extends \BaseController
      * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      */
-	public function store($userId)
-	{
+    public function store($userId)
+    {
         $user = User::findWithPermission($userId);
         $this->bbCredit->setUserId($user->id);
 

@@ -30,7 +30,7 @@ class MembershipPayments
     {
         $date = self::lastUserPaymentDate($userId);
         if ($date) {
-            return $date->setTime(0,0,0)->addMonth();
+            return $date->setTime(0, 0, 0)->addMonth();
         }
         return false;
     }
@@ -49,7 +49,7 @@ class MembershipPayments
         }
 
         //The time needs to be zeroed so that comparisons with pure dates work
-        $refDate->setTime(0,0,0);
+        $refDate->setTime(0, 0, 0);
 
         $standingOrderCutoff = $refDate->copy()->subMonth()->subDays(7);
         $paypalCutoff        = $refDate->copy()->subDays(7);

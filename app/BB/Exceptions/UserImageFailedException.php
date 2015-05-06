@@ -1,5 +1,6 @@
 <?php namespace BB\Exceptions;
 
-class UserImageFailedException extends \Exception {
+class UserImageFailedException extends \Exception
+{
 
 } 
