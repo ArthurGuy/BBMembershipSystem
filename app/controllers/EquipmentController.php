@@ -82,15 +82,16 @@ class EquipmentController extends \BaseController
     public function show($equipmentId)
     {
         $equipment = $this->equipmentRepository->findByKey($equipmentId);
-        $trainers  = $this->inductionRepository->getTrainersForEquipment($equipmentId);
 
-        $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipmentId);
+        $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
 
-        $userInduction = $this->inductionRepository->getUserForEquipment(Auth::user()->id, $equipmentId);
+        $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipment->device_key);
 
-        $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipmentId);
+        $userInduction = $this->inductionRepository->getUserForEquipment(Auth::user()->id, $equipment->induction_category);
 
-        $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($equipmentId);
+        $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipment->induction_category);
+
+        $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($equipment->induction_category);
 
         return View::make('equipment.show')
             ->with('equipmentId', $equipmentId)
