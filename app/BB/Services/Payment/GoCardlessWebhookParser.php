@@ -41,7 +41,11 @@ class GoCardlessWebhookParser
     public function parseResponse($paymentPaidPayload)
     {
         $this->rawResponse = $paymentPaidPayload;
-        $this->response = json_decode($this->rawResponse, true);
+        $response = json_decode($this->rawResponse, true);
+        if (!is_array($response)) {
+            return;
+        }
+        $this->response = $response;
 
         $this->action = $this->response['payload']['action'];
         $this->resourceType = $this->response['payload']['resource_type'];
