@@ -26,6 +26,6 @@ class PayPalConfig
             "acct1.Signature" => $_ENV['PAYPAL_SIGNATURE'],
         );
 
-        return array_merge($config, self::getConfig());;
+        return array_merge($config, self::getConfig());
     }
 } 
