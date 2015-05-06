@@ -237,7 +237,7 @@ class EquipmentController extends \BaseController
 
         //delete photo
         $s3 = \AWS::get('s3');
-        $result = $s3->deleteObject(array(
+        $s3->deleteObject(array(
             'Bucket' => getenv('S3_BUCKET'),
             'Key'    => $equipment->getPhotoBasePath().$photo['path']
         ));

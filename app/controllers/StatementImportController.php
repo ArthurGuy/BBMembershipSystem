@@ -12,7 +12,7 @@ class StatementImportController extends \BaseController {
      */
     private $subscriptionChargeRepository;
 
-    function __construct(SubscriptionChargeRepository $subscriptionChargeRepository)
+    public function __construct(SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
     }
@@ -164,7 +164,7 @@ class StatementImportController extends \BaseController {
             {
                 if ($subPayment) {
                     //$subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
-                    if ($subCharge) {
+                    if (isset($subCharge) && $subCharge) {
                         $paymentReference = $subCharge->id;
                         if ($subCharge->amount == $row[4]) {
                             $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $date);
