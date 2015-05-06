@@ -167,21 +167,20 @@ class AccountController extends \BaseController {
 	{
         $user = User::findWithPermission($id);
 
-        $inductions = $this->equipmentRepository->allPaid();
+        $inductions = $this->equipmentRepository->getRequiresInduction();
 
         $userInductions = $user->inductions()->get();
-        foreach ($inductions as $key => $induction)
+        foreach ($inductions as $i=>$induction)
         {
-            $inductions[$key]->userInduction = false;
+            $inductions[$i]->userInduction = false;
             foreach ($userInductions as $userInduction)
             {
-                if ($userInduction->key == $key)
+                if ($userInduction->key == $induction->key)
                 {
-                    $inductions[$key]->userInduction = $userInduction;
+                    $inductions[$i]->userInduction = $userInduction;
                 }
             }
         }
-
 
         //get pending address if any
         $newAddress = $this->addressRepository->getNewUserAddress($id);
