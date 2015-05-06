@@ -71,12 +71,12 @@ Tools and Equipment
                         To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
                         Equipment access fee: &pound{{ $equipment->access_fee }}<br />
                         <br />
-                        @if ($userInduction->is_trained)
+                        @if (!$userInduction)
+                            @include('partials/payment-form', ['reason'=>'induction', 'displayReason'=>'Equipment Access Fee', 'returnPath'=>route('equipment.show', [$equipmentId], false), 'amount'=>$equipment->access_fee, 'buttonLabel'=>'Pay Now', 'methods'=>['balance'], 'ref'=>$equipmentId])
+                        @elseif ($userInduction->is_trained)
                             Trained
                         @elseif ($userInduction)
                             Access fee paid, induction to be completed
-                        @elseif (!$userInduction)
-                            @include('partials/payment-form', ['reason'=>'induction', 'displayReason'=>'Equipment Access Fee', 'returnPath'=>route('equipment.show', [$equipmentId], false), 'amount'=>$equipment->access_fee, 'buttonLabel'=>'Pay Now', 'methods'=>['balance'], 'ref'=>$equipmentId])
                         @endif
 
                     @else

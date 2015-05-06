@@ -46,8 +46,9 @@ class EquipmentCest
         $I->seeCurrentUrlEquals('/equipment/create');
 
         $equipmentName = $this->faker->word;
+        $equipmentKey = substr($this->faker->slug, 0, 10);
         $I->fillField('Name', $equipmentName);
-        $I->fillField('Key', $this->faker->slug);
+        $I->fillField('Key', $equipmentKey);
         $I->click('Save');
 
         $I->see($equipmentName);
@@ -67,14 +68,14 @@ class EquipmentCest
         $I->canSee('Record a new item');
 
         $name = $this->faker->word;
-        $slug = $this->faker->slug;
+        $slug = substr($this->faker->slug, 0, 10);
 
         //First item
         $I->click('Record a new item');
         $I->fillField('Name', $name);
         $I->fillField('Key', $slug);
         $I->click('Save');
-        $I->seeCurrentUrlEquals('/equipment');
+        $I->seeCurrentUrlEquals('/equipment/'.$slug.'/edit');
 
         /*
         //Second item
