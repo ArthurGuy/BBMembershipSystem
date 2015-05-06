@@ -179,11 +179,6 @@ class PaymentRepository extends DBRepository
         \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->reference, $status));
     }
 
-    public function updateStatus($paymentId, $status)
-    {
-        $record = $this->model->findOrFail($paymentId);
-    }
-
 
     /**
      * Fetch the users latest payment of a particular type
