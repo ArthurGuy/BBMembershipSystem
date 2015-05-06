@@ -4,7 +4,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class Proposal extends Model {
+class Proposal extends Model
+{
 
     use PresentableTrait;
 

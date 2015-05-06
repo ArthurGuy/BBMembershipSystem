@@ -1,5 +1,6 @@
 <?php namespace BB\Exceptions;
 
-class DatabaseException extends \Exception {
+class DatabaseException extends \Exception
+{
 
 } 

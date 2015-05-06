@@ -117,7 +117,7 @@ class GoCardlessHelper
 
     public function getNameFromReason($reason)
     {
-        switch($reason) {
+        switch ($reason) {
             case 'subscription':
                 return 'Monthly subscription';
             case 'balance':
