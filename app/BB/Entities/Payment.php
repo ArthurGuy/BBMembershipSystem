@@ -4,23 +4,24 @@
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class Payment extends Model {
+class Payment extends Model
+{
 
     use PresentableTrait;
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'payments';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'payments';
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array();
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = array();
 
     /**
      * Fillable fields

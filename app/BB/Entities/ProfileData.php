@@ -4,7 +4,8 @@ use BB\Observer\UserAuditObserver;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class ProfileData extends Model {
+class ProfileData extends Model
+{
 
     use PresentableTrait;
 

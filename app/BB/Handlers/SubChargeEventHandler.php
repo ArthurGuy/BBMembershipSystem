@@ -1,8 +1,6 @@
 <?php namespace BB\Handlers;
 
-use BB\Entities\Induction;
 use BB\Helpers\MembershipPayments;
-use BB\Repo\InductionRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;

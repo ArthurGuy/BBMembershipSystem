@@ -39,8 +39,7 @@ class InductionRepository extends DBRepository
     public function getTrainersForEquipment($deviceId)
     {
         $trainers = $this->model->with('user', 'user.profile')->where('is_trainer', true)->where('key', $deviceId)->get();
-        return $trainers->filter(function ($trainer)
-        {
+        return $trainers->filter(function ($trainer) {
             return $trainer->user->active;
         });
     }
@@ -103,8 +102,7 @@ class InductionRepository extends DBRepository
     public function getTrainedUsersForEquipment($device)
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->whereNotNull('trained')->where('key', $device)->get();
-        return $users->filter(function ($trainer)
-        {
+        return $users->filter(function ($trainer) {
             return $trainer->user->active;
         });
     }
@@ -116,8 +114,7 @@ class InductionRepository extends DBRepository
     public function getUsersPendingInductionForEquipment($device)
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->where('key', $device)->whereNull('trained')->get();
-        return $users->filter(function ($trainer)
-        {
+        return $users->filter(function ($trainer) {
             return $trainer->user->active;
         });
     }

@@ -27,8 +27,8 @@ class CashPaymentController extends \BaseController
      * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      */
-	public function store($userId)
-	{
+    public function store($userId)
+    {
         User::findWithPermission($userId);
 
         $amount      = Request::get('amount');

@@ -1,5 +1,6 @@
 <?php namespace BB\Exceptions;
 
-class NotImplementedException extends \Exception {
+class NotImplementedException extends \Exception
+{
 
 } 
