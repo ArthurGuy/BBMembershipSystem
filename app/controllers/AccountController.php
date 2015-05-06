@@ -226,20 +226,17 @@ class AccountController extends \BaseController
     public function adminUpdate($id)
     {
         $user = User::findWithPermission($id);
-        $input = Input::only('trusted', 'key_holder', 'induction_completed', 'photo_approved', 'profile_photo_on_wall', 'approve_new_address');
-
-        //$this->userDetailsForm->validate($input, $user->id);
 
         if (Input::has('trusted')) {
-                    $user->trusted = Input::get('trusted');
+            $user->trusted = Input::get('trusted');
         }
 
         if (Input::has('key_holder')) {
-                    $user->key_holder = Input::get('key_holder');
+            $user->key_holder = Input::get('key_holder');
         }
 
         if (Input::has('induction_completed')) {
-                    $user->induction_completed = Input::get('induction_completed');
+            $user->induction_completed = Input::get('induction_completed');
         }
 
         if (Input::has('profile_photo_on_wall')) {
