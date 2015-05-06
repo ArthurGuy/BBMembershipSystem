@@ -1,6 +1,7 @@
 <?php
 
-class DeviceAccessControlController extends Controller {
+class DeviceAccessControlController extends Controller
+{
 
     /**
      * @var

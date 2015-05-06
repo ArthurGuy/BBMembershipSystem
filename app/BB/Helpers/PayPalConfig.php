@@ -1,6 +1,7 @@
 <?php namespace BB\Helpers;
 
-class PayPalConfig {
+class PayPalConfig
+{
     public static function getConfig()
     {
         $config = array(

@@ -4,7 +4,8 @@ use BB\Exceptions\FormValidationException;
 use Illuminate\Validation\Factory as Validator;
 use Illuminate\Validation\Validator as ValidatorInstance;
 
-abstract class FormValidator {
+abstract class FormValidator
+{
 
     /**
      * @var Validator
@@ -43,8 +44,7 @@ abstract class FormValidator {
     {
         $this->validation = $this->validator->make($formData, $this->getValidationRules(['id'=>$id]));
 
-        if ($this->validation->fails())
-        {
+        if ($this->validation->fails()) {
             throw new FormValidationException('Validation failed', $this->getValidationErrors());
         }
 
@@ -60,22 +60,18 @@ abstract class FormValidator {
     protected function getValidationRules(array $replacements = [])
     {
         $rules = $this->rules;
-        if (isset($replacements['id']) && isset($this->updateRules))
-        {
+        if (isset($replacements['id']) && isset($this->updateRules)) {
             //If an id has been passed in this is an update action and use the update rules as well
             $rules = array_merge($rules, $this->updateRules);
         }
 
-        if ($this->adminOverrideSet && isset($this->adminOverride))
-        {
+        if ($this->adminOverrideSet && isset($this->adminOverride)) {
             $rules = array_merge($rules, $this->adminOverride);
         }
 
-        foreach ($rules as $name => $rule)
-        {
+        foreach ($rules as $name => $rule) {
             //This should be hard coded but for now it will do
-            if (isset($replacements['id']))
-            {
+            if (isset($replacements['id'])) {
                 $rules[$name] = str_replace('{id}', $replacements['id'], $rule);
             }
         }

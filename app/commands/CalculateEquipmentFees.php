@@ -4,7 +4,8 @@ use BB\Services\DeviceCharge;
 use Illuminate\Console\Command;
 
 
-class CalculateEquipmentFees extends Command {
+class CalculateEquipmentFees extends Command
+{
 
 	/**
 	 * The console command name.

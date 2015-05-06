@@ -5,7 +5,8 @@ use BB\Exceptions\ValidationException;
 use BB\Repo\AccessLogRepository;
 use Carbon\Carbon;
 
-class KeyFobAccess {
+class KeyFobAccess
+{
 
     /**
      * The key fob string

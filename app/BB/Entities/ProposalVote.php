@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProposalVote extends Model {
+class ProposalVote extends Model
+{
 
     /**
      * The database table used by the model.

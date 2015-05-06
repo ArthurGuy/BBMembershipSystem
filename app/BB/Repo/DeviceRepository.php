@@ -4,7 +4,8 @@ use BB\Entities\Device;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DeviceRepository extends DBRepository {
+class DeviceRepository extends DBRepository
+{
 
     /**
      * @var Device

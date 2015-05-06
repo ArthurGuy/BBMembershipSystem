@@ -2,7 +2,8 @@
 
 use BB\Repo\EquipmentLogRepository;
 
-class CombineEquipmentLogs {
+class CombineEquipmentLogs
+{
 
 
     /**

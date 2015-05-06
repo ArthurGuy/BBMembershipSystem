@@ -4,7 +4,8 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
-class CreateTodaysSubCharges extends Command {
+class CreateTodaysSubCharges extends Command
+{
 
 	/**
 	 * The console command name.

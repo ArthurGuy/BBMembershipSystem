@@ -7,7 +7,8 @@ use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
 
-class SubChargeEventHandler {
+class SubChargeEventHandler
+{
 
     /**
      * @var UserRepository

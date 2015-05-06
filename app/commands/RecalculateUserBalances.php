@@ -2,7 +2,8 @@
 
 use Illuminate\Console\Command;
 
-class RecalculateUserBalances extends Command {
+class RecalculateUserBalances extends Command
+{
 
 	/**
 	 * The console command name.

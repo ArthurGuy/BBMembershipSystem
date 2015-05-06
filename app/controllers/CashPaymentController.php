@@ -2,7 +2,8 @@
 
 use BB\Entities\User;
 
-class CashPaymentController extends \BaseController {
+class CashPaymentController extends \BaseController
+{
 
 
     /**
@@ -27,7 +28,7 @@ class CashPaymentController extends \BaseController {
      * @throws \BB\Exceptions\NotImplementedException
      */
 	public function store($userId)
-    {
+	{
         User::findWithPermission($userId);
 
         $amount      = Request::get('amount');

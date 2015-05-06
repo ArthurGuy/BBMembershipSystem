@@ -197,8 +197,7 @@ class EquipmentController extends \BaseController
 
         $this->equipmentPhotoValidator->validate($data);
 
-        if (Input::file('photo'))
-        {
+        if (Input::file('photo')) {
             try {
                 $filePath = Input::file('photo')->getRealPath();
                 $ext = Input::file('photo')->guessClientExtension();

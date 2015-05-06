@@ -3,7 +3,8 @@
 use BB\Exceptions\ValidationException;
 use BB\Repo\AccessLogRepository;
 
-class BuildingAccess extends KeyFobAccess {
+class BuildingAccess extends KeyFobAccess
+{
 
     protected $systemMessage = false;
 

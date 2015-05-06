@@ -2,7 +2,8 @@
 
 use BB\Mailer\UserMailer;
 
-class UserObserver {
+class UserObserver
+{
 
     /**
      * Look at the user record each time its saved and fire events
@@ -13,26 +14,22 @@ class UserObserver {
         $original = $user->getOriginal();
 
         //Use status changed from setting-up to something else
-        if (($original['status'] == 'setting-up') && ($user->status != 'setting-up'))
-        {
+        if (($original['status'] == 'setting-up') && ($user->status != 'setting-up')) {
             $this->newUser($user);
         }
 
         //User status changed to payment warning
-        if (($original['status'] != 'payment-warning') && ($user->status == 'payment-warning'))
-        {
+        if (($original['status'] != 'payment-warning') && ($user->status == 'payment-warning')) {
             $this->paymentWarning($user);
         }
 
         //User status changed to payment warning
-        if (($original['status'] != 'suspended') && ($user->status == 'suspended'))
-        {
+        if (($original['status'] != 'suspended') && ($user->status == 'suspended')) {
             $this->suspended($user);
         }
 
         //User left
-        if (($original['status'] != 'left') && ($user->status == 'left'))
-        {
+        if (($original['status'] != 'left') && ($user->status == 'left')) {
             $this->userLeft($user);
         }
     }

@@ -2,7 +2,8 @@
 
 use BB\Entities\User;
 
-class BalancePaymentController extends \BaseController {
+class BalancePaymentController extends \BaseController
+{
 
 
     /**
@@ -32,7 +33,7 @@ class BalancePaymentController extends \BaseController {
      * @throws \BB\Exceptions\NotImplementedException
      */
 	public function store($userId)
-    {
+	{
         $user = User::findWithPermission($userId);
         $this->bbCredit->setUserId($user->id);
 

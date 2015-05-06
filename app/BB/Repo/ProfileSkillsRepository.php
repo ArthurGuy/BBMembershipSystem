@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
-class ProfileSkillsRepository {
+class ProfileSkillsRepository
+{
 
     protected $skills = [
         'midi'  => [

@@ -220,8 +220,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public function promoteGoCardless()
     {
-        if (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'))
-        {
+        if (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active')) {
             return true;
         }
         return false;
@@ -386,22 +385,19 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public static function findWithPermission($id = null)
     {
-        if (!$id)
-        {
+        if (!$id) {
             //Return the logged in user
             return Auth::user();
         }
 
         $requestedUser = self::findOrFail($id);
-        if (Auth::user()->id == $requestedUser->id)
-        {
+        if (Auth::user()->id == $requestedUser->id) {
             //The user they are after is themselves
             return $requestedUser;
         }
 
         //They are requesting a user that isn't them
-        if (Auth::user()->hasRole('admin'))
-        {
+        if (Auth::user()->hasRole('admin')) {
             //They are an admin so that's alright
             return $requestedUser;
         }
@@ -412,8 +408,7 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function extendMembership($paymentMethod = null, DateTime $expiry = null)
     {
-        if (empty($expiry))
-        {
+        if (empty($expiry)) {
             $expiry = Carbon::now()->addMonth();
         }
         $this->status = 'active';
@@ -433,8 +428,7 @@ class User extends Model implements UserInterface, RemindableInterface {
         } else {
             $users = self::all();
         }
-        foreach ($users as $user)
-        {
+        foreach ($users as $user) {
             $userArray[$user->id] = $user->name;
         }
         return $userArray;

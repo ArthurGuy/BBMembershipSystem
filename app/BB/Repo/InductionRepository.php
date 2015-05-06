@@ -3,7 +3,8 @@
 use BB\Entities\Induction;
 use Illuminate\Database\Eloquent\Collection;
 
-class InductionRepository extends DBRepository {
+class InductionRepository extends DBRepository
+{
 
     /**
      * @var Induction
@@ -24,8 +25,7 @@ class InductionRepository extends DBRepository {
         $trainersRaw = $this->model->with('user', 'user.profile')->where('is_trainer', true)->get();
         $trainers = [];
         foreach ($trainersRaw as $trainer) {
-            if (isset($trainer->user->name) && $trainer->user->active)
-            {
+            if (isset($trainer->user->name) && $trainer->user->active) {
                 $trainers[$trainer->key][] = $trainer->user;
             }
         }
@@ -39,7 +39,7 @@ class InductionRepository extends DBRepository {
     public function getTrainersForEquipment($deviceId)
     {
         $trainers = $this->model->with('user', 'user.profile')->where('is_trainer', true)->where('key', $deviceId)->get();
-        return $trainers->filter(function($trainer)
+        return $trainers->filter(function ($trainer)
         {
             return $trainer->user->active;
         });
@@ -54,7 +54,7 @@ class InductionRepository extends DBRepository {
     public function getUsersForEquipment($deviceId)
     {
         $users = new Collection();
-        $inductionUsers = $this->model->with('user')->whereHas('user', function($q) {
+        $inductionUsers = $this->model->with('user')->whereHas('user', function ($q) {
             $q->where('active', '=', true);
         })->where('trained', '!=', '')->where('key', $deviceId)->get();
 
@@ -74,8 +74,7 @@ class InductionRepository extends DBRepository {
         $usersRaw = $this->model->with('user', 'user.profile')->where('paid', true)->whereNull('trained')->get();
         $users = [];
         foreach ($usersRaw as $induction) {
-            if (isset($induction->user->name) && $induction->user->active)
-            {
+            if (isset($induction->user->name) && $induction->user->active) {
                 $users[$induction->key][] = $induction->user;
             }
         }
@@ -90,8 +89,7 @@ class InductionRepository extends DBRepository {
         $usersRaw = $this->model->with('user', 'user.profile')->where('paid', true)->whereNotNull('trained')->get();
         $users = [];
         foreach ($usersRaw as $induction) {
-            if (isset($induction->user->name) && $induction->user->active)
-            {
+            if (isset($induction->user->name) && $induction->user->active) {
                 $users[$induction->key][] = $induction->user;
             }
         }
@@ -105,7 +103,7 @@ class InductionRepository extends DBRepository {
     public function getTrainedUsersForEquipment($device)
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->whereNotNull('trained')->where('key', $device)->get();
-        return $users->filter(function($trainer)
+        return $users->filter(function ($trainer)
         {
             return $trainer->user->active;
         });
@@ -118,7 +116,7 @@ class InductionRepository extends DBRepository {
     public function getUsersPendingInductionForEquipment($device)
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->where('key', $device)->whereNull('trained')->get();
-        return $users->filter(function($trainer)
+        return $users->filter(function ($trainer)
         {
             return $trainer->user->active;
         });

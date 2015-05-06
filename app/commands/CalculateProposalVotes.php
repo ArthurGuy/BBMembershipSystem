@@ -2,7 +2,8 @@
 
 use Illuminate\Console\Command;
 
-class CalculateProposalVotes extends Command {
+class CalculateProposalVotes extends Command
+{
 
 	/**
 	 * The console command name.

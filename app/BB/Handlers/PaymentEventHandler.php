@@ -7,7 +7,8 @@ use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 
-class PaymentEventHandler {
+class PaymentEventHandler
+{
 
     /**
      * @var UserRepository

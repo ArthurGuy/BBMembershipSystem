@@ -1,6 +1,7 @@
 <?php
 
-class ActivityController extends \BaseController {
+class ActivityController extends \BaseController
+{
 
     protected $layout = 'layouts.main';
     /**

@@ -3,7 +3,8 @@
 
 use BB\Entities\User;
 
-class AccountController extends \BaseController {
+class AccountController extends \BaseController
+{
 
     protected $layout = 'layouts.main';
 
@@ -133,23 +134,18 @@ class AccountController extends \BaseController {
 
         $user = $this->userRepository->registerMember($input, !Auth::guest() && Auth::user()->hasRole('admin'));
 
-        if (Input::file('new_profile_photo'))
-        {
-            try
-            {
+        if (Input::file('new_profile_photo')) {
+            try {
                 $this->userImage->uploadPhoto($user->hash, Input::file('new_profile_photo')->getRealPath(), true);
 
                 $this->profileRepo->update($user->id, ['new_profile_photo'=>1, 'profile_photo_private'=>$input['profile_photo_private']]);
-            }
-            catch (\Exception $e)
-            {
+            } catch (\Exception $e) {
                 Log::error($e);
             }
         }
 
         //If this isn't an admin user creating the record log them in
-        if (Auth::guest() || !Auth::user()->isAdmin())
-        {
+        if (Auth::guest() || !Auth::user()->isAdmin()) {
             Auth::login($user);
         }
 
@@ -170,13 +166,10 @@ class AccountController extends \BaseController {
         $inductions = $this->equipmentRepository->getRequiresInduction();
 
         $userInductions = $user->inductions()->get();
-        foreach ($inductions as $i=>$induction)
-        {
+        foreach ($inductions as $i=>$induction) {
             $inductions[$i]->userInduction = false;
-            foreach ($userInductions as $userInduction)
-            {
-                if ($userInduction->key == $induction->key)
-                {
+            foreach ($userInductions as $userInduction) {
+                if ($userInduction->key == $induction->key) {
                     $inductions[$i]->userInduction = $userInduction;
                 }
             }
@@ -237,14 +230,17 @@ class AccountController extends \BaseController {
 
         //$this->userDetailsForm->validate($input, $user->id);
 
-        if (Input::has('trusted'))
-            $user->trusted = Input::get('trusted');
+        if (Input::has('trusted')) {
+                    $user->trusted = Input::get('trusted');
+        }
 
-        if (Input::has('key_holder'))
-            $user->key_holder = Input::get('key_holder');
+        if (Input::has('key_holder')) {
+                    $user->key_holder = Input::get('key_holder');
+        }
 
-        if (Input::has('induction_completed'))
-            $user->induction_completed = Input::get('induction_completed');
+        if (Input::has('induction_completed')) {
+                    $user->induction_completed = Input::get('induction_completed');
+        }
 
         if (Input::has('profile_photo_on_wall')) {
             $profileData = $user->profile()->first();
@@ -291,12 +287,10 @@ class AccountController extends \BaseController {
 
         $this->updateSubscriptionAdminForm->validate($input, $user->id);
 
-        if (($user->payment_method == 'gocardless') && ($input['payment_method'] != 'gocardless'))
-        {
+        if (($user->payment_method == 'gocardless') && ($input['payment_method'] != 'gocardless')) {
             //Changing away from GoCardless
             $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
-            if ($subscription->status == 'cancelled')
-            {
+            if ($subscription->status == 'cancelled') {
                 $user->cancelSubscription();
             }
         }
@@ -310,8 +304,7 @@ class AccountController extends \BaseController {
     public function confirmEmail($id, $hash)
     {
         $user = User::find($id);
-        if ($user && $user->hash == $hash)
-        {
+        if ($user && $user->hash == $hash) {
             $user->emailConfirmed();
             Notification::success("Email address confirmed, thank you");
             return Redirect::route('account.show', $user->id);

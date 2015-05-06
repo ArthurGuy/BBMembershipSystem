@@ -1,6 +1,7 @@
 <?php namespace BB\Traits;
 
-trait UserRoleTrait {
+trait UserRoleTrait
+{
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -18,9 +19,10 @@ trait UserRoleTrait {
      */
     public function hasRole($name)
     {
-        foreach ($this->roles as $role)
-        {
-            if ($role->name == $name) return true;
+        foreach ($this->roles as $role) {
+            if ($role->name == $name) {
+                return true;
+            }
         }
 
         return false;

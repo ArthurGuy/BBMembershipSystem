@@ -3,7 +3,8 @@
 use BB\Entities\ProfileData;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ProfileDataRepository extends DBRepository {
+class ProfileDataRepository extends DBRepository
+{
 
     /**
      * @var ProfileData

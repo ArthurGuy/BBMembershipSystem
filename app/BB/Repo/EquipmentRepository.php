@@ -3,7 +3,8 @@
 use BB\Entities\Equipment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class EquipmentRepository extends DBRepository {
+class EquipmentRepository extends DBRepository
+{
 
     /**
      * @var Equipment
