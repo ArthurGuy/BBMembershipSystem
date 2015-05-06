@@ -135,7 +135,7 @@ class EquipmentController extends \BaseController
 
         $this->equipmentRepository->create($data);
 
-        return Redirect::route('equipment.index');
+        return Redirect::route('equipment.edit', $data['key']);
     }
 
 
