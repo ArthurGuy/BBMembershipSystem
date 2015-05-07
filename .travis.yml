@@ -10,7 +10,7 @@ after_script:
 - wget https://scrutinizer-ci.com/ocular.phar
 - php ocular.phar code-coverage:upload --format=php-clover app/tests/codeception/_output/coverage.xml
 after_success:
-- curl https://api.rollbar.com/api/1/deploy/ --silent -F access_token=$ROLLBAR_API_KEY -F environment=production -F revision=#TRAVIS_COMMIT
+- curl https://api.rollbar.com/api/1/deploy/ --silent -F access_token=$ROLLBAR_API_KEY -F environment=production -F revision=$TRAVIS_COMMIT
 notifications:
   email: false
   webhooks:
