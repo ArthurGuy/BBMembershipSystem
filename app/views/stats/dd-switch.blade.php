@@ -24,7 +24,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 
     google.setOnLoadCallback(drawPaymentMethodsChart);
     function drawPaymentMethodsChart() {
-        var data = google.visualization.arrayToDataTable(paymentMethods);
+        var data = google.visualization.arrayToDataTable(BB.chartData.paymentMethods);
 
         var options = {
             //title: 'Payment Methods',
