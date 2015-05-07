@@ -71,14 +71,12 @@ Log::useDailyFiles(storage_path().'/logs/'.$logFile);
 |
 */
 
-App::error(function(Exception $exception, $code)
-{
+App::error(function(Exception $exception, $code) {
 	Log::error($exception);
 });
 
 
-App::error(function(\BB\Exceptions\AuthenticationException $exception)
-{
+App::error(function(\BB\Exceptions\AuthenticationException $exception) {
     if (Auth::guest()) {
         $userString = "A guest";
     } else {
@@ -90,16 +88,13 @@ App::error(function(\BB\Exceptions\AuthenticationException $exception)
 });
 
 
-App::error(function(NotFoundHttpException $exception)
-{
+App::error(function(NotFoundHttpException $exception) {
     return Response::view('errors.404', [], 404);
 });
-App::error(function(ModelNotFoundException $exception)
-{
+App::error(function(ModelNotFoundException $exception) {
     return Response::view('errors.404', [], 404);
 });
-App::error(function(MethodNotAllowedHttpException $exception)
-{
+App::error(function(MethodNotAllowedHttpException $exception) {
     return Response::view('errors.404', [], 404);
 });
 
@@ -107,8 +102,7 @@ App::error(function(MethodNotAllowedHttpException $exception)
 /**
  * Catch validation errors and return them back to the previous page/form
  */
-App::error(function(\BB\Exceptions\FormValidationException $exception)
-{
+App::error(function(\BB\Exceptions\FormValidationException $exception) {
     if (Request::wantsJson()) {
         return Response::json($exception->getErrors(), 400);
     } else {
@@ -117,8 +111,7 @@ App::error(function(\BB\Exceptions\FormValidationException $exception)
     }
 });
 
-App::error(function(\BB\Exceptions\ValidationException $exception)
-{
+App::error(function(\BB\Exceptions\ValidationException $exception) {
     if (Request::wantsJson()) {
         return Response::json($exception->getMessage(), 400);
     } else {
@@ -127,8 +120,7 @@ App::error(function(\BB\Exceptions\ValidationException $exception)
     }
 });
 
-App::error(function(\BB\Exceptions\NotImplementedException $exception)
-{
+App::error(function(\BB\Exceptions\NotImplementedException $exception) {
     Notification::error("NotImplementedException: ".$exception->getMessage());
     Log::warning($exception);
     return Redirect::back()->withInput();
@@ -145,8 +137,7 @@ App::error(function(\BB\Exceptions\NotImplementedException $exception)
 |
 */
 
-App::down(function()
-{
+App::down(function() {
 	return Response::make("Be right back!", 503);
 });
 

@@ -2,7 +2,8 @@
 
 use Carbon\Carbon;
 
-class ProposalController extends \BaseController {
+class ProposalController extends \BaseController
+{
 
 
     /**

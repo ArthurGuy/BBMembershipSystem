@@ -2,7 +2,8 @@
 
 use BB\Entities\User;
 
-class MembersController extends \BaseController {
+class MembersController extends \BaseController
+{
     
     /**
      * @var
@@ -51,10 +52,11 @@ class MembersController extends \BaseController {
 }
 function _key_compare_func($key1, $key2)
 {
-    if ($key1 == $key2)
-        return 0;
-    else if ($key1 > $key2)
-        return 1;
-    else
-        return -1;
-}
+    if ($key1 == $key2) {
+            return 0;
+    } else if ($key1 > $key2) {
+            return 1;
+    } else {
+            return -1;
+    }
+    }

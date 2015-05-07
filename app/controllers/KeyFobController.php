@@ -2,7 +2,8 @@
 
 use BB\Entities\KeyFob;
 
-class KeyFobController extends \BaseController {
+class KeyFobController extends \BaseController
+{
 
 
     /**

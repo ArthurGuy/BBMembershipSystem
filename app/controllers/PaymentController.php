@@ -171,7 +171,7 @@ class PaymentController extends \BaseController
      *
      * @depreciated
      * @param $userId
-     * @return mixed
+     * @return Illuminate\Http\RedirectResponse
      * @throws \BB\Exceptions\AuthenticationException
      * @throws \BB\Exceptions\NotImplementedException
      */
@@ -256,7 +256,7 @@ class PaymentController extends \BaseController
      * @throws \BB\Exceptions\AuthenticationException
      * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      */
     public function store($userId)
     {
@@ -392,7 +392,7 @@ class PaymentController extends \BaseController
      * Change where the money goes by altering the original record or creating a secondary payment
      *
      * @param  int $id
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      */
     public function update($id)
     {
@@ -408,7 +408,7 @@ class PaymentController extends \BaseController
      * Remove the specified payment
      *
      * @param  int $id
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      * @throws \BB\Exceptions\ValidationException
      */
     public function destroy($id)
@@ -436,7 +436,7 @@ class PaymentController extends \BaseController
      * This is a method for migrating user to the variable gocardless subscription
      * It will cancel the existing direct debit and direct the user to setup a pre auth
      *
-     * @return mixed
+     * @return Illuminate\Http\RedirectResponse
      */
     public function migrateDD()
     {

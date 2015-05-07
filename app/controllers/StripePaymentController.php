@@ -2,7 +2,8 @@
 
 use BB\Entities\User;
 
-class StripePaymentController extends \BaseController {
+class StripePaymentController extends \BaseController
+{
 
 
     /**
@@ -27,7 +28,7 @@ class StripePaymentController extends \BaseController {
      * @throws \BB\Exceptions\NotImplementedException
      */
 	public function store($userId)
-    {
+	{
         User::findWithPermission($userId);
 
         $stripeToken = Request::get('stripe_token');

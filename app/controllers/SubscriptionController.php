@@ -5,7 +5,8 @@ use BB\Entities\Payment;
 use BB\Repo\SubscriptionChargeRepository;
 use Carbon\Carbon;
 
-class SubscriptionController extends \BaseController {
+class SubscriptionController extends \BaseController
+{
 
 
     /**
@@ -197,12 +198,9 @@ class SubscriptionController extends \BaseController {
 
         $user = User::findWithPermission($userId);
 
-        try
-        {
+        try {
             $confirmed_resource = $this->goCardless->confirmResource($confirm_params);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Notification::error($e->getMessage());
             return Redirect::route('account.show', $user->id);
         }
@@ -234,12 +232,10 @@ class SubscriptionController extends \BaseController {
          * TODO: Check for and cancel pending sub charges
          */
         $user = User::findWithPermission($userId);
-        if ($user->payment_method == 'gocardless')
-        {
+        if ($user->payment_method == 'gocardless') {
             try {
                 $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
-                if ($subscription->status == 'cancelled')
-                {
+                if ($subscription->status == 'cancelled') {
                     $user->cancelSubscription();
                     Notification::success("Your subscription has been cancelled");
                     return Redirect::back();
@@ -251,9 +247,7 @@ class SubscriptionController extends \BaseController {
                     return Redirect::back();
                 }
             }
-        }
-        elseif ($user->payment_method == 'gocardless-variable')
-        {
+        } elseif ($user->payment_method == 'gocardless-variable') {
             $status = $this->goCardless->cancelPreAuth($user->subscription_id);
             if ($status) {
                 $user->subscription_id = null;

@@ -1,6 +1,7 @@
 <?php namespace BB\Validators;
 
-class UserDetails extends FormValidator {
+class UserDetails extends FormValidator
+{
 
     /**
      * Validation rules

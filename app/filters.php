@@ -12,21 +12,17 @@
 */
 
 
-App::before(function($request)
-{
+App::before(function($request) {
     //SSL Only
-    if(!Request::secure())
-    {
-        if ((strpos(Request::path(), 'access-control/') !== 0) && (Request::path() !== 'acs'))
-        {
+    if(!Request::secure()) {
+        if ((strpos(Request::path(), 'access-control/') !== 0) && (Request::path() !== 'acs')) {
             return Redirect::secure(Request::path());
         }
     }
 });
 
 
-App::after(function($request, $response)
-{
+App::after(function($request, $response) {
 	//
 });
 
@@ -65,33 +61,23 @@ Route::filter('auth.admin', function()
 });
 */
 //This is the main auth filter, it handles all authentication based redirection
-Route::filter('role', function($route, $request, $role)
-{
-    if (Auth::guest())
-    {
+Route::filter('role', function($route, $request, $role) {
+    if (Auth::guest()) {
         //Guests should be redirected to the login page as we make some links visible
-        if (Request::ajax())
-        {
+        if (Request::ajax()) {
             return Response::make('Unauthorized', 401);
-        }
-        else
-        {
+        } else {
             return Redirect::guest('login');
         }
-    }
-    elseif (($role != 'member') && !Auth::user()->hasRole($role))
-    {
+    } elseif (($role != 'member') && !Auth::user()->hasRole($role)) {
         throw new \BB\Exceptions\AuthenticationException();
-    }
-    elseif (Auth::user()->isBanned())
-    {
+    } elseif (Auth::user()->isBanned()) {
         throw new \BB\Exceptions\AuthenticationException();
     }
 });
 
 
-Route::filter('auth.basic', function()
-{
+Route::filter('auth.basic', function() {
 	return Auth::basic();
 });
 
@@ -106,10 +92,11 @@ Route::filter('auth.basic', function()
 |
 */
 
-Route::filter('guest', function()
-{
-	if (Auth::check()) return Redirect::to('/');
-});
+Route::filter('guest', function() {
+	if (Auth::check()) {
+	    return Redirect::to('/');
+	}
+	});
 
 /*
 |--------------------------------------------------------------------------
@@ -122,10 +109,8 @@ Route::filter('guest', function()
 |
 */
 
-Route::filter('csrf', function()
-{
-	if (Session::token() != Input::get('_token'))
-	{
+Route::filter('csrf', function() {
+	if (Session::token() != Input::get('_token')) {
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });

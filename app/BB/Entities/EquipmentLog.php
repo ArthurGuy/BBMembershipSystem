@@ -3,7 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class EquipmentLog extends Model {
+class EquipmentLog extends Model
+{
 
     use PresentableTrait;
 

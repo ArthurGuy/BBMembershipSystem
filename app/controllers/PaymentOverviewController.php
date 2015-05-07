@@ -1,6 +1,7 @@
 <?php
 
-class PaymentOverviewController extends \BaseController {
+class PaymentOverviewController extends \BaseController
+{
 
     /**
      * @var \BB\Repo\PaymentRepository

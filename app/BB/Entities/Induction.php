@@ -3,7 +3,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Induction extends Model {
+class Induction extends Model
+{
 
 	/**
 	 * The database table used by the model.
@@ -81,8 +82,7 @@ class Induction extends Model {
         $trainers = self::trainersFor($key);
         $trainersArray = [null=>'Unknown'];
 
-        foreach ($trainers as $trainer)
-        {
+        foreach ($trainers as $trainer) {
             $trainersArray[$trainer->user->id] = $trainer->user->name;
         }
 

@@ -4,7 +4,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class Equipment extends Model {
+class Equipment extends Model
+{
 
     use PresentableTrait;
 

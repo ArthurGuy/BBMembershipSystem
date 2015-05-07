@@ -4,7 +4,8 @@ use BB\Entities\Role;
 use BB\Entities\User;
 use BB\Validators\RoleUserValidator;
 
-class RoleUsersController extends \BaseController {
+class RoleUsersController extends \BaseController
+{
 
     /**
      * @var RoleUserValidator

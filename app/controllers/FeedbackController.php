@@ -1,6 +1,7 @@
 <?php 
 
-class FeedbackController extends \BaseController {
+class FeedbackController extends \BaseController
+{
 
 
     /**
@@ -8,7 +9,8 @@ class FeedbackController extends \BaseController {
      */
     private $feedbackValidator;
 
-    public function __construct(\BB\Validators\FeedbackValidator $feedbackValidator) {
+    public function __construct(\BB\Validators\FeedbackValidator $feedbackValidator)
+    {
         $this->feedbackValidator = $feedbackValidator;
     }
 
@@ -17,8 +19,7 @@ class FeedbackController extends \BaseController {
         $this->feedbackValidator->validate(Request::only('comments'));
 
         $memberName = Auth::user()->name;
-        \Mail::queue('emails.feedback', ['memberName'=>$memberName, 'comments'=>Request::get('comments')], function($message)
-        {
+        \Mail::queue('emails.feedback', ['memberName'=>$memberName, 'comments'=>Request::get('comments')], function($message) {
             $message->to('arthur@arthurguy.co.uk', 'Arthur Guy')->subject('BBMS Feedback');
         });
         return Response::json(['success'=>1]);

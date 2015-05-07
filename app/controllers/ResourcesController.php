@@ -2,7 +2,8 @@
 
 use Michelf\Markdown;
 
-class ResourcesController extends \BaseController {
+class ResourcesController extends \BaseController
+{
 
 
     /**

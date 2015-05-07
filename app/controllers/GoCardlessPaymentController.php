@@ -2,7 +2,8 @@
 
 use BB\Entities\User;
 
-class GoCardlessPaymentController extends \BaseController {
+class GoCardlessPaymentController extends \BaseController
+{
 
 
     /**
@@ -91,12 +92,9 @@ class GoCardlessPaymentController extends \BaseController {
 
 
         //Confirm the resource
-        try
-        {
+        try {
             $confirmed_resource = $this->goCardless->confirmResource($confirm_params);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Notification::error($e->getMessage());
             return Redirect::to($returnPath);
         }
@@ -167,8 +165,7 @@ class GoCardlessPaymentController extends \BaseController {
     {
         $bill = $this->goCardless->newBill($user->subscription_id, $amount, $this->goCardless->getNameFromReason($reason));
 
-        if ($bill)
-        {
+        if ($bill) {
             //Store the payment
             $fee = ($bill->amount - $bill->amount_minus_fees);
             $paymentSourceId = $bill->id;
@@ -179,9 +176,7 @@ class GoCardlessPaymentController extends \BaseController {
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
 
             Notification::success("The payment was submitted successfully");
-        }
-        else
-        {
+        } else {
             //something went wrong - we still have the pre auth though
             Notification::error("There was a problem charging your account");
         }
@@ -193,68 +188,43 @@ class GoCardlessPaymentController extends \BaseController {
 
     private function getDescription($reason)
     {
-        if ($reason == 'subscription')
-        {
+        if ($reason == 'subscription') {
             return "Monthly Subscription Fee - Manual";
-        }
-        elseif ($reason == 'induction')
-        {
+        } elseif ($reason == 'induction') {
             return strtoupper(Input::get('induction_key')) . " Induction Fee";
-        }
-        elseif ($reason == 'door-key')
-        {
+        } elseif ($reason == 'door-key') {
             return "Door Key Deposit";
-        }
-        elseif ($reason == 'storage-box')
-        {
+        } elseif ($reason == 'storage-box') {
             return "Storage Box Deposit";
-        }
-        elseif ($reason == 'balance')
-        {
+        } elseif ($reason == 'balance') {
             return "BB Credit Payment";
-        }
-        else
-        {
+        } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
     }
 
     private function getName($reason, $userId)
     {
-        if ($reason == 'subscription')
-        {
+        if ($reason == 'subscription') {
             return strtoupper("BBSUB".$userId.":MANUAL");
-        }
-        elseif ($reason == 'induction')
-        {
+        } elseif ($reason == 'induction') {
             return strtoupper("BBINDUCTION".$userId.":".Request::get('induction_key'));
-        }
-        elseif ($reason == 'door-key')
-        {
+        } elseif ($reason == 'door-key') {
             return strtoupper("BBDOORKEY".$userId);
-        }
-        elseif ($reason == 'storage-box')
-        {
+        } elseif ($reason == 'storage-box') {
             return strtoupper("BBSTORAGEBOX".$userId);
-        }
-        elseif ($reason == 'balance')
-        {
+        } elseif ($reason == 'balance') {
             return strtoupper("BBBALANCE".$userId);
-        }
-        else
-        {
+        } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
     }
 
     private function getReference($reason)
     {
-        if ($reason == 'induction')
-        {
+        if ($reason == 'induction') {
             return Request::get('induction_key');
-        }
-        elseif ($reason == 'balance')
-        {
+        } elseif ($reason == 'balance') {
             return Request::get('reference');
         }
         return false;

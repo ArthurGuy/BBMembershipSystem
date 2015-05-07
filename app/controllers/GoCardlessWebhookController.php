@@ -9,7 +9,8 @@ use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use \Carbon\Carbon;
 
-class GoCardlessWebhookController extends \BaseController {
+class GoCardlessWebhookController extends \BaseController
+{
 
     /**
      * @var PaymentRepository
@@ -86,8 +87,7 @@ class GoCardlessWebhookController extends \BaseController {
     private function processNewBills(array $bills)
     {
         //We have new bills/payment
-        foreach ($bills as $bill)
-        {
+        foreach ($bills as $bill) {
             //Ignore non subscription payment creations
             if ($bill['source_type'] != 'subscription') {
                 break;
@@ -140,22 +140,17 @@ class GoCardlessWebhookController extends \BaseController {
 
     private function processBills($action, array $bills)
     {
-        foreach ($bills as $bill)
-        {
+        foreach ($bills as $bill) {
             $existingPayment = $this->paymentRepository->getPaymentBySourceId($bill['id']);
-            if ($existingPayment)
-            {
-                if (($bill['status'] == 'failed') || ($bill['status'] == 'cancelled'))
-                {
+            if ($existingPayment) {
+                if (($bill['status'] == 'failed') || ($bill['status'] == 'cancelled')) {
                     //Payment failed or cancelled - either way we don't have the money!
                     //We need to retrieve the payment from the user somehow but don't want to cancel the subscription.
                     //$this->handleFailedCancelledBill($existingPayment);
 
                     $this->paymentRepository->recordPaymentFailure($existingPayment->id, $bill['status']);
 
-                }
-                elseif (($bill['status'] == 'pending') && ($action == 'retried'))
-                {
+                } elseif (($bill['status'] == 'pending') && ($action == 'retried')) {
                     //Failed payment is being retried
                     $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
                     if ($subCharge) {
@@ -166,14 +161,10 @@ class GoCardlessWebhookController extends \BaseController {
                             \Log::warning("Sub charge handling - gocardless partial payment");
                         }
                     }
-                }
-                elseif ($bill['status'] == 'refunded')
-                {
+                } elseif ($bill['status'] == 'refunded') {
                     //Payment refunded
                     //Update the payment record and possible the user record
-                }
-                elseif ($bill['status'] == 'withdrawn')
-                {
+                } elseif ($bill['status'] == 'withdrawn') {
                     //Money taken out - not our concern
                 }
             } else {
@@ -199,15 +190,12 @@ class GoCardlessWebhookController extends \BaseController {
 
     private function processSubscriptions($subscriptions)
     {
-        foreach ($subscriptions as $sub)
-        {
+        foreach ($subscriptions as $sub) {
             //Setup messages aren't used as we deal with them directly.
-            if ($sub['status'] == 'cancelled')
-            {
+            if ($sub['status'] == 'cancelled') {
                 //Make sure our local record is correct
                 $user = User::where('payment_method', 'gocardless')->where('subscription_id', $sub['id'])->first();
-                if ($user)
-                {
+                if ($user) {
                     $user->cancelSubscription();
                 }
             }
