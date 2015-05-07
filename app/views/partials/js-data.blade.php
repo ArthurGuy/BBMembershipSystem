@@ -8,4 +8,8 @@
         var stripePublicKey = '@stripeKey()';
         var memberEmail = '{{ Auth::user()->email }}';
     </script>
+@else
+    <script>
+        var stripePublicKey = '';
+    </script>
 @endif
