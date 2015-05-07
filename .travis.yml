@@ -9,6 +9,8 @@ script: vendor/bin/codecept run  --coverage-xml
 after_script:
    - wget https://scrutinizer-ci.com/ocular.phar
    - php ocular.phar code-coverage:upload --format=php-clover app/tests/codeception/_output/coverage.xml
+after_success:
+   - curl https://api.rollbar.com/api/1/deploy/ --silent -F access_token=A4MSneQD2TA/xpuxAKW+FvHrriyYk3+VB6Duym7URFRvuja14HA02Yo1XuLqJ6gHIDFiWhMG+azOHAXNtnhofiUWUxvi76TtBQ4ykl0QLTo9BHUwu00AcavMmXf/Dc0A7I2Ixawd3ROnB/Lz5kT4A6zuV1219iThfgz2wUIyeUM= -F environment=production -F revision=#TRAVIS_COMMIT
 notifications:
   email: false
   webhooks:
