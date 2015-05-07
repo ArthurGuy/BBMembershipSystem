@@ -17,14 +17,14 @@ Edit your details
     <div class="col-xs-12 col-md-4">
         <div class="form-group {{ Notification::hasErrorDetail('given_name', 'has-error has-feedback') }}">
             {{ Form::label('given_name', 'First Name') }}
-            {{ Form::text('given_name', null, ['class'=>'form-control', 'x-autocompletetype'=>'given-name']) }}
+            {{ Form::text('given_name', null, ['class'=>'form-control', 'autocomplete'=>'given-name']) }}
             {{ Notification::getErrorDetail('given_name') }}
         </div>
     </div>
     <div class="col-xs-12 col-md-4">
         <div class="form-group {{ Notification::hasErrorDetail('family_name', 'has-error has-feedback') }}">
             {{ Form::label('family_name', 'Family Name') }}
-            {{ Form::text('family_name', null, ['class'=>'form-control', 'x-autocompletetype'=>'surname']) }}
+            {{ Form::text('family_name', null, ['class'=>'form-control', 'autocomplete'=>'family-name']) }}
             {{ Notification::getErrorDetail('family_name') }}
         </div>
     </div>
@@ -34,7 +34,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
             {{ Form::label('email', 'Email') }}
-            {{ Form::text('email', null, ['class'=>'form-control', 'x-autocompletetype'=>'email']) }}
+            {{ Form::text('email', null, ['class'=>'form-control', 'autocomplete'=>'email']) }}
             {{ Notification::getErrorDetail('email') }}
         </div>
     </div>
@@ -43,7 +43,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('secondary_email', 'has-error has-feedback') }}">
             {{ Form::label('secondary_email', 'Alternate Email') }}
-            {{ Form::text('secondary_email', null, ['class'=>'form-control']) }}
+            {{ Form::text('secondary_email', null, ['class'=>'form-control', 'autocomplete'=>'off']) }}
             <span class="help-block">If your paying through PayPal and that account has a different address or your using a different email with google groups please enter it here</span>
             {{ Notification::getErrorDetail('secondary_email') }}
         </div>
@@ -64,7 +64,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_1', 'has-error has-feedback') }}">
             {{ Form::label('address[line_1]', 'Address Line 1') }}
-            {{ Form::text('address[line_1]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-1']) }}
+            {{ Form::text('address[line_1]', null, ['class'=>'form-control', 'autocomplete'=>'address-line-1']) }}
             {{ Notification::getErrorDetail('address.line_1') }}
         </div>
     </div>
@@ -74,7 +74,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_2', 'has-error has-feedback') }}">
             {{ Form::label('address[line_2]', 'Address Line 2') }}
-            {{ Form::text('address[line_2]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-2']) }}
+            {{ Form::text('address[line_2]', null, ['class'=>'form-control', 'autocomplete'=>'address-line-2']) }}
             {{ Notification::getErrorDetail('address.line_2') }}
         </div>
     </div>
@@ -84,7 +84,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_3', 'has-error has-feedback') }}">
             {{ Form::label('address[line_3]', 'Address Line 3') }}
-            {{ Form::text('address[line_3]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-locality']) }}
+            {{ Form::text('address[line_3]', null, ['class'=>'form-control', 'autocomplete'=>'address-locality']) }}
             {{ Notification::getErrorDetail('address.line_3') }}
         </div>
     </div>
@@ -95,7 +95,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_4', 'has-error has-feedback') }}">
             {{ Form::label('address[line_4]', 'Address Line 4') }}
-            {{ Form::text('address[line_4]', null, ['class'=>'form-control', 'x-autocompletetype'=>'region']) }}
+            {{ Form::text('address[line_4]', null, ['class'=>'form-control', 'autocomplete'=>'region']) }}
             {{ Notification::getErrorDetail('address.line_4') }}
         </div>
     </div>
@@ -105,7 +105,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.postcode', 'has-error has-feedback') }}">
             {{ Form::label('address[postcode]', 'Post Code') }}
-            {{ Form::text('address[postcode]', null, ['class'=>'form-control', 'x-autocompletetype'=>'postal-code']) }}
+            {{ Form::text('address[postcode]', null, ['class'=>'form-control', 'autocomplete'=>'postal-code']) }}
             {{ Notification::getErrorDetail('address.postcode') }}
         </div>
     </div>

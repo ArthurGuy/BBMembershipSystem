@@ -41,7 +41,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('given_name', 'has-error has-feedback') }}">
         {{ Form::label('given_name', 'First Name', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('given_name', null, ['class'=>'form-control', 'x-autocompletetype'=>'given-name']) }}
+            {{ Form::text('given_name', null, ['class'=>'form-control', 'autocomplete'=>'given-name']) }}
             {{ Notification::getErrorDetail('given_name') }}
         </div>
     </div>
@@ -49,7 +49,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('family_name', 'has-error has-feedback') }}">
         {{ Form::label('family_name', 'Family Name', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('family_name', null, ['class'=>'form-control', 'x-autocompletetype'=>'surname']) }}
+            {{ Form::text('family_name', null, ['class'=>'form-control', 'autocomplete'=>'family-name']) }}
             {{ Notification::getErrorDetail('family_name') }}
         </div>
     </div>
@@ -58,7 +58,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
         {{ Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::input('email', 'email', null, ['class'=>'form-control', 'x-autocompletetype'=>'email']) }}
+            {{ Form::input('email', 'email', null, ['class'=>'form-control', 'autocomplete'=>'email']) }}
             {{ Notification::getErrorDetail('email') }}
         </div>
     </div>
@@ -87,7 +87,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('address.line_1', 'has-error has-feedback') }}">
         {{ Form::label('address[line_1]', 'Address Line 1', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('address[line_1]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-1']) }}
+            {{ Form::text('address[line_1]', null, ['class'=>'form-control', 'autocomplete'=>'address-line-1']) }}
             {{ Notification::getErrorDetail('address.line_1') }}
         </div>
     </div>
@@ -95,7 +95,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('address.line_2', 'has-error has-feedback') }}">
         {{ Form::label('address[line_2]', 'Address Line 2', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('address[line_2]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-line-2']) }}
+            {{ Form::text('address[line_2]', null, ['class'=>'form-control', 'autocomplete'=>'address-line-2']) }}
             {{ Notification::getErrorDetail('address.line_2') }}
         </div>
     </div>
@@ -103,7 +103,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('address.line_3', 'has-error has-feedback') }}">
         {{ Form::label('address[line_3]', 'Address Line 3', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('address[line_3]', null, ['class'=>'form-control', 'x-autocompletetype'=>'address-locality']) }}
+            {{ Form::text('address[line_3]', null, ['class'=>'form-control', 'autocomplete'=>'address-locality']) }}
             {{ Notification::getErrorDetail('address.line_3') }}
         </div>
     </div>
@@ -111,7 +111,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('address.line_4', 'has-error has-feedback') }}">
         {{ Form::label('address[line_4]', 'Address Line 4', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('address[line_4]', null, ['class'=>'form-control', 'x-autocompletetype'=>'region']) }}
+            {{ Form::text('address[line_4]', null, ['class'=>'form-control', 'autocomplete'=>'region']) }}
             {{ Notification::getErrorDetail('address.line_4') }}
         </div>
     </div>
@@ -119,7 +119,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('address.postcode', 'has-error has-feedback') }}">
         {{ Form::label('address[postcode]', 'Post Code', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::text('address[postcode]', null, ['class'=>'form-control', 'x-autocompletetype'=>'postal-code']) }}
+            {{ Form::text('address[postcode]', null, ['class'=>'form-control', 'autocomplete'=>'postal-code']) }}
             {{ Notification::getErrorDetail('address.postcode') }}
         </div>
     </div>
@@ -127,7 +127,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('phone', 'has-error has-feedback') }}">
         {{ Form::label('phone', 'Phone', ['class'=>'col-sm-3 control-label']) }}
         <div class="col-sm-9 col-lg-7">
-            {{ Form::input('tel', 'phone', null, ['class'=>'form-control', 'x-autocompletetype'=>'tel']) }}
+            {{ Form::input('tel', 'phone', null, ['class'=>'form-control', 'autocomplete'=>'tel']) }}
             {{ Notification::getErrorDetail('phone') }}
         </div>
     </div>
