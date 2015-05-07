@@ -1,6 +1,7 @@
 <?php namespace BB\Validators;
 
-class KeyFob extends FormValidator {
+class KeyFob extends FormValidator
+{
 
     /**
      * Validation rules

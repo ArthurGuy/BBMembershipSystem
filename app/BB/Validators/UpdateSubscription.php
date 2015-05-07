@@ -1,6 +1,7 @@
 <?php namespace BB\Validators;
 
-class UpdateSubscription extends FormValidator {
+class UpdateSubscription extends FormValidator
+{
 
     /**
      * Validation rules

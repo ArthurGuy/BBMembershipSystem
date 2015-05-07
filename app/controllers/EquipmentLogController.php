@@ -1,6 +1,7 @@
 <?php 
 
-class EquipmentLogController extends \BaseController {
+class EquipmentLogController extends \BaseController
+{
 
     /**
      * @var \BB\Repo\InductionRepository

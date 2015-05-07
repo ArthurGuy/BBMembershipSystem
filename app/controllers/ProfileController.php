@@ -2,7 +2,8 @@
 
 use BB\Entities\User;
 
-class ProfileController extends \BaseController {
+class ProfileController extends \BaseController
+{
 
     /**
      * @var \BB\Repo\ProfileDataRepository
@@ -61,25 +62,22 @@ class ProfileController extends \BaseController {
         //Clear the profile photo field as this is handled separately below.
         unset($input['new_profile_photo']);
 
-        if (empty($input['profile_photo_private']))
-            $input['profile_photo_private'] = false;
+        if (empty($input['profile_photo_private'])) {
+                    $input['profile_photo_private'] = false;
+        }
 
         $this->profileValidator->validate($input, $userId);
 
         $this->profileRepo->update($userId, $input);
 
-        if (Input::file('new_profile_photo'))
-        {
-            try
-            {
+        if (Input::file('new_profile_photo')) {
+            try {
                 $this->userImage->uploadPhoto($user->hash, Input::file('new_profile_photo')->getRealPath(), true);
 
                 $this->profileRepo->update($userId, ['new_profile_photo'=>1]);
 
                 Notification::success("Photo uploaded, it will be checked and appear shortly");
-            }
-            catch (\Exception $e)
-            {
+            } catch (\Exception $e) {
                 Log::error($e);
             }
         } else {

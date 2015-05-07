@@ -1,6 +1,7 @@
 <?php
 
-class StorageBoxController extends \BaseController {
+class StorageBoxController extends \BaseController
+{
 
     /**
      * @var \BB\Repo\StorageBoxRepository

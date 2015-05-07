@@ -4,7 +4,8 @@ use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Repo\SubscriptionChargeRepository;
 
-class StatementImportController extends \BaseController {
+class StatementImportController extends \BaseController
+{
 
     protected $layout = 'layouts.main';
     /**
@@ -57,8 +58,7 @@ class StatementImportController extends \BaseController {
 
         echo '<br />'.PHP_EOL;
         echo '<table width="100%">';
-        foreach ($reader as $i=>$row)
-        {
+        foreach ($reader as $i=>$row) {
             echo "<tr>";
             $subPayment = false;
             $balancePayment = false;
@@ -67,8 +67,7 @@ class StatementImportController extends \BaseController {
 
             //If the payment isn't a credit then we don't care about it
             //if (($row[1] != 'CR') && ($row[1]) != 'BP')
-            if ($row[1] != 'CR')
-            {
+            if ($row[1] != 'CR') {
                 continue;
             }
 
@@ -77,16 +76,11 @@ class StatementImportController extends \BaseController {
 
             //echo "<td>".$row[1].'</td>';
 
-            if (strpos(strtoupper($row[2]), 'SUB') !== false)
-            {
+            if (strpos(strtoupper($row[2]), 'SUB') !== false) {
                 $subPayment = true;
-            }
-            elseif (strpos($row[2], 'MEMBERSHIP') !== false)
-            {
+            } elseif (strpos($row[2], 'MEMBERSHIP') !== false) {
                 $subPayment = true;
-            }
-            elseif (strpos($row[2], '-BALANCE-') !== false)
-            {
+            } elseif (strpos($row[2], '-BALANCE-') !== false) {
                 $balancePayment = true;
                 $descriptionParts = explode('-BALANCE-', $row[2]);
                 if (is_array($descriptionParts) && count($descriptionParts) > 1) {
@@ -94,18 +88,13 @@ class StatementImportController extends \BaseController {
                 }
             }
 
-            if ($subPayment)
-            {
+            if ($subPayment) {
                 echo '<td>SUB</td>';
                 $reasonString = 'subscription';
-            }
-            elseif ($balancePayment)
-            {
+            } elseif ($balancePayment) {
                 echo '<td>Balance</td>';
                 $reasonString = 'balance';
-            }
-            else
-            {
+            } else {
                 echo '<td></td>';
                 $reasonString = 'unknown';
             }
@@ -114,29 +103,23 @@ class StatementImportController extends \BaseController {
             $paymentDescription = strtolower($row[2]);
 
             //Try matching against specific match strings first
-            foreach ($stringMatchUsers as $user)
-            {
-                if (strpos($paymentDescription, strtolower($user->import_match_string)) !== false)
-                {
+            foreach ($stringMatchUsers as $user) {
+                if (strpos($paymentDescription, strtolower($user->import_match_string)) !== false) {
                     $matchedUser = $user;
                     break;
                 }
             }
 
             //If there was no match do a general surname match
-            if (!$matchedUser)
-            {
-                foreach ($users as $user)
-                {
-                    if (strpos($paymentDescription, strtolower($user->family_name)) !== false)
-                    {
+            if (!$matchedUser) {
+                foreach ($users as $user) {
+                    if (strpos($paymentDescription, strtolower($user->family_name)) !== false) {
                         $matchedUser = $user;
                         break;
                     }
                 }
             }
-            if ($matchedUser)
-            {
+            if ($matchedUser) {
                 echo '<td>'.$matchedUser->name.'</td>';
                 if ($subPayment) {
                     $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
@@ -146,9 +129,7 @@ class StatementImportController extends \BaseController {
                         echo '<td>No Sub Charge</td>';
                     }
                 }
-            }
-            else
-            {
+            } else {
                 echo '<td>Unknown</td><td></td>';
             }
 
@@ -160,8 +141,7 @@ class StatementImportController extends \BaseController {
 
             echo "</tr>";
 
-            if (!$testProcess && $matchedUser)
-            {
+            if (!$testProcess && $matchedUser) {
                 if ($subPayment) {
                     //$subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
                     if (isset($subCharge) && $subCharge) {
@@ -186,8 +166,7 @@ class StatementImportController extends \BaseController {
                     'status' => 'paid',
                     'reference' => $paymentReference
                 ]);
-                if ($subPayment)
-                {
+                if ($subPayment) {
                     $matchedUser->extendMembership($matchedUser->payment_method, $date->addMonth());
 
                     if ($matchedUser->payment_method == 'standing-order') {

@@ -1,6 +1,7 @@
 <?php
 
-class ReminderController extends \BaseController {
+class ReminderController extends \BaseController
+{
 
     protected $layout = 'layouts.main';
 
@@ -26,12 +27,10 @@ class ReminderController extends \BaseController {
 	 */
 	public function store()
 	{
-        $response = Password::remind(Input::only('email'), function($message)
-        {
+        $response = Password::remind(Input::only('email'), function($message) {
             $message->subject('Reset your password');
         });
-		switch ($response)
-		{
+		switch ($response) {
 			case Password::INVALID_USER:
                 Notification::error(Lang::get($response));
 				return Redirect::back();
@@ -50,7 +49,9 @@ class ReminderController extends \BaseController {
 	 */
 	public function getReset($token = null)
 	{
-		if (is_null($token)) App::abort(404);
+		if (is_null($token)) {
+		    App::abort(404);
+		}
 
         $this->layout->content = View::make('password.reset')->with('token', $token);
 	}
@@ -69,20 +70,17 @@ class ReminderController extends \BaseController {
         //We aren't using a confirm password box so this can be faked
         $credentials['password_confirmation'] = $credentials['password'];
 
-        Password::validator(function($credentials)
-        {
+        Password::validator(function($credentials) {
             return strlen($credentials['password']) >= 8;
         });
 
-		$response = Password::reset($credentials, function($user, $password)
-		{
+		$response = Password::reset($credentials, function($user, $password) {
 			$user->password = $password;
 
 			$user->save();
 		});
 
-		switch ($response)
-		{
+		switch ($response) {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:

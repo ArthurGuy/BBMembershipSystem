@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class AuditLog extends Model {
+class AuditLog extends Model
+{
 
     /**
      * The database table used by the model.

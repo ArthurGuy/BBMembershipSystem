@@ -1,6 +1,7 @@
 <?php
 
-class SessionController extends \BaseController {
+class SessionController extends \BaseController
+{
 
     protected $loginForm;
 
@@ -36,8 +37,7 @@ class SessionController extends \BaseController {
 
         $this->loginForm->validate($input);
 
-        if (Auth::attempt($input, true))
-        {
+        if (Auth::attempt($input, true)) {
             return Redirect::intended('account/'.Auth::id());
         }
 
