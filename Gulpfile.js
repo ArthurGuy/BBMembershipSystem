@@ -14,15 +14,7 @@ var elixir = require('laravel-elixir');
 
 
 
-gulp.task('js', function() {
-    return gulp.src(jsSources)
-        .pipe(minifyjs())
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest('public/js/'));
-});
-
-
-
+//JS
 gulp.task('browserify', function() {
     elixir(function(mix) {
         mix.browserify('app.js', 'public/js/bundle.js');
@@ -31,12 +23,10 @@ gulp.task('browserify', function() {
 
 
 
-
 //LESS
 var lessSources = [
     'resources/assets/less/application.less'
 ];
-
 
 gulp.task('less', function() {
     return gulp.src(lessSources)
@@ -44,11 +34,13 @@ gulp.task('less', function() {
         .pipe(concat('main.css'))
         .pipe(gulp.dest('public/css/'));
 });
+
+
+
 var cssSources = [
     //'/public/css/lib/*',
     '/public/css/application.css'
 ];
-
 
 gulp.task('css', function() {
     return gulp.src(cssSources)
@@ -57,12 +49,13 @@ gulp.task('css', function() {
         .pipe(gulp.dest('public/css/'));
 });
 
+
+
 //FONTS
 var fontSources = [
-    'resources/assets/bower/bootstrap/dist/fonts/*'
+    'node_modules/bootstrap/dist/fonts/*'
     //'public/src/fonts/*'
 ];
-
 
 gulp.task('fonts', function() {
     return gulp.src(fontSources)
@@ -92,4 +85,4 @@ gulp.task('version-assets', function () {
 });
 
 
-gulp.task('default', ['less', 'js', 'fonts']);
+gulp.task('default', ['less', 'browserify', 'fonts']);
