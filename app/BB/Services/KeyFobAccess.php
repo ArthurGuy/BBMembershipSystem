@@ -176,7 +176,7 @@ class KeyFobAccess
     }
 
 
-    protected function lookupKeyFob($keyId)
+    public function lookupKeyFob($keyId)
     {
         try {
             $keyFob = KeyFob::lookup($keyId);

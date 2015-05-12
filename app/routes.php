@@ -123,6 +123,7 @@ Route::post('access-control/spark-status', ['uses' => 'AccessControlController@s
 //New ACS System
 Route::post('acs', ['uses' => 'ACSController@update']);
 Route::get('acs', ['uses' => 'ACSController@get']);
+Route::post('acs/spark', ['uses' => 'ACSSparkController@handle']);
 
 
 
