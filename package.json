@@ -10,11 +10,22 @@
     "gulp-rename": "^1.2.2",
     "gulp-rev": "^3.0.0",
     "gulp-uglify": "~1.0.1",
-    "jquery": "^2.1.4",
     "laravel-elixir-bower": "0.1.0",
     "laravel-elixir-codeception": "^0.1.2",
     "npm-utils": "0.0.9",
     "laravel-elixir": "^1.0.0",
-      "babelify": "^6.0.2"
+    "babelify": "^6.0.2"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "bootstrap": "^3.3.4",
+    "bootstrap-datepicker": "^1.4.0",
+    "react": "^0.13.2",
+    "react-notification": "^1.2.0",
+    "select2": "^3.5.2-browserify"
+  },
+  "browser": {
+    "select2": "./node_modules/select2/select2.js",
+    "bootstrap-datepicker": "./node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"
   }
 }

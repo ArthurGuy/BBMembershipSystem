@@ -1,23 +1,18 @@
-var elixir = require('laravel-elixir');
+
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var minifyjs = require('gulp-uglify');
 var minifycss = require('gulp-minify-css');
 var less = require('gulp-less');
 var rev = require('gulp-rev');
+var rename = require('gulp-rename');
 var del = require('del');
+var browserify = require('gulp-browserify');
+var babelify = require('babelify');
 
-require('laravel-elixir-codeception');
-require('laravel-elixir-bower');
+var elixir = require('laravel-elixir');
 
-//JS
-var jsSources = [
-    'resources/assets/bower/jquery/dist/jquery.js',
-    'resources/assets/bower/bootstrap/dist/js/bootstrap.js',
-    'resources/assets/bower/bootstrap-datepicker/js/bootstrap-datepicker.js',
-    'public/js/lib/*',
-    'public/js/partials/*'
-];
+
 
 gulp.task('js', function() {
     return gulp.src(jsSources)
@@ -27,10 +22,21 @@ gulp.task('js', function() {
 });
 
 
+
+gulp.task('browserify', function() {
+    elixir(function(mix) {
+        mix.browserify('app.js', 'public/js/bundle.js');
+    });
+});
+
+
+
+
 //LESS
 var lessSources = [
     'resources/assets/less/application.less'
 ];
+
 
 gulp.task('less', function() {
     return gulp.src(lessSources)
@@ -38,12 +44,12 @@ gulp.task('less', function() {
         .pipe(concat('main.css'))
         .pipe(gulp.dest('public/css/'));
 });
-
-
 var cssSources = [
     //'/public/css/lib/*',
     '/public/css/application.css'
 ];
+
+
 gulp.task('css', function() {
     return gulp.src(cssSources)
         .pipe(concat('main.css'))
@@ -51,13 +57,13 @@ gulp.task('css', function() {
         .pipe(gulp.dest('public/css/'));
 });
 
-
 //FONTS
-
 var fontSources = [
     'resources/assets/bower/bootstrap/dist/fonts/*'
     //'public/src/fonts/*'
 ];
+
+
 gulp.task('fonts', function() {
     return gulp.src(fontSources)
         .pipe(gulp.dest('public/fonts/'));
