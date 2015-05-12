@@ -36903,20 +36903,20 @@ module.exports = exports["default"];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"bootstrap":3,"bootstrap-datepicker":2,"jquery":16,"select2":173}],178:[function(require,module,exports){
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Snackbar = function Snackbar() {
     _classCallCheck(this, Snackbar);
 
-    var $ = require('jquery');
+    var $ = require("jquery");
 
-    console.log('Snackbar Loading');
+    console.log("Snackbar Loading");
 
     //Replace the fixed html in the flash-message include
     //trigger this js directly somehow and then remove the old timeout
@@ -36942,8 +36942,9 @@ var Snackbar = function Snackbar() {
             }
 
             //Add the content to the div
-            var snackBarContent = document.createTextNode(message);
-            this.snackBarDiv.innerHTML = '';
+            var snackBarContent = document.createElement("div");
+            snackBarContent.innerHTML = message;
+            this.snackBarDiv.innerHTML = "";
             this.snackBarDiv.appendChild(snackBarContent);
 
             this.display();
@@ -36953,23 +36954,32 @@ var Snackbar = function Snackbar() {
                 self.remove();
             }, 3000);
         },
+        displayMessages: function displayMessages(messages) {
+            var message = "<ul>";
+            for (var i = 0; i < messages.length; i++) {
+                message += "<li>" + messages[i] + "</li>";
+            }
+            message += "</ul>";
+
+            this.displayMessage(message);
+        },
         display: function display() {
             //Remove the hidden class
-            this.snackBarDiv.className = 'snackBar';
+            this.snackBarDiv.className = "snackBar";
 
             this.onScreen = true;
         },
         remove: function remove() {
             window.clearTimeout(this.timeoutID);
 
-            this.snackBarDiv.className = this.snackBarDiv.className + ' snackBarHidden';
+            this.snackBarDiv.className = this.snackBarDiv.className + " snackBarHidden";
 
             this.onScreen = false;
         },
         createElement: function createElement() {
             //Create the snackbar div
-            this.snackBarDiv = document.createElement('div');
-            this.snackBarDiv.className = 'snackBar snackBarHidden';
+            this.snackBarDiv = document.createElement("div");
+            this.snackBarDiv.className = "snackBar snackBarHidden";
 
             //Add the div to the page
             document.body.appendChild(this.snackBarDiv);
@@ -36982,18 +36992,29 @@ var Snackbar = function Snackbar() {
     };
     BB.SnackBar.boot();
 
-    setTimeout(function () {
-        $('.snackBar').fadeOut();
-    }, 3000);
-    $('.snackBar').on('click', function () {
-        $(this).fadeOut();
+    //Fetch any existing messages from the dom
+    $(document).ready(function () {
+        var message = $("#snackbarMessage").val();
+        var level = $("#snackbarLevel").val();
+        var messages = $("#snackbarMessages").val();
+        if (messages) {
+            messages = JSON.parse(messages);
+        }
+
+        if (level) {
+            if (messages) {
+                BB.SnackBar.displayMessages(messages);
+            } else {
+                BB.SnackBar.displayMessage(message);
+            }
+        }
     });
 
-    console.log('Snackbar Loaded');
+    console.log("Snackbar Loaded");
 };
 
-exports['default'] = Snackbar;
-module.exports = exports['default'];
+exports["default"] = Snackbar;
+module.exports = exports["default"];
 
 },{"jquery":16}],179:[function(require,module,exports){
 'use strict';

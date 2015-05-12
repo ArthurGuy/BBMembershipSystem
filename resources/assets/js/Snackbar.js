@@ -35,7 +35,8 @@ class Snackbar {
                 }
 
                 //Add the content to the div
-                var snackBarContent = document.createTextNode(message);
+                var snackBarContent = document.createElement("div");
+                snackBarContent.innerHTML = message;
                 this.snackBarDiv.innerHTML = '';
                 this.snackBarDiv.appendChild(snackBarContent);
 
@@ -45,6 +46,15 @@ class Snackbar {
                 this.timeoutID = setTimeout(function () {
                     self.remove();
                 }, 3000);
+            },
+            displayMessages: function(messages) {
+                var message = '<ul>';
+                for (var i = 0; i < messages.length; i++) {
+                    message += '<li>'+messages[i]+'</li>';
+                }
+                message += '</ul>';
+
+                this.displayMessage(message);
             },
             display: function() {
                 //Remove the hidden class
@@ -75,14 +85,23 @@ class Snackbar {
         }
         BB.SnackBar.boot();
 
+        //Fetch any existing messages from the dom
+        $(document).ready(function() {
+            var message = $('#snackbarMessage').val();
+            var level = $('#snackbarLevel').val();
+            var messages = $('#snackbarMessages').val();
+            if (messages) {
+                messages = JSON.parse(messages);
+            }
 
-        setTimeout(function () {
-            $('.snackBar').fadeOut();
-        }, 3000);
-        $('.snackBar').on('click', function() {
-            $(this).fadeOut();
+            if (level) {
+                if (messages) {
+                    BB.SnackBar.displayMessages(messages);
+                } else {
+                    BB.SnackBar.displayMessage(message);
+                }
+            }
         });
-
 
         console.log("Snackbar Loaded");
 
