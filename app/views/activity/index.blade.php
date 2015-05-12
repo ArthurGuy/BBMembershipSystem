@@ -16,10 +16,7 @@ Activity Log
 
     {{ Form::open(['route'=> 'activity.index', 'method'=>'GET', 'id'=>'activityDatePicker', 'class'=>'form-inline']) }}
     <div class="input-group date">
-        <input name="date" type="text" class="date-input form-control" value="{{ $date->format('Y-m-d') }}">
-        <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar"></span>
-        </span>
+        <input name="date" type="text" class="date-select form-control" value="{{ $date->format('Y-m-d') }}">
     </div>
 
     {{ Form::close() }}
@@ -70,19 +67,4 @@ Activity Log
     </div>
 </div>
 
-@stop
-
-@section('footer-js')
-    <script>
-    $('#activityDatePicker .date').datepicker({
-        format: "yyyy-mm-dd",
-        endDate: "{{ date('Y-m-d') }}}",
-        todayBtn: "linked",
-        autoclose: true,
-        todayHighlight: true
-    })
-    .on('hide', function(e){
-        $('#activityDatePicker').submit();
-    });
-    </script>
 @stop

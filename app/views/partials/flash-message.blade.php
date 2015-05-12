@@ -10,15 +10,7 @@
     </ul>
     @endif
 </div>
-<script>
-    setTimeout(function () {
-            $('.snackBar').fadeOut();
-    }, 3000);
-    $('.snackBar').on('click', function() {
-        $(this).fadeOut();
-    });
-</script>
 @endif
 
 
-
+<div id="js-message-holder"></div>
