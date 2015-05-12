@@ -38,7 +38,7 @@ Update a Proposal
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ Notification::hasErrorDetail('start_date', 'has-error has-feedback') }}">
                     {{ Form::label('start_date', 'Start Date') }}
-                    {{ Form::text('start_date', $proposal->start_date->format('Y-m-d'), ['class'=>'form-control date-select']) }}
+                    {{ Form::text('start_date', $proposal->start_date->format('Y-m-d'), ['class'=>'form-control js-date-select']) }}
                     {{ Notification::getErrorDetail('start_date') }}
                 </div>
             </div>
@@ -48,7 +48,7 @@ Update a Proposal
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ Notification::hasErrorDetail('end_date', 'has-error has-feedback') }}">
                     {{ Form::label('end_date', 'End Date') }}
-                    {{ Form::text('end_date', $proposal->end_date->format('Y-m-d'), ['class'=>'form-control date-select']) }}
+                    {{ Form::text('end_date', $proposal->end_date->format('Y-m-d'), ['class'=>'form-control js-date-select']) }}
                     {{ Notification::getErrorDetail('end_date') }}
                 </div>
             </div>

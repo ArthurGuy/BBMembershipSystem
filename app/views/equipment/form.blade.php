@@ -98,7 +98,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('managing_role_id', 'has-error has-feedback') }}">
     {{ Form::label('managing_role_id', 'Managing Group', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">
-        {{ Form::select('managing_role_id', [''=>'']+$roleList, null, ['class'=>'form-control advanced-dropdown']) }}
+        {{ Form::select('managing_role_id', [''=>'']+$roleList, null, ['class'=>'form-control js-advanced-dropdown']) }}
         <p class="help-block">Is a group is responsible for this piece of equipment?</p>
         {{ Notification::getErrorDetail('managing_role_id') }}
     </div>
@@ -142,7 +142,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('permaloan_user_id', 'has-error has-feedback') }}">
     {{ Form::label('permaloan_user_id', 'Permaloan Owner', ['class'=>'col-sm-3 control-label']) }}
     <div class="col-sm-9 col-lg-7">
-        {{ Form::select('permaloan_user_id', [''=>'']+$memberList, null, ['class'=>'form-control advanced-dropdown']) }}
+        {{ Form::select('permaloan_user_id', [''=>'']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) }}
         <p class="help-block">If its being loaned who owns it?</p>
         {{ Notification::getErrorDetail('permaloan_user_id') }}
     </div>

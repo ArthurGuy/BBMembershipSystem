@@ -37,7 +37,7 @@ Assign members to specific roles in order to control how much access they have a
                 @endforeach
                     <tr>
                         {{ Form::open(array('method'=>'POST', 'route' => ['roles.users.store', $role->id], 'class'=>'form-inline')) }}
-                        <td>{{ Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'advanced-dropdown form-control']) }}</td>
+                        <td>{{ Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) }}</td>
                         <td>
                         {{ Form::submit('Add', array('class'=>'btn btn-default btn-sm')) }}
                         </td>

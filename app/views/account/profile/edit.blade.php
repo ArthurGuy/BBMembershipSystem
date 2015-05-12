@@ -22,7 +22,7 @@ Fill in your profile
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('skills', 'has-error has-feedback') }}">
             {{ Form::label('skills', 'Skills') }}
-            {{ Form::select('skills[]', $skills, null, ['class'=>'form-control advanced-dropdown', 'multiple']) }}
+            {{ Form::select('skills[]', $skills, null, ['class'=>'form-control js-advanced-dropdown', 'multiple']) }}
             {{ Notification::getErrorDetail('skills') }}
         </div>
     </div>

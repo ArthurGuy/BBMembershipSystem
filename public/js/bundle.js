@@ -16,9 +16,6 @@ new AdminForms();
 var Snackbar = require('./Snackbar');
 new Snackbar();
 
-var FormControls = require('./FormControls');
-new FormControls();
-
 var FeedbackWidget = require('./FeedbackWidget');
 new FeedbackWidget();
 
@@ -31,7 +28,7 @@ if (jQuery('body').hasClass('payment-page')) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AdminForms":174,"./FeedbackWidget":175,"./FormControls":176,"./PaymentForm":177,"./SiteInteraction":178,"./Snackbar":179,"./components/FilterablePaymentTable":180,"bootstrap":3,"jquery":16,"react":172}],2:[function(require,module,exports){
+},{"./AdminForms":174,"./FeedbackWidget":175,"./PaymentForm":176,"./SiteInteraction":177,"./Snackbar":178,"./components/FilterablePaymentTable":179,"bootstrap":3,"jquery":16,"react":172}],2:[function(require,module,exports){
 /*!
  * Datepicker for Bootstrap v1.4.0 (https://github.com/eternicode/bootstrap-datepicker)
  *
@@ -36753,56 +36750,6 @@ Object.defineProperty(exports, '__esModule', {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var FormControls = function FormControls() {
-    _classCallCheck(this, FormControls);
-
-    var $ = require('jquery');
-    require('select2');
-    require('bootstrap-datepicker');
-
-    console.log('Form Controls Loading');
-
-    (function ($) {
-
-        $(document).ready(function () {
-
-            $('.advanced-dropdown').select2({ dropdownAutoWidth: false });
-
-            $('.date-select').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true
-            });
-        });
-
-        //Change sub amount button
-        $('.js-show-alter-subscription-amount').click(function (event) {
-            event.preventDefault();
-            $('.js-alter-subscription-amount-form').removeClass('hidden');
-            $(this).hide();
-        });
-
-        //Activity page - Date Picker
-        $('#activityDatePicker .date-select').on('change', function (e) {
-            $('#activityDatePicker').submit();
-        });
-    })($);
-
-    console.log('Form Controls Loaded');
-};
-
-exports['default'] = FormControls;
-module.exports = exports['default'];
-
-},{"bootstrap-datepicker":2,"jquery":16,"select2":173}],177:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
 var PaymentForm = function PaymentForm() {
     _classCallCheck(this, PaymentForm);
 
@@ -36875,7 +36822,7 @@ module.exports = exports['default'];
 //$(this).submit();
 //return true;
 
-},{"jquery":16}],178:[function(require,module,exports){
+},{"jquery":16}],177:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -36900,22 +36847,52 @@ var SiteInteraction = function SiteInteraction() {
         }
     });
 
+    //Navbar top menu
     jQuery(".mainSidenav .toggleSettings").on("click", function (event) {
         event.preventDefault();
         jQuery(".mainSidenav .memberAccountLinks").toggleClass("open");
     });
 
     global.jQuery = jQuery;
+
+    //Tooltips
     require("bootstrap");
     jQuery("[data-toggle=tooltip]").tooltip({});
 
+    //Fancy dropdown
+    require("select2");
+    jQuery(".js-advanced-dropdown").select2({ dropdownAutoWidth: false });
+
+    //Main side nav - mobile view
     jQuery(".menuToggleButton").on("click", function () {
         jQuery("body").addClass("menuOpen");
         jQuery(".modalMask").addClass("display");
     });
+
+    //Modal window background mask
     jQuery(".modalMask").on("click", function () {
         jQuery(".modalMask").removeClass("display");
         jQuery("body").removeClass("menuOpen");
+    });
+
+    //Change sub amount button
+    jQuery(".js-show-alter-subscription-amount").click(function (event) {
+        event.preventDefault();
+        jQuery(".js-alter-subscription-amount-form").removeClass("hidden");
+        jQuery(this).hide();
+    });
+
+    //Activity page - Date picker, auto form submit
+    jQuery("#activityDatePicker").find("input").on("change", function (e) {
+        jQuery("#activityDatePicker").submit();
+    });
+
+    //Input date picker
+    require("bootstrap-datepicker");
+    jQuery(".js-date-select").datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayHighlight: true
     });
 
     console.log("Site Interaction Loaded");
@@ -36925,7 +36902,7 @@ exports["default"] = SiteInteraction;
 module.exports = exports["default"];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"bootstrap":3,"jquery":16}],179:[function(require,module,exports){
+},{"bootstrap":3,"bootstrap-datepicker":2,"jquery":16,"select2":173}],178:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37018,7 +36995,7 @@ var Snackbar = function Snackbar() {
 exports['default'] = Snackbar;
 module.exports = exports['default'];
 
-},{"jquery":16}],180:[function(require,module,exports){
+},{"jquery":16}],179:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37120,7 +37097,7 @@ var FilterablePaymentTable = (function (_React$Component) {
 exports['default'] = FilterablePaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTable":181,"react":172,"select2":173}],181:[function(require,module,exports){
+},{"./PaymentTable":180,"react":172,"select2":173}],180:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37230,7 +37207,7 @@ var PaymentTable = (function (_React$Component) {
 exports['default'] = PaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTableRow":182,"react":172}],182:[function(require,module,exports){
+},{"./PaymentTableRow":181,"react":172}],181:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {

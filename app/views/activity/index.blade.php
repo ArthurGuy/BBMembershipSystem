@@ -16,7 +16,7 @@ Activity Log
 
     {{ Form::open(['route'=> 'activity.index', 'method'=>'GET', 'id'=>'activityDatePicker', 'class'=>'form-inline']) }}
     <div class="input-group date">
-        <input name="date" type="text" class="date-select form-control" value="{{ $date->format('Y-m-d') }}">
+        <input name="date" type="text" class="form-control js-date-select" value="{{ $date->format('Y-m-d') }}">
     </div>
 
     {{ Form::close() }}

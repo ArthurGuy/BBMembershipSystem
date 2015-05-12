@@ -13,9 +13,6 @@ new AdminForms();
 var Snackbar = require('./Snackbar');
 new Snackbar();
 
-var FormControls = require('./FormControls');
-new FormControls();
-
 var FeedbackWidget = require('./FeedbackWidget');
 new FeedbackWidget();
 
