@@ -89,7 +89,7 @@
 
     <script src="https://checkout.stripe.com/checkout.js"></script>
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/bundle.js"></script>
 
     @include('partials/flash-message')
 
