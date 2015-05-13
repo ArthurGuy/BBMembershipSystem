@@ -11,5 +11,6 @@
 @else
     <script>
         var stripePublicKey = '';
+        var memberEmail = '';
     </script>
 @endif
