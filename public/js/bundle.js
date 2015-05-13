@@ -29,7 +29,7 @@ if (jQuery('body').hasClass('payment-page')) {
 
 if (document.getElementById('paymentModuleTest')) {
     var PaymentModule = require('./components/PaymentModule');
-    React.render(React.createElement(PaymentModule, { name: 'Build Brighton', description: 'Sample Description', email: memberEmail }), document.getElementById('paymentModuleTest'));
+    React.render(React.createElement(PaymentModule, { name: 'Build Brighton', description: 'Sample Description', reason: 'balance', email: memberEmail, userId: userId }), document.getElementById('paymentModuleTest'));
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -37151,7 +37151,17 @@ var PaymentModule = (function (_React$Component) {
         _classCallCheck(this, PaymentModule);
 
         _get(Object.getPrototypeOf(PaymentModule.prototype), 'constructor', this).call(this, props);
-        this.state = { amount: 10, method: 'gocardless', stripeToken: null, stripeLowValueWarning: false };
+
+        var csrfToken = document.getElementById('csrfToken').value;
+
+        this.state = {
+            amount: 10,
+            method: 'gocardless',
+            stripeToken: null,
+            stripeLowValueWarning: false,
+            csrfToken: csrfToken,
+            requestInProgress: false
+        };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAmountChange = this.handleAmountChange.bind(this);
@@ -37166,7 +37176,14 @@ var PaymentModule = (function (_React$Component) {
 
     _createClass(PaymentModule, [{
         key: 'loadConfigureStripe',
+
+        /**
+         * On initialisation stripe gets loaded in and setup
+         *
+         * @param stripeKey
+         */
         value: function loadConfigureStripe(stripeKey) {
+            //Load the stripe js
             var stripeScript = document.createElement('script');
             stripeScript.src = 'https://checkout.stripe.com/checkout.js';
             document.head.appendChild(stripeScript);
@@ -37178,10 +37195,16 @@ var PaymentModule = (function (_React$Component) {
                     throw Error('Stripe unavailable');
                 }
 
+                //Handle the storing of the stripe token and submit the form
                 var onToken = (function (token) {
-                    this.setState({ stripeToken: token });
-                    this.handleSubmit();
+                    //The set state function may take some time, so dont move on untill we know its ready
+                    this.setState({ stripeToken: token.id }, function () {
+                        //The callback will only run when the state is ready
+                        this.handleSubmit();
+                    });
                 }).bind(this);
+
+                //Setup the stripe handler
                 var stripeHandler = StripeCheckout.configure({
                     key: stripeKey,
                     name: this.props.name,
@@ -37195,40 +37218,109 @@ var PaymentModule = (function (_React$Component) {
     }, {
         key: 'handleAmountChange',
         value: function handleAmountChange(event) {
+            //this doesn't allow decimal places to be entered by hand
             var amount = parseFloat(event.target.value);
 
-            if (!amount || amount < 0) {
-                amount = 0;
+            //The amount needs to be at least £5
+            if (!amount || amount < 5) {
+                amount = 5;
             }
 
-            this.state.stripeLowValueWarning = this.state.method === 'stripe' && amount < 10;
+            if (amount > 200) {}
 
             this.setState({ amount: amount });
+
+            this.checkLowValue(this.state.method, amount);
         }
     }, {
         key: 'handleMethodChange',
         value: function handleMethodChange(event) {
             var method = event.target.value;
 
-            this.state.stripeLowValueWarning = method === 'stripe' && this.state.amount < 10;
-
             this.setState({ method: method });
+
+            this.checkLowValue(method, this.state.amount);
+        }
+    }, {
+        key: 'checkLowValue',
+
+        /**
+         * Ensure that if stripe is being used the amount isnt to low
+         * @param method
+         * @param amount
+         */
+        value: function checkLowValue(method, amount) {
+            var stripeLowValueWarning = method === 'stripe' && amount < 10;
+            this.setState({ stripeLowValueWarning: stripeLowValueWarning });
         }
     }, {
         key: 'handleSubmit',
         value: function handleSubmit() {
 
-            console.log(this.state.method);
-            console.log(this.state.amount);
-            console.log(this.state.stripeToken);
+            var $ = require('jquery');
 
             if (this.state.stripeLowValueWarning) {
                 return;
             }
 
+            //The stripe process starts with the dialog box to collect card details
             if (this.state.method === 'stripe' && this.state.stripeToken === null) {
                 this.displayStripeDialog();
+                return;
             }
+
+            this.setState({ requestInProgress: true });
+
+            $.ajax({
+                url: this.getTargetUrl(this.props.userId, this.state.method),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'POST',
+                data: this.prepareRequestData(),
+                success: (function (responseData) {
+
+                    //Reset the state
+                    this.setState({ requestInProgress: false, amount: 10, stripeToken: null });
+
+                    BB.SnackBar.displayMessage('Your payment has been processed');
+                }).bind(this),
+                error: (function (xhr, status, err) {
+
+                    var responseData = JSON.parse(xhr.responseText);
+
+                    this.setState({ requestInProgress: false });
+
+                    BB.SnackBar.displayMessage(responseData.error);
+                }).bind(this)
+            });
+        }
+    }, {
+        key: 'prepareRequestData',
+
+        /**
+         * Generate data data for the ajax request
+         * @returns string
+         */
+        value: function prepareRequestData() {
+            return JSON.stringify({
+                amount: this.state.amount * 100 + '',
+                reason: this.props.reason,
+                stripeToken: this.state.stripeToken,
+                '_token': this.state.csrfToken
+            });
+        }
+    }, {
+        key: 'getTargetUrl',
+
+        /**
+         * Where will the request be sent?
+         *
+         * @param userId
+         * @param method
+         * @returns {string}
+         */
+        value: function getTargetUrl(userId, method) {
+            return '/account/' + userId + '/payment/' + method;
         }
     }, {
         key: 'displayStripeDialog',
@@ -37247,12 +37339,6 @@ var PaymentModule = (function (_React$Component) {
                 'div',
                 { className: 'form-inline' },
                 _react2['default'].createElement(
-                    'strong',
-                    null,
-                    'New Payment Form'
-                ),
-                _react2['default'].createElement('br', null),
-                _react2['default'].createElement(
                     'div',
                     { className: 'form-group' },
                     _react2['default'].createElement(
@@ -37263,7 +37349,7 @@ var PaymentModule = (function (_React$Component) {
                             { className: 'input-group-addon' },
                             '£'
                         ),
-                        _react2['default'].createElement('input', { className: 'form-control', step: '0.01', required: 'required', type: 'number', value: this.state.amount, onChange: this.handleAmountChange })
+                        _react2['default'].createElement('input', { className: 'form-control', step: '0.1', required: 'required', type: 'number', value: this.state.amount, onChange: this.handleAmountChange })
                     )
                 ),
                 _react2['default'].createElement(
@@ -37281,10 +37367,15 @@ var PaymentModule = (function (_React$Component) {
                             'option',
                             { value: 'stripe' },
                             'Credit/Debit Card'
+                        ),
+                        _react2['default'].createElement(
+                            'option',
+                            { value: 'balance' },
+                            'Balance'
                         )
                     )
                 ),
-                _react2['default'].createElement('input', { className: 'btn btn-primary', type: 'submit', value: 'Top Up', onClick: this.handleSubmit }),
+                _react2['default'].createElement('input', { className: 'btn btn-primary', type: 'submit', value: 'Top Up', disabled: this.state.requestInProgress, onClick: this.handleSubmit }),
                 _react2['default'].createElement(
                     'div',
                     { className: 'has-feedback has-error' },
@@ -37292,6 +37383,11 @@ var PaymentModule = (function (_React$Component) {
                         'span',
                         { className: this.state.stripeLowValueWarning ? 'help-block' : 'hidden' },
                         'Because of processing fees the payment must be £10 or over when paying by card'
+                    ),
+                    _react2['default'].createElement(
+                        'span',
+                        { className: this.state.requestInProgress ? 'help-block' : 'hidden' },
+                        'Sending...'
                     )
                 )
             );
@@ -37304,7 +37400,9 @@ var PaymentModule = (function (_React$Component) {
 exports['default'] = PaymentModule;
 module.exports = exports['default'];
 
-},{"react":172}],181:[function(require,module,exports){
+//We should probably do something here as gocardless will most likely fail
+
+},{"jquery":16,"react":172}],181:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {

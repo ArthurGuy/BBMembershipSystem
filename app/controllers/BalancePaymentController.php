@@ -37,10 +37,12 @@ class BalancePaymentController extends \BaseController
         $user = User::findWithPermission($userId);
         $this->bbCredit->setUserId($user->id);
 
-        $amount      = Request::get('amount');
-        $reason      = Request::get('reason');
-        $returnPath  = Request::get('return_path');
-        $ref         = Request::get('ref');
+        $requestData = Request::only(['reason', 'amount', 'return_path', 'ref']);
+
+        $amount      = ($requestData['amount'] * 1) / 100;
+        $reason      = $requestData['reason'];
+        $returnPath  = $requestData['return_path'];
+        $ref         = $requestData['ref'];
 
         //Can the users balance go below 0
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance($reason);
@@ -50,6 +52,11 @@ class BalancePaymentController extends \BaseController
 
         //With this payment will the users balance go to low?
         if (($userBalance - $amount) < $minimumBalance) {
+
+            if (Request::wantsJson()) {
+                return Response::json(['error' => 'You don\'t have the money for this'], 400);
+            }
+
             Notification::error("You don't have the money for this");
             return Redirect::to($returnPath);
         }
@@ -59,6 +66,10 @@ class BalancePaymentController extends \BaseController
 
         //Update the users cached balance
         $this->bbCredit->recalculate();
+
+        if (Request::wantsJson()) {
+            return Response::json(['message' => 'Payment made']);
+        }
 
         Notification::success("Payment made");
         return Redirect::to($returnPath);

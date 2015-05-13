@@ -28,7 +28,7 @@ if (jQuery('body').hasClass('payment-page')) {
 
 if (document.getElementById('paymentModuleTest')) {
     var PaymentModule = require('./components/PaymentModule');
-    React.render(<PaymentModule name="Build Brighton" description="Sample Description" email={memberEmail} />, document.getElementById('paymentModuleTest'));
+    React.render(<PaymentModule name="Build Brighton" description="Sample Description" reason="balance" email={memberEmail} userId={userId} />, document.getElementById('paymentModuleTest'));
 }
 
 

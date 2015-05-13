@@ -37,17 +37,26 @@ class GoCardlessPaymentController extends \BaseController
     {
         $user = User::findWithPermission($userId);
 
-        $reason = Request::get('reason');
-        $amount = Request::get('amount');
-        $returnPath = Request::get('return_path');
+        $requestData = Request::only(['reason', 'amount', 'return_path']);
+
+        $reason = $requestData['reason'];
+        $amount = ($requestData['amount'] * 1) / 100;
+        $returnPath = $requestData['return_path'];
         $ref = $this->getReference($reason);
 
+
         if ($user->payment_method == 'gocardless-variable') {
+
             return $this->handleBill($amount, $reason, $user, $ref, $returnPath);
+
         } elseif ($user->payment_method == 'gocardless') {
+
             return $this->ddMigratePrompt($returnPath);
+
         } else {
+
             return $this->handleManualBill($amount, $reason, $user, $ref, $returnPath);
+
         }
     }
 
@@ -147,6 +156,9 @@ class GoCardlessPaymentController extends \BaseController
 
     private function ddMigratePrompt($returnPath)
     {
+        if (Request::wantsJson()) {
+            return Response::json(['error' => 'Please visit the "Your Membership" page and migrate your Direct Debit first, then return and make the payment'], 400);
+        }
         Notification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
         return Redirect::to($returnPath);
     }
@@ -175,9 +187,18 @@ class GoCardlessPaymentController extends \BaseController
             //The record payment process will make the necessary record updates
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
 
+            if (Request::wantsJson()) {
+                return Response::json(['message' => 'The payment was submitted successfully']);
+            }
+
             Notification::success("The payment was submitted successfully");
         } else {
             //something went wrong - we still have the pre auth though
+
+            if (Request::wantsJson()) {
+                return Response::json(['error' => 'There was a problem charging your account'], 400);
+            }
+
             Notification::error("There was a problem charging your account");
         }
 

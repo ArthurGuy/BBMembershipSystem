@@ -31,23 +31,30 @@ class StripePaymentController extends \BaseController
 	{
         User::findWithPermission($userId);
 
-        $stripeToken = Request::get('stripe_token');
-        $amount      = Request::get('amount');
-        $reason      = Request::get('reason');
-        $returnPath  = Request::get('return_path');
-        $ref         = Request::get('ref');
+        $requestData = Request::only(['reason', 'amount', 'return_path', 'stripeToken', 'ref']);
+
+        $stripeToken = $requestData['stripeToken'];
+        $amount      = $requestData['amount'];
+        $reason      = $requestData['reason'];
+        $returnPath  = $requestData['return_path'];
+        $ref         = $requestData['ref'];
 
         try {
             $charge = Stripe_Charge::create(
                 array(
-                    "amount"      => $amount * 100,
+                    "amount"      => $amount,
                     "currency"    => "gbp",
                     "card"        => $stripeToken,
                     "description" => $reason
                 )
             );
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+
+            if (Request::wantsJson()) {
+                return Response::json(['error' => 'There was an error confirming your payment'], 400);
+            }
+
             Notification::error("There was an error confirming your payment");
             return Redirect::to($returnPath);
         }
@@ -59,6 +66,10 @@ class StripePaymentController extends \BaseController
         $fee = (($amount * 0.024) + 0.2);
 
         $this->paymentRepository->recordPayment($reason, $userId, 'stripe', $charge->id, $amount, 'paid', $fee, $ref);
+
+        if (Request::wantsJson()) {
+            return Response::json(['message' => 'Payment made']);
+        }
 
         Notification::success("Payment made");
         return Redirect::to($returnPath);
