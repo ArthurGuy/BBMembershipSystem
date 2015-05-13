@@ -8,6 +8,7 @@
         var stripePublicKey = '@stripeKey()';
         var memberEmail = '{{ Auth::user()->email }}';
     </script>
+    <input type="hidden" id="stripePublicKey" value="@stripeKey()" />
 @else
     <script>
         var stripePublicKey = '';

@@ -29,6 +29,9 @@ Build Brighton Balance
 
                 @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.balance.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up', 'displayReason'=>'Balance Payment', 'methods'=>['gocardless', 'stripe']])
 
+
+                <div id="paymentModuleTest"></div>
+
                 <p>
                     Cash top ups can be made to a trustee in the space
                 </p>

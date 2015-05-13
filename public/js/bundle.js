@@ -27,8 +27,13 @@ if (jQuery('body').hasClass('payment-page')) {
     React.render(React.createElement(FilterablePaymentTable, null), document.getElementById('react-test'));
 }
 
+if (document.getElementById('paymentModuleTest')) {
+    var PaymentModule = require('./components/PaymentModule');
+    React.render(React.createElement(PaymentModule, { name: 'Build Brighton', description: 'Sample Description', email: memberEmail }), document.getElementById('paymentModuleTest'));
+}
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AdminForms":174,"./FeedbackWidget":175,"./PaymentForm":176,"./SiteInteraction":177,"./Snackbar":178,"./components/FilterablePaymentTable":179,"bootstrap":3,"jquery":16,"react":172}],2:[function(require,module,exports){
+},{"./AdminForms":174,"./FeedbackWidget":175,"./PaymentForm":176,"./SiteInteraction":177,"./Snackbar":178,"./components/FilterablePaymentTable":179,"./components/PaymentModule":180,"bootstrap":3,"jquery":16,"react":172}],2:[function(require,module,exports){
 /*!
  * Datepicker for Bootstrap v1.4.0 (https://github.com/eternicode/bootstrap-datepicker)
  *
@@ -37118,7 +37123,188 @@ var FilterablePaymentTable = (function (_React$Component) {
 exports['default'] = FilterablePaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTable":180,"react":172,"select2":173}],180:[function(require,module,exports){
+},{"./PaymentTable":181,"react":172,"select2":173}],180:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
+    property = _x2,
+    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var PaymentModule = (function (_React$Component) {
+    function PaymentModule(props) {
+        _classCallCheck(this, PaymentModule);
+
+        _get(Object.getPrototypeOf(PaymentModule.prototype), 'constructor', this).call(this, props);
+        this.state = { amount: 10, method: 'gocardless', stripeToken: null, stripeLowValueWarning: false };
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleAmountChange = this.handleAmountChange.bind(this);
+        this.handleMethodChange = this.handleMethodChange.bind(this);
+
+        //Load in the stripe js file and configure our instance
+        var stripeKey = document.getElementById('stripePublicKey').value;
+        this.loadConfigureStripe(stripeKey);
+    }
+
+    _inherits(PaymentModule, _React$Component);
+
+    _createClass(PaymentModule, [{
+        key: 'loadConfigureStripe',
+        value: function loadConfigureStripe(stripeKey) {
+            var stripeScript = document.createElement('script');
+            stripeScript.src = 'https://checkout.stripe.com/checkout.js';
+            document.head.appendChild(stripeScript);
+
+            stripeScript.onload = (function () {
+                console.log('Stripe JS Loaded');
+
+                if (typeof StripeCheckout === 'undefined') {
+                    throw Error('Stripe unavailable');
+                }
+
+                var onToken = (function (token) {
+                    this.setState({ stripeToken: token });
+                    this.handleSubmit();
+                }).bind(this);
+                var stripeHandler = StripeCheckout.configure({
+                    key: stripeKey,
+                    name: this.props.name,
+                    currency: 'GBP',
+                    allowRememberMe: false,
+                    token: onToken
+                });
+                this.setState({ stripeHandler: stripeHandler });
+            }).bind(this);
+        }
+    }, {
+        key: 'handleAmountChange',
+        value: function handleAmountChange(event) {
+            var amount = parseFloat(event.target.value);
+
+            if (!amount || amount < 0) {
+                amount = 0;
+            }
+
+            this.state.stripeLowValueWarning = this.state.method === 'stripe' && amount < 10;
+
+            this.setState({ amount: amount });
+        }
+    }, {
+        key: 'handleMethodChange',
+        value: function handleMethodChange(event) {
+            var method = event.target.value;
+
+            this.state.stripeLowValueWarning = method === 'stripe' && this.state.amount < 10;
+
+            this.setState({ method: method });
+        }
+    }, {
+        key: 'handleSubmit',
+        value: function handleSubmit() {
+
+            console.log(this.state.method);
+            console.log(this.state.amount);
+            console.log(this.state.stripeToken);
+
+            if (this.state.stripeLowValueWarning) {
+                return;
+            }
+
+            if (this.state.method === 'stripe' && this.state.stripeToken === null) {
+                this.displayStripeDialog();
+            }
+        }
+    }, {
+        key: 'displayStripeDialog',
+        value: function displayStripeDialog() {
+            this.state.stripeHandler.open({
+                description: this.props.description,
+                amount: this.state.amount * 100,
+                email: this.props.email
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+
+            return _react2['default'].createElement(
+                'div',
+                { className: 'form-inline' },
+                _react2['default'].createElement(
+                    'strong',
+                    null,
+                    'New Payment Form'
+                ),
+                _react2['default'].createElement('br', null),
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'form-group' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'input-group' },
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'input-group-addon' },
+                            '£'
+                        ),
+                        _react2['default'].createElement('input', { className: 'form-control', step: '0.01', required: 'required', type: 'number', value: this.state.amount, onChange: this.handleAmountChange })
+                    )
+                ),
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'form-group' },
+                    _react2['default'].createElement(
+                        'select',
+                        { className: 'form-control', value: this.state.method, onChange: this.handleMethodChange },
+                        _react2['default'].createElement(
+                            'option',
+                            { value: 'gocardless' },
+                            'Direct Debit'
+                        ),
+                        _react2['default'].createElement(
+                            'option',
+                            { value: 'stripe' },
+                            'Credit/Debit Card'
+                        )
+                    )
+                ),
+                _react2['default'].createElement('input', { className: 'btn btn-primary', type: 'submit', value: 'Top Up', onClick: this.handleSubmit }),
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'has-feedback has-error' },
+                    _react2['default'].createElement(
+                        'span',
+                        { className: this.state.stripeLowValueWarning ? 'help-block' : 'hidden' },
+                        'Because of processing fees the payment must be £10 or over when paying by card'
+                    )
+                )
+            );
+        }
+    }]);
+
+    return PaymentModule;
+})(_react2['default'].Component);
+
+exports['default'] = PaymentModule;
+module.exports = exports['default'];
+
+},{"react":172}],181:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37228,7 +37414,7 @@ var PaymentTable = (function (_React$Component) {
 exports['default'] = PaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTableRow":181,"react":172}],181:[function(require,module,exports){
+},{"./PaymentTableRow":182,"react":172}],182:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
