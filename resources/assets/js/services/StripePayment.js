@@ -53,7 +53,7 @@ class StripePayment {
     /**
      * Create the stripe handler which will control the modal generation
      */
-    private createHandler() {
+    createHandler() {
         this.stripeHandler = StripeCheckout.configure({
             key:             this.stripeKey,
             name:            this.name,

@@ -36,12 +36,11 @@ jQuery('.paymentModule').each(function () {
     var amount = jQuery(this).data('amount');
     var ref = jQuery(this).data('ref');
     var memberEmail = document.getElementById('memberEmail').value;
+    var stripeKey = document.getElementById('stripePublicKey').value;
 
-    var handleSuccess = function () {
-        document.location.reload(true);
-    };
+    var handleSuccess = () => { document.location.reload(true) };
 
-    React.render(<PaymentModule description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} onSuccess={handleSuccess} reference={ref} />, jQuery(this)[0]);
+    React.render(<PaymentModule description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} reference={ref} stripeKey={stripeKey} />, jQuery(this)[0]);
 
 });
 
