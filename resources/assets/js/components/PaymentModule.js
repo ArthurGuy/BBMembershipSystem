@@ -14,7 +14,7 @@ class PaymentModule extends React.Component {
         var csrfToken = document.getElementById('csrfToken').value;
 
         this.state = {
-            amount: this.props.amount,
+            amount: this.props.amount || 10,
             method: 'gocardless',
             stripeToken: null,
             stripeLowValueWarning: false,
@@ -110,7 +110,7 @@ class PaymentModule extends React.Component {
                 BB.SnackBar.displayMessage('Your payment has been processed');
 
                 //run the passed in success function
-                //this.props.onSuccess();
+                this.props.onSuccess();
 
             }.bind(this),
             error: function(xhr, status, err) {
@@ -135,10 +135,11 @@ class PaymentModule extends React.Component {
      */
     prepareRequestData() {
         return JSON.stringify({
-            amount: (this.state.amount * 100) + '',
-            reason: this.props.reason,
-            stripeToken: this.state.stripeToken,
-            '_token': this.state.csrfToken
+            amount:      (this.state.amount * 100) + '',
+            reason:      this.props.reason,
+            ref:         this.props.reference,
+            '_token':    this.state.csrfToken,
+            stripeToken: this.state.stripeToken
         });
     }
 
@@ -169,14 +170,23 @@ class PaymentModule extends React.Component {
     }
 
     render() {
-        return (
-            <div className="form-inline">
+
+        var amountField = null;
+
+        if (!this.props.amount) {
+            amountField =
                 <div className="form-group">
                     <div className="input-group">
                         <div className="input-group-addon">£</div>
-                        <input style={{width:70}} className="form-control" step="0.1" required="required" type="number" value={this.state.amount} onChange={this.handleAmountChange} />
+                        <input style={{width: 70}} className="form-control" step="0.1" required="required" type="number" value={this.state.amount} onChange={this.handleAmountChange} />
                     </div>
-                </div>
+                </div>;
+        }
+
+        return (
+            <div className="form-inline">
+
+                { amountField }
 
                 <Select value={this.state.method} onChange={this.handleMethodChange} options={this.getPaymentMethodArray()} style={{width:150}} />
 
@@ -200,7 +210,7 @@ PaymentModule.defaultProps = {
     buttonLabel: 'Pay Now',
     onSuccess: function() {},
     methods: 'gocardless,stripe,balance',
-    amount: 10
+    reference: null
 };
 
 export default PaymentModule;

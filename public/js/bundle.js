@@ -37389,7 +37389,7 @@ var PaymentModule = (function (_React$Component) {
         var csrfToken = document.getElementById('csrfToken').value;
 
         this.state = {
-            amount: this.props.amount,
+            amount: this.props.amount || 10,
             method: 'gocardless',
             stripeToken: null,
             stripeLowValueWarning: false,
@@ -37487,7 +37487,7 @@ var PaymentModule = (function (_React$Component) {
                     BB.SnackBar.displayMessage('Your payment has been processed');
 
                     //run the passed in success function
-                    //this.props.onSuccess();
+                    this.props.onSuccess();
                 }).bind(this),
                 error: (function (xhr, status, err) {
 
@@ -37514,8 +37514,9 @@ var PaymentModule = (function (_React$Component) {
             return JSON.stringify({
                 amount: this.state.amount * 100 + '',
                 reason: this.props.reason,
-                stripeToken: this.state.stripeToken,
-                '_token': this.state.csrfToken
+                ref: this.props.reference,
+                '_token': this.state.csrfToken,
+                stripeToken: this.state.stripeToken
             });
         }
     }, {
@@ -37553,10 +37554,10 @@ var PaymentModule = (function (_React$Component) {
         value: function render() {
             var _this3 = this;
 
-            return _react2['default'].createElement(
-                'div',
-                { className: 'form-inline' },
-                _react2['default'].createElement(
+            var amountField = null;
+
+            if (!this.props.amount) {
+                amountField = _react2['default'].createElement(
                     'div',
                     { className: 'form-group' },
                     _react2['default'].createElement(
@@ -37569,7 +37570,13 @@ var PaymentModule = (function (_React$Component) {
                         ),
                         _react2['default'].createElement('input', { style: { width: 70 }, className: 'form-control', step: '0.1', required: 'required', type: 'number', value: this.state.amount, onChange: this.handleAmountChange })
                     )
-                ),
+                );
+            }
+
+            return _react2['default'].createElement(
+                'div',
+                { className: 'form-inline' },
+                amountField,
                 _react2['default'].createElement(Select, { value: this.state.method, onChange: this.handleMethodChange, options: this.getPaymentMethodArray(), style: { width: 150 } }),
                 _react2['default'].createElement(
                     'button',
@@ -37608,7 +37615,7 @@ PaymentModule.defaultProps = {
     buttonLabel: 'Pay Now',
     onSuccess: function onSuccess() {},
     methods: 'gocardless,stripe,balance',
-    amount: 10
+    reference: null
 };
 
 exports['default'] = PaymentModule;
