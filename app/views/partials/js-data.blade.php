@@ -10,6 +10,7 @@
         var userId = '{{ Auth::user()->id }}';
     </script>
     <input type="hidden" id="stripePublicKey" value="@stripeKey()" />
+    <input type="hidden" id="memberEmail" value="{{ Auth::user()->email }}" />
 @else
     <script>
         var stripePublicKey = '';

@@ -1,5 +1,7 @@
 import React from 'react';
 
+var StripePayment = require('../services/StripePayment');
+
 class PaymentModule extends React.Component {
 
     constructor(props) {
@@ -8,12 +10,13 @@ class PaymentModule extends React.Component {
         var csrfToken = document.getElementById('csrfToken').value;
 
         this.state = {
-            amount: 10.00,
+            amount: this.props.amount,
             method: 'gocardless',
             stripeToken: null,
             stripeLowValueWarning: false,
             csrfToken,
-            requestInProgress: false
+            requestInProgress: false,
+            desiredPaymentMethods: this.props.methods.split(',')
         };
 
         this.handleSubmit       = this.handleSubmit.bind(this);
@@ -22,48 +25,10 @@ class PaymentModule extends React.Component {
 
         //Load in the stripe js file and configure our instance
         var stripeKey = document.getElementById('stripePublicKey').value;
-        this.loadConfigureStripe(stripeKey);
 
-    }
-
-    /**
-     * On initialisation stripe gets loaded in and setup
-     *
-     * @param stripeKey
-     */
-    loadConfigureStripe(stripeKey) {
-        //Load the stripe js
-        var stripeScript = document.createElement('script');
-        stripeScript.src = 'https://checkout.stripe.com/checkout.js';
-        document.head.appendChild(stripeScript);
-
-        stripeScript.onload = function() {
-            console.log('Stripe JS Loaded');
-
-            if (typeof StripeCheckout === 'undefined') {
-                throw Error('Stripe unavailable');
-            }
-
-            //Handle the storing of the stripe token and submit the form
-            var onToken = function(token) {
-                //The set state function may take some time, so dont move on untill we know its ready
-                this.setState({stripeToken:token.id}, function() {
-                    //The callback will only run when the state is ready
-                    this.handleSubmit();
-                });
-            }.bind(this);
-
-            //Setup the stripe handler
-            var stripeHandler = StripeCheckout.configure({
-                key:             stripeKey,
-                name:            this.props.name,
-                currency:        'GBP',
-                allowRememberMe: false,
-                token:           onToken
-            });
-            this.setState({stripeHandler:stripeHandler});
-
-        }.bind(this);
+        StripePayment.loadConfigureStripe(stripeKey, this.props.name, this.props.email, (token) => {
+            this.setState({stripeToken:token.id}, () => { this.handleSubmit(); });  //set state isn't immediate so wait until its done
+        });
     }
 
     handleAmountChange(event) {
@@ -132,12 +97,19 @@ class PaymentModule extends React.Component {
 
                 BB.SnackBar.displayMessage('Your payment has been processed');
 
+                //run the passed in success function
+                this.props.onSuccess();
+
             }.bind(this),
             error: function(xhr, status, err) {
 
                 var responseData = JSON.parse(xhr.responseText);
 
                 this.setState({requestInProgress:false});
+
+                if (xhr.status == 303) {
+                    document.location.href = responseData.url;
+                }
 
                 BB.SnackBar.displayMessage(responseData.error);
 
@@ -170,11 +142,11 @@ class PaymentModule extends React.Component {
     }
 
     displayStripeDialog() {
-        this.state.stripeHandler.open({
-            description: this.props.description,
-            amount:      this.state.amount * 100,
-            email:       this.props.email
-        });
+        StripePayment.collectCardDetails(this.state.amount * 100, this.props.description);
+    }
+
+    paymentMethodHidden(method) {
+        return (this.state.desiredPaymentMethods.indexOf(method) === -1)
     }
 
     render() {
@@ -189,22 +161,30 @@ class PaymentModule extends React.Component {
                 </div>
                 <div className="form-group">
                     <select className="form-control" value={this.state.method} onChange={this.handleMethodChange}>
-                        <option value="gocardless">Direct Debit</option>
-                        <option value="stripe">Credit/Debit Card</option>
-                        <option value="balance">Balance</option>
+                        <option value="gocardless" hidden={this.paymentMethodHidden('gocardless')}>Direct Debit</option>
+                        <option value="stripe" hidden={this.paymentMethodHidden('stripe')}>Credit/Debit Card</option>
+                        <option value="balance" hidden={this.paymentMethodHidden('balance')}>Balance</option>
                     </select>
                 </div>
 
-                <input className="btn btn-primary" type="submit" value="Top Up" disabled={this.state.requestInProgress} onClick={this.handleSubmit} />
+                <input className="btn btn-primary" type="submit" value={this.props.buttonLabel} disabled={this.state.requestInProgress} onClick={x => this.handleSubmit(x)} />
 
                 <div className="has-feedback has-error">
                     <span className={this.state.stripeLowValueWarning ? 'help-block' : 'hidden'}>Because of processing fees the payment must be £10 or over when paying by card</span>
-                    <span className={this.state.requestInProgress ? 'help-block' : 'hidden'}>Sending...</span>
+                    <span className={this.state.requestInProgress ? 'help-block' : 'hidden'}>Processing...</span>
                 </div>
             </div>
         );
     }
 
 }
+
+PaymentModule.defaultProps = {
+    name: 'Build Brighton',
+    buttonLabel: 'Pay Now',
+    onSuccess: function() {},
+    methods: 'gocardless,stripe,balance',
+    amount: 10
+};
 
 export default PaymentModule;

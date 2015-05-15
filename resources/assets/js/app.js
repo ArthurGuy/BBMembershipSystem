@@ -26,9 +26,32 @@ if (jQuery('body').hasClass('payment-page')) {
     React.render(<FilterablePaymentTable />, document.getElementById('react-test'));
 }
 
+var PaymentModule = require('./components/PaymentModule');
+jQuery('.paymentModule').each(function () {
+
+    var reason = jQuery(this).data('reason');
+    var displayReason = jQuery(this).data('displayReason');
+    var buttonLabel = jQuery(this).data('buttonLabel');
+    var methods = jQuery(this).data('methods');
+    var amount = jQuery(this).data('amount');
+    var ref = jQuery(this).data('ref');
+    var memberEmail = document.getElementById('memberEmail').value;
+
+    var handleSuccess = function () {
+        document.location.reload(true);
+    };
+
+    React.render(<PaymentModule description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} onSuccess={handleSuccess} reference={ref} />, jQuery(this)[0]);
+
+});
+
 if (document.getElementById('paymentModuleTest')) {
-    var PaymentModule = require('./components/PaymentModule');
-    React.render(<PaymentModule name="Build Brighton" description="Sample Description" reason="balance" email={memberEmail} userId={userId} />, document.getElementById('paymentModuleTest'));
+
+    var handleSuccess = function () {
+        console.log('refresh');
+        document.location.reload(true);
+    };
+
+    React.render(<PaymentModule description="Sample Description" reason="balance" email={memberEmail} userId={userId} onSuccess={handleSuccess} />, document.getElementById('paymentModuleTest'));
+
 }
-
-
