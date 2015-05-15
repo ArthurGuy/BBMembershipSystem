@@ -36,7 +36,9 @@
                     <p>
                     If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need pay its &pound;5 deposit
                     </p>
-                    @include('partials/payment-form', ['reason'=>'storage-box', 'displayReason'=>'Storage Box Deposit', 'returnPath'=>route('storage_boxes.index', [], false), 'amount'=>5, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'balance']])
+
+                    <div class="paymentModule" data-reason="storage-box" data-display-reason="Storage Box Deposit" data-button-label="Pay Now" data-methods="gocardless,balance" data-amount="5"></div>
+
                 @endif
                 @if ($moneyAvailable > 0)
                     To claim a box click claim next to the box you want below, you should probably make sure its on the shelf before you do this.

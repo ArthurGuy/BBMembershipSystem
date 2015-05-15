@@ -27,10 +27,7 @@ Build Brighton Balance
             <div class="panel-body">
                 <p>Top up using Direct Debit or a credit/debit card payment</p>
 
-                @include('partials/payment-form', ['reason'=>'balance', 'returnPath'=>route('account.balance.index', [$user->id], false), 'amount'=>null, 'buttonLabel'=>'Top Up', 'displayReason'=>'Balance Payment', 'methods'=>['gocardless', 'stripe']])
-
-
-                <div id="paymentModuleTest"></div>
+                <div class="paymentModule" data-reason="balance" data-display-reason="Balance Payment" data-button-label="Top Up" data-methods="gocardless,stripe"></div>
 
                 <p>
                     Cash top ups can be made to a trustee in the space
