@@ -62,10 +62,11 @@ Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-p
 # Payment provider specific urls
 Route::post('account/{account}/payment/stripe', ['as'=>'account.payment.stripe.store', 'uses' => 'StripePaymentController@store']);
 Route::post('account/{account}/payment/gocardless', ['as'=>'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
-Route::get('account/{account}/payment/gocardless/store', ['as'=>'account.payment.gocardless.store', 'uses' => 'GoCardlessPaymentController@store']);
-
-//balance payments
 Route::post('account/{account}/payment/balance', ['as'=>'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
+//Gocardless return url
+Route::get('account/{account}/payment/gocardless/manual-return', ['as'=>'account.payment.gocardless.manual-return', 'uses' => 'GoCardlessPaymentController@handleManualReturn']);
+
+
 //Cash
 Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
 

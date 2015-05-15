@@ -62,11 +62,12 @@ class GoCardlessPaymentController extends \BaseController
 
     /**
      * Processes the return for old gocardless payments
+     *
      * @param $userId
      * @return mixed
      * @throws \BB\Exceptions\AuthenticationException
      */
-    public function store($userId)
+    public function handleManualReturn($userId)
     {
         $user = User::findWithPermission($userId);
 
@@ -124,6 +125,7 @@ class GoCardlessPaymentController extends \BaseController
 
     /**
      * Process a manual gocardless payment
+     *
      * @param $amount
      * @param $reason
      * @param $user
@@ -138,7 +140,7 @@ class GoCardlessPaymentController extends \BaseController
             'amount'       => $amount,
             'name'         => $this->getName($reason, $user->id),
             'description'  => $this->getDescription($reason),
-            'redirect_uri' => route('account.payment.gocardless.store', [$user->id]),
+            'redirect_uri' => route('account.payment.gocardless.manual-return', [$user->id]),
             'user'         => [
                 'first_name'       => $user->given_name,
                 'last_name'        => $user->family_name,
@@ -150,7 +152,13 @@ class GoCardlessPaymentController extends \BaseController
             ],
             'state'        => $reason . ':' . $ref . ':' . $returnPath
         );
-        return Redirect::to($this->goCardless->newBillUrl($payment_details));
+        $redirectUrl = $this->goCardless->newBillUrl($payment_details);
+
+        if (Request::wantsJson()) {
+            return Response::json(['url' => $redirectUrl], 303);
+        }
+
+        return Redirect::to($redirectUrl);
     }
 
 
