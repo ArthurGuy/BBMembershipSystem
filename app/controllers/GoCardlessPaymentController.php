@@ -37,27 +37,37 @@ class GoCardlessPaymentController extends \BaseController
     {
         $user = User::findWithPermission($userId);
 
-        $reason = Request::get('reason');
-        $amount = Request::get('amount');
-        $returnPath = Request::get('return_path');
+        $requestData = Request::only(['reason', 'amount', 'return_path']);
+
+        $reason = $requestData['reason'];
+        $amount = ($requestData['amount'] * 1) / 100;
+        $returnPath = $requestData['return_path'];
         $ref = $this->getReference($reason);
 
+
         if ($user->payment_method == 'gocardless-variable') {
+
             return $this->handleBill($amount, $reason, $user, $ref, $returnPath);
+
         } elseif ($user->payment_method == 'gocardless') {
+
             return $this->ddMigratePrompt($returnPath);
+
         } else {
+
             return $this->handleManualBill($amount, $reason, $user, $ref, $returnPath);
+
         }
     }
 
     /**
      * Processes the return for old gocardless payments
+     *
      * @param $userId
      * @return mixed
      * @throws \BB\Exceptions\AuthenticationException
      */
-    public function store($userId)
+    public function handleManualReturn($userId)
     {
         $user = User::findWithPermission($userId);
 
@@ -115,6 +125,7 @@ class GoCardlessPaymentController extends \BaseController
 
     /**
      * Process a manual gocardless payment
+     *
      * @param $amount
      * @param $reason
      * @param $user
@@ -129,7 +140,7 @@ class GoCardlessPaymentController extends \BaseController
             'amount'       => $amount,
             'name'         => $this->getName($reason, $user->id),
             'description'  => $this->getDescription($reason),
-            'redirect_uri' => route('account.payment.gocardless.store', [$user->id]),
+            'redirect_uri' => route('account.payment.gocardless.manual-return', [$user->id]),
             'user'         => [
                 'first_name'       => $user->given_name,
                 'last_name'        => $user->family_name,
@@ -141,12 +152,21 @@ class GoCardlessPaymentController extends \BaseController
             ],
             'state'        => $reason . ':' . $ref . ':' . $returnPath
         );
-        return Redirect::to($this->goCardless->newBillUrl($payment_details));
+        $redirectUrl = $this->goCardless->newBillUrl($payment_details);
+
+        if (Request::wantsJson()) {
+            return Response::json(['url' => $redirectUrl], 303);
+        }
+
+        return Redirect::to($redirectUrl);
     }
 
 
     private function ddMigratePrompt($returnPath)
     {
+        if (Request::wantsJson()) {
+            return Response::json(['error' => 'Please visit the "Your Membership" page and migrate your Direct Debit first, then return and make the payment'], 400);
+        }
         Notification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
         return Redirect::to($returnPath);
     }
@@ -175,9 +195,18 @@ class GoCardlessPaymentController extends \BaseController
             //The record payment process will make the necessary record updates
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
 
+            if (Request::wantsJson()) {
+                return Response::json(['message' => 'The payment was submitted successfully']);
+            }
+
             Notification::success("The payment was submitted successfully");
         } else {
             //something went wrong - we still have the pre auth though
+
+            if (Request::wantsJson()) {
+                return Response::json(['error' => 'There was a problem charging your account'], 400);
+            }
+
             Notification::error("There was a problem charging your account");
         }
 
