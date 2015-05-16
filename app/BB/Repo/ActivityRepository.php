@@ -30,7 +30,6 @@ class ActivityRepository extends DBRepository
 
         return $this->model->with('user', 'user.profile')->where('created_at', '>', $startDate)
             ->where('created_at', '<', $endDate)
-            ->where('service', 'main-door')
             ->where('response', '200')
             ->orderBy('created_at', 'desc')
             ->get();
