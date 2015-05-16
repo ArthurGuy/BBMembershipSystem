@@ -2,6 +2,13 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class StorageBox
+ *
+ * @property bool $active
+ * @property integer $user_id
+ * @package BB\Entities
+ */
 class StorageBox extends Model
 {
 

@@ -2,6 +2,18 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Device
+ *
+ * @property string $device_key
+ * @property bool $requires_induction
+ * @property integer $usageCost
+ * @property bool $working
+ * @property bool $permaloan
+ * @property integer $managing_role_id
+ * @property $photos
+ * @package BB\Entities
+ */
 class Device extends Model
 {
 

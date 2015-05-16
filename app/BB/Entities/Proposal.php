@@ -4,6 +4,13 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
+/**
+ * Class Proposal
+ *
+ * @property /Carbon $start_date
+ * @property /Carbon $end_date
+ * @package BB\Entities
+ */
 class Proposal extends Model
 {
 

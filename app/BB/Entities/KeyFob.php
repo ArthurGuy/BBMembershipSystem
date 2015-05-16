@@ -3,6 +3,13 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * Class KeyFob
+ *
+ * @property bool lost
+ * @property bool active
+ * @package BB\Entities
+ */
 class KeyFob extends Model
 {
 

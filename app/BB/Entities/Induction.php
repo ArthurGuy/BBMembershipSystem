@@ -3,6 +3,12 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Induction
+ *
+ * @property bool $trained
+ * @package BB\Entities
+ */
 class Induction extends Model
 {
 

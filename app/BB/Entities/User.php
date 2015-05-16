@@ -13,6 +13,22 @@ use Laracasts\Presenter\PresentableTrait;
 use Auth;
 use Hash;
 
+/**
+ * Class User
+ *
+ * @property string $hash
+ * @property bool $active
+ * @property bool $key_holder
+ * @property bool $trusted
+ * @property bool $banned
+ * @property bool $email_verified
+ * @property integer $payment_day
+ * @property string $status
+ * @property string $payment_method
+ * @property string $subscription_id
+ * @property string $phone
+ * @package BB\Entities
+ */
 class User extends Model implements UserInterface, RemindableInterface {
 
     use UserTrait, RemindableTrait, UserRoleTrait, PresentableTrait;
