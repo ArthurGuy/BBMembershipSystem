@@ -23,8 +23,9 @@
         @elseif ($user->payment_method == 'gocardless-variable')
             <p>
                 Your latest subscription payment has failed and your account has been temporarily suspended.<br />
-                You can retry your direct debit payment now.
-                @include('partials/payment-form', ['reason'=>'subscription', 'displayReason'=>'Retry payment', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>round($user->monthly_subscription), 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'balance', 'stripe']])
+                You can retry your payment now.
+
+                <div class="paymentModule" data-reason="subscription" data-display-reason="Retry payment" data-methods="gocardless,stripe,balance" data-amount="{{ $user->monthly_subscription }}"></div>
 
                 @if (Auth::user()->isAdmin())
                     <small>Admins: You cannot do this process on behalf of the member, it will just charge your account.</small>
