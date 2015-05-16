@@ -164,6 +164,8 @@ class UserImage
                     //rotate 90 ccw
                     $source = imagecreatefromjpeg($filePath);
                     $rotate = imagerotate($source, 90, 0);
+                } else {
+                    return;
                 }
                 imagejpeg($rotate, $filePath, 98);
             }

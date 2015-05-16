@@ -18,7 +18,7 @@ class ActivityRepository extends DBRepository
     }
 
     /**
-     * Fetch all entries for a paticular date
+     * Fetch all entries for a particular date
      *
      * @param \DateTime $startDate
      * @return mixed
@@ -40,8 +40,8 @@ class ActivityRepository extends DBRepository
     /**
      * Record an access attempt
      *
-     * @param $data
-     * @return AccessLog
+     * @param array $data
+     * @return Activity
      */
     public function logAccessAttempt($data)
     {
@@ -49,6 +49,11 @@ class ActivityRepository extends DBRepository
     }
 
 
+    /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return mixed
+     */
     public function activeUsersForPeriod(\DateTime $startDate, \DateTime $endDate)
     {
         $startDate = $startDate->setTime(0, 0, 0);
@@ -66,11 +71,11 @@ class ActivityRepository extends DBRepository
     /**
      * Record a generic activity entry for the user
      *
-     * @param        $userId
-     * @param        $keyFobId
-     * @param        $deviceKey
-     * @param Carbon $time
-     * @return static
+     * @param integer $userId
+     * @param integer $keyFobId
+     * @param string  $deviceKey
+     * @param Carbon  $time
+     * @return Activity
      */
     public function recordMemberActivity($userId, $keyFobId, $deviceKey, Carbon $time = null)
     {

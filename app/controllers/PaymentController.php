@@ -118,24 +118,24 @@ class PaymentController extends \BaseController
             $reason = Input::get('reason');
             if ($reason == 'subscription') {
                 //must go via the gocardless payment controller
-                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless subscription payment");
+                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless subscription payment');
             } elseif ($reason == 'induction') {
                 //Payments must go via the balance
-                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless induction payment");
+                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless induction payment');
             } elseif ($reason == 'door-key') {
                 //Payments must go via the balance
-                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless door payment");
+                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless door payment');
             } elseif ($reason == 'storage-box') {
                 //Payments must go via the balance
-                throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless storage box payment");
+                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless storage box payment');
             } elseif ($reason == 'balance') {
                 $amount = Input::get('amount') * 1;//convert the users amount into a number
                 if (!is_numeric($amount)) {
                     $exceptionErrors = new \Illuminate\Support\MessageBag(['amount' => 'Invalid amount']);
-                    throw new \BB\Exceptions\FormValidationException("Not a valid amount", $exceptionErrors);
+                    throw new \BB\Exceptions\FormValidationException('Not a valid amount', $exceptionErrors);
                 }
-                $name        = strtoupper("BBBALANCE" . $user->id);
-                $description = "BB Credit Payment";
+                $name        = strtoupper('BBBALANCE' . $user->id);
+                $description = 'BB Credit Payment';
                 $ref         = null;
             } else {
                 throw new \BB\Exceptions\NotImplementedException();
@@ -197,14 +197,14 @@ class PaymentController extends \BaseController
             $errors = $e->getMessage();
             Notification::error($errors);
 
-            return Redirect::route('account.show', $user->id);
+            return Redirect::route('account.show', [$user->id]);
         }
 
         $details = explode(':', Input::get('state'));
         $reason  = $details[0];
         $ref     = $details[1];
 
-        Log::debug("Old PaymentController@confirmPayment method used. Reason: " . $reason);
+        Log::debug('Old PaymentController@confirmPayment method used. Reason: ' . $reason);
 
         $payment = new Payment([
             'reason'           => $reason,
@@ -223,29 +223,29 @@ class PaymentController extends \BaseController
             $user->save();
         } elseif ($reason == 'induction') {
             //Payments must go via the balance
-            throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless induction payment");
+            throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless induction payment');
         } elseif ($reason == 'door-key') {
             //Payments must go via the balance
-            throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless dor key payment");
+            throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless dor key payment');
         } elseif ($reason == 'storage-box') {
             //Payments must go via the balance
-            throw new \BB\Exceptions\NotImplementedException("Attempted GoCardless storage box payment");
+            throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless storage box payment');
         } elseif ($reason == 'balance') {
             $memberCreditService = \App::make('\BB\Services\Credit');
             $memberCreditService->setUserId($user->id);
             $memberCreditService->recalculate();
 
             //This needs to be improved
-            Notification::success("Payment recorded");
+            Notification::success('Payment recorded');
 
             return Redirect::route('account.bbcredit.index', $user->id);
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
 
-        Notification::success("Payment made");
+        Notification::success('Payment made');
 
-        return Redirect::route('account.show', $user->id);
+        return Redirect::route('account.show', [$user->id]);
     }
 
 
@@ -334,7 +334,7 @@ class PaymentController extends \BaseController
             $amount = Input::get('amount') * 1;//convert the users amount into a number
             if (!is_numeric($amount)) {
                 $exceptionErrors = new \Illuminate\Support\MessageBag(['amount' => 'Invalid amount']);
-                throw new \BB\Exceptions\FormValidationException("Not a valid amount", $exceptionErrors);
+                throw new \BB\Exceptions\FormValidationException('Not a valid amount', $exceptionErrors);
             }
             $payment = new Payment([
                 'reason'           => 'balance',
@@ -351,15 +351,15 @@ class PaymentController extends \BaseController
             $memberCreditService->recalculate();
 
             //This needs to be improved
-            Notification::success("Payment recorded");
+            Notification::success('Payment recorded');
 
             return Redirect::route('account.bbcredit.index', $user->id);
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
-        Notification::success("Payment recorded");
+        Notification::success('Payment recorded');
 
-        return Redirect::route('account.show', $user->id);
+        return Redirect::route('account.show', [$user->id]);
     }
 
 
@@ -398,7 +398,7 @@ class PaymentController extends \BaseController
     {
         $this->paymentRepository->getById($id);
 
-        Notification::success("Not yet implemented");
+        Notification::success('Not yet implemented');
 
         return Redirect::back();
     }
@@ -426,7 +426,7 @@ class PaymentController extends \BaseController
         //The delete event will broadcast an event and allow related actions to occur
         $this->paymentRepository->delete($id);
 
-        Notification::success("Payment deleted");
+        Notification::success('Payment deleted');
 
         return Redirect::back();
     }
@@ -446,7 +446,7 @@ class PaymentController extends \BaseController
         try {
             $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
             if ($subscription->status != 'cancelled') {
-                Notification::error("Could not cancel the existing subscription");
+                Notification::error('Could not cancel the existing subscription');
 
                 return Redirect::back();
             }
