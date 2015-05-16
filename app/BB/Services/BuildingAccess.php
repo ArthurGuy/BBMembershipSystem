@@ -52,11 +52,11 @@ class BuildingAccess extends KeyFobAccess
 
         //Validate the action
         if ($this->isSystemMessage()) {
-            if (!in_array($this->action, $this->systemDeviceActions)) {
+            if ( ! in_array($this->action, $this->systemDeviceActions)) {
                 throw new ValidationException('Invalid Device Action');
             }
             //Validate the device
-            if (!in_array($this->deviceKey, $this->devices)) {
+            if ( ! in_array($this->deviceKey, $this->devices)) {
                 throw new ValidationException('Invalid device key');
             }
 
@@ -64,12 +64,12 @@ class BuildingAccess extends KeyFobAccess
         }
 
         //Validate the action
-        if (!in_array($this->action, $this->deviceActions)) {
+        if ( ! in_array($this->action, $this->deviceActions)) {
             throw new ValidationException('Invalid Device Action');
         }
 
         //Validate the device
-        if (!in_array($this->deviceKey, $this->devices)) {
+        if ( ! in_array($this->deviceKey, $this->devices)) {
             throw new ValidationException('Invalid device key');
         }
 
@@ -78,22 +78,22 @@ class BuildingAccess extends KeyFobAccess
 
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
-        if (!$this->user || !$this->user->active) {
+        if ( ! $this->user || ! $this->user->active) {
             $this->logFailure();
             throw new ValidationException('Not a member');
         }
 
-        if (!$this->user->trusted) {
+        if ( ! $this->user->trusted) {
             $this->logFailure();
             throw new ValidationException('Not a keyholder');
         }
 
-        if (!$this->user->key_holder) {
+        if ( ! $this->user->key_holder) {
             $this->logFailure();
             throw new ValidationException('Not a keyholder');
         }
 
-        if (!($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
+        if ( ! ($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
             $this->logFailure();
             throw new ValidationException('Member not trusted');
         }

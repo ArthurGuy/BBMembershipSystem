@@ -31,7 +31,7 @@ class EquipmentPresenter extends Presenter
 
     public function purchaseDate()
     {
-        if (!$this->entity->obtained_at) {
+        if ( ! $this->entity->obtained_at) {
             return null;
         }
         return $this->entity->obtained_at->toFormattedDateString();

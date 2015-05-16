@@ -206,15 +206,15 @@ class GoCardlessPaymentController extends \BaseController
     private function getName($reason, $userId)
     {
         if ($reason == 'subscription') {
-            return strtoupper("BBSUB".$userId.":MANUAL");
+            return strtoupper("BBSUB" . $userId . ":MANUAL");
         } elseif ($reason == 'induction') {
-            return strtoupper("BBINDUCTION".$userId.":".Request::get('induction_key'));
+            return strtoupper("BBINDUCTION" . $userId . ":" . Request::get('induction_key'));
         } elseif ($reason == 'door-key') {
-            return strtoupper("BBDOORKEY".$userId);
+            return strtoupper("BBDOORKEY" . $userId);
         } elseif ($reason == 'storage-box') {
-            return strtoupper("BBSTORAGEBOX".$userId);
+            return strtoupper("BBSTORAGEBOX" . $userId);
         } elseif ($reason == 'balance') {
-            return strtoupper("BBBALANCE".$userId);
+            return strtoupper("BBBALANCE" . $userId);
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }

@@ -31,14 +31,14 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     {
         if ($profileData->profile_photo) {
             if (\Auth::guest() && $profileData->profile_photo_private) {
-                return '<img src="'.\BB\Helpers\UserImage::anonymous().'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
-            } elseif ((!\Auth::guest() && !\Auth::user()->shouldMemberSeeProtectedPhoto()) && $profileData->profile_photo_private) {
-                return '<img src="'.\BB\Helpers\UserImage::anonymous().'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
+                return '<img src="' . \BB\Helpers\UserImage::anonymous() . '" width="' . $size . '" height="' . $size . '" class="' . $class . '" />';
+            } elseif (( ! \Auth::guest() && ! \Auth::user()->shouldMemberSeeProtectedPhoto()) && $profileData->profile_photo_private) {
+                return '<img src="' . \BB\Helpers\UserImage::anonymous() . '" width="' . $size . '" height="' . $size . '" class="' . $class . '" />';
             } else {
-                return '<img src="'.\BB\Helpers\UserImage::thumbnailUrl($userHash).'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
+                return '<img src="' . \BB\Helpers\UserImage::thumbnailUrl($userHash) . '" width="' . $size . '" height="' . $size . '" class="' . $class . '" />';
             }
         } else {
-            return '<img src="'.\BB\Helpers\UserImage::anonymous().'" width="'.$size.'" height="'.$size.'" class="'.$class.'" />';
+            return '<img src="' . \BB\Helpers\UserImage::anonymous() . '" width="' . $size . '" height="' . $size . '" class="' . $class . '" />';
         }
     }
 
@@ -63,7 +63,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
     public function profileSocialMediaListItem($name, $url)
     {
         if ($name && $url) {
-            return '<li>'.$name.' - <a href="'.$url.'" title="'.$name.'">'.$url.'</a></li>';
+            return '<li>' . $name . ' - <a href="' . $url . '" title="' . $name . '">' . $url . '</a></li>';
         }
     }
 
@@ -91,15 +91,15 @@ class HtmlBuilder extends IlluminateHtmlBuilder
 
     public function sideNavLink($name, $route, $routeParams = [])
     {
-        return '<li><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
+        return '<li><a href="' . route($route, $routeParams) . '">' . $name . '</a></li>';
     }
 
     public function paymentFormMethodDropdown($methods = [])
     {
         $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card', 'balance'=>'Pay using your Balance'];
-        if (!empty($methods)) {
+        if ( ! empty($methods)) {
             foreach ($possibleMethods as $method => $methodName) {
-                if (!in_array($method, $methods)) {
+                if ( ! in_array($method, $methods)) {
                     unset($possibleMethods[$method]);
                 }
             }

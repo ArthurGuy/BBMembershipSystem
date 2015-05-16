@@ -3,7 +3,6 @@
 use BB\Entities\Payment;
 use BB\Exceptions\NotImplementedException;
 use Carbon\Carbon;
-use DateTime;
 
 class PaymentRepository extends DBRepository
 {
@@ -98,14 +97,14 @@ class PaymentRepository extends DBRepository
      * @param Carbon $paidDate
      * @return int The ID of the payment record
      */
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref='', Carbon $paidDate=null)
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
     {
         if ($paidDate == null) {
             $paidDate = new Carbon();
         }
         //If we have an existing similer record dont create another, except for when there is no source id
         $existingRecord = $this->model->where('source', $source)->where('source_id', $sourceId)->where('user_id', $userId)->first();
-        if (!$existingRecord || empty($sourceId)) {
+        if ( ! $existingRecord || empty($sourceId)) {
             $record                   = new $this->model;
             $record->user_id          = $userId;
             $record->reason           = $reason;
@@ -139,11 +138,11 @@ class PaymentRepository extends DBRepository
      * @param double $amount Amount received before a fee
      * @param string $status paid, pending, cancelled, refunded
      * @param double $fee The fee charged by the payment provider
-     * @param null   $ref
+     * @param string|null   $ref
      * @param Carbon $paidDate
      * @return int  The ID of the payment record
      */
-    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref='', Carbon $paidDate=null)
+    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
     {
         return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref, $paidDate);
     }
@@ -152,7 +151,7 @@ class PaymentRepository extends DBRepository
      * An existing payment has been set to paid
      *
      * @param $paymentId
-     * @param $paidDate
+     * @param Carbon $paidDate
      */
     public function markPaymentPaid($paymentId, $paidDate)
     {
@@ -170,7 +169,7 @@ class PaymentRepository extends DBRepository
      * @param int    $paymentId
      * @param string $status
      */
-    public function recordPaymentFailure($paymentId, $status='failed')
+    public function recordPaymentFailure($paymentId, $status = 'failed')
     {
         $this->update($paymentId, ['status' => $status]);
 
@@ -186,7 +185,7 @@ class PaymentRepository extends DBRepository
      * @param string  $reason
      * @return mixed
      */
-    public function latestUserPayment($userId, $reason='subscription')
+    public function latestUserPayment($userId, $reason = 'subscription')
     {
         return $this->model->where('user_id', $userId)
             ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', [$reason, 'paid', 'pending', 'withdrawn'])
@@ -304,7 +303,7 @@ class PaymentRepository extends DBRepository
 
     private function hasMemberFilter()
     {
-        return !is_null($this->memberId);
+        return ! is_null($this->memberId);
     }
 
     /**
@@ -318,7 +317,7 @@ class PaymentRepository extends DBRepository
 
     private function hasReasonFilter()
     {
-        return !is_null($this->reason);
+        return ! is_null($this->reason);
     }
 
     /**
@@ -333,7 +332,7 @@ class PaymentRepository extends DBRepository
 
     private function hasSourceFilter()
     {
-        return !is_null($this->source);
+        return ! is_null($this->source);
     }
 
     /**

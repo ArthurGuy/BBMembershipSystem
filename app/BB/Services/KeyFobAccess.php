@@ -125,7 +125,7 @@ class KeyFobAccess
     }
 
     /**
-     * @return \User
+     * @return User
      */
     public function getUser()
     {
@@ -148,22 +148,22 @@ class KeyFobAccess
 
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
-        if (!$this->user || !$this->user->active) {
+        if ( ! $this->user || ! $this->user->active) {
             $this->logFailure();
             throw new ValidationException('Not a member');
         }
 
-        if (!$this->user->trusted) {
+        if ( ! $this->user->trusted) {
             $this->logFailure();
             throw new ValidationException('Not a keyholder');
         }
 
-        if (!$this->user->key_holder) {
+        if ( ! $this->user->key_holder) {
             $this->logFailure();
             throw new ValidationException('Not a keyholder');
         }
 
-        if (!($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
+        if ( ! ($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
             $this->logFailure();
             throw new ValidationException('Member not trusted');
         }
@@ -183,7 +183,7 @@ class KeyFobAccess
             $keyFob = KeyFob::lookup($keyId);
             return $keyFob;
         } catch (\Exception $e) {
-            $keyId = substr('BB'.$keyId, 0, 12);
+            $keyId = substr('BB' . $keyId, 0, 12);
             try {
                 $keyFob = KeyFob::lookup($keyId);
             } catch (\Exception $e) {
@@ -229,9 +229,9 @@ class KeyFobAccess
      * Set the time to a specific timestamp - the new entry system will be passing a local time with the requests
      * @param null $time
      */
-    protected function setAccessTime($time=null)
+    protected function setAccessTime($time = null)
     {
-        if (!empty($time)) {
+        if ( ! empty($time)) {
             $this->time = Carbon::createFromTimestamp($time);
         } else {
             $this->time = Carbon::now();

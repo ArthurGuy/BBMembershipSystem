@@ -33,7 +33,7 @@ class CheckMemberships
             $expired = false;
 
             $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
-            if (!$user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
+            if ( ! $user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
                 $expired = true;
             }
 

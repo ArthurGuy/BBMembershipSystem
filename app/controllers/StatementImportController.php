@@ -56,7 +56,7 @@ class StatementImportController extends \BaseController
         $users = User::active()->get();
 
 
-        echo '<br />'.PHP_EOL;
+        echo '<br />' . PHP_EOL;
         echo '<table width="100%">';
         foreach ($reader as $i=>$row) {
             echo "<tr>";
@@ -72,7 +72,7 @@ class StatementImportController extends \BaseController
             }
 
             $date = new \Carbon\Carbon($row[0]);
-            echo "<td>".$date.'</td>';
+            echo "<td>" . $date . '</td>';
 
             //echo "<td>".$row[1].'</td>';
 
@@ -111,7 +111,7 @@ class StatementImportController extends \BaseController
             }
 
             //If there was no match do a general surname match
-            if (!$matchedUser) {
+            if ( ! $matchedUser) {
                 foreach ($users as $user) {
                     if (strpos($paymentDescription, strtolower($user->family_name)) !== false) {
                         $matchedUser = $user;
@@ -120,11 +120,11 @@ class StatementImportController extends \BaseController
                 }
             }
             if ($matchedUser) {
-                echo '<td>'.$matchedUser->name.'</td>';
+                echo '<td>' . $matchedUser->name . '</td>';
                 if ($subPayment) {
                     $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
                     if ($subCharge) {
-                        echo '<td>Sub Charge: '.$subCharge->amount.'</td>';
+                        echo '<td>Sub Charge: ' . $subCharge->amount . '</td>';
                     } else {
                         echo '<td>No Sub Charge</td>';
                     }
@@ -133,15 +133,15 @@ class StatementImportController extends \BaseController
                 echo '<td>Unknown</td><td></td>';
             }
 
-            echo '<td>'.$row[2].'</td>';
+            echo '<td>' . $row[2] . '</td>';
 
             //echo '<td>'.$row[3].'</td>';
 
-            echo '<td>'.$row[4].'</td>';
+            echo '<td>' . $row[4] . '</td>';
 
             echo "</tr>";
 
-            if (!$testProcess && $matchedUser) {
+            if ( ! $testProcess && $matchedUser) {
                 if ($subPayment) {
                     //$subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
                     if (isset($subCharge) && $subCharge) {

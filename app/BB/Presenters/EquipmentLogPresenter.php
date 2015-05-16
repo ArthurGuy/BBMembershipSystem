@@ -21,7 +21,7 @@ class EquipmentLogPresenter extends Presenter
         $delta = $this->entity->finished->diffInSeconds($this->entity->started);
 
         $hours = (int)($delta / 3600);
-        $seconds = $delta % 3600;   //seconds after hours taken away
+        $seconds = $delta % 3600; //seconds after hours taken away
         $minutes = (int)($seconds / 60);
         $seconds = $seconds % 60;
 

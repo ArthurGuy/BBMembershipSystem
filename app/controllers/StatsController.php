@@ -30,7 +30,7 @@ class StatsController extends \BaseController
      */
     public function index()
     {
-        $users         = $this->userRepository->getActive();
+        $users = $this->userRepository->getActive();
         $paymentMethodsNumbers = [
             'gocardless'            => 0,
             'gocardless-variable'   => 0,
@@ -86,9 +86,9 @@ class StatsController extends \BaseController
 
         //Format the data into the chart format
         $monthlyAmountsData = [];
-        $monthlyAmountsData[] = ['Amount', 'Number of Members', (object)['role'=> 'annotation' ]];
+        $monthlyAmountsData[] = ['Amount', 'Number of Members', (object)['role'=> 'annotation']];
         foreach ($monthlyAmounts as $amount => $numUsers) {
-            $monthlyAmountsData[] = ['£'.$amount, $numUsers, $numUsers];
+            $monthlyAmountsData[] = ['£' . $amount, $numUsers, $numUsers];
         }
 
 
@@ -126,7 +126,7 @@ class StatsController extends \BaseController
 
     public function ddSwitch()
     {
-        $users         = $this->userRepository->getActive();
+        $users = $this->userRepository->getActive();
         $paymentMethodsNumbers = [
             'gocardless'            => 0,
             'gocardless-variable'   => 0,

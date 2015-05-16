@@ -40,7 +40,7 @@ Route::get('account/{account}/balance', ['uses'=>'BBCreditController@index', 'as
 
 # Members
 
-Route::resource('members', 'MembersController', ['only'=>['index','show']]);
+Route::resource('members', 'MembersController', ['only'=>['index', 'show']]);
 
 
 # Subscription/Payments
@@ -186,10 +186,10 @@ Route::post('camera/event/store', function() {
 
 
         $date = Carbon::createFromFormat('YmdHis', $event);
-        $folderName = $date->hour.':'.$date->minute.':'.$date->second;
+        $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
 
         try {
-            $newFilename = \App::environment() . '/cctv/'.$date->year.'/'.$date->month.'/'.$date->day.'/' . $folderName . '/' . $time . '.jpg';
+            $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '/' . $time . '.jpg';
             $s3->putObject(array(
                 'Bucket'        => $s3Bucket,
                 'Key'           => $newFilename,
@@ -209,13 +209,13 @@ Route::post('camera/event/store', function() {
         $event = Request::get('textevent');
 
         $date = Carbon::createFromFormat('YmdHis', $event);
-        $folderName = $date->hour.':'.$date->minute.':'.$date->second;
+        $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
 
         $iterator = $s3->getIterator(
             'ListObjects',
             array(
                 'Bucket' => $s3Bucket,
-                'Prefix' => \App::environment().'/cctv/'.$date->year.'/'.$date->month.'/'.$date->day.'/'.$folderName,
+                'Prefix' => \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName,
                 //'Prefix' => 'production/camera-photos/20150410222028',
             )
         );
@@ -231,7 +231,7 @@ Route::post('camera/event/store', function() {
             //only two images, probably two bad frames
             //delete them
             foreach ($iterator as $object) {
-                Log::debug("Deleting small event image ".$object['Key']);
+                Log::debug("Deleting small event image " . $object['Key']);
                 $s3->deleteObject([
                     'Bucket'    => $s3Bucket,
                     'Key'       => $object['Key'],
@@ -254,7 +254,7 @@ Route::post('camera/event/store', function() {
         }
 
         //Save the gif
-        $newFilename = \App::environment() . '/cctv/' . $date->year.'/'.$date->month.'/'.$date->day.'/' . $folderName . '.gif';
+        $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '.gif';
         $s3->putObject(
             array(
                 'Bucket'               => $s3Bucket,
@@ -271,7 +271,7 @@ Route::post('camera/event/store', function() {
 
         //Log::debug('Event Gif generated :https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename);
 
-        \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/'.$newFilename, 'color'=>'warning'])->send('Movement detected');
+        \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('Movement detected');
 
     }
 

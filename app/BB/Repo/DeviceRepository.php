@@ -26,7 +26,7 @@ class DeviceRepository extends DBRepository
     public function getByName($device)
     {
         $record = $this->model->where('device_id', $device)->first();
-        if (!$record) {
+        if ( ! $record) {
             throw new ModelNotFoundException();
         }
         return $record;
@@ -38,7 +38,7 @@ class DeviceRepository extends DBRepository
     public function logBoot($device)
     {
         $record = $this->model->where('device_id', $device)->first();
-        if (!$record) {
+        if ( ! $record) {
             $record = $this->createRecord($device);
         }
         $record->last_boot = Carbon::now();
@@ -51,7 +51,7 @@ class DeviceRepository extends DBRepository
     public function logHeartbeat($device)
     {
         $record = $this->model->where('device_id', $device)->first();
-        if (!$record) {
+        if ( ! $record) {
             $record = $this->createRecord($device);
         }
         $record->last_heartbeat = Carbon::now();

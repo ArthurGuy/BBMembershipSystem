@@ -204,7 +204,7 @@ class EquipmentController extends \BaseController
                 $mimeType = Input::file('photo')->getMimeType();
                 $fileData = Image::make($filePath)->fit(1000)->encode($ext);
 
-                $newFilename = str_random().'.'.$ext;
+                $newFilename = str_random() . '.' . $ext;
 
 
                 $s3 = \AWS::get('s3');
@@ -239,7 +239,7 @@ class EquipmentController extends \BaseController
         $s3 = \AWS::get('s3');
         $s3->deleteObject(array(
             'Bucket' => getenv('S3_BUCKET'),
-            'Key'    => $equipment->getPhotoBasePath().$photo['path']
+            'Key'    => $equipment->getPhotoBasePath() . $photo['path']
         ));
         Notification::success("Image deleted");
         return Redirect::route('equipment.edit', $equipmentId);

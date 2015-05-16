@@ -68,6 +68,6 @@ class ProposalRepository extends DBRepository
     {
         //Possibly expand this to allow editing on proposals that have been started but received no votes
         $proposal = $this->getById($proposalId);
-        return !$proposal->hasStarted();
+        return ! $proposal->hasStarted();
     }
 }

@@ -13,7 +13,7 @@ class UserImage
 
     }
 
-    public function uploadPhoto($userId, $filePath, $newImage=false)
+    public function uploadPhoto($userId, $filePath, $newImage = false)
     {
         $tmpFilePath = storage_path('tmp') . '/' . $userId . '.png';
         $tmpFilePathThumb = storage_path('tmp') . '/' . $userId . '-thumb.png';
@@ -119,7 +119,7 @@ class UserImage
 
     public static function thumbnailUrl($userId)
     {
-        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket .'/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
+        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket . '/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
     }
 
     public static function newThumbnailUrl($userId)

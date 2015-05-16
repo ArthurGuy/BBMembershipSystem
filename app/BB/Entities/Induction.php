@@ -12,19 +12,19 @@ use Illuminate\Database\Eloquent\Model;
 class Induction extends Model
 {
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'inductions';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'inductions';
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array();
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = array();
 
 
     /**
@@ -49,7 +49,7 @@ class Induction extends Model
 
     public function getIsTrainedAttribute()
     {
-        return (!empty($this->trained));
+        return ( ! empty($this->trained));
     }
 
 

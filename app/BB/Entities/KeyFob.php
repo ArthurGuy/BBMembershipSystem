@@ -51,7 +51,7 @@ class KeyFob extends Model
     public static function lookup($fobId)
     {
         $record = self::where('key_id', '=', $fobId)->active()->first();
-        if (!$record) {
+        if ( ! $record) {
             throw new ModelNotFoundException;
         }
         return $record;

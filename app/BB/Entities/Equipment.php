@@ -51,7 +51,7 @@ class Equipment extends Model
      */
     public function hasActivity()
     {
-        return !empty($this->device_key);
+        return ! empty($this->device_key);
     }
 
     /**
@@ -148,7 +148,7 @@ class Equipment extends Model
      */
     public function getPhotoUrl($num = 1)
     {
-        return 'https://s3-eu-west-1.amazonaws.com/'.getenv('S3_BUCKET').'/'.$this->getPhotoPath($num);
+        return 'https://s3-eu-west-1.amazonaws.com/' . getenv('S3_BUCKET') . '/' . $this->getPhotoPath($num);
     }
 
     public function getNumPhotos()
