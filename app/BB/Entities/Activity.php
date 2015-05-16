@@ -2,6 +2,16 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Activity
+ *
+ * @property string $key_fob_id
+ * @property string $user_id
+ * @property string $service
+ * @property string $response
+ * @property bool $delayed
+ * @package BB\Entities
+ */
 class Activity extends Model
 {
 
