@@ -25,6 +25,10 @@
                 Your latest subscription payment has failed and your account has been temporarily suspended.<br />
                 You can retry your direct debit payment now.
                 @include('partials/payment-form', ['reason'=>'subscription', 'displayReason'=>'Retry payment', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>round($user->monthly_subscription), 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'balance', 'stripe']])
+
+                @if (Auth::user()->isAdmin())
+                    <small>Admins: You cannot do this process on behalf of the member, it will just charge your account.</small>
+                @endif
             </p>
         @else
         <p>
