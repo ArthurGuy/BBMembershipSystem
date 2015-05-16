@@ -5,7 +5,7 @@ use BB\Services\KeyFobAccess;
 use BB\Validators\ACSValidator;
 use Illuminate\Support\Facades\Response;
 
-class ACSSparkController extends Controller{
+class ACSSparkController extends Controller {
 
     /**
      * @var DeviceRepository
@@ -37,7 +37,7 @@ class ACSSparkController extends Controller{
         } catch (Exception $e) {
 
             $client = new GuzzleHttp\Client();
-            $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
+            $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
                 'body' => [
                     'args' => json_encode(['name'=>'', 'status'=>'Unknown', 'balance'=>'', 'success'=>false]),
                     'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
@@ -49,9 +49,9 @@ class ACSSparkController extends Controller{
         $user = $keyFob->user()->first();
 
         $client = new GuzzleHttp\Client();
-        $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
+        $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
             'body' => [
-                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance/100), 2), 'success'=>true]),
+                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance / 100), 2), 'success'=>true]),
                 'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
             ]
         ]);

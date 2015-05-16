@@ -64,7 +64,7 @@ class DeviceSession extends KeyFobAccess
         //Verify the keyfob, device key and action
 
         //Validate the action
-        if (!in_array($this->action, $this->deviceActions)) {
+        if ( ! in_array($this->action, $this->deviceActions)) {
             throw new ValidationException('Invalid Device Action');
         }
         //Validate the device
@@ -74,7 +74,7 @@ class DeviceSession extends KeyFobAccess
             throw new ValidationException('Invalid Device Key');
         }
         //Confirm the device is working
-        if (!$this->device->working) {
+        if ( ! $this->device->working) {
             throw new ValidationException('Device Not Working');
         }
         //Validate the key fob
@@ -82,14 +82,14 @@ class DeviceSession extends KeyFobAccess
 
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
-        if (!$this->user || !$this->user->active) {
+        if ( ! $this->user || ! $this->user->active) {
             throw new ValidationException('User Invalid');
         }
 
         //Make sure the user is allowed to use the device
         if ($this->device->requires_induction) {
             //Verify the user has training
-            if (!$this->inductionRepository->isUserTrained($this->user->id, $this->deviceKey)) {
+            if ( ! $this->inductionRepository->isUserTrained($this->user->id, $this->deviceKey)) {
                 throw new ValidationException('User Not Trained');
             }
         }

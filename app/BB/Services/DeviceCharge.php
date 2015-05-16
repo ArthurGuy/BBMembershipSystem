@@ -39,7 +39,7 @@ class DeviceCharge
             //If the reason is empty then its not a special case and should be billed
             if (empty($record->reason)) {
                 //Create a payment against the user
-                $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '', $incurredFee, 'paid', 0, $record->id.':'.$record->device);
+                $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '', $incurredFee, 'paid', 0, $record->id . ':' . $record->device);
             }
 
             //Mark this log as being billed and complete

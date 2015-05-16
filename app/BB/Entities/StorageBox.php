@@ -49,7 +49,7 @@ class StorageBox extends Model
 
     public function getAvailableAttribute()
     {
-        return ($this->active && !$this->user_id);
+        return ($this->active && ! $this->user_id);
     }
 
 

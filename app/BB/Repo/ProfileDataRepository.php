@@ -18,7 +18,7 @@ class ProfileDataRepository extends DBRepository
 
     /**
      * Create an empty profile for a user
-     * @param $userId
+     * @param integer $userId
      * @return mixed
      */
     public function createProfile($userId)
@@ -37,7 +37,7 @@ class ProfileDataRepository extends DBRepository
     public function getUserProfile($userId)
     {
         $record = $this->model->where('user_id', $userId)->first();
-        if (!$record) {
+        if ( ! $record) {
             throw new ModelNotFoundException;
         }
         return $record;

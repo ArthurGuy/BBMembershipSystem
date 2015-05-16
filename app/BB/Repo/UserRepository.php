@@ -64,7 +64,7 @@ class UserRepository extends DBRepository
      * @param bool $showPrivateMembers Some members don't want to listed on public pages, set to true to show everyone
      * @return mixed
      */
-    public function getActivePublicList($showPrivateMembers=false)
+    public function getActivePublicList($showPrivateMembers = false)
     {
         if ($showPrivateMembers) {
             return $this->model->with('profile')->active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
@@ -95,7 +95,7 @@ class UserRepository extends DBRepository
     /**
      * @param array   $memberData The new members details
      * @param boolean $isAdminCreating Is the user making the change an admin
-     * @return static
+     * @return User
      */
     public function registerMember(array $memberData, $isAdminCreating)
     {
@@ -119,7 +119,7 @@ class UserRepository extends DBRepository
      * The user has setup a payment method of some kind so they are now considered active
      * This will kick off the automated member checking processes
      *
-     * @param $userId
+     * @param integer $userId
      */
     public function ensureMembershipActive($userId)
     {
@@ -134,7 +134,7 @@ class UserRepository extends DBRepository
         $outstandingCharges = $this->subscriptionChargeRepository->hasOutstandingCharges($userId);
 
         //If the user doesn't have any charges currently processing or they dont have an expiry date or are past their expiry data create a charge
-        if (!$outstandingCharges && (!$user->subscription_expires || $user->subscription_expires->lt(Carbon::now()))) {
+        if ( ! $outstandingCharges && ( ! $user->subscription_expires || $user->subscription_expires->lt(Carbon::now()))) {
             //create a charge
             $this->subscriptionChargeRepository->createChargeAndBillDD($userId, Carbon::now(), $user->monthly_subscription, 'due', $user->subscription_id);
         }

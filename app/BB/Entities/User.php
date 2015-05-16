@@ -169,7 +169,7 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function getNameAttribute()
     {
-        return $this->attributes['given_name'].' '.$this->attributes['family_name'];
+        return $this->attributes['given_name'] . ' ' . $this->attributes['family_name'];
     }
 
     public function setPasswordAttribute($password)
@@ -259,7 +259,7 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function promoteGetAKey()
     {
-        return ($this->trusted && !$this->key_holder && ($this->status == 'active'));
+        return ($this->trusted && ! $this->key_holder && ($this->status == 'active'));
     }
 
     /**
@@ -270,7 +270,7 @@ class User extends Model implements UserInterface, RemindableInterface {
     public function getAlerts()
     {
         $alerts = [];
-        if (!$this->profile->profile_photo && !$this->profile->new_profile_photo) {
+        if ( ! $this->profile->profile_photo && ! $this->profile->new_profile_photo) {
             $alerts[] = 'missing-profile-photo';
         }
         if (empty($this->phone)) {
@@ -402,7 +402,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public static function findWithPermission($id = null)
     {
-        if (!$id) {
+        if ( ! $id) {
             //Return the logged in user
             return Auth::user();
         }

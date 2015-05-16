@@ -45,7 +45,7 @@ class Proposal extends Model
      */
     public function isOpen()
     {
-        return $this->hasStarted() && !$this->hasFinished();
+        return $this->hasStarted() && ! $this->hasFinished();
     }
 
     /**

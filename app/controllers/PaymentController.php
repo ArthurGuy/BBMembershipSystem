@@ -129,8 +129,8 @@ class PaymentController extends \BaseController
                 //Payments must go via the balance
                 throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless storage box payment');
             } elseif ($reason == 'balance') {
-                $amount = Input::get('amount') * 1;//convert the users amount into a number
-                if (!is_numeric($amount)) {
+                $amount = Input::get('amount') * 1; //convert the users amount into a number
+                if ( ! is_numeric($amount)) {
                     $exceptionErrors = new \Illuminate\Support\MessageBag(['amount' => 'Invalid amount']);
                     throw new \BB\Exceptions\FormValidationException('Not a valid amount', $exceptionErrors);
                 }
@@ -262,7 +262,7 @@ class PaymentController extends \BaseController
     {
         $user = User::findWithPermission($userId);
 
-        if (!Auth::user()->hasRole('admin')) {
+        if ( ! Auth::user()->hasRole('admin')) {
             throw new \BB\Exceptions\AuthenticationException;
         }
 
@@ -331,8 +331,8 @@ class PaymentController extends \BaseController
             $user->storage_box_payment_id = $payment->id;
             $user->save();
         } elseif ($reason == 'balance') {
-            $amount = Input::get('amount') * 1;//convert the users amount into a number
-            if (!is_numeric($amount)) {
+            $amount = Input::get('amount') * 1; //convert the users amount into a number
+            if ( ! is_numeric($amount)) {
                 $exceptionErrors = new \Illuminate\Support\MessageBag(['amount' => 'Invalid amount']);
                 throw new \BB\Exceptions\FormValidationException('Not a valid amount', $exceptionErrors);
             }

@@ -42,7 +42,7 @@ class GoCardlessWebhookParser
     {
         $this->rawResponse = $paymentPaidPayload;
         $response = json_decode($this->rawResponse, true);
-        if (!is_array($response)) {
+        if ( ! is_array($response)) {
             return;
         }
         $this->response = $response;
@@ -102,13 +102,13 @@ class GoCardlessWebhookParser
     private function setBills($bills)
     {
         foreach ($bills as $i=>$bill) {
-            if (!isset($bills[$i]['source_type'])) {
+            if ( ! isset($bills[$i]['source_type'])) {
                 $bills[$i]['source_type'] = '';
             }
-            if (!isset($bills[$i]['source_id'])) {
+            if ( ! isset($bills[$i]['source_id'])) {
                 $bills[$i]['source_id'] = '';
             }
-            if (!isset($bills[$i]['paid_at'])) {
+            if ( ! isset($bills[$i]['paid_at'])) {
                 $bills[$i]['paid_at'] = '';
             }
         }

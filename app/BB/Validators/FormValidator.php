@@ -40,7 +40,7 @@ abstract class FormValidator
      * @throws \BB\Exceptions\FormValidationException
      * @return boolean
      */
-    public function validate(array $formData, $id=null)
+    public function validate(array $formData, $id = null)
     {
         $this->validation = $this->validator->make($formData, $this->getValidationRules(['id'=>$id]));
 
@@ -92,7 +92,7 @@ abstract class FormValidator
      * Set the admin override - tones down some validation rules
      * @param bool $admin
      */
-    public function setAdminOverride($admin=false)
+    public function setAdminOverride($admin = false)
     {
         $this->adminOverrideSet = $admin;
     }

@@ -5,19 +5,19 @@ use Illuminate\Console\Command;
 class CalculateProposalVotes extends Command
 {
 
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'bb:calculate-proposal-votes';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'bb:calculate-proposal-votes';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Update the vote tallies stored on the proposal records.';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Update the vote tallies stored on the proposal records.';
     /**
      * @var \BB\Repo\ProposalRepository
      */
@@ -32,21 +32,21 @@ class CalculateProposalVotes extends Command
      * Create a new command instance.
      *
      */
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
         $this->proposalRepository = App::make('\BB\Repo\ProposalRepository');
         $this->proposalVoteRepository = App::make('\BB\Repo\ProposalVoteRepository');
     }
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function fire()
-	{
-		$proposals = $this->proposalRepository->getUnprocessedFinishedProposals();
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        $proposals = $this->proposalRepository->getUnprocessedFinishedProposals();
         foreach ($proposals as $proposal) {
             $this->info($proposal->title);
             $votes = $this->proposalVoteRepository->getProposalVotes($proposal->id);
@@ -69,10 +69,10 @@ class CalculateProposalVotes extends Command
                     $votesCast++;
                 }
             }
-            $this->info("For: ".$for);
-            $this->info("Neutral: ".$neutral);
-            $this->info("Against: ".$against);
-            $this->info("Abstain: ".$abstain);
+            $this->info("For: " . $for);
+            $this->info("Neutral: " . $neutral);
+            $this->info("Against: " . $against);
+            $this->info("Abstain: " . $abstain);
 
             $result = $for - $against;
 
@@ -81,7 +81,7 @@ class CalculateProposalVotes extends Command
             $this->proposalRepository->setResults($proposal->id, $result, $votesCast, $for, $against, $neutral, $abstain, $quorum);
 
         }
-	}
+    }
 
 
 }

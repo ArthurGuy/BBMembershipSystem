@@ -76,7 +76,7 @@ class AccountController extends \BaseController
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
 
         //This tones down some validation rules for admins
-        $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->hasRole('admin'));
+        $this->userForm->setAdminOverride( ! Auth::guest() && Auth::user()->hasRole('admin'));
 
         $this->beforeFilter('role:member', array('except' => ['create', 'store']));
         $this->beforeFilter('role:admin', array('only' => ['index']));
@@ -122,7 +122,7 @@ class AccountController extends \BaseController
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function store()
 	{
@@ -132,7 +132,7 @@ class AccountController extends \BaseController
         $this->profileValidator->validate($input);
 
 
-        $user = $this->userRepository->registerMember($input, !Auth::guest() && Auth::user()->hasRole('admin'));
+        $user = $this->userRepository->registerMember($input, ! Auth::guest() && Auth::user()->hasRole('admin'));
 
         if (Input::file('new_profile_photo')) {
             try {
@@ -145,22 +145,22 @@ class AccountController extends \BaseController
         }
 
         //If this isn't an admin user creating the record log them in
-        if (Auth::guest() || !Auth::user()->isAdmin()) {
+        if (Auth::guest() || ! Auth::user()->isAdmin()) {
             Auth::login($user);
         }
 
         return Redirect::route('account.show', [$user->id]);
-	}
+    }
 
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
         $user = User::findWithPermission($id);
 
         $inductions = $this->equipmentRepository->getRequiresInduction();
@@ -206,7 +206,7 @@ class AccountController extends \BaseController
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function update($id)
 	{
@@ -219,7 +219,7 @@ class AccountController extends \BaseController
 
         Notification::success('Details Updated');
         return Redirect::route('account.show', [$user->id]);
-	}
+    }
 
 
 
@@ -312,8 +312,8 @@ class AccountController extends \BaseController
 
 
 
-	public function destroy($id)
-	{
+    public function destroy($id)
+    {
         $user = User::findWithPermission($id);
 
         //No one will ever leaves the system but we can at least update their status to left.
@@ -321,7 +321,7 @@ class AccountController extends \BaseController
 
         Notification::success('Updated status to leaving');
         return Redirect::route('account.show', [$user->id]);
-	}
+    }
 
 
     public function rejoin($id)

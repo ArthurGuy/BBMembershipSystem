@@ -1,9 +1,7 @@
 <?php
 
 use BB\Entities\User;
-use BB\Entities\Payment;
 use BB\Repo\SubscriptionChargeRepository;
-use Carbon\Carbon;
 
 class SubscriptionController extends \BaseController
 {
@@ -94,13 +92,13 @@ class SubscriptionController extends \BaseController
 
 
     /**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Response
-	 */
-	public function destroy($userId, $id=null)
-	{
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Response
+     */
+    public function destroy($userId, $id=null)
+    {
 
         /**
          * TODO: Check for and cancel pending sub charges
@@ -138,7 +136,7 @@ class SubscriptionController extends \BaseController
         }
         Notification::error('Sorry, we were unable to cancel your subscription, please get in contact');
         return Redirect::back();
-	}
+    }
 
 
     public function listCharges()

@@ -34,7 +34,7 @@ class Notification
      * @param       $message
      * @param MessageBag $details
      */
-    public function success($message, MessageBag $details=null)
+    public function success($message, MessageBag $details = null)
     {
         $this->message($message, $details, 'success');
     }
@@ -43,7 +43,7 @@ class Notification
      * @param                                      $message
      * @param MessageBag $details
      */
-    public function error($message, MessageBag $details=null)
+    public function error($message, MessageBag $details = null)
     {
         $this->message($message, $details, 'danger');
     }
@@ -52,7 +52,7 @@ class Notification
      * @param                                      $message
      * @param MessageBag $details
      */
-    public function overlay($message, MessageBag $details=null)
+    public function overlay($message, MessageBag $details = null)
     {
         $this->message($message, $details);
     }
@@ -62,7 +62,7 @@ class Notification
      * @param MessageBag $details
      * @param string                               $level
      */
-    public function message($message, MessageBag $details=null, $level = 'info')
+    public function message($message, MessageBag $details = null, $level = 'info')
     {
         $this->message = $message;
         $this->details = $details;
@@ -88,10 +88,10 @@ class Notification
 
     public function hasMessage()
     {
-        return !empty($this->message);
+        return ! empty($this->message);
     }
 
-    public function hasErrorDetail($detail, $response=null)
+    public function hasErrorDetail($detail, $response = null)
     {
         if ($this->details && $this->details->has($detail)) {
             if ($response) {
@@ -103,7 +103,7 @@ class Notification
         return false;
     }
 
-    public function getErrorDetail($detail, $responseFormat='<span class="help-block">:message</span>')
+    public function getErrorDetail($detail, $responseFormat = '<span class="help-block">:message</span>')
     {
         if ($this->hasErrorDetail($detail)) {
             return $this->details->first($detail, $responseFormat);

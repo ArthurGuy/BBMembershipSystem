@@ -42,10 +42,10 @@ class AccessControlController extends Controller
 
         } catch (\BB\Exceptions\ValidationException $e) {
 
-            Log::debug("Entry message received - failed: ".$receivedData);
+            Log::debug("Entry message received - failed: " . $receivedData);
 
             //The data was invalid or the user doesnt have access
-            $response = Response::make(json_encode(['valid' => '0', 'msg' => $e->getMessage()]).PHP_EOL, 200);
+            $response = Response::make(json_encode(['valid' => '0', 'msg' => $e->getMessage()]) . PHP_EOL, 200);
             $response->headers->set('Content-Length', strlen($response->getContent()));
             return $response;
         }
@@ -62,7 +62,7 @@ class AccessControlController extends Controller
         $userName = substr($this->buildingAccess->getUser()->given_name, 0, 20);
         $responseBody = json_encode(['valid' => '1', 'msg' => $userName]);
 
-        $response = Response::make($responseBody.PHP_EOL, 200);
+        $response = Response::make($responseBody . PHP_EOL, 200);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
     }
@@ -94,7 +94,7 @@ class AccessControlController extends Controller
             $keyFob = KeyFob::lookup($keyId);
             return $keyFob;
         } catch (Exception $e) {
-            $keyId = substr('BB'.$keyId, 0, 12);
+            $keyId = substr('BB' . $keyId, 0, 12);
             $keyFob = KeyFob::lookup($keyId);
             return $keyFob;
         }
@@ -139,7 +139,7 @@ class AccessControlController extends Controller
         } catch (Exception $e) {
 
             $client = new GuzzleHttp\Client();
-            $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
+            $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
                 'body' => [
                     'args' => json_encode(['name'=>'', 'status'=>'Unknown', 'balance'=>'', 'success'=>false]),
                     'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
@@ -151,9 +151,9 @@ class AccessControlController extends Controller
         $user = $keyFob->user()->first();
 
         $client = new GuzzleHttp\Client();
-        $client->post('https://api.spark.io/v1/devices/'.$data['coreid'].'/chk-resp', [
+        $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
             'body' => [
-                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance/100), 2), 'success'=>true]),
+                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance / 100), 2), 'success'=>true]),
                 'access_token' => $_SERVER['SPARK_ACCESS_TOKEN']
             ]
         ]);

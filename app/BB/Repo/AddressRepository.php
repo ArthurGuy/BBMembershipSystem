@@ -38,13 +38,13 @@ class AddressRepository extends DBRepository
             return true;
         }
 
-        if (!$isAdminUpdating) {
+        if ( ! $isAdminUpdating) {
             $address = null;
         }
 
-        if (!$address) {
+        if ( ! $address) {
             $address = $this->getNewUserAddress($userId);
-            if (!$address) {
+            if ( ! $address) {
                 return $this->saveUserAddress($userId, $addressFields, $isAdminUpdating);
             }
         }

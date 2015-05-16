@@ -9,7 +9,7 @@ class StripeServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        if (!isset($_ENV['STRIPE_API_KEY'])) {
+        if ( ! isset($_ENV['STRIPE_API_KEY'])) {
             return;
         }
         Stripe::setApiKey($_ENV['STRIPE_API_KEY']);
