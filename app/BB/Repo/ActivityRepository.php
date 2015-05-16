@@ -58,5 +58,15 @@ class ActivityRepository extends DBRepository
             ->get();
     }
 
+    public function recordMemberActivity($userId, $keyFobId, $deviceKey)
+    {
+        return $this->model->create([
+            'user_id'    => $userId,
+            'key_fob_id' => $keyFobId,
+            'service'   => $deviceKey,
+            'response' => 200
+        ]);
+    }
+
 
 } 

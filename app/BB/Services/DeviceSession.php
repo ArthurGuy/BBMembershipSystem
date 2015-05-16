@@ -1,6 +1,7 @@
 <?php namespace BB\Services;
 
 use BB\Exceptions\ValidationException;
+use BB\Repo\ActivityRepository;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
@@ -36,12 +37,25 @@ class DeviceSession extends KeyFobAccess
     private $bbCredit;
 
 
-    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository, Credit $bbCredit)
-    {
+    /**
+     * @param EquipmentRepository    $equipmentRepository
+     * @param InductionRepository    $inductionRepository
+     * @param EquipmentLogRepository $equipmentLogRepository
+     * @param Credit                 $bbCredit
+     * @param ActivityRepository     $activityRepository
+     */
+    public function __construct(
+        EquipmentRepository $equipmentRepository,
+        InductionRepository $inductionRepository,
+        EquipmentLogRepository $equipmentLogRepository,
+        Credit $bbCredit,
+        ActivityRepository $activityRepository
+    ) {
         $this->equipmentRepository = $equipmentRepository;
         $this->inductionRepository = $inductionRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
         $this->bbCredit = $bbCredit;
+        $this->activityRepository = $activityRepository;
     }
 
 
@@ -116,6 +130,9 @@ class DeviceSession extends KeyFobAccess
     private function processStartAction()
     {
         $this->equipmentLogRepository->recordStartCloseExisting($this->user->id, $this->keyFob->id, $this->deviceKey);
+
+        //Create a general entry in the activity log
+        $this->activityRepository->recordMemberActivity($this->user->id, $this->keyFob->id, $this->deviceKey);
     }
 
     private function processPingAction()
