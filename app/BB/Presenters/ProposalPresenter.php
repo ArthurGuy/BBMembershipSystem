@@ -24,15 +24,14 @@ class ProposalPresenter extends Presenter
     public function description()
     {
         return Markdown::defaultTransform($this->entity->description);
-        //return nl2br($this->entity->description);
     }
 
     public function status()
     {
         if ($this->entity->isOpen()) {
             return 'Open';
-        } else if (!$this->entity->hasStarted()) {
-            return 'Opens '.$this->entity->start_date->format('jS M');
+        } else if ( ! $this->entity->hasStarted()) {
+            return 'Opens ' . $this->entity->start_date->format('jS M');
         } else {
             return 'Closed';
         }
@@ -49,9 +48,9 @@ class ProposalPresenter extends Presenter
             } else {
                 $outputText .= '<strong>Failed</strong>: ';
             }
-            $outputText .= $this->entity->votes_for.' for, '.$this->entity->votes_against.' against';
+            $outputText .= $this->entity->votes_for . ' for, ' . $this->entity->votes_against . ' against';
             if ($this->entity->abstentions > 0) {
-                $outputText .= ', '.$this->entity->abstentions.' abstentions';
+                $outputText .= ', ' . $this->entity->abstentions . ' abstentions';
             }
             return $outputText;
         } else {

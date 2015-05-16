@@ -32,8 +32,6 @@ class GoCardlessHelper
             'max_amount'        => 250,
             'interval_length'   => 1,
             'interval_unit'     => 'month',
-            //'name'              => 'BBSUB'.$user->id,
-            //'description'       => 'Build Brighton Monthly Subscription',
         );
         $paymentDetails = array_merge($baseDetails, $paymentDetails);
         return \GoCardless::new_pre_authorization_url($paymentDetails);
@@ -121,7 +119,7 @@ class GoCardlessHelper
             case 'subscription':
                 return 'Monthly subscription';
             case 'balance':
-                return "Balance top up";
+                return 'Balance top up';
             case 'equipment-fee':
                 return 'Equipment access fee';
             case 'door-key':

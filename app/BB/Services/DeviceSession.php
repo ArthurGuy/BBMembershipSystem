@@ -1,6 +1,7 @@
 <?php namespace BB\Services;
 
 use BB\Exceptions\ValidationException;
+use BB\Repo\ActivityRepository;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
@@ -36,12 +37,25 @@ class DeviceSession extends KeyFobAccess
     private $bbCredit;
 
 
-    public function __construct(EquipmentRepository $equipmentRepository, InductionRepository $inductionRepository, EquipmentLogRepository $equipmentLogRepository, Credit $bbCredit)
-    {
+    /**
+     * @param EquipmentRepository    $equipmentRepository
+     * @param InductionRepository    $inductionRepository
+     * @param EquipmentLogRepository $equipmentLogRepository
+     * @param Credit                 $bbCredit
+     * @param ActivityRepository     $activityRepository
+     */
+    public function __construct(
+        EquipmentRepository $equipmentRepository,
+        InductionRepository $inductionRepository,
+        EquipmentLogRepository $equipmentLogRepository,
+        Credit $bbCredit,
+        ActivityRepository $activityRepository
+    ) {
         $this->equipmentRepository = $equipmentRepository;
         $this->inductionRepository = $inductionRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
         $this->bbCredit = $bbCredit;
+        $this->activityRepository = $activityRepository;
     }
 
 
@@ -50,33 +64,33 @@ class DeviceSession extends KeyFobAccess
         //Verify the keyfob, device key and action
 
         //Validate the action
-        if (!in_array($this->action, $this->deviceActions)) {
-            throw new ValidationException("Invalid Device Action");
+        if ( ! in_array($this->action, $this->deviceActions)) {
+            throw new ValidationException('Invalid Device Action');
         }
         //Validate the device
         try {
             $this->device = $this->equipmentRepository->findByKey($this->deviceKey);
         } catch (ModelNotFoundException $e) {
-            throw new ValidationException("Invalid Device Key");
+            throw new ValidationException('Invalid Device Key');
         }
         //Confirm the device is working
-        if (!$this->device->working) {
-            throw new ValidationException("Device Not Working");
+        if ( ! $this->device->working) {
+            throw new ValidationException('Device Not Working');
         }
         //Validate the key fob
         $this->keyFob = $this->lookupKeyFob($this->keyFobId);
 
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
-        if (!$this->user || !$this->user->active) {
-            throw new ValidationException("User Invalid");
+        if ( ! $this->user || ! $this->user->active) {
+            throw new ValidationException('User Invalid');
         }
 
         //Make sure the user is allowed to use the device
         if ($this->device->requires_induction) {
             //Verify the user has training
-            if (!$this->inductionRepository->isUserTrained($this->user->id, $this->deviceKey)) {
-                throw new ValidationException("User Not Trained");
+            if ( ! $this->inductionRepository->isUserTrained($this->user->id, $this->deviceKey)) {
+                throw new ValidationException('User Not Trained');
             }
         }
 
@@ -84,7 +98,7 @@ class DeviceSession extends KeyFobAccess
         //Make sure the member has enough money on their account
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance('equipment-fee');
         if (($this->user->cash_balance + ($minimumBalance * 100)) <= 0) {
-            throw new ValidationException("User doesn't have enough credit");
+            throw new ValidationException('User doesn\'t have enough credit');
         }
 
     }
@@ -93,7 +107,7 @@ class DeviceSession extends KeyFobAccess
     {
         $dataPacket = explode('|', $receivedData);
         if (count($dataPacket) != 3) {
-            throw new ValidationException("Invalid Device String");
+            throw new ValidationException('Invalid Device String');
         }
 
         $this->keyFobId = trim(strtolower($dataPacket[0]));
@@ -116,6 +130,9 @@ class DeviceSession extends KeyFobAccess
     private function processStartAction()
     {
         $this->equipmentLogRepository->recordStartCloseExisting($this->user->id, $this->keyFob->id, $this->deviceKey);
+
+        //Create a general entry in the activity log
+        $this->activityRepository->recordMemberActivity($this->user->id, $this->keyFob->id, $this->deviceKey);
     }
 
     private function processPingAction()

@@ -85,7 +85,7 @@ class SubChargeEventHandler
             $user = $this->userRepository->getById($userId);
             $user->extendMembership(null, $paidUntil);
         } else {
-            \Log::warning("Unable to update member expiry date - payment cancelled. User ID:".$userId);
+            \Log::warning('Unable to update member expiry date - payment cancelled. User ID:' . $userId);
         }
     }
 

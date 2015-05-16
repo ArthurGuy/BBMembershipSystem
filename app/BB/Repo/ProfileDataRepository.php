@@ -11,14 +11,14 @@ class ProfileDataRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(ProfileData $model)
+    public function __construct(ProfileData $model)
     {
         $this->model = $model;
     }
 
     /**
      * Create an empty profile for a user
-     * @param $userId
+     * @param integer $userId
      * @return mixed
      */
     public function createProfile($userId)
@@ -37,7 +37,7 @@ class ProfileDataRepository extends DBRepository
     public function getUserProfile($userId)
     {
         $record = $this->model->where('user_id', $userId)->first();
-        if (!$record) {
+        if ( ! $record) {
             throw new ModelNotFoundException;
         }
         return $record;

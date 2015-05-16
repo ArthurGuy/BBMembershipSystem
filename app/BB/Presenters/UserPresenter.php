@@ -41,12 +41,12 @@ class UserPresenter extends Presenter
 
     public function cashBalance()
     {
-        return '&pound;'.number_format(($this->entity->cash_balance / 100), 2);
+        return '&pound;' . number_format(($this->entity->cash_balance / 100), 2);
     }
 
     public function monthlySubscription()
     {
-        return '&pound;'.number_format(round($this->entity->monthly_subscription));
+        return '&pound;' . number_format(round($this->entity->monthly_subscription));
     }
 
     public function subscriptionDetailLine()
@@ -54,7 +54,7 @@ class UserPresenter extends Presenter
         if ($this->entity->status == 'setting-up') {
             return '';
         }
-        $string = ''.$this->monthlySubscription.' a month ';
+        $string = '' . $this->monthlySubscription . ' a month ';
 
         if ($this->paymentMethod) {
             $string .= 'by ' . $this->paymentMethod;

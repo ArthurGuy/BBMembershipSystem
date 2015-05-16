@@ -38,7 +38,7 @@ Event::subscribe('BB\Handlers\SubChargeEventHandler');
 |
 */
 
-\BB\Entities\AccessLog::observe(new \BB\Observer\AccessLogObserver());
+\BB\Entities\Activity::observe(new \BB\Observer\ActivityObserver());
 \BB\Entities\User::observe(new \BB\Observer\UserObserver());
 \BB\Entities\User::observe(new \BB\Observer\UserAuditObserver());
 

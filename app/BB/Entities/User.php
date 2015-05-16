@@ -13,6 +13,32 @@ use Laracasts\Presenter\PresentableTrait;
 use Auth;
 use Hash;
 
+/**
+ * Class User
+ *
+ * @property integer $id
+ * @property string $email
+ * @property string $name
+ * @property string $given_name
+ * @property string $family_name
+ * @property string $hash
+ * @property bool $active
+ * @property bool $key_holder
+ * @property bool $trusted
+ * @property bool $banned
+ * @property bool $email_verified
+ * @property bool $induction_completed
+ * @property integer $payment_day
+ * @property string $status
+ * @property string $payment_method
+ * @property string $subscription_id
+ * @property Carbon $subscription_expires
+ * @property Carbon $banned_date
+ * @property string $phone
+ * @property integer $storage_box_payment_id
+ * @property ProfileData $profile
+ * @package BB\Entities
+ */
 class User extends Model implements UserInterface, RemindableInterface {
 
     use UserTrait, RemindableTrait, UserRoleTrait, PresentableTrait;
@@ -143,7 +169,7 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function getNameAttribute()
     {
-        return $this->attributes['given_name'].' '.$this->attributes['family_name'];
+        return $this->attributes['given_name'] . ' ' . $this->attributes['family_name'];
     }
 
     public function setPasswordAttribute($password)
@@ -233,7 +259,7 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function promoteGetAKey()
     {
-        return ($this->trusted && !$this->key_holder && ($this->status == 'active'));
+        return ($this->trusted && ! $this->key_holder && ($this->status == 'active'));
     }
 
     /**
@@ -244,7 +270,7 @@ class User extends Model implements UserInterface, RemindableInterface {
     public function getAlerts()
     {
         $alerts = [];
-        if (!$this->profile->profile_photo && !$this->profile->new_profile_photo) {
+        if ( ! $this->profile->profile_photo && ! $this->profile->new_profile_photo) {
             $alerts[] = 'missing-profile-photo';
         }
         if (empty($this->phone)) {
@@ -368,14 +394,6 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->save();
     }
 
-    /*
-    public function profilePhoto($photoAvailable=true)
-    {
-        $this->profile_photo = $photoAvailable;
-        $this->save();
-    }
-    */
-
     /**
      * Fetch a user record, performs a permission check
      * @param null $id
@@ -384,7 +402,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public static function findWithPermission($id = null)
     {
-        if (!$id) {
+        if ( ! $id) {
             //Return the logged in user
             return Auth::user();
         }

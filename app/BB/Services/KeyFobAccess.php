@@ -1,8 +1,9 @@
 <?php namespace BB\Services;
 
 use BB\Entities\KeyFob;
+use BB\Entities\User;
 use BB\Exceptions\ValidationException;
-use BB\Repo\AccessLogRepository;
+use BB\Repo\ActivityRepository;
 use Carbon\Carbon;
 
 class KeyFobAccess
@@ -16,7 +17,7 @@ class KeyFobAccess
 
     /**
      * The key fob record
-     * @var
+     * @var KeyFob
      */
     protected $keyFob;
 
@@ -40,14 +41,14 @@ class KeyFobAccess
     protected $action;
 
     /**
-     * @var \User
+     * @var User
      */
     protected $user;
 
     /**
-     * @var AccessLogRepository
+     * @var ActivityRepository
      */
-    protected $accessLogRepository;
+    protected $activityRepository;
 
 
     protected $messageDelayed = false;
@@ -61,9 +62,9 @@ class KeyFobAccess
     protected $time;
 
 
-    public function __construct(AccessLogRepository $accessLogRepository)
+    public function __construct(ActivityRepository $activityRepository)
     {
-        $this->accessLogRepository = $accessLogRepository;
+        $this->activityRepository = $activityRepository;
     }
 
 
@@ -124,7 +125,7 @@ class KeyFobAccess
     }
 
     /**
-     * @return \User
+     * @return User
      */
     public function getUser()
     {
@@ -147,24 +148,24 @@ class KeyFobAccess
 
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
-        if (!$this->user || !$this->user->active) {
+        if ( ! $this->user || ! $this->user->active) {
             $this->logFailure();
-            throw new ValidationException("Not a member");
+            throw new ValidationException('Not a member');
         }
 
-        if (!$this->user->trusted) {
+        if ( ! $this->user->trusted) {
             $this->logFailure();
-            throw new ValidationException("Not a keyholder");
+            throw new ValidationException('Not a keyholder');
         }
 
-        if (!$this->user->key_holder) {
+        if ( ! $this->user->key_holder) {
             $this->logFailure();
-            throw new ValidationException("Not a keyholder");
+            throw new ValidationException('Not a keyholder');
         }
 
-        if (!($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
+        if ( ! ($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
             $this->logFailure();
-            throw new ValidationException("Member not trusted");
+            throw new ValidationException('Member not trusted');
         }
 
         $this->memberName = $this->user->given_name;
@@ -182,11 +183,11 @@ class KeyFobAccess
             $keyFob = KeyFob::lookup($keyId);
             return $keyFob;
         } catch (\Exception $e) {
-            $keyId = substr('BB'.$keyId, 0, 12);
+            $keyId = substr('BB' . $keyId, 0, 12);
             try {
                 $keyFob = KeyFob::lookup($keyId);
             } catch (\Exception $e) {
-                throw new ValidationException("Key fob ID not valid");
+                throw new ValidationException('Key fob ID not valid');
             }
             return $keyFob;
         }
@@ -202,20 +203,18 @@ class KeyFobAccess
         $log['delayed']    = $this->messageDelayed;
         $log['response']   = 402;
         $log['created_at'] = $this->time;
-        $this->accessLogRepository->logAccessAttempt($log);
+        $this->activityRepository->logAccessAttempt($log);
+
     }
 
     public function logSuccess()
     {
-        $log               = [];
-        $log['key_fob_id'] = $this->keyFob->id;
-        $log['user_id']    = $this->user->id;
-        $log['service']    = 'main-door';
-        $log['delayed']    = $this->messageDelayed;
-        $log['created_at'] = $this->time;
-        //OK
-        $log['response']   = 200;
-        $this->accessLogRepository->logAccessAttempt($log);
+        $activity = $this->activityRepository->recordMemberActivity($this->user->id, $this->keyFob->id, 'main-door', $this->time);
+
+        if ($this->messageDelayed) {
+            $activity->delayed = true;
+            $activity->save();
+        }
     }
 
     /**
@@ -230,9 +229,9 @@ class KeyFobAccess
      * Set the time to a specific timestamp - the new entry system will be passing a local time with the requests
      * @param null $time
      */
-    protected function setAccessTime($time=null)
+    protected function setAccessTime($time = null)
     {
-        if (!empty($time)) {
+        if ( ! empty($time)) {
             $this->time = Carbon::createFromTimestamp($time);
         } else {
             $this->time = Carbon::now();

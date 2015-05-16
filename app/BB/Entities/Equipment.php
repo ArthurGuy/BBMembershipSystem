@@ -4,6 +4,15 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
+/**
+ * Class Equipment
+ *
+ * @property array $photos
+ * @property string $key
+ * @property Carbon $obtained_at
+ * @property Carbon $removed_at
+ * @package BB\Entities
+ */
 class Equipment extends Model
 {
 
@@ -42,7 +51,7 @@ class Equipment extends Model
      */
     public function hasActivity()
     {
-        return !empty($this->device_key);
+        return ! empty($this->device_key);
     }
 
     /**
@@ -139,7 +148,7 @@ class Equipment extends Model
      */
     public function getPhotoUrl($num = 1)
     {
-        return 'https://s3-eu-west-1.amazonaws.com/'.getenv('S3_BUCKET').'/'.$this->getPhotoPath($num);
+        return 'https://s3-eu-west-1.amazonaws.com/' . getenv('S3_BUCKET') . '/' . $this->getPhotoPath($num);
     }
 
     public function getNumPhotos()

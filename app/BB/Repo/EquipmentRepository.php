@@ -11,7 +11,7 @@ class EquipmentRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(Equipment $model)
+    public function __construct(Equipment $model)
     {
         $this->model = $model;
     }

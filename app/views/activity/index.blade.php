@@ -11,7 +11,7 @@ Activity Log
 @section('content')
 
 <div class="page-header">
-    <h3>Door access to the main space - {{ $date->format('l jS \\of F'); }}</h3>
+    <h3>Activity in the main space - {{ $date->format('l jS \\of F'); }}</h3>
     Want to know if anyone's there now? Call the number at the space : 01273 603516
 
     {{ Form::open(['route'=> 'activity.index', 'method'=>'GET', 'id'=>'activityDatePicker', 'class'=>'form-inline']) }}
@@ -35,32 +35,28 @@ Activity Log
     </ul>
 </div>
 
-<div class="memberActivityGrid">
+<div class="memberGrid">
     <div class="row">
         @foreach ($logEntries as $logEntry)
         <div class="col-sm-6 col-md-4 col-lg-2">
-            <div class="activityBlock">
-                @if ($logEntry->user->profile->profile_photo)
-                    <img src="{{ \BB\Helpers\UserImage::thumbnailUrl($logEntry->user->hash) }}" width="200" height="200" class="profilePhoto" />
-                @else
-                    <img src="{{ \BB\Helpers\UserImage::anonymous() }}" width="200" height="200" class="profilePhoto" />
-                @endif
-                <div class="activityDetails">
-                    <strong><a href="{{ route('members.show', $logEntry->user->id) }}">{{{ $logEntry->user->name }}}</a></strong>
-                    <!--
-                    <span class="memberFlags">
-                        @if ($logEntry->user->keyholderStatus())
-                        <span class="glyphicon glyphicon-lock" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
-                        @endif
-                    </span>
-                    -->
-                    <br />
+            <div class="memberBlock">
+
+                {{ HTML::memberPhoto($logEntry->user->profile, $logEntry->user->hash, 200) }}
+
+                <div class="memberDetails">
+                    <strong>{{{ $logEntry->user->name }}}</strong><br />
                     @if ($logEntry->delayed)
                         <span data-toggle="tooltip" data-placement="below" title="This record doesn't have an accurate time">(delayed)</span>
                     @else
                         {{ $logEntry->created_at->toTimeString() }}
                     @endif
                 </div>
+
+                <span class="memberFlags">
+                    @if ($logEntry->user->keyholderStatus())
+                        <span class="glyphicon glyphicon-lock" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
+                    @endif
+                </span>
             </div>
         </div>
         @endforeach

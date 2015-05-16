@@ -19,8 +19,8 @@ class SessionController extends \BaseController
 	 */
 	public function create()
 	{
-        if (!Auth::guest()) {
-            return Redirect::to('account/'.Auth::id());
+        if ( ! Auth::guest()) {
+            return Redirect::to('account/' . Auth::id());
         }
         return View::make('session.create');
 	}
@@ -38,7 +38,7 @@ class SessionController extends \BaseController
         $this->loginForm->validate($input);
 
         if (Auth::attempt($input, true)) {
-            return Redirect::intended('account/'.Auth::id());
+            return Redirect::intended('account/' . Auth::id());
         }
 
         Notification::error("Invalid login details");
@@ -52,7 +52,7 @@ class SessionController extends \BaseController
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id=null)
+	public function destroy($id = null)
 	{
         Auth::logout();
 

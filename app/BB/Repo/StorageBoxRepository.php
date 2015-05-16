@@ -10,7 +10,7 @@ class StorageBoxRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(StorageBox $model)
+    public function __construct(StorageBox $model)
     {
         $this->model = $model;
     }

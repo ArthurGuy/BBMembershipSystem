@@ -5,7 +5,7 @@ use BB\Entities\User;
 use BB\Helpers\UserImage;
 use Illuminate\Support\Facades\Log;
 
-class AccessLogObserver
+class ActivityObserver
 {
 
     /**
@@ -44,7 +44,7 @@ class AccessLogObserver
             );
 
             if (\App::environment('production')) {
-                \Slack::send($userName . ' has entered the space');
+                \Slack::send($userName . ' is in the space');
             }
 
         } catch (\Exception $e) {

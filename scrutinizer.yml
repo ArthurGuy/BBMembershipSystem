@@ -21,6 +21,7 @@ coding_style:
                 closure_definition: true
             around_operators:
                 negation: true
+                concatenation: true
             other:
                 after_type_cast: false
         braces:

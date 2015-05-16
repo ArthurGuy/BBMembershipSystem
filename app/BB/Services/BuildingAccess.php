@@ -1,7 +1,6 @@
 <?php namespace BB\Services;
 
 use BB\Exceptions\ValidationException;
-use BB\Repo\AccessLogRepository;
 
 class BuildingAccess extends KeyFobAccess
 {
@@ -10,6 +9,7 @@ class BuildingAccess extends KeyFobAccess
 
     /**
      * The valid actions for the device
+     *
      * @var array
      */
     private $deviceActions = ['delayed', ''];
@@ -52,24 +52,25 @@ class BuildingAccess extends KeyFobAccess
 
         //Validate the action
         if ($this->isSystemMessage()) {
-            if (!in_array($this->action, $this->systemDeviceActions)) {
-                throw new ValidationException("Invalid Device Action");
+            if ( ! in_array($this->action, $this->systemDeviceActions)) {
+                throw new ValidationException('Invalid Device Action');
             }
             //Validate the device
-            if (!in_array($this->deviceKey, $this->devices)) {
-                throw new ValidationException("Invalid device key");
+            if ( ! in_array($this->deviceKey, $this->devices)) {
+                throw new ValidationException('Invalid device key');
             }
+
             return;
         }
 
         //Validate the action
-        if (!in_array($this->action, $this->deviceActions)) {
-            throw new ValidationException("Invalid Device Action");
+        if ( ! in_array($this->action, $this->deviceActions)) {
+            throw new ValidationException('Invalid Device Action');
         }
 
         //Validate the device
-        if (!in_array($this->deviceKey, $this->devices)) {
-            throw new ValidationException("Invalid device key");
+        if ( ! in_array($this->deviceKey, $this->devices)) {
+            throw new ValidationException('Invalid device key');
         }
 
         //Validate the key fob
@@ -77,24 +78,24 @@ class BuildingAccess extends KeyFobAccess
 
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
-        if (!$this->user || !$this->user->active) {
+        if ( ! $this->user || ! $this->user->active) {
             $this->logFailure();
-            throw new ValidationException("Not a member");
+            throw new ValidationException('Not a member');
         }
 
-        if (!$this->user->trusted) {
+        if ( ! $this->user->trusted) {
             $this->logFailure();
-            throw new ValidationException("Not a keyholder");
+            throw new ValidationException('Not a keyholder');
         }
 
-        if (!$this->user->key_holder) {
+        if ( ! $this->user->key_holder) {
             $this->logFailure();
-            throw new ValidationException("Not a keyholder");
+            throw new ValidationException('Not a keyholder');
         }
 
-        if (!($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
+        if ( ! ($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
             $this->logFailure();
-            throw new ValidationException("Member not trusted");
+            throw new ValidationException('Member not trusted');
         }
 
     }
@@ -114,30 +115,30 @@ class BuildingAccess extends KeyFobAccess
 
         //The system message consists of a device key and an action
         if (strpos($receivedData, '|') === false) {
-            throw new ValidationException("Invalid System Message");
+            throw new ValidationException('Invalid System Message');
         }
         $messageParts = explode('|', $receivedData);
 
-        if (count($messageParts) != 2) {
-            throw new ValidationException("Invalid System Message");
+        if (count($messageParts) !== 2) {
+            throw new ValidationException('Invalid System Message');
         }
         $this->deviceKey = $messageParts[0];
-        $this->action = $messageParts[1];
+        $this->action    = $messageParts[1];
     }
 
     private function decodeAccessRequest($receivedData)
     {
         if (strpos($receivedData, '|') === false) {
-            //No seperator character, just a key id
+            //No separator character, just a key id
             $this->keyFobId = $receivedData;
         } else {
             $keyParts = explode('|', $receivedData);
-            if (count($keyParts) != 2) {
-                throw new ValidationException("Invalid System Message");
+            if (count($keyParts) !== 2) {
+                throw new ValidationException('Invalid System Message');
             }
             $this->keyFobId = $keyParts[0];
-            $this->action = $keyParts[1];
-            if ($this->action == 'delayed') {
+            $this->action   = $keyParts[1];
+            if ($this->action === 'delayed') {
                 $this->messageDelayed = true;
             }
         }

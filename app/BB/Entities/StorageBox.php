@@ -2,6 +2,13 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class StorageBox
+ *
+ * @property bool $active
+ * @property integer $user_id
+ * @package BB\Entities
+ */
 class StorageBox extends Model
 {
 
@@ -42,7 +49,7 @@ class StorageBox extends Model
 
     public function getAvailableAttribute()
     {
-        return ($this->active && !$this->user_id);
+        return ($this->active && ! $this->user_id);
     }
 
 

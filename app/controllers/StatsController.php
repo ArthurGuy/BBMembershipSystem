@@ -12,15 +12,15 @@ class StatsController extends \BaseController
      */
     private $userRepository;
     /**
-     * @var \BB\Repo\AccessLogRepository
+     * @var \BB\Repo\ActivityRepository
      */
-    private $accessLogRepository;
+    private $activityRepository;
 
 
-    function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\AccessLogRepository $accessLogRepository)
+    function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\ActivityRepository $activityRepository)
     {
         $this->userRepository = $userRepository;
-        $this->accessLogRepository = $accessLogRepository;
+        $this->activityRepository = $activityRepository;
     }
 
     /**
@@ -30,7 +30,7 @@ class StatsController extends \BaseController
      */
     public function index()
     {
-        $users         = $this->userRepository->getActive();
+        $users = $this->userRepository->getActive();
         $paymentMethodsNumbers = [
             'gocardless'            => 0,
             'gocardless-variable'   => 0,
@@ -86,9 +86,9 @@ class StatsController extends \BaseController
 
         //Format the data into the chart format
         $monthlyAmountsData = [];
-        $monthlyAmountsData[] = ['Amount', 'Number of Members', (object)['role'=> 'annotation' ]];
+        $monthlyAmountsData[] = ['Amount', 'Number of Members', (object)['role'=> 'annotation']];
         foreach ($monthlyAmounts as $amount => $numUsers) {
-            $monthlyAmountsData[] = ['£'.$amount, $numUsers, $numUsers];
+            $monthlyAmountsData[] = ['£' . $amount, $numUsers, $numUsers];
         }
 
 
@@ -97,14 +97,14 @@ class StatsController extends \BaseController
 
 
         //door access logs
-        $logEntrys = $this->accessLogRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonth(), \Carbon\Carbon::now());
+        $logEntrys = $this->activityRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonth(), \Carbon\Carbon::now());
         $userArray = [];
         foreach ($logEntrys as $entry) {
             $userArray[] = $entry->user_id;
         }
         $numActiveUsers = count(array_unique($userArray));
 
-        $logEntrys = $this->accessLogRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonths(3), \Carbon\Carbon::now());
+        $logEntrys = $this->activityRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonths(3), \Carbon\Carbon::now());
         $userArray = [];
         foreach ($logEntrys as $entry) {
             $userArray[] = $entry->user_id;
@@ -126,7 +126,7 @@ class StatsController extends \BaseController
 
     public function ddSwitch()
     {
-        $users         = $this->userRepository->getActive();
+        $users = $this->userRepository->getActive();
         $paymentMethodsNumbers = [
             'gocardless'            => 0,
             'gocardless-variable'   => 0,

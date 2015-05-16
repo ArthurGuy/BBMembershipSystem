@@ -11,7 +11,7 @@ class InductionRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(Induction $model)
+    public function __construct(Induction $model)
     {
         $this->model = $model;
     }

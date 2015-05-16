@@ -13,10 +13,10 @@ class UserImage
 
     }
 
-    public function uploadPhoto($userId, $filePath, $newImage=false)
+    public function uploadPhoto($userId, $filePath, $newImage = false)
     {
-        $tmpFilePath = storage_path("tmp")."/".$userId.".png";
-        $tmpFilePathThumb = storage_path("tmp")."/".$userId."-thumb.png";
+        $tmpFilePath = storage_path('tmp') . '/' . $userId . '.png';
+        $tmpFilePathThumb = storage_path('tmp') . '/' . $userId . '-thumb.png';
 
 
         try {
@@ -88,7 +88,7 @@ class UserImage
         $s3->copyObject(array(
             'Bucket'     => self::$bucket,
             'Key'        => $targetFilename,
-            'CopySource' => self::$bucket."/".$sourceFilename,
+            'CopySource' => self::$bucket . '/' . $sourceFilename,
             'ACL'           => 'public-read',
             'ContentType'   => 'image/png',
             'ServerSideEncryption' => 'AES256',
@@ -101,7 +101,7 @@ class UserImage
         $s3->copyObject(array(
             'Bucket'     => self::$bucket,
             'Key'        => $targetThumbFilename,
-            'CopySource' => self::$bucket."/".$sourceThumbFilename,
+            'CopySource' => self::$bucket . '/' . $sourceThumbFilename,
             'ACL'           => 'public-read',
             'ContentType'   => 'image/png',
             'ServerSideEncryption' => 'AES256',
@@ -114,22 +114,22 @@ class UserImage
 
     public static function imageUrl($userId)
     {
-        return "https://s3-eu-west-1.amazonaws.com/".self::$bucket."/".\App::environment().'/user-photo/'.md5($userId).'.png';
+        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket . '/' . \App::environment() . '/user-photo/' . md5($userId) . '.png';
     }
 
     public static function thumbnailUrl($userId)
     {
-        return "https://s3-eu-west-1.amazonaws.com/".self::$bucket."/".\App::environment().'/user-photo/'.md5($userId).'-thumb.png';
+        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket . '/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
     }
 
     public static function newThumbnailUrl($userId)
     {
-        return "https://s3-eu-west-1.amazonaws.com/".self::$bucket."/".\App::environment().'/user-photo/'.md5($userId).'-thumb-new.png';
+        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket . '/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb-new.png';
     }
 
     public static function gravatar($email)
     {
-        return 'https://www.gravatar.com/avatar/'.md5($email).'?s=200&d=mm';
+        return 'https://www.gravatar.com/avatar/' . md5($email) . '?s=200&d=mm';
     }
 
     public static function anonymous()
@@ -151,23 +151,23 @@ class UserImage
             if ($exif_data['MimeType'] == 'image/jpeg') {
                 if ($orientation == '1') {
                     //Correct
+                    return;
                 } elseif ($orientation == '3') {
-                    //Upside down
                     //rotate 180
                     $source = imagecreatefromjpeg($filePath);
                     $rotate = imagerotate($source, 180, 0);
-                    imagejpeg($rotate, $filePath, 98);
                 } elseif ($orientation == '6') {
                     //rotate 90 cw
                     $source = imagecreatefromjpeg($filePath);
                     $rotate = imagerotate($source, 270, 0);
-                    imagejpeg($rotate, $filePath, 98);
                 } elseif ($orientation == '8') {
                     //rotate 90 ccw
                     $source = imagecreatefromjpeg($filePath);
                     $rotate = imagerotate($source, 90, 0);
-                    imagejpeg($rotate, $filePath, 98);
+                } else {
+                    return;
                 }
+                imagejpeg($rotate, $filePath, 98);
             }
         }
     }

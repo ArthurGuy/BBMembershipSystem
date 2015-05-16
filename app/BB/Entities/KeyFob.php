@@ -3,6 +3,14 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * Class KeyFob
+ *
+ * @property integer id
+ * @property bool lost
+ * @property bool active
+ * @package BB\Entities
+ */
 class KeyFob extends Model
 {
 
@@ -43,7 +51,7 @@ class KeyFob extends Model
     public static function lookup($fobId)
     {
         $record = self::where('key_id', '=', $fobId)->active()->first();
-        if (!$record) {
+        if ( ! $record) {
             throw new ModelNotFoundException;
         }
         return $record;

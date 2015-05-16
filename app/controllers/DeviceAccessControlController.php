@@ -1,12 +1,14 @@
 <?php
 
+use BB\Repo\ActivityRepository;
+
 class DeviceAccessControlController extends Controller
 {
 
     /**
-     * @var
+     * @var ActivityRepository
      */
-    private $accessLogRepository;
+    protected $activityRepository;
     /**
      * @var \BB\Repo\EquipmentRepository
      */
@@ -21,12 +23,12 @@ class DeviceAccessControlController extends Controller
     private $deviceSession;
 
     function __construct(
-        \BB\Repo\AccessLogRepository $accessLogRepository,
+        \BB\Repo\ActivityRepository $activityRepository,
         \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\EquipmentLogRepository $equipmentLogRepository,
         \BB\Services\DeviceSession $deviceSession)
     {
-        $this->accessLogRepository = $accessLogRepository;
+        $this->activityRepository = $activityRepository;
         $this->equipmentRepository = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
         $this->deviceSession = $deviceSession;

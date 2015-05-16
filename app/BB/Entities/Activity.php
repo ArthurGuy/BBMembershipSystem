@@ -2,7 +2,17 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class AccessLog extends Model
+/**
+ * Class Activity
+ *
+ * @property integer $key_fob_id
+ * @property integer $user_id
+ * @property string $service
+ * @property string $response
+ * @property bool $delayed
+ * @package BB\Entities
+ */
+class Activity extends Model
 {
 
     /**

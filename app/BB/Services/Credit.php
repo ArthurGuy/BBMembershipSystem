@@ -87,7 +87,7 @@ class Credit
 
     public function getBalanceFormatted()
     {
-        return '&pound;'.number_format(($this->user->cash_balance / 100), 2);
+        return '&pound;' . number_format(($this->user->cash_balance / 100), 2);
     }
 
     public function getBalancePaymentsPaginated()
@@ -102,7 +102,7 @@ class Credit
             case 'laser':
                 return 3.00;
         }
-        throw new NotImplementedException("No fee exists for this device");
+        throw new NotImplementedException('No fee exists for this device');
     }
 
 } 

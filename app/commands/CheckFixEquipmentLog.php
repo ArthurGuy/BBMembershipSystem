@@ -6,19 +6,19 @@ use Illuminate\Console\Command;
 class CheckFixEquipmentLog extends Command
 {
 
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'bb:fix-equipment-log';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'bb:fix-equipment-log';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Fix equipment log entries';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Fix equipment log entries';
 
     /**
      * @var \BB\Services\CombineEquipmentLogs
@@ -33,20 +33,20 @@ class CheckFixEquipmentLog extends Command
     /**
      * Create a new command instance.
      */
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
         $this->equipmentLogRepository = App::make('\BB\Repo\EquipmentLogRepository');
         $this->combineEquipmentLogs = App::make('\BB\Services\CombineEquipmentLogs');
     }
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function fire()
-	{
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
         //Close records that were left open
         $records = $this->equipmentLogRepository->getActiveRecords();
         foreach ($records as $log) {
@@ -56,7 +56,7 @@ class CheckFixEquipmentLog extends Command
                 //End the session with the end date being the last update date
                 $this->equipmentLogRepository->endSession($log->id, $log->last_update);
 
-            } elseif (!$log->last_update && $log->started->lt(\Carbon\Carbon::now()->subHour())) {
+            } elseif ( ! $log->last_update && $log->started->lt(\Carbon\Carbon::now()->subHour())) {
                 //started over an hour ago, no updates
 
                 //We don't know how long the user was active so record a minute
@@ -82,6 +82,6 @@ class CheckFixEquipmentLog extends Command
             //$record->processed = true;
             $record->save();
         }
-	}
+    }
 
 }

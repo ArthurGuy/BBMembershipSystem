@@ -18,7 +18,7 @@ class CheckMemberships
      */
     private $memberSubscriptionCharges;
 
-    function __construct(MemberSubscriptionCharges $memberSubscriptionCharges)
+    public function __construct(MemberSubscriptionCharges $memberSubscriptionCharges)
     {
         $this->memberSubscriptionCharges = $memberSubscriptionCharges;
     }
@@ -33,8 +33,7 @@ class CheckMemberships
             $expired = false;
 
             $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
-            if (!$user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
-                //echo "- Expired";
+            if ( ! $user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
                 $expired = true;
             }
 
@@ -53,7 +52,7 @@ class CheckMemberships
             }
             if ($expired) {
                 $user->setSuspended();
-                echo " - Suspended";
+                echo ' - Suspended';
             }
 
 

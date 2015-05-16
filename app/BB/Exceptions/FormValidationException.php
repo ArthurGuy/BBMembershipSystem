@@ -14,7 +14,7 @@ class FormValidationException extends \Exception
      * @param string     $message
      * @param MessageBag $errors
      */
-    function __construct($message, MessageBag $errors)
+    public function __construct($message, MessageBag $errors)
     {
         $this->errors = $errors;
 

@@ -76,7 +76,7 @@ class AccountController extends \BaseController
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
 
         //This tones down some validation rules for admins
-        $this->userForm->setAdminOverride(!Auth::guest() && Auth::user()->hasRole('admin'));
+        $this->userForm->setAdminOverride( ! Auth::guest() && Auth::user()->hasRole('admin'));
 
         $this->beforeFilter('role:member', array('except' => ['create', 'store']));
         $this->beforeFilter('role:admin', array('only' => ['index']));
@@ -122,7 +122,7 @@ class AccountController extends \BaseController
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function store()
 	{
@@ -132,7 +132,7 @@ class AccountController extends \BaseController
         $this->profileValidator->validate($input);
 
 
-        $user = $this->userRepository->registerMember($input, !Auth::guest() && Auth::user()->hasRole('admin'));
+        $user = $this->userRepository->registerMember($input, ! Auth::guest() && Auth::user()->hasRole('admin'));
 
         if (Input::file('new_profile_photo')) {
             try {
@@ -145,22 +145,22 @@ class AccountController extends \BaseController
         }
 
         //If this isn't an admin user creating the record log them in
-        if (Auth::guest() || !Auth::user()->isAdmin()) {
+        if (Auth::guest() || ! Auth::user()->isAdmin()) {
             Auth::login($user);
         }
 
-        return Redirect::route('account.show', $user->id);
-	}
+        return Redirect::route('account.show', [$user->id]);
+    }
 
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
         $user = User::findWithPermission($id);
 
         $inductions = $this->equipmentRepository->getRequiresInduction();
@@ -206,7 +206,7 @@ class AccountController extends \BaseController
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function update($id)
 	{
@@ -217,9 +217,9 @@ class AccountController extends \BaseController
 
         $this->userRepository->updateMember($id, $input, Auth::user()->hasRole('admin'));
 
-        Notification::success("Details Updated");
-        return Redirect::route('account.show', $user->id);
-	}
+        Notification::success('Details Updated');
+        return Redirect::route('account.show', [$user->id]);
+    }
 
 
 
@@ -269,10 +269,10 @@ class AccountController extends \BaseController
 
 
         if (Request::wantsJson()) {
-            return Response::json("Updated", 200);
+            return Response::json('Updated', 200);
         } else {
-            Notification::success("Details Updated");
-            return Redirect::route('account.show', $user->id);
+            Notification::success('Details Updated');
+            return Redirect::route('account.show', [$user->id]);
         }
     }
 
@@ -294,8 +294,8 @@ class AccountController extends \BaseController
 
         $user->updateSubscription($input['payment_method'], $input['payment_day']);
 
-        Notification::success("Details Updated");
-        return Redirect::route('account.show', $user->id);
+        Notification::success('Details Updated');
+        return Redirect::route('account.show', [$user->id]);
     }
 
     public function confirmEmail($id, $hash)
@@ -303,40 +303,40 @@ class AccountController extends \BaseController
         $user = User::find($id);
         if ($user && $user->hash == $hash) {
             $user->emailConfirmed();
-            Notification::success("Email address confirmed, thank you");
+            Notification::success('Email address confirmed, thank you');
             return Redirect::route('account.show', $user->id);
         }
-        Notification::error("Error confirming email address");
+        Notification::error('Error confirming email address');
         return Redirect::route('home');
     }
 
 
 
-	public function destroy($id)
-	{
+    public function destroy($id)
+    {
         $user = User::findWithPermission($id);
 
         //No one will ever leaves the system but we can at least update their status to left.
         $user->setLeaving();
 
-        Notification::success("Updated status to leaving");
-        return Redirect::route('account.show', $user->id);
-	}
+        Notification::success('Updated status to leaving');
+        return Redirect::route('account.show', [$user->id]);
+    }
 
 
     public function rejoin($id)
     {
         $user = User::findWithPermission($id);
         $user->rejoin();
-        Notification::success("Details Updated");
-        return Redirect::route('account.show', $user->id);
+        Notification::success('Details Updated');
+        return Redirect::route('account.show', [$user->id]);
     }
 
     public function updateSubscriptionAmount($id)
     {
         $user = User::findWithPermission($id);
         $user->updateSubAmount(Input::get('monthly_subscription'));
-        Notification::success("Details Updated");
-        return Redirect::route('account.show', $user->id);
+        Notification::success('Details Updated');
+        return Redirect::route('account.show', [$user->id]);
     }
 }

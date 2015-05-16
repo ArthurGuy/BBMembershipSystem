@@ -21,7 +21,7 @@ class PaypalIPNController extends \BaseController
     {
         $ipnMessage = new \PayPal\IPN\PPIPNMessage('', PayPalConfig::getConfig());
 
-        if (!$ipnMessage->validate()) {
+        if ( ! $ipnMessage->validate()) {
             \Log::error("Invalid IPN");
         }
 
@@ -31,14 +31,14 @@ class PaypalIPNController extends \BaseController
 
         if (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_payment')) {
             if ($ipnData['payment_status'] != 'Completed') {
-                \Log::error("PayPal IPN: Received unknown payment status for sub payment: \"" . $ipnData['payment_status']."\" Email: ".$ipnData['payer_email']);
+                \Log::error("PayPal IPN: Received unknown payment status for sub payment: \"" . $ipnData['payment_status'] . "\" Email: " . $ipnData['payer_email']);
                 return;
             }
             $user = User::where('email', $ipnData['payer_email'])->first();
-            if (!$user) {
+            if ( ! $user) {
                 $user = User::where('secondary_email', $ipnData['payer_email'])->first();
             }
-            if (!$user) {
+            if ( ! $user) {
                 \Log::error("PayPal IPN Received for unknown email " . $ipnData['payer_email']);
                 return;
             }
@@ -65,7 +65,7 @@ class PaypalIPNController extends \BaseController
                 } else {
                     //member who cancelled and restarted
                     //  or changed their amount by cancelling and starting again
-                    \Log::debug("No pp charge found and status is not setting up. User ID: ".$user->id);
+                    \Log::debug("No pp charge found and status is not setting up. User ID: " . $user->id);
                 }
             }
 

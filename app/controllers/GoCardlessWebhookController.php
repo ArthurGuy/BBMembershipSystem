@@ -36,7 +36,7 @@ class GoCardlessWebhookController extends \BaseController
     {
         $request = Request::instance();
 
-        if (!$this->goCardless->validateWebhook($request->getContent())) {
+        if ( ! $this->goCardless->validateWebhook($request->getContent())) {
             return Response::make('', 403);
         }
 
@@ -97,7 +97,7 @@ class GoCardlessWebhookController extends \BaseController
                 //Locate the user through their subscription id
                 $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['source_id'])->first();
 
-                if (!$user) {
+                if ( ! $user) {
                     Log::warning("GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['id']);
 
                     break;
@@ -133,7 +133,7 @@ class GoCardlessWebhookController extends \BaseController
                 $this->paymentRepository->markPaymentPaid($existingPayment->id, $paymentDate);
 
             } else {
-                Log::info("GoCardless Webhook received for unknown payment: ".$bill['id']);
+                Log::info("GoCardless Webhook received for unknown payment: " . $bill['id']);
             }
         }
     }
@@ -168,7 +168,7 @@ class GoCardlessWebhookController extends \BaseController
                     //Money taken out - not our concern
                 }
             } else {
-                Log::info("GoCardless Webhook received for unknown payment: ".$bill['id']);
+                Log::info("GoCardless Webhook received for unknown payment: " . $bill['id']);
             }
         }
 

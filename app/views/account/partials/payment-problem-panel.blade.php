@@ -7,7 +7,8 @@
             @if (!empty($user->subscription_id))
             <p>
                 Your direct debit payment has failed and we need you to make a manual payment.<br />
-                Please start by migrating to our new direct debit system
+                Please start by migrating to the new direct debit system.<br />
+                This process wont charge you anything, just setup the new Direct Debit.
             </p>
             <p>
                 {{ Form::open(array('method'=>'POST', 'route' => ['account.payment.gocardless-migrate'])) }}
@@ -24,6 +25,10 @@
                 Your latest subscription payment has failed and your account has been temporarily suspended.<br />
                 You can retry your direct debit payment now.
                 @include('partials/payment-form', ['reason'=>'subscription', 'displayReason'=>'Retry payment', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>round($user->monthly_subscription), 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'balance', 'stripe']])
+
+                @if (Auth::user()->isAdmin())
+                    <small>Admins: You cannot do this process on behalf of the member, it will just charge your account.</small>
+                @endif
             </p>
         @else
         <p>
@@ -60,18 +65,6 @@
             {{ Form::hidden('hosted_button_i', '3H4YABLMVW6RC') }}
             {{ Form::close() }}
         </p>
-        @endif
-
-        @if (Auth::user()->isAdmin())
-        {{ Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) }}
-        <p>
-            <span class="label label-danger pull-right">Admin</span>
-            Add a manual payment to this account
-        </p>
-        {{ Form::hidden('reason', 'subscription') }}
-        {{ Form::select('source', ['other'=>'Other', 'cash'=>'Cash', 'paypal'=>'PayPal', 'standing-order'=>'Standing Order'], null, ['class'=>'form-control']) }}
-        {{ Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) }}
-        {{ Form::close() }}
         @endif
 
     </div>

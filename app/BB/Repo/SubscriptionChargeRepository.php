@@ -1,7 +1,6 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\SubscriptionCharge;
-use BB\Exceptions\InvalidDataException;
 use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 
@@ -22,7 +21,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     private $goCardless;
 
-    function __construct(SubscriptionCharge $model, PaymentRepository $paymentRepository, GoCardlessHelper $goCardless)
+    public function __construct(SubscriptionCharge $model, PaymentRepository $paymentRepository, GoCardlessHelper $goCardless)
     {
         $this->model = $model;
         $this->paymentRepository = $paymentRepository;
@@ -36,7 +35,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param string    $status
      * @return SubscriptionCharge
      */
-    public function createCharge($userId, \DateTime $date, $amount=0, $status='pending')
+    public function createCharge($userId, \DateTime $date, $amount = 0, $status = 'pending')
     {
         return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>$status]);
     }
@@ -65,7 +64,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * Does a charge already exist for the user and date
      * @param $userId
-     * @param $date
+     * @param Carbon $date
      * @return bool
      */
     public function chargeExists($userId, $date)
@@ -83,7 +82,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param Carbon $paymentDate
      * @return mixed
      */
-    public function findCharge($userId, $paymentDate=null)
+    public function findCharge($userId, $paymentDate = null)
     {
         //find any existing payment that hasn't been paid
         //Subscription payments will always be used to pay of bills
@@ -95,7 +94,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param $chargeId
      * @param $paymentDate
      */
-    public function markChargeAsPaid($chargeId, $paymentDate=null)
+    public function markChargeAsPaid($chargeId, $paymentDate = null)
     {
         if (is_null($paymentDate)) {
             $paymentDate = new Carbon();
@@ -135,7 +134,7 @@ class SubscriptionChargeRepository extends DBRepository
             $subCharge->amount       = 0;
             $subCharge->save();
         } else {
-            \Log::debug("Sub charge not updated after payment failure, already cancelled. Charge ID: ".$chargeId);
+            \Log::debug('Sub charge not updated after payment failure, already cancelled. Charge ID: ' . $chargeId);
         }
 
         \Event::fire('sub-charge.payment-failed', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
