@@ -36,6 +36,7 @@ jQuery('.paymentModule').each(function () {
     var amount = jQuery(this).data('amount');
     var ref = jQuery(this).data('ref');
     var memberEmail = document.getElementById('memberEmail').value;
+    var userId = document.getElementById('userId').value;
     var stripeKey = document.getElementById('stripePublicKey').value;
 
     var handleSuccess = () => { document.location.reload(true) };
