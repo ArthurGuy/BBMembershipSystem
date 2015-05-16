@@ -51,6 +51,10 @@ class CreateTodaysSubCharges extends Command
         $this->info("Generating charges for ".$targetDate);
 
         $this->subscriptionChargeService->createSubscriptionCharges($targetDate);
+
+        //in case yesterdays process failed we will rerun the past two days, this should pickup and stragglers
+        $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-1 day
+        $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-2 days
 	}
 
     /**
