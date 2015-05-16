@@ -2922,39 +2922,37 @@
         },
         {
             "name": "codeception/mockery-module",
-            "version": "0.2.0",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/MockeryModule.git",
-                "reference": "178dd30c676220731d6d1efa07743143ad0b3525"
+                "reference": "f0206c1e59a5a6cddb8c115d06af17d3af58f9c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/MockeryModule/zipball/178dd30c676220731d6d1efa07743143ad0b3525",
-                "reference": "178dd30c676220731d6d1efa07743143ad0b3525",
+                "url": "https://api.github.com/repos/Codeception/MockeryModule/zipball/f0206c1e59a5a6cddb8c115d06af17d3af58f9c5",
+                "reference": "f0206c1e59a5a6cddb8c115d06af17d3af58f9c5",
                 "shasum": ""
             },
             "require": {
-                "mockery/mockery": "~0.8"
+                "mockery/mockery": "dev-master@dev"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Codeception\\Module\\": "src"
+                    "Codeception\\Module\\": "codeception-module"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
             "authors": [
                 {
                     "name": "Michael Bodnarchuk",
-                    "email": "davert.php@mailican.com"
+                    "email": "davert.php@mailican.com",
+                    "homepage": "http://codeception.com"
                 }
             ],
             "description": "Mockery Module for Codeception",
-            "time": "2014-08-30 22:28:34"
+            "time": "2014-01-25 04:24:27"
         },
         {
             "name": "doctrine/instantiator",
