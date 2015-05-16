@@ -12,15 +12,15 @@ class StatsController extends \BaseController
      */
     private $userRepository;
     /**
-     * @var \BB\Repo\AccessLogRepository
+     * @var \BB\Repo\ActivityRepository
      */
-    private $accessLogRepository;
+    private $activityRepository;
 
 
-    function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\AccessLogRepository $accessLogRepository)
+    function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\ActivityRepository $activityRepository)
     {
         $this->userRepository = $userRepository;
-        $this->accessLogRepository = $accessLogRepository;
+        $this->activityRepository = $activityRepository;
     }
 
     /**
@@ -97,14 +97,14 @@ class StatsController extends \BaseController
 
 
         //door access logs
-        $logEntrys = $this->accessLogRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonth(), \Carbon\Carbon::now());
+        $logEntrys = $this->activityRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonth(), \Carbon\Carbon::now());
         $userArray = [];
         foreach ($logEntrys as $entry) {
             $userArray[] = $entry->user_id;
         }
         $numActiveUsers = count(array_unique($userArray));
 
-        $logEntrys = $this->accessLogRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonths(3), \Carbon\Carbon::now());
+        $logEntrys = $this->activityRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonths(3), \Carbon\Carbon::now());
         $userArray = [];
         foreach ($logEntrys as $entry) {
             $userArray[] = $entry->user_id;

@@ -3,15 +3,14 @@
 class ActivityController extends \BaseController
 {
 
-    protected $layout = 'layouts.main';
     /**
-     * @var
+     * @var \BB\Repo\ActivityRepository
      */
-    private $accessLogRepository;
+    private $activityRepository;
 
-    function __construct(\BB\Repo\AccessLogRepository $accessLogRepository)
+    function __construct(\BB\Repo\ActivityRepository $activityRepository)
     {
-        $this->accessLogRepository = $accessLogRepository;
+        $this->activityRepository = $activityRepository;
     }
 
 	/**
@@ -25,7 +24,7 @@ class ActivityController extends \BaseController
         $date = \Carbon\Carbon::createFromFormat('Y-m-d', $date)->setTime(0, 0, 0);
         $today = \Carbon\Carbon::now()->setTime(0, 0, 0);
 
-        $logEntries = $this->accessLogRepository->getForDate($date);
+        $logEntries = $this->activityRepository->getForDate($date);
 
         $nextDate = null;
         if ($date->lt($today)) {

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class AccessLog extends Model
+class Activity extends Model
 {
 
     /**

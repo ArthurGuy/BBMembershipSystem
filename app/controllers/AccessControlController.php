@@ -1,6 +1,6 @@
 <?php
 
-use BB\Entities\AccessLog;
+use BB\Entities\Activity;
 use BB\Entities\KeyFob;
 use Illuminate\Support\Facades\Response;
 
@@ -79,7 +79,7 @@ class AccessControlController extends Controller
         }
         $user = $keyFob->user()->first();
 
-        $log = new AccessLog();
+        $log = new Activity();
         $log->key_fob_id = $keyFob->id;
         $log->user_id = $user->id;
         $log->service = 'status';

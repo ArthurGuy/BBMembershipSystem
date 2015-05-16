@@ -1,7 +1,6 @@
 <?php namespace BB\Services;
 
 use BB\Exceptions\ValidationException;
-use BB\Repo\AccessLogRepository;
 
 class BuildingAccess extends KeyFobAccess
 {

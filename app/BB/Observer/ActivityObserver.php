@@ -5,7 +5,7 @@ use BB\Entities\User;
 use BB\Helpers\UserImage;
 use Illuminate\Support\Facades\Log;
 
-class AccessLogObserver
+class ActivityObserver
 {
 
     /**

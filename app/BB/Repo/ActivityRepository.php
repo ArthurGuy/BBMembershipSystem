@@ -1,17 +1,17 @@
 <?php namespace BB\Repo;
 
-use BB\Entities\AccessLog;
+use BB\Entities\Activity;
 
-class AccessLogRepository extends DBRepository
+class ActivityRepository extends DBRepository
 {
 
 
     /**
-     * @var AccessLog
+     * @var Activity
      */
     protected $model;
 
-    function __construct(AccessLog $model)
+    function __construct(Activity $model)
     {
         $this->model = $model;
     }

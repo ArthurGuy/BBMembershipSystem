@@ -2,7 +2,7 @@
 
 use BB\Entities\KeyFob;
 use BB\Exceptions\ValidationException;
-use BB\Repo\AccessLogRepository;
+use BB\Repo\ActivityRepository;
 use Carbon\Carbon;
 
 class KeyFobAccess
@@ -45,9 +45,9 @@ class KeyFobAccess
     protected $user;
 
     /**
-     * @var AccessLogRepository
+     * @var ActivityRepository
      */
-    protected $accessLogRepository;
+    protected $activityRepository;
 
 
     protected $messageDelayed = false;
@@ -61,9 +61,9 @@ class KeyFobAccess
     protected $time;
 
 
-    public function __construct(AccessLogRepository $accessLogRepository)
+    public function __construct(ActivityRepository $activityRepository)
     {
-        $this->accessLogRepository = $accessLogRepository;
+        $this->activityRepository = $activityRepository;
     }
 
 
@@ -202,7 +202,7 @@ class KeyFobAccess
         $log['delayed']    = $this->messageDelayed;
         $log['response']   = 402;
         $log['created_at'] = $this->time;
-        $this->accessLogRepository->logAccessAttempt($log);
+        $this->activityRepository->logAccessAttempt($log);
     }
 
     public function logSuccess()
@@ -215,7 +215,7 @@ class KeyFobAccess
         $log['created_at'] = $this->time;
         //OK
         $log['response']   = 200;
-        $this->accessLogRepository->logAccessAttempt($log);
+        $this->activityRepository->logAccessAttempt($log);
     }
 
     /**
