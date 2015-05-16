@@ -43,7 +43,7 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendWelcomeMessage();
 
-        $this->sendSlackNotification("#general", $user->name . ' has just joined Build Brighton');
+        $this->sendSlackNotification('#general', $user->name . ' has just joined Build Brighton');
     }
 
     private function paymentWarning($user)
@@ -57,7 +57,7 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendSuspendedMessage();
 
-        $this->sendSlackNotification("#trustees", $user->name . ' has been suspended for non payment');
+        $this->sendSlackNotification('#trustees', $user->name . ' has been suspended for non payment');
     }
 
     private function userLeft($user)
@@ -65,7 +65,7 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendLeftMessage();
 
-        $this->sendSlackNotification("#trustees", $user->name . ' has left Build Brighton');
+        $this->sendSlackNotification('#trustees', $user->name . ' has left Build Brighton');
     }
 
     /**

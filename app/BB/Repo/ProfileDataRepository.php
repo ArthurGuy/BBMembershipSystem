@@ -11,7 +11,7 @@ class ProfileDataRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(ProfileData $model)
+    public function __construct(ProfileData $model)
     {
         $this->model = $model;
     }

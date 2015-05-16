@@ -44,7 +44,7 @@ class ActivityObserver
             );
 
             if (\App::environment('production')) {
-                \Slack::send($userName . ' has entered the space');
+                \Slack::send($userName . ' is in the space');
             }
 
         } catch (\Exception $e) {

@@ -24,7 +24,6 @@ class ProposalPresenter extends Presenter
     public function description()
     {
         return Markdown::defaultTransform($this->entity->description);
-        //return nl2br($this->entity->description);
     }
 
     public function status()
@@ -32,7 +31,7 @@ class ProposalPresenter extends Presenter
         if ($this->entity->isOpen()) {
             return 'Open';
         } else if (!$this->entity->hasStarted()) {
-            return 'Opens '.$this->entity->start_date->format('jS M');
+            return 'Opens ' . $this->entity->start_date->format('jS M');
         } else {
             return 'Closed';
         }

@@ -94,7 +94,7 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         return '<li><a href="'.route($route, $routeParams).'">'.$name.'</a></li>';
     }
 
-    function paymentFormMethodDropdown($methods = [])
+    public function paymentFormMethodDropdown($methods = [])
     {
         $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card', 'balance'=>'Pay using your Balance'];
         if (!empty($methods)) {

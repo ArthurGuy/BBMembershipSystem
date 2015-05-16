@@ -1,6 +1,7 @@
 <?php namespace BB\Services;
 
 use BB\Entities\KeyFob;
+use BB\Entities\User;
 use BB\Exceptions\ValidationException;
 use BB\Repo\ActivityRepository;
 use Carbon\Carbon;
@@ -16,7 +17,7 @@ class KeyFobAccess
 
     /**
      * The key fob record
-     * @var
+     * @var KeyFob
      */
     protected $keyFob;
 
@@ -40,7 +41,7 @@ class KeyFobAccess
     protected $action;
 
     /**
-     * @var \User
+     * @var User
      */
     protected $user;
 
@@ -149,22 +150,22 @@ class KeyFobAccess
         $this->user = $this->keyFob->user()->first();
         if (!$this->user || !$this->user->active) {
             $this->logFailure();
-            throw new ValidationException("Not a member");
+            throw new ValidationException('Not a member');
         }
 
         if (!$this->user->trusted) {
             $this->logFailure();
-            throw new ValidationException("Not a keyholder");
+            throw new ValidationException('Not a keyholder');
         }
 
         if (!$this->user->key_holder) {
             $this->logFailure();
-            throw new ValidationException("Not a keyholder");
+            throw new ValidationException('Not a keyholder');
         }
 
         if (!($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
             $this->logFailure();
-            throw new ValidationException("Member not trusted");
+            throw new ValidationException('Member not trusted');
         }
 
         $this->memberName = $this->user->given_name;
@@ -186,7 +187,7 @@ class KeyFobAccess
             try {
                 $keyFob = KeyFob::lookup($keyId);
             } catch (\Exception $e) {
-                throw new ValidationException("Key fob ID not valid");
+                throw new ValidationException('Key fob ID not valid');
             }
             return $keyFob;
         }
@@ -203,19 +204,17 @@ class KeyFobAccess
         $log['response']   = 402;
         $log['created_at'] = $this->time;
         $this->activityRepository->logAccessAttempt($log);
+
     }
 
     public function logSuccess()
     {
-        $log               = [];
-        $log['key_fob_id'] = $this->keyFob->id;
-        $log['user_id']    = $this->user->id;
-        $log['service']    = 'main-door';
-        $log['delayed']    = $this->messageDelayed;
-        $log['created_at'] = $this->time;
-        //OK
-        $log['response']   = 200;
-        $this->activityRepository->logAccessAttempt($log);
+        $activity = $this->activityRepository->recordMemberActivity($this->user->id, $this->keyFob->id, 'main-door', $this->time);
+
+        if ($this->messageDelayed) {
+            $activity->delayed = true;
+            $activity->save();
+        }
     }
 
     /**

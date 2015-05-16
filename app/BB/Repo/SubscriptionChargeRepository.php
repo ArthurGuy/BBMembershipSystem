@@ -22,7 +22,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     private $goCardless;
 
-    function __construct(SubscriptionCharge $model, PaymentRepository $paymentRepository, GoCardlessHelper $goCardless)
+    public function __construct(SubscriptionCharge $model, PaymentRepository $paymentRepository, GoCardlessHelper $goCardless)
     {
         $this->model = $model;
         $this->paymentRepository = $paymentRepository;
@@ -135,7 +135,7 @@ class SubscriptionChargeRepository extends DBRepository
             $subCharge->amount       = 0;
             $subCharge->save();
         } else {
-            \Log::debug("Sub charge not updated after payment failure, already cancelled. Charge ID: ".$chargeId);
+            \Log::debug('Sub charge not updated after payment failure, already cancelled. Charge ID: ' . $chargeId);
         }
 
         \Event::fire('sub-charge.payment-failed', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));

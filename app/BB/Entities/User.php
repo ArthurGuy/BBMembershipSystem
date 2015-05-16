@@ -16,6 +16,11 @@ use Hash;
 /**
  * Class User
  *
+ * @property integer $id
+ * @property string $email
+ * @property string $name
+ * @property string $given_name
+ * @property string $family_name
  * @property string $hash
  * @property bool $active
  * @property bool $key_holder
@@ -26,7 +31,11 @@ use Hash;
  * @property string $status
  * @property string $payment_method
  * @property string $subscription_id
+ * @property Carbon $subscription_expires
+ * @property Carbon $banned_date
  * @property string $phone
+ * @property integer $storage_box_payment_id
+ * @property ProfileData $profile
  * @package BB\Entities
  */
 class User extends Model implements UserInterface, RemindableInterface {
@@ -383,14 +392,6 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->email_verified = true;
         $this->save();
     }
-
-    /*
-    public function profilePhoto($photoAvailable=true)
-    {
-        $this->profile_photo = $photoAvailable;
-        $this->save();
-    }
-    */
 
     /**
      * Fetch a user record, performs a permission check

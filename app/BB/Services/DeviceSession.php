@@ -65,17 +65,17 @@ class DeviceSession extends KeyFobAccess
 
         //Validate the action
         if (!in_array($this->action, $this->deviceActions)) {
-            throw new ValidationException("Invalid Device Action");
+            throw new ValidationException('Invalid Device Action');
         }
         //Validate the device
         try {
             $this->device = $this->equipmentRepository->findByKey($this->deviceKey);
         } catch (ModelNotFoundException $e) {
-            throw new ValidationException("Invalid Device Key");
+            throw new ValidationException('Invalid Device Key');
         }
         //Confirm the device is working
         if (!$this->device->working) {
-            throw new ValidationException("Device Not Working");
+            throw new ValidationException('Device Not Working');
         }
         //Validate the key fob
         $this->keyFob = $this->lookupKeyFob($this->keyFobId);
@@ -83,14 +83,14 @@ class DeviceSession extends KeyFobAccess
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
         if (!$this->user || !$this->user->active) {
-            throw new ValidationException("User Invalid");
+            throw new ValidationException('User Invalid');
         }
 
         //Make sure the user is allowed to use the device
         if ($this->device->requires_induction) {
             //Verify the user has training
             if (!$this->inductionRepository->isUserTrained($this->user->id, $this->deviceKey)) {
-                throw new ValidationException("User Not Trained");
+                throw new ValidationException('User Not Trained');
             }
         }
 
@@ -98,7 +98,7 @@ class DeviceSession extends KeyFobAccess
         //Make sure the member has enough money on their account
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance('equipment-fee');
         if (($this->user->cash_balance + ($minimumBalance * 100)) <= 0) {
-            throw new ValidationException("User doesn't have enough credit");
+            throw new ValidationException('User doesn\'t have enough credit');
         }
 
     }
@@ -107,7 +107,7 @@ class DeviceSession extends KeyFobAccess
     {
         $dataPacket = explode('|', $receivedData);
         if (count($dataPacket) != 3) {
-            throw new ValidationException("Invalid Device String");
+            throw new ValidationException('Invalid Device String');
         }
 
         $this->keyFobId = trim(strtolower($dataPacket[0]));

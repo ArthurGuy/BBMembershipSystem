@@ -12,7 +12,7 @@ class ProposalRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(Proposal $model)
+    public function __construct(Proposal $model)
     {
         $this->model = $model;
     }

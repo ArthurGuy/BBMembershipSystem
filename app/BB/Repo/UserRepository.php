@@ -23,7 +23,7 @@ class UserRepository extends DBRepository
      */
     private $subscriptionChargeRepository;
 
-    function __construct(User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
+    public function __construct(User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->model = $model;
         $this->perPage = 150;

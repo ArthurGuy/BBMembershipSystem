@@ -5,8 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Activity
  *
- * @property string $key_fob_id
- * @property string $user_id
+ * @property integer $key_fob_id
+ * @property integer $user_id
  * @property string $service
  * @property string $response
  * @property bool $delayed

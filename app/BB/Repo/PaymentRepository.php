@@ -13,8 +13,8 @@ class PaymentRepository extends DBRepository
      */
     protected $model;
 
-    static $SUBSCRIPTION = 'subscription';
-    static $INDUCTION = 'induction';
+    public static $SUBSCRIPTION = 'subscription';
+    public static $INDUCTION = 'induction';
 
 
     private $startDate = null;
@@ -26,7 +26,7 @@ class PaymentRepository extends DBRepository
     /**
      * @param Payment $model
      */
-    function __construct(Payment $model)
+    public function __construct(Payment $model)
     {
         $this->model = $model;
         $this->perPage = 10;

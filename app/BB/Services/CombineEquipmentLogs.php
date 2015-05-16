@@ -16,7 +16,7 @@ class CombineEquipmentLogs
      */
     private $logEntries;
 
-    function __construct(EquipmentLogRepository $equipmentLogRepository)
+    public function __construct(EquipmentLogRepository $equipmentLogRepository)
     {
         $this->equipmentLogRepository = $equipmentLogRepository;
 

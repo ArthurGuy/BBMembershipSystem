@@ -9,22 +9,22 @@ class SubscriptionChargePresenter extends Presenter
     {
         switch ($this->entity->status) {
 
-            case 'pending';
+            case 'pending':
                 return 'Pending';
 
-            case 'due';
+            case 'due':
                 return 'Due';
 
-            case 'processing';
+            case 'processing':
                 return 'Processing';
 
-            case 'paid';
+            case 'paid':
                 return 'Paid';
 
-            case 'cancelled';
+            case 'cancelled':
                 return 'Cancelled';
 
-            default;
+            default:
                 return $this->entity->status;
         }
     }
@@ -33,22 +33,22 @@ class SubscriptionChargePresenter extends Presenter
     {
         switch ($this->entity->status) {
 
-            case 'pending';
+            case 'pending':
                 return '';
 
-            case 'due';
+            case 'due':
                 return 'warning';
 
-            case 'processing';
+            case 'processing':
                 return 'info';
 
-            case 'paid';
+            case 'paid':
                 return 'success';
 
-            case 'cancelled';
+            case 'cancelled':
                 return 'text-muted';
 
-            default;
+            default:
                 return $this->entity->status;
         }
     }
@@ -63,7 +63,7 @@ class SubscriptionChargePresenter extends Presenter
      */
     public function payment_date()
     {
-        if ($this->entity->status == 'paid') {
+        if ($this->entity->status === 'paid') {
             return $this->entity->payment_date->toFormattedDateString();
         }
         return null;
@@ -71,7 +71,7 @@ class SubscriptionChargePresenter extends Presenter
 
     public function amount()
     {
-        if (($this->entity->status == 'processing') || ($this->entity->status == 'paid')) {
+        if (($this->entity->status === 'processing') || ($this->entity->status === 'paid')) {
             return '&pound;' . $this->entity->amount;
         }
         return '';

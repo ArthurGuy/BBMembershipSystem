@@ -5,13 +5,12 @@ use BB\Entities\ProposalVote;
 class ProposalVoteRepository extends DBRepository
 {
 
-
     /**
      * @var ProposalVote
      */
     protected $model;
 
-    function __construct(ProposalVote $model)
+    public function __construct(ProposalVote $model)
     {
         $this->model = $model;
     }

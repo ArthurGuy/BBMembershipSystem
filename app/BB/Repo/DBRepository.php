@@ -13,7 +13,7 @@ abstract class DBRepository
     /**
      * @param $model
      */
-    function __construct($model)
+    public function __construct($model)
     {
         $this->model = $model;
     }

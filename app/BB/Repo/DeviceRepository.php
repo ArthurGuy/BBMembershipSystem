@@ -12,7 +12,7 @@ class DeviceRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(Device $model)
+    public function __construct(Device $model)
     {
         $this->model = $model;
     }

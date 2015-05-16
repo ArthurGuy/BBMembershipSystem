@@ -11,7 +11,7 @@ class EquipmentLogRepository extends DBRepository
      */
     protected $model;
 
-    function __construct(EquipmentLog $model)
+    public function __construct(EquipmentLog $model)
     {
         $this->model = $model;
         $this->perPage = 25;
