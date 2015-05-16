@@ -73,11 +73,6 @@ class Induction extends Model
         return self::where('user_id', $userId)->where('key', $key)->first();
     }
 
-    public static function userInductions($userId)
-    {
-
-    }
-
     public static function trainersFor($key)
     {
         return self::where('key', $key)->where('is_trainer', 1)->get();
