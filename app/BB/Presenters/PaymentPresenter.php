@@ -67,6 +67,8 @@ class PaymentPresenter extends Presenter
                 return 'Other';
             case 'balance':
                 return 'BB Balance';
+            case 'reimbursement':
+                return 'Reimbursement';
             default:
                 return $this->entity->source;
         }
