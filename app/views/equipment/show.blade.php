@@ -58,13 +58,13 @@ Tools and Equipment
                         </div>
                     </div>
 
-
-
                     <br />
 
                     {{ $equipment->present()->description }}<br />
 
-
+                    @if ($equipment->help_text)
+                        <a data-toggle="modal" data-target="#helpModal" href="#">Help</a><br />
+                    @endif
 
 
                     @if ($equipment->requiresInduction())
@@ -178,10 +178,21 @@ Tools and Equipment
         </div>
     @endif
 
+
+    <div class="modal fade" id="helpModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Help</h4>
+                </div>
+                <div class="modal-body">
+                    {{ $equipment->present()->help_text }}
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-@stop
-
-@section('footer-js')
 
 @stop

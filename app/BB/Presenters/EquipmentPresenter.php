@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Laracasts\Presenter\Presenter;
+use Michelf\Markdown;
 
 class EquipmentPresenter extends Presenter
 {
@@ -26,7 +27,12 @@ class EquipmentPresenter extends Presenter
 
     public function description()
     {
-        return nl2br($this->entity->description);
+        return Markdown::defaultTransform($this->entity->description);
+    }
+
+    public function help_text()
+    {
+        return Markdown::defaultTransform($this->entity->help_text);
     }
 
     public function purchaseDate()
