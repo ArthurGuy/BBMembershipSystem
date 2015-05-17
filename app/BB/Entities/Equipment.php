@@ -7,8 +7,9 @@ use Laracasts\Presenter\PresentableTrait;
 /**
  * Class Equipment
  *
- * @property array $photos
+ * @property array  $photos
  * @property string $key
+ * @property array  $ppe
  * @property Carbon $obtained_at
  * @property Carbon $removed_at
  * @package BB\Entities
@@ -31,7 +32,7 @@ class Equipment extends Model
         'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'location', 'room', 'detail', 'key',
         'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'induction_category', 'working',
         'permaloan', 'permaloan_user_id', 'access_fee', 'photos', 'archive', 'obtained_at', 'removed_at', 'asset_tag_id',
-        'usage_cost', 'usage_cost_per'
+        'usage_cost', 'usage_cost_per', 'ppe'
     ];
 
     public function getDates()
@@ -210,5 +211,25 @@ class Equipment extends Model
         $this->attributes['usage_cost'] = $value * 100;
     }
 
+    /**
+     * @return array
+     */
+    public function getPpeAttribute()
+    {
+        $items = json_decode($this->attributes['ppe'], true);
+        if (is_array($items)) {
+            return $items;
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setPpeAttribute($value)
+    {
+        $this->attributes['ppe'] = json_encode($value);
+    }
 
 } 

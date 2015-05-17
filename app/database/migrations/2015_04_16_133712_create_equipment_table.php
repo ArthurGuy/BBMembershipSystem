@@ -26,6 +26,7 @@ class CreateEquipmentTable extends Migration {
             $table->string('device_key', 20)->nullable();
             $table->text('description')->nullable();
             $table->longText('help_text')->nullable();
+            $table->string('ppe', 255)->nullable();
             $table->integer('managing_role_id')->nullable();
             $table->boolean('requires_induction')->default(0);
             $table->string('induction_category', 20)->nullable();

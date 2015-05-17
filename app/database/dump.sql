@@ -526,6 +526,7 @@ CREATE TABLE `equipment` (
   `device_key` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `help_text` longtext COLLATE utf8_unicode_ci,
+  `ppe` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `managing_role_id` int(11) DEFAULT NULL,
   `requires_induction` tinyint(1) NOT NULL DEFAULT '0',
   `induction_category` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
