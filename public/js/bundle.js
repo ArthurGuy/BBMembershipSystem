@@ -7,8 +7,8 @@ var React = require('react');
 var SiteInteraction = require('./SiteInteraction');
 new SiteInteraction();
 
-var PaymentForm = require('./PaymentForm');
-new PaymentForm();
+//var PaymentForm = require('./PaymentForm');
+//new PaymentForm();
 
 var AdminForms = require('./AdminForms');
 new AdminForms();
@@ -58,7 +58,7 @@ if (document.getElementById('paymentModuleTest')) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AdminForms":180,"./FeedbackWidget":181,"./PaymentForm":182,"./SiteInteraction":183,"./Snackbar":184,"./components/FilterablePaymentTable":185,"./components/PaymentModule":186,"bootstrap":3,"jquery":22,"react":178}],2:[function(require,module,exports){
+},{"./AdminForms":180,"./FeedbackWidget":181,"./SiteInteraction":182,"./Snackbar":183,"./components/FilterablePaymentTable":184,"./components/PaymentModule":185,"bootstrap":3,"jquery":22,"react":178}],2:[function(require,module,exports){
 /*!
  * Datepicker for Bootstrap v1.4.0 (https://github.com/eternicode/bootstrap-datepicker)
  *
@@ -36975,87 +36975,6 @@ exports['default'] = FeedbackWidget;
 module.exports = exports['default'];
 
 },{"jquery":22}],182:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var PaymentForm = function PaymentForm() {
-    _classCallCheck(this, PaymentForm);
-
-    var $ = require('jquery');
-
-    console.log('Payment Form Loading');
-
-    var stripeAvailable = false;
-
-    if (typeof StripeCheckout !== 'undefined') {
-        var stripeHandler = StripeCheckout.configure({
-            key: stripePublicKey,
-            name: 'Build Brighton',
-            currency: 'GBP',
-            email: memberEmail,
-            allowRememberMe: false,
-            token: function token(_token) {
-                //Fill in the token and submit the form again
-                $('.js-stripeToken').val(_token.id);
-                $('.js-multiPaymentForm').submit();
-            }
-        });
-        stripeAvailable = true;
-    }
-
-    var multiPaymentFormChecked = false;
-    $('.js-multiPaymentForm').on('submit', function (event) {
-
-        //Clear the error messages
-        $(this).find('.help-block').text('');
-
-        var source = $('.js-multiPaymentForm [name=source] option:selected').val();
-
-        //Update the form target
-        $(this).attr('action', paymentRoutes[source]);
-
-        //Validation rules
-        if (source == 'stripe') {
-            if (!stripeAvailable) {
-                $(this).find('.help-block').text('Sorry, card processing is currently unavailable');
-                event.preventDefault();
-            } else {
-                if ($('.js-stripeToken').val() == '') {
-                    //Stripe is handled separately so stop this form post
-                    event.preventDefault();
-                    if ($(this).find('.js-amount').val() * 1 < 10) {
-                        $(this).find('.help-block').text('Because of processing fees the payment must be £10 or over when paying by card');
-                    } else {
-                        var topUpAmount = $(this).find('.js-amount').val() * 100;
-                        var description = $(this).find('.js-paymentDescription').val();
-
-                        stripeHandler.open({
-                            description: description,
-                            amount: topUpAmount
-                        });
-                    }
-                } else {}
-            }
-        } else {}
-    });
-
-    console.log('Payment Form Loaded');
-};
-
-exports['default'] = PaymentForm;
-module.exports = exports['default'];
-
-//Card collection is complete send it to the server
-
-//$(this).submit();
-//return true;
-
-},{"jquery":22}],183:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -37135,7 +37054,7 @@ exports["default"] = SiteInteraction;
 module.exports = exports["default"];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"bootstrap":3,"bootstrap-datepicker":2,"jquery":22,"select2":179}],184:[function(require,module,exports){
+},{"bootstrap":3,"bootstrap-datepicker":2,"jquery":22,"select2":179}],183:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37249,7 +37168,7 @@ var Snackbar = function Snackbar() {
 exports["default"] = Snackbar;
 module.exports = exports["default"];
 
-},{"jquery":22}],185:[function(require,module,exports){
+},{"jquery":22}],184:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37351,7 +37270,7 @@ var FilterablePaymentTable = (function (_React$Component) {
 exports['default'] = FilterablePaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTable":187,"react":178,"select2":179}],186:[function(require,module,exports){
+},{"./PaymentTable":186,"react":178,"select2":179}],185:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37624,7 +37543,7 @@ module.exports = exports['default'];
 
 //We should probably do something here as gocardless will most likely fail
 
-},{"../services/StripePayment":190,"./form/Select":189,"halogen/PulseLoader":16,"jquery":22,"react":178}],187:[function(require,module,exports){
+},{"../services/StripePayment":189,"./form/Select":188,"halogen/PulseLoader":16,"jquery":22,"react":178}],186:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37734,7 +37653,7 @@ var PaymentTable = (function (_React$Component) {
 exports['default'] = PaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTableRow":188,"react":178}],188:[function(require,module,exports){
+},{"./PaymentTableRow":187,"react":178}],187:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37817,7 +37736,7 @@ var PaymentTableRow = (function (_React$Component) {
 exports['default'] = PaymentTableRow;
 module.exports = exports['default'];
 
-},{"react":178}],189:[function(require,module,exports){
+},{"react":178}],188:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -37879,7 +37798,7 @@ var Select = (function (_React$Component) {
 exports['default'] = Select;
 module.exports = exports['default'];
 
-},{"react":178}],190:[function(require,module,exports){
+},{"react":178}],189:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {

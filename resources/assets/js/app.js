@@ -4,8 +4,8 @@ var React = require('react');
 var SiteInteraction = require('./SiteInteraction');
 new SiteInteraction();
 
-var PaymentForm = require('./PaymentForm');
-new PaymentForm();
+//var PaymentForm = require('./PaymentForm');
+//new PaymentForm();
 
 var AdminForms = require('./AdminForms');
 new AdminForms();
