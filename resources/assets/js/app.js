@@ -55,3 +55,14 @@ if (document.getElementById('paymentModuleTest')) {
     React.render(<PaymentModule description="Sample Description" reason="balance" email={memberEmail} userId={userId} onSuccess={handleSuccess} />, document.getElementById('paymentModuleTest'));
 
 }
+
+if (document.getElementById('memberExpensesTest')) {
+
+    var MemberExpenses = require('./components/expenses/MemberExpenses');
+    var Expenses = require('./collections/Expenses');
+    var expenses = new Expenses();
+    global.expenses = expenses;
+    React.render(<MemberExpenses expenses={expenses} />, document.getElementById('memberExpensesTest'));
+
+}
+

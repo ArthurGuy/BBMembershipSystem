@@ -17,12 +17,16 @@
     "babelify": "^6.0.2"
   },
   "dependencies": {
-    "jquery": "^2.1.4",
+    "backbone": "^1.2.0",
+    "backbone.localstorage": "^1.1.16",
     "bootstrap": "^3.3.4",
     "bootstrap-datepicker": "^1.4.0",
+    "jquery": "^2.1.4",
     "react": "^0.13.2",
+    "react-bootstrap": "^0.22.4",
     "react-notification": "^1.2.0",
-    "select2": "^3.5.2-browserify"
+    "select2": "^3.5.2-browserify",
+    "underscore": "^1.8.3"
   },
   "browser": {
     "select2": "./node_modules/select2/select2.js",
