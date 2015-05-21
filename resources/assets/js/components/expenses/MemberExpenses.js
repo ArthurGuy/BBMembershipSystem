@@ -91,13 +91,8 @@ var MemberExpenses = React.createClass({
         });
     },
 
-    newExpenseFormSubmission: function() {
-        console.log('form submitted');
-        this.props.expenses.create({description:'saw blades', category:'consumables', amount:980}, {wait: true});
-    },
-
     render: function () {
-        var main = <div className="panel-body"><p>Bought an item for Build Brighton, claim the money back here</p></div>;
+        var main = <p>Bought an item for Build Brighton, claim the money back here</p>;
         var expenses = this.props.expenses;
 
 
@@ -107,7 +102,7 @@ var MemberExpenses = React.createClass({
 
         if (expenses.length) {
             main = (
-                <table className="table">
+                <table fill className="table">
                     <thead>
                         <tr>
                             <th>Category</th>
@@ -122,16 +117,19 @@ var MemberExpenses = React.createClass({
             );
         }
 
+        var header = (
+            <h3>Reclaim Expenses</h3>
+        );
+        var footer = (
+            <ReactBootstrap.ModalTrigger modal={<NewExpenseModal collection={this.props.expenses} />}>
+                <ReactBootstrap.Button bsStyle='primary'>Submit a new expense</ReactBootstrap.Button>
+            </ReactBootstrap.ModalTrigger>
+        );
+
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Reclaim Expenses</h3>
-                    <ReactBootstrap.ModalTrigger modal={<NewExpenseModal onSubmit={x => this.newExpenseFormSubmission(x)} />}>
-                        <ReactBootstrap.Button bsStyle='primary'>Submit a new expense</ReactBootstrap.Button>
-                    </ReactBootstrap.ModalTrigger>
-                </div>
+            <ReactBootstrap.Panel header={header} footer={footer}>
                 {main}
-            </div>
+            </ReactBootstrap.Panel>
         );
     }
 });

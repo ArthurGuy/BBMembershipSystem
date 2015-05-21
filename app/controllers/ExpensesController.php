@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 class ExpensesController extends \BaseController {
 
 	/**
@@ -9,7 +11,7 @@ class ExpensesController extends \BaseController {
 	 */
 	public function index()
 	{
-		return \BB\Entities\Expense::all();
+		return \BB\Entities\Expense::where('user_id', Auth::user()->id)->get();
 	}
 
 
@@ -31,7 +33,9 @@ class ExpensesController extends \BaseController {
 	 */
 	public function store()
 	{
-		$data = Request::only(['category', 'description', 'amount']);
+		$data = Request::only(['category', 'description', 'amount', 'expense_date', 'file']);
+        $data['user_id'] = Auth::user()->id;
+        $data['expense_date'] = Carbon::now();
 
         $expense = \BB\Entities\Expense::create($data);
 
@@ -71,7 +75,7 @@ class ExpensesController extends \BaseController {
 	 */
 	public function update($id)
 	{
-        $data = Request::only(['category', 'description', 'amount']);
+        $data = Request::only(['category', 'description', 'amount', 'expense_date']);
 
         $expense = \BB\Entities\Expense::findOrFail($id);
         $expense = $expense->update($data);

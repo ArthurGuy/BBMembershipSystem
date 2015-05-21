@@ -1,37 +1,105 @@
 import React from 'react';
 var ReactBootstrap = require('react-bootstrap');
+var Select = require('../form/Select');
+var ValidationMixin = require('react-validation-mixin');
+var Joi = require('joi');
+require('backbone-model-file-upload');
+var $ = require('jquery');
 
 const NewExpenseModal = React.createClass({
-    render() {
+
+    mixins: [ValidationMixin],
+
+    validatorTypes:  {
+        category: Joi.string().required().label('Category'),
+        description: Joi.string().required().min(5).label('Description'),
+        amount: Joi.number().precision(2).positive().max(200).required().label('Amount'),
+        date: Joi.date().format('YYYY-MM-DD').required().label('Purchase Date'),
+        file:  Joi.string().label('Receipt')
+    },
+
+    getInitialState: function() {
+        return {
+            category: null,
+            description: null,
+            amount: null,
+            date: '2015-05-10',
+            file: null,
+            requestInProgress: false,
+            dirty: [],
+            submitAttempt: false
+        };
+    },
+
+    handleChange: function(key) {
+        return function (e) {
+            var state = {};
+            state[key] = e.target.value;
+            state['dirty'] = this.state.dirty;
+            state['dirty'][key] = true;
+
+            //Validate the form when anything changes
+            this.setState(state, () => { this.validate(); });
+        }.bind(this);
+    },
+
+    handleSubmit: function(event) {
+        event.preventDefault();
+        this.setState({submitAttempt:true});
+        var onValidate = function(error, validationErrors) {
+            if (!error) {
+                var submitAmount = this.state.amount * 100; //values are stored in pence
+                var file = $('#fileUpload')[0].files[0];
+                this.props.collection.create({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
+                this.props.collection.on('progress', console.log);
+                this.props.onRequestHide();
+            }
+        }.bind(this);
+        this.validate(onValidate);
+    },
+
+    fieldStyle: function(key) {
+        if (this.state.dirty[key] || this.state.submitAttempt) {
+            if (this.isValid(key)) {
+                return 'success';
+            } else {
+                return 'error';
+            }
+        }
+    },
+
+    validationMessage: function(key) {
+        if ( ! this.state.dirty[key] && ! this.state.submitAttempt) {
+            return;
+        }
+        //return the first of the validation messages
+        return this.getValidationMessages(key).pop();
+    },
+
+    render: function() {
+
+        var dropdownOptions = [{key:'', value:''},{key:'consumables', value:'Consumables'}, {key:'food', value:'Food'}];
+
         return (
-            <ReactBootstrap.Modal {...this.props} title='Modal heading' animation={false}>
+            <ReactBootstrap.Modal {...this.props} title='Submit a New Expense' footer animation={false}>
                 <div className='modal-body'>
-                    <h4>Text in a modal</h4>
-                    <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
 
-                    <h4>Popover in a modal</h4>
-                    <p>TODO</p>
+                    <Select options={dropdownOptions} value={this.state.category} label="Category" onChange={this.handleChange('category')} help={this.validationMessage('category')} bsStyle={this.fieldStyle('category')} />
 
-                    <h4>Tooltips in a modal</h4>
-                    <p>TODO</p>
+                    <ReactBootstrap.Input type='text' label='Description' help={this.validationMessage('description')} placeholder='New saw blades' value={this.state.description} onChange={this.handleChange('description')} bsStyle={this.fieldStyle('description')} />
 
-                    <hr />
+                    <ReactBootstrap.Input type='text' label='Amount' help={this.validationMessage('amount')} placeholder='4.99' value={this.state.amount} onChange={this.handleChange('amount')} bsStyle={this.fieldStyle('amount')} />
 
-                    <h4>Overflowing text to show scroll behavior</h4>
-                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                    <ReactBootstrap.Input type='text' label='Date' help={this.validationMessage('date')} placeholder='2015-03-24' value={this.state.date} onChange={this.handleChange('date')} bsStyle={this.fieldStyle('date')} />
+
+                    <ReactBootstrap.Input id="fileUpload" type='file' label='Receipt' help={this.validationMessage('file')} value={this.state.file} onChange={this.handleChange('file')} bsStyle={this.fieldStyle('file')} />
+
                 </div>
                 <div className='modal-footer'>
-                    <ReactBootstrap.Button onClick={this.props.onSubmit}>Save</ReactBootstrap.Button>
                     <ReactBootstrap.Button onClick={this.props.onRequestHide}>Close</ReactBootstrap.Button>
+                    <ReactBootstrap.Button bsStyle='primary' onClick={this.handleSubmit}>Save</ReactBootstrap.Button>
                 </div>
+                {this.state.feedback}
             </ReactBootstrap.Modal>
         );
     }

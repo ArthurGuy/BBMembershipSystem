@@ -12,6 +12,8 @@ var Expense = Backbone.Model.extend({
         declined: false
     },
 
+    fileAttribute: 'file',
+
     approve: function () {
         this.save({
             approved: true
