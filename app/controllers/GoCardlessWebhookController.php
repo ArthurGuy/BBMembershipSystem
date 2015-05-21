@@ -90,7 +90,7 @@ class GoCardlessWebhookController extends \BaseController
         foreach ($bills as $bill) {
             //Ignore non subscription payment creations
             if ($bill['source_type'] != 'subscription') {
-                break;
+                continue;
             }
             try {
 
@@ -100,7 +100,7 @@ class GoCardlessWebhookController extends \BaseController
                 if ( ! $user) {
                     Log::warning("GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['id']);
 
-                    break;
+                    continue;
                 }
 
                 $ref = null;
