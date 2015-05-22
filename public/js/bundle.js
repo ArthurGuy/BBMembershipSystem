@@ -78231,24 +78231,19 @@ exports['default'] = Expenses;
 module.exports = exports['default'];
 
 },{"../models/Expense":493,"backbone":3}],484:[function(require,module,exports){
+//import React from 'react';
 'use strict';
-
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
+var React = require('react');
 var PaymentTable = require('./PaymentTable');
 
 var FilterablePaymentTable = (function (_React$Component) {
@@ -78276,7 +78271,7 @@ var FilterablePaymentTable = (function (_React$Component) {
             require('select2');
 
             //Convert all the dropdowns in this element to select2 dropdowns
-            jQuery(_react2['default'].findDOMNode(this)).find('select').select2({ dropdownAutoWidth: false });
+            jQuery(React.findDOMNode(this)).find('select').select2({ dropdownAutoWidth: false });
         }
     }, {
         key: 'handleDateChange',
@@ -78297,37 +78292,37 @@ var FilterablePaymentTable = (function (_React$Component) {
         key: 'render',
         value: function render() {
 
-            return _react2['default'].createElement(
+            return React.createElement(
                 'div',
                 null,
-                _react2['default'].createElement(
+                React.createElement(
                     'form',
                     null,
-                    _react2['default'].createElement('select', { value: this.state.filterDate, onChange: this.handleDateChange }),
-                    _react2['default'].createElement('select', { value: this.state.filterMember, onChange: this.handleMemberChange }),
-                    _react2['default'].createElement(
+                    React.createElement('select', { value: this.state.filterDate, onChange: this.handleDateChange }),
+                    React.createElement('select', { value: this.state.filterMember, onChange: this.handleMemberChange }),
+                    React.createElement(
                         'select',
                         { value: this.state.filterReason, onChange: this.handleReasonChange },
-                        _react2['default'].createElement('option', { value: '' }),
-                        _react2['default'].createElement(
+                        React.createElement('option', { value: '' }),
+                        React.createElement(
                             'option',
                             { value: 'subscription' },
                             'Subscription'
                         ),
-                        _react2['default'].createElement(
+                        React.createElement(
                             'option',
                             { value: 'balance' },
                             'Balance'
                         )
                     )
                 ),
-                _react2['default'].createElement(PaymentTable, { payments: this.state.items })
+                React.createElement(PaymentTable, { payments: this.state.items })
             );
         }
     }]);
 
     return FilterablePaymentTable;
-})(_react2['default'].Component);
+})(React.Component);
 
 exports['default'] = FilterablePaymentTable;
 module.exports = exports['default'];
@@ -78341,9 +78336,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
-    property = _x2,
-    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -78361,7 +78354,7 @@ var Loader = require('halogen/PulseLoader');
 
 var PaymentModule = (function (_React$Component) {
     function PaymentModule(props) {
-        var _this2 = this;
+        var _this = this;
 
         _classCallCheck(this, PaymentModule);
 
@@ -78386,8 +78379,8 @@ var PaymentModule = (function (_React$Component) {
 
         //Load in the stripe js file and configure our instance
         StripePayment.loadConfigureStripe(this.props.stripeKey, this.props.name, this.props.email, function (token) {
-            _this2.setState({ stripeToken: token.id }, function () {
-                _this2.handleSubmit();
+            _this.setState({ stripeToken: token.id }, function () {
+                _this.handleSubmit();
             }); //set state isn't immediate so wait until its done
         });
 
@@ -78534,7 +78527,7 @@ var PaymentModule = (function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _this3 = this;
+            var _this2 = this;
 
             var amountField = null;
 
@@ -78563,7 +78556,7 @@ var PaymentModule = (function (_React$Component) {
                 _react2['default'].createElement(
                     'button',
                     { className: 'btn btn-primary', disabled: this.state.requestInProgress, onClick: function (x) {
-                            return _this3.handleSubmit(x);
+                            return _this2.handleSubmit(x);
                         } },
                     this.props.buttonLabel
                 ),
@@ -79066,10 +79059,10 @@ var NewExpenseModal = _react2['default'].createClass({
 
     validatorTypes: {
         category: Joi.string().required().label('Category'),
-        description: Joi.string().required().min(5).label('Description'),
+        description: Joi.string().required().min(2).label('Description'),
         amount: Joi.number().precision(2).positive().max(200).required().label('Amount'),
         date: Joi.date().format('YYYY-MM-DD').required().label('Purchase Date'),
-        file: Joi.string().label('Receipt')
+        file: Joi.required().label('Receipt')
     },
 
     getInitialState: function getInitialState() {
@@ -79105,14 +79098,20 @@ var NewExpenseModal = _react2['default'].createClass({
         event.preventDefault();
         this.setState({ submitAttempt: true });
         var onValidate = (function (error, validationErrors) {
+            var _this2 = this;
+
             if (!error) {
                 var submitAmount = this.state.amount * 100; //values are stored in pence
-                console.log($('#fileUpload'));
-                console.log($('#fileUpload')[0].files);
                 var file = $('#fileUpload')[0].files[0];
-                this.props.collection.create({ description: this.state.description, category: this.state.category, amount: submitAmount, expense_date: this.state.date, file: file }, { wait: true });
                 this.props.collection.on('progress', console.log);
-                this.props.onRequestHide();
+                this.props.collection.on('all', console.log);
+                this.props.collection.on('add', function () {
+                    _this2.props.onRequestHide();
+                });
+                this.props.collection.on('error', function (model, error) {
+                    console.log(error);var errors = jQuery.parseJSON(error.responseText);console.log(errors);_this2.setState({ feedback: errors[0] });
+                });
+                this.props.collection.create({ description: this.state.description, category: this.state.category, amount: submitAmount, expense_date: this.state.date, file: file }, { wait: true });
             }
         }).bind(this);
         this.validate(onValidate);

@@ -12,10 +12,10 @@ const NewExpenseModal = React.createClass({
 
     validatorTypes:  {
         category: Joi.string().required().label('Category'),
-        description: Joi.string().required().min(5).label('Description'),
+        description: Joi.string().required().min(2).label('Description'),
         amount: Joi.number().precision(2).positive().max(200).required().label('Amount'),
         date: Joi.date().format('YYYY-MM-DD').required().label('Purchase Date'),
-        file:  Joi.string().label('Receipt')
+        file:  Joi.required().label('Receipt')
     },
 
     getInitialState: function() {
@@ -50,9 +50,11 @@ const NewExpenseModal = React.createClass({
             if (!error) {
                 var submitAmount = this.state.amount * 100; //values are stored in pence
                 var file = $('#fileUpload')[0].files[0];
-                this.props.collection.create({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
                 this.props.collection.on('progress', console.log);
-                this.props.onRequestHide();
+                this.props.collection.on('all', console.log);
+                this.props.collection.on('add', () => { this.props.onRequestHide(); });
+                this.props.collection.on('error', (model, error) => { console.log(error); var errors = jQuery.parseJSON(error.responseText); console.log(errors); this.setState({feedback:errors[0]}); });
+                this.props.collection.create({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
             }
         }.bind(this);
         this.validate(onValidate);
