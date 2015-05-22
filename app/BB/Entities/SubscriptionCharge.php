@@ -1,8 +1,20 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
+/**
+ * Class SubscriptionCharge
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property Carbon  $charge_date
+ * @property Carbon  $payment_date
+ * @property integer $amount
+ * @property string  $status
+ * @package BB\Entities
+ */
 class SubscriptionCharge extends Model
 {
 
