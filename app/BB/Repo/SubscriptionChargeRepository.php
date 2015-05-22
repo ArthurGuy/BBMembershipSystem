@@ -69,7 +69,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function chargeExists($userId, $date)
     {
-        if ($this->model->where('user_id', $userId)->where('charge_date', $date)->count() !== 0) {
+        if ($this->model->where('user_id', $userId)->where('charge_date', $date->format('Y-m-d'))->count() !== 0) {
             return true;
         }
         return false;
