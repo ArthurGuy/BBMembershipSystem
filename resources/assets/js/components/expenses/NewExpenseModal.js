@@ -50,11 +50,26 @@ const NewExpenseModal = React.createClass({
             if (!error) {
                 var submitAmount = this.state.amount * 100; //values are stored in pence
                 var file = $('#fileUpload')[0].files[0];
-                this.props.collection.on('progress', console.log);
-                this.props.collection.on('all', console.log);
-                this.props.collection.on('add', () => { this.props.onRequestHide(); });
-                this.props.collection.on('error', (model, error) => { console.log(error); var errors = jQuery.parseJSON(error.responseText); console.log(errors); this.setState({feedback:errors[0]}); });
-                this.props.collection.create({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
+                this.props.collection.on('progress', (data) => {console.log('Collection Progress: ', data)});
+                this.props.collection.on('all', (data) => {console.log('Collection All: ', data)});
+                //this.props.collection.on('add', () => { this.props.onRequestHide(); });
+                //this.props.collection.on('error', (model, error) => { console.log(error); var errors = jQuery.parseJSON(error.responseText); console.log(errors); this.setState({feedback:errors[0]}); });
+                //this.props.collection.create({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
+                var expense = new this.props.collection.model();
+                expense.on('error', (model, error) => {
+                    //console.log(error);
+                    var errors = jQuery.parseJSON(error.responseText);
+                    console.log(errors);
+                    this.setState({feedback:errors});
+                });
+                expense.on('sync', () => {
+                    this.props.onRequestHide();
+                    this.props.collection.add(expense);
+                });
+                expense.on('progress', (data) => {console.log('Progress: ', data)});
+
+
+                expense.save({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
             }
         }.bind(this);
         this.validate(onValidate);
@@ -82,9 +97,16 @@ const NewExpenseModal = React.createClass({
 
         var dropdownOptions = [{key:'', value:''},{key:'consumables', value:'Consumables'}, {key:'food', value:'Food'}];
 
+        var feedback = null;
+        if (this.state.feedback) {
+            feedback = <ReactBootstrap.Alert bsStyle='danger'>{this.state.feedback}</ReactBootstrap.Alert>;
+        }
+
         return (
             <ReactBootstrap.Modal {...this.props} title='Submit a New Expense' footer animation={false}>
                 <div className='modal-body'>
+
+                    {feedback}
 
                     <Select options={dropdownOptions} value={this.state.category} label="Category" onChange={this.handleChange('category')} help={this.validationMessage('category')} bsStyle={this.fieldStyle('category')} />
 
@@ -101,7 +123,7 @@ const NewExpenseModal = React.createClass({
                     <ReactBootstrap.Button onClick={this.props.onRequestHide}>Close</ReactBootstrap.Button>
                     <ReactBootstrap.Button bsStyle='primary' onClick={this.handleSubmit}>Save</ReactBootstrap.Button>
                 </div>
-                {this.state.feedback}
+
             </ReactBootstrap.Modal>
         );
     }

@@ -79103,15 +79103,31 @@ var NewExpenseModal = _react2['default'].createClass({
             if (!error) {
                 var submitAmount = this.state.amount * 100; //values are stored in pence
                 var file = $('#fileUpload')[0].files[0];
-                this.props.collection.on('progress', console.log);
-                this.props.collection.on('all', console.log);
-                this.props.collection.on('add', function () {
+                this.props.collection.on('progress', function (data) {
+                    console.log('Collection Progress: ', data);
+                });
+                this.props.collection.on('all', function (data) {
+                    console.log('Collection All: ', data);
+                });
+                //this.props.collection.on('add', () => { this.props.onRequestHide(); });
+                //this.props.collection.on('error', (model, error) => { console.log(error); var errors = jQuery.parseJSON(error.responseText); console.log(errors); this.setState({feedback:errors[0]}); });
+                //this.props.collection.create({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
+                var expense = new this.props.collection.model();
+                expense.on('error', function (model, error) {
+                    //console.log(error);
+                    var errors = jQuery.parseJSON(error.responseText);
+                    console.log(errors);
+                    _this2.setState({ feedback: errors });
+                });
+                expense.on('sync', function () {
                     _this2.props.onRequestHide();
+                    _this2.props.collection.add(expense);
                 });
-                this.props.collection.on('error', function (model, error) {
-                    console.log(error);var errors = jQuery.parseJSON(error.responseText);console.log(errors);_this2.setState({ feedback: errors[0] });
+                expense.on('progress', function (data) {
+                    console.log('Progress: ', data);
                 });
-                this.props.collection.create({ description: this.state.description, category: this.state.category, amount: submitAmount, expense_date: this.state.date, file: file }, { wait: true });
+
+                expense.save({ description: this.state.description, category: this.state.category, amount: submitAmount, expense_date: this.state.date, file: file }, { wait: true });
             }
         }).bind(this);
         this.validate(onValidate);
@@ -79139,12 +79155,22 @@ var NewExpenseModal = _react2['default'].createClass({
 
         var dropdownOptions = [{ key: '', value: '' }, { key: 'consumables', value: 'Consumables' }, { key: 'food', value: 'Food' }];
 
+        var feedback = null;
+        if (this.state.feedback) {
+            feedback = _react2['default'].createElement(
+                ReactBootstrap.Alert,
+                { bsStyle: 'error' },
+                this.state.feedback
+            );
+        }
+
         return _react2['default'].createElement(
             ReactBootstrap.Modal,
             _extends({}, this.props, { title: 'Submit a New Expense', footer: true, animation: false }),
             _react2['default'].createElement(
                 'div',
                 { className: 'modal-body' },
+                feedback,
                 _react2['default'].createElement(Select, { options: dropdownOptions, value: this.state.category, label: 'Category', onChange: this.handleChange('category'), help: this.validationMessage('category'), bsStyle: this.fieldStyle('category') }),
                 _react2['default'].createElement(ReactBootstrap.Input, { type: 'text', label: 'Description', help: this.validationMessage('description'), placeholder: 'New saw blades', value: this.state.description, onChange: this.handleChange('description'), bsStyle: this.fieldStyle('description') }),
                 _react2['default'].createElement(ReactBootstrap.Input, { type: 'text', label: 'Amount', help: this.validationMessage('amount'), placeholder: '4.99', value: this.state.amount, onChange: this.handleChange('amount'), bsStyle: this.fieldStyle('amount') }),
@@ -79164,8 +79190,7 @@ var NewExpenseModal = _react2['default'].createClass({
                     { bsStyle: 'primary', onClick: this.handleSubmit },
                     'Save'
                 )
-            ),
-            this.state.feedback
+            )
         );
     }
 });
@@ -79306,6 +79331,8 @@ Object.defineProperty(exports, '__esModule', {
 var Backbone = require('backbone');
 
 var Expense = Backbone.Model.extend({
+
+    url: '/expenses',
 
     defaults: {
         user_id: null,

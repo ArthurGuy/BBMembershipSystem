@@ -3,6 +3,8 @@ var Backbone = require('backbone');
 
 var Expense = Backbone.Model.extend({
 
+    url: '/expenses',
+
     defaults: {
         user_id: null,
         category: null,
