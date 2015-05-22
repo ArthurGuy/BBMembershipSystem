@@ -79,10 +79,10 @@ class GoCardlessHelper
 
     /**
      * Create a new payment against a preauth
-     * @param      $preauthId
-     * @param      $amount
-     * @param null $name
-     * @param null $description
+     * @param             $preauthId
+     * @param             $amount
+     * @param null|string $name
+     * @param null|string $description
      * @return bool
      */
     public function newBill($preauthId, $amount, $name = null, $description = null)
