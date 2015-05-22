@@ -59,12 +59,12 @@ class ExpensesController extends \BaseController {
                 $ext = Input::file('file')->guessClientExtension();
                 $mimeType = Input::file('file')->getMimeType();
 
-                $newFilename = str_random() . '.' . $ext;
+                $newFilename = \App::environment().'/expenses/' . str_random() . '.' . $ext;
 
                 $s3 = \AWS::get('s3');
                 $s3->putObject(array(
                     'Bucket'        => getenv('S3_BUCKET'),
-                    'Key'           => 'expenses/' . $newFilename,
+                    'Key'           => $newFilename,
                     'Body'          => file_get_contents($filePath),
                     'ACL'           => 'public-read',
                     'ContentType'   => $mimeType,

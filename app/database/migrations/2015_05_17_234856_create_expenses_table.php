@@ -24,6 +24,8 @@ class CreateExpensesTable extends Migration {
             $table->boolean('declined')->default(false);
             $table->integer('approved_by_user');
 
+            $table->string('file', 255);
+
             $table->date('expense_date');
 
             $table->timestamps();
