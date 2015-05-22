@@ -1,12 +1,19 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Expense
  *
- * @property bool $active
+ * @property integer $id
  * @property integer $user_id
+ * @property User    $user
+ * @property string  $category
+ * @property string  $description
+ * @property integer $amount
+ * @property Carbon  $expense_date
+ * @property string  $file
  * @package BB\Entities
  */
 class Expense extends Model
@@ -31,6 +38,7 @@ class Expense extends Model
         'amount',
         'expense_date',
         'user_id',
+        'file',
     ];
 
 
