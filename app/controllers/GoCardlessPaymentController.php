@@ -4,12 +4,6 @@ use BB\Entities\User;
 
 class GoCardlessPaymentController extends \BaseController
 {
-
-
-    /**
-     * @var \BB\Repo\EquipmentRepository
-     */
-    private $equipmentRepository;
     /**
      * @var \BB\Repo\PaymentRepository
      */

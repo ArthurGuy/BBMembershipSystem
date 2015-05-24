@@ -2,15 +2,6 @@
 
 class EquipmentLogController extends \BaseController
 {
-
-    /**
-     * @var \BB\Repo\InductionRepository
-     */
-    private $inductionRepository;
-    /**
-     * @var \BB\Repo\EquipmentRepository
-     */
-    private $equipmentRepository;
     /**
      * @var \BB\Repo\EquipmentLogRepository
      */

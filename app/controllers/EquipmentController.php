@@ -23,10 +23,6 @@ class EquipmentController extends \BaseController
      */
     private $equipmentLogRepository;
     /**
-     * @var \BB\Repo\PaymentRepository
-     */
-    private $paymentRepository;
-    /**
      * @var UserRepository
      */
     private $userRepository;
