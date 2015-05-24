@@ -29,7 +29,7 @@ class SessionController extends \BaseController
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function store()
 	{
@@ -50,7 +50,7 @@ class SessionController extends \BaseController
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function destroy($id = null)
 	{

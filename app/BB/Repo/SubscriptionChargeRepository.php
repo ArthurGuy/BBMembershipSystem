@@ -54,7 +54,7 @@ class SubscriptionChargeRepository extends DBRepository
     {
         $charge = $this->createCharge($userId, $date, $amount, $status);
 
-        $bill = $this->goCardless->newBill($DDAuthId, $amount);
+        $bill = $this->goCardless->newBill($DDAuthId, $amount, $this->goCardless->getNameFromReason('subscription'));
         if ($bill) {
             $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id,
                 $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
@@ -69,7 +69,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function chargeExists($userId, $date)
     {
-        if ($this->model->where('user_id', $userId)->where('charge_date', $date)->count() !== 0) {
+        if ($this->model->where('user_id', $userId)->where('charge_date', $date->format('Y-m-d'))->count() !== 0) {
             return true;
         }
         return false;
@@ -218,7 +218,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * Does the user have any active or outstanding charges
      *
-     * @param $userId
+     * @param integer $userId
      * @return bool
      */
     public function hasOutstandingCharges($userId)
@@ -226,6 +226,10 @@ class SubscriptionChargeRepository extends DBRepository
         return ($this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due', 'processing'])->count() > 0);
     }
 
+    /**
+     * @param integer $chargeId
+     * @param integer $newAmount
+     */
     public function updateAmount($chargeId, $newAmount)
     {
         $subCharge = $this->getById($chargeId);

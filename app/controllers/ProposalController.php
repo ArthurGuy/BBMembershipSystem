@@ -65,7 +65,7 @@ class ProposalController extends \BaseController
         $this->proposalVoteValidator->validate(Request::all());
 
         $proposal = $this->proposalRepository->getById($proposalId);
-        if (!$proposal->isOpen()) {
+        if ( ! $proposal->isOpen()) {
             throw new \BB\Exceptions\ValidationException("The proposal isn't open for voting");
         }
 
@@ -96,7 +96,7 @@ class ProposalController extends \BaseController
 
     public function edit($proposalId)
     {
-        if (!$this->proposalRepository->canEdit($proposalId)) {
+        if ( ! $this->proposalRepository->canEdit($proposalId)) {
             throw new \BB\Exceptions\ValidationException("The proposal can no longer be edited");
         }
         $proposal = $this->proposalRepository->getById($proposalId);

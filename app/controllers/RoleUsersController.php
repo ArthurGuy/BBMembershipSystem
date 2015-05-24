@@ -18,25 +18,25 @@ class RoleUsersController extends \BaseController
     }
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store($roleId)
-	{
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store($roleId)
+    {
         $formData = Request::only(['user_id']);
         $this->roleUserValidator->validate($formData);
 
         $role = Role::findOrFail($roleId);
 
         //If the user isnt already a member add them
-        if(! $role->users()->get()->contains($formData['user_id'])) {
+        if ( ! $role->users()->get()->contains($formData['user_id'])) {
             $role->users()->attach($formData['user_id']);
         }
 
         return Redirect::back();
-	}
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -45,8 +45,8 @@ class RoleUsersController extends \BaseController
      * @param $userId
      * @return Response
      */
-	public function destroy($roleId, $userId)
-	{
+    public function destroy($roleId, $userId)
+    {
         $role = Role::findOrFail($roleId);
 
         //don't let people remove the admin permission if they are a trustee
@@ -60,7 +60,7 @@ class RoleUsersController extends \BaseController
         $role->users()->detach($userId);
 
         return Redirect::back();
-	}
+    }
 
 
 }

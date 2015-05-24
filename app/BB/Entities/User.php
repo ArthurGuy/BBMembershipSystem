@@ -69,7 +69,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'password', 'emergency_contact', 'phone',
-        'monthly_subscription', 'profile_private',
+        'monthly_subscription', 'profile_private', 'hash',
         'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status'
     ];
 
@@ -107,17 +107,6 @@ class User extends Model implements UserInterface, RemindableInterface {
             'left'              => 'Left',
             'honorary'          => 'Honorary'
         ];
-    }
-
-    public static function create(array $input)
-    {
-        $user = parent::create($input);
-
-        // Find a better way to doing this
-        $user->hash = str_random(30);
-        $user->save();
-
-        return $user;
     }
 
 
@@ -179,7 +168,7 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     public function setPaymentDayAttribute($value)
     {
-        //Ensure the payment date will always exist on any monthpayment_date
+        //Ensure the payment date will always exist on any month payment_date
         if ($value > 28) {
             $value = 1;
         }
@@ -222,10 +211,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public function keyholderStatus()
     {
-        if ($this->active && $this->key_holder && $this->trusted) {
-            return true;
-        }
-        return false;
+        return ($this->active && $this->key_holder && $this->trusted);
     }
 
     /**
@@ -245,18 +231,24 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public function promoteGoCardless()
     {
-        if (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active')) {
-            return true;
-        }
-        return false;
+        return (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'));
     }
 
-
+    /**
+     * Should we be promoting the new variable gocardless to users?
+     *
+     * @return bool
+     */
     public function promoteVariableGoCardless()
     {
         return (($this->status == 'active') && ($this->payment_method == 'gocardless'));
     }
 
+    /**
+     * Is the user eligible for a key?
+     *
+     * @return bool
+     */
     public function promoteGetAKey()
     {
         return ($this->trusted && ! $this->key_holder && ($this->status == 'active'));
@@ -335,15 +327,10 @@ class User extends Model implements UserInterface, RemindableInterface {
     |--------------------------------------------------------------------------
     */
 
-    public static function activePublicList()
-    {
-        return self::active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
-    }
-
     /**
      * @param $paymentMethod
      * @param $paymentDay
-     * @depreciated
+     * @deprecated
      */
     public function updateSubscription($paymentMethod, $paymentDay)
     {
@@ -354,12 +341,19 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    /**
+     * @param $amount
+     * @deprecated
+     */
     public function updateSubAmount($amount)
     {
         $this->attributes['monthly_subscription'] = $amount;
         $this->save();
     }
 
+    /**
+     * @deprecated
+     */
     public function cancelSubscription()
     {
         $this->payment_method = '';
@@ -369,12 +363,18 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    /**
+     * @deprecated
+     */
     public function setLeaving()
     {
         $this->status = 'leaving';
         $this->save();
     }
 
+    /**
+     * @deprecated
+     */
     public function setSuspended()
     {
         $this->status = 'suspended';
@@ -382,6 +382,9 @@ class User extends Model implements UserInterface, RemindableInterface {
         $this->save();
     }
 
+    /**
+     * @deprecated
+     */
     public function rejoin()
     {
         $this->status = 'setting-up';
@@ -396,13 +399,14 @@ class User extends Model implements UserInterface, RemindableInterface {
 
     /**
      * Fetch a user record, performs a permission check
-     * @param null $id
+     *
+     * @param integer|null $id
      * @return User
      * @throws AuthenticationException
      */
     public static function findWithPermission($id = null)
     {
-        if ( ! $id) {
+        if (empty($id)) {
             //Return the logged in user
             return Auth::user();
         }
@@ -422,7 +426,6 @@ class User extends Model implements UserInterface, RemindableInterface {
         throw new AuthenticationException();
     }
 
-
     public function extendMembership($paymentMethod = null, DateTime $expiry = null)
     {
         if (empty($expiry)) {
@@ -435,31 +438,6 @@ class User extends Model implements UserInterface, RemindableInterface {
         }
         $this->subscription_expires = $expiry;
         $this->save();
-    }
-
-    public static function dropdown($activeOnly = null)
-    {
-        $userArray = [];
-        if ($activeOnly) {
-            $users = self::active()->get();
-        } else {
-            $users = self::all();
-        }
-        foreach ($users as $user) {
-            $userArray[$user->id] = $user->name;
-        }
-        return $userArray;
-    }
-
-    public function getStorageBoxPayment()
-    {
-        if ($this->storage_box_payment_id) {
-            $payment = Payment::find($this->storage_box_payment_id);
-            if ($payment) {
-                return $payment;
-            }
-        }
-        return false;
     }
 
     /**

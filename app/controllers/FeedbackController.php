@@ -19,7 +19,7 @@ class FeedbackController extends \BaseController
         $this->feedbackValidator->validate(Request::only('comments'));
 
         $memberName = Auth::user()->name;
-        \Mail::queue('emails.feedback', ['memberName'=>$memberName, 'comments'=>Request::get('comments')], function($message) {
+        \Mail::queue('emails.feedback', ['memberName'=>$memberName, 'comments'=>Request::get('comments')], function ($message) {
             $message->to('arthur@arthurguy.co.uk', 'Arthur Guy')->subject('BBMS Feedback');
         });
         return Response::json(['success'=>1]);

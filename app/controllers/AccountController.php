@@ -92,40 +92,40 @@ class AccountController extends \BaseController
         View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
     }
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
         $sortBy = Request::get('sortBy');
         $direction = Request::get('direction', 'asc');
         $showLeft = \Request::get('showLeft', 0);
         $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft'));
         return View::make('account.index')->withUsers($users);
-	}
+    }
 
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
         View::share('body_class', 'register_login');
         return View::make('account.create');
-	}
+    }
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Illuminate\Http\RedirectResponse
-	 */
-	public function store()
-	{
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function store()
+    {
         $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'phone', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'monthly_subscription', 'emergency_contact', 'new_profile_photo', 'profile_photo_private');
 
         $this->userForm->validate($input);
@@ -182,34 +182,34 @@ class AccountController extends \BaseController
         $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($id);
 
         return View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress)->with('subscriptionCharges', $subscriptionCharges);
-	}
+    }
 
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
         $user = User::findWithPermission($id);
 
         //We need to access the address here so its available in the view
         $user->address;
 
         return View::make('account.edit')->with('user', $user);
-	}
+    }
 
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Illuminate\Http\RedirectResponse
-	 */
-	public function update($id)
-	{
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function update($id)
+    {
         $user = User::findWithPermission($id);
         $input = Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'phone', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'emergency_contact', 'profile_private');
 

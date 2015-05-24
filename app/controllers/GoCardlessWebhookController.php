@@ -3,7 +3,6 @@
 
 use BB\Entities\Payment;
 use BB\Entities\User;
-use BB\Exceptions\PaymentException;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
@@ -90,7 +89,7 @@ class GoCardlessWebhookController extends \BaseController
         foreach ($bills as $bill) {
             //Ignore non subscription payment creations
             if ($bill['source_type'] != 'subscription') {
-                break;
+                continue;
             }
             try {
 
@@ -100,7 +99,7 @@ class GoCardlessWebhookController extends \BaseController
                 if ( ! $user) {
                     Log::warning("GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['id']);
 
-                    break;
+                    continue;
                 }
 
                 $ref = null;
@@ -138,6 +137,9 @@ class GoCardlessWebhookController extends \BaseController
         }
     }
 
+    /**
+     * @param string $action
+     */
     private function processBills($action, array $bills)
     {
         foreach ($bills as $bill) {
@@ -174,6 +176,9 @@ class GoCardlessWebhookController extends \BaseController
 
     }
 
+    /**
+     * @param string $action
+     */
     private function processPreAuths($action, $preAuthList)
     {
         //Preauths are handled at creation

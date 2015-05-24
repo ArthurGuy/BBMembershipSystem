@@ -24,13 +24,13 @@ class StorageBoxController extends \BaseController
     }
 
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
         $storageBoxes = $this->storageBoxRepository->getAll();
 
         $availableBoxes = $this->storageBoxRepository->numAvailableBoxes();
@@ -67,53 +67,53 @@ class StorageBoxController extends \BaseController
             ->with('boxesTaken', $boxesTaken)
             ->with('canPayMore', $canPayMore)
             ->with('moneyAvailable', $moneyAvailable);
-	}
+    }
 
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
+    }
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        //
+    }
 
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
 
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
 
     /**
@@ -125,8 +125,8 @@ class StorageBoxController extends \BaseController
      * @internal param int $id
      * @return Response
      */
-	public function update($boxId)
-	{
+    public function update($boxId)
+    {
         $userId = Request::get('user_id');
 
         if ($userId) {
@@ -137,7 +137,7 @@ class StorageBoxController extends \BaseController
                 //User is returning their own box
             } else {
                 //No id - reclaiming the box
-                if (!Auth::user()->hasRole('storage')) {
+                if ( ! Auth::user()->hasRole('storage')) {
                     throw new \BB\Exceptions\AuthenticationException();
                 }
             }
@@ -146,7 +146,7 @@ class StorageBoxController extends \BaseController
 
         Notification::success("Member box updated");
         return Redirect::route('storage_boxes.index');
-	}
+    }
 
     private function selfClaimBox($boxId, $userId)
     {
@@ -157,7 +157,7 @@ class StorageBoxController extends \BaseController
         $box = $this->storageBoxRepository->getById($boxId);
 
         //Make sure the box is available
-        if (!$box->available) {
+        if ( ! $box->available) {
             throw new \BB\Exceptions\ValidationException();
         }
 
@@ -178,16 +178,16 @@ class StorageBoxController extends \BaseController
     }
 
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
 
 
 }

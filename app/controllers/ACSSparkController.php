@@ -5,7 +5,8 @@ use BB\Services\KeyFobAccess;
 use BB\Validators\ACSValidator;
 use Illuminate\Support\Facades\Response;
 
-class ACSSparkController extends Controller {
+class ACSSparkController extends Controller
+{
 
     /**
      * @var DeviceRepository
