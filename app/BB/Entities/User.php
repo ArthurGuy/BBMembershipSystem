@@ -406,7 +406,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public static function findWithPermission($id = null)
     {
-        if ( ! $id) {
+        if (empty($id)) {
             //Return the logged in user
             return Auth::user();
         }
