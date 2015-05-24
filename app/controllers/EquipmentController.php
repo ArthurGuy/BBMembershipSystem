@@ -120,7 +120,7 @@ class EquipmentController extends \BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      * @throws ImageFailedException
      * @throws \BB\Exceptions\FormValidationException
      */
@@ -159,7 +159,7 @@ class EquipmentController extends \BaseController
      * Update the specified resource in storage.
      *
      * @param  string $equipmentId
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      */
     public function update($equipmentId)
     {

@@ -30,11 +30,11 @@ class MembersController extends \BaseController
         $this->userRepository = $userRepository;
     }
 
-	public function index()
-	{
+    public function index()
+    {
         $users = $this->userRepository->getActivePublicList(!Auth::guest());
         return View::make('members.index')->withUsers($users);
-	}
+    }
 
     public function show($id)
     {

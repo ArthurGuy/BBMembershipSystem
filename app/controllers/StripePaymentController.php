@@ -27,8 +27,8 @@ class StripePaymentController extends \BaseController
      * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      */
-	public function store($userId)
-	{
+    public function store($userId)
+    {
         User::findWithPermission($userId);
 
         $requestData = Request::only(['reason', 'amount', 'return_path', 'stripeToken', 'ref']);
