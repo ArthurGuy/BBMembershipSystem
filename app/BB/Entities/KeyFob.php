@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 /**
  * Class KeyFob
  *
- * @property integer id
- * @property bool lost
- * @property bool active
+ * @property integer $id
+ * @property bool    $lost
+ * @property bool    $active
  * @package BB\Entities
  */
 class KeyFob extends Model

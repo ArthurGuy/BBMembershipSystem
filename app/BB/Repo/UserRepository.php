@@ -100,12 +100,14 @@ class UserRepository extends DBRepository
     public function registerMember(array $memberData, $isAdminCreating)
     {
         if (empty($memberData['profile_photo_private'])) {
-                    $memberData['profile_photo_private'] = false;
+            $memberData['profile_photo_private'] = false;
         }
 
         if (empty($memberData['password'])) {
-                    unset($memberData['password']);
+            unset($memberData['password']);
         }
+
+        $memberData['hash'] = str_random(30);
 
         $user = $this->model->create($memberData);
         $this->profileDataRepository->createProfile($user->id);

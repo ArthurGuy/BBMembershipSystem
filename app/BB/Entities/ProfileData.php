@@ -7,8 +7,8 @@ use Laracasts\Presenter\PresentableTrait;
 /**
  * Class ProfileData
  *
- * @property bool @profile_photo
- * @property bool @new_profile_photo
+ * @property bool $profile_photo
+ * @property bool $new_profile_photo
  * @package BB\Entities
  */
 class ProfileData extends Model
