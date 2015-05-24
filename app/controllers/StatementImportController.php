@@ -20,23 +20,23 @@ class StatementImportController extends \BaseController
 
 
     /**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
         $this->layout->content = View::make('statement-import.create');
-	}
+    }
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
 
         $spreadsheetPath = Input::file('statement')->getRealPath();
         $testProcess = Request::get('test');
@@ -179,7 +179,7 @@ class StatementImportController extends \BaseController
         }
         echo "</table>";
         exit;
-	}
+    }
 
 
 

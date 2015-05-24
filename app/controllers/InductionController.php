@@ -30,7 +30,7 @@ class InductionController extends \BaseController
      * @param      $userId
      * @param  int $id
      * @throws BB\Exceptions\NotImplementedException
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      */
     public function update($userId, $id)
     {

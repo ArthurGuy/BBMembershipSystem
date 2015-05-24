@@ -218,7 +218,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * Does the user have any active or outstanding charges
      *
-     * @param $userId
+     * @param integer $userId
      * @return bool
      */
     public function hasOutstandingCharges($userId)

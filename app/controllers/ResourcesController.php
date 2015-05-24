@@ -16,15 +16,15 @@ class ResourcesController extends \BaseController
         $this->policyRepository = $policyRepository;
     }
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
         return View::make('resources.index');
-	}
+    }
 
     public function viewPolicy($document)
     {

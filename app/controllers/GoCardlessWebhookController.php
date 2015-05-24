@@ -3,7 +3,6 @@
 
 use BB\Entities\Payment;
 use BB\Entities\User;
-use BB\Exceptions\PaymentException;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
@@ -138,6 +137,9 @@ class GoCardlessWebhookController extends \BaseController
         }
     }
 
+    /**
+     * @param string $action
+     */
     private function processBills($action, array $bills)
     {
         foreach ($bills as $bill) {
@@ -174,6 +176,9 @@ class GoCardlessWebhookController extends \BaseController
 
     }
 
+    /**
+     * @param string $action
+     */
     private function processPreAuths($action, $preAuthList)
     {
         //Preauths are handled at creation

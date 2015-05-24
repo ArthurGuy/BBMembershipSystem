@@ -28,7 +28,7 @@ class SubscriptionController extends \BaseController
     /**
      * Setup a new pre auth
      *
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      */
     public function create($userId)
     {
@@ -52,7 +52,7 @@ class SubscriptionController extends \BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
+     * @return Illuminate\Http\RedirectResponse
      */
     public function store($userId)
     {
@@ -95,9 +95,9 @@ class SubscriptionController extends \BaseController
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Response
+     * @return Illuminate\Http\RedirectResponse
      */
-    public function destroy($userId, $id=null)
+    public function destroy($userId, $id = null)
     {
 
         /**

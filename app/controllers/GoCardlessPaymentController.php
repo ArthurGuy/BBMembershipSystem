@@ -64,7 +64,7 @@ class GoCardlessPaymentController extends \BaseController
      * Processes the return for old gocardless payments
      *
      * @param $userId
-     * @return mixed
+     * @return Illuminate\Http\RedirectResponse
      * @throws \BB\Exceptions\AuthenticationException
      */
     public function handleManualReturn($userId)
@@ -128,7 +128,7 @@ class GoCardlessPaymentController extends \BaseController
      *
      * @param $amount
      * @param $reason
-     * @param $user
+     * @param User $user
      * @param $ref
      * @param $returnPath
      * @return mixed
@@ -176,7 +176,7 @@ class GoCardlessPaymentController extends \BaseController
      *
      * @param $amount
      * @param $reason
-     * @param $user
+     * @param User $user
      * @param $ref
      * @param $returnPath
      * @return mixed

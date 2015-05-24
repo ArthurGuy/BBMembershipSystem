@@ -43,7 +43,7 @@ class NotificationEmailController extends \BaseController
         $this->notifications              = $notifications;
         $this->inductionRepository        = $inductionRepository;
 
-        if (!Auth::user()->isAdmin() && Auth::user()->roles()->get()->count() <= 0) {
+        if ( ! Auth::user()->isAdmin() && Auth::user()->roles()->get()->count() <= 0) {
             throw new \BB\Exceptions\AuthenticationException("You don't have permission to be here");
         }
     }
@@ -61,7 +61,7 @@ class NotificationEmailController extends \BaseController
         $this->emailNotificationValidator->validate($input);
 
         //This is for admins only unless they are part of a group, then they have access to specific lists
-        if (!Auth::user()->isAdmin() && !Auth::user()->hasRole('laser')) {
+        if ( ! Auth::user()->isAdmin() && ! Auth::user()->hasRole('laser')) {
 
         }
 
@@ -69,14 +69,14 @@ class NotificationEmailController extends \BaseController
         if ($input['send_to_all']) {
 
             if ($input['recipient'] == 'all') {
-                if (!Auth::user()->isAdmin()) {
+                if ( ! Auth::user()->isAdmin()) {
                     throw new \BB\Exceptions\AuthenticationException("You don't have permission to send to this group");
                 }
                 $users = $this->userRepository->getActive();
             } else {
                 if ($input['recipient'] == 'laser_induction_members') {
 
-                    if (!Auth::user()->hasRole('laser')) {
+                    if ( ! Auth::user()->hasRole('laser')) {
                         throw new \BB\Exceptions\AuthenticationException("You don't have permission to send to this group");
                     }
 
