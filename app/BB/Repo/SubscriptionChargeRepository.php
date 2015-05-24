@@ -226,6 +226,10 @@ class SubscriptionChargeRepository extends DBRepository
         return ($this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due', 'processing'])->count() > 0);
     }
 
+    /**
+     * @param integer $chargeId
+     * @param integer $newAmount
+     */
     public function updateAmount($chargeId, $newAmount)
     {
         $subCharge = $this->getById($chargeId);

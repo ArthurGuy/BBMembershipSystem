@@ -113,6 +113,10 @@ class GoCardlessHelper
         }
     }
 
+    /**
+     * @param string $reason
+     * @return null|string
+     */
     public function getNameFromReason($reason)
     {
         switch ($reason) {
