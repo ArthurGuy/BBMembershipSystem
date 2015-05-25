@@ -13,7 +13,7 @@ class ExpenseItem extends React.Component {
         var status = null;
         if (this.props.expense.get('approved')) {
             status = 'Approved';
-        } else if (this.props.expense.get('declines')) {
+        } else if (this.props.expense.get('declined')) {
             status = 'Declined';
         } else {
             status = 'Pending';
