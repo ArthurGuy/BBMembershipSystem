@@ -27,7 +27,7 @@ class ExpensePresenter extends Presenter
 
     public function file()
     {
-        return 'https://s3-eu-west-1.amazonaws.com/' . $_ENV['S3_BUCKET'] . '/' . $this->entity->file;
+        return 'https://s3-eu-west-1.amazonaws.com/' . $_SERVER['S3_BUCKET'] . '/' . $this->entity->file;
     }
 
 } 
