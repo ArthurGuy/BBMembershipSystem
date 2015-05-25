@@ -145,7 +145,7 @@ const NewExpenseModal = React.createClass({
                         <span className="help-block">Please wait, processing...</span>
                     </div>
                     <ReactBootstrap.Button onClick={this.props.onRequestHide}>Close</ReactBootstrap.Button>
-                    <ReactBootstrap.Button bsStyle='primary' onClick={this.handleSubmit}>Save</ReactBootstrap.Button>
+                    <ReactBootstrap.Button bsStyle='primary' onClick={this.handleSubmit} disabled={this.state.requestInProgress}>Save</ReactBootstrap.Button>
                 </div>
 
             </ReactBootstrap.Modal>

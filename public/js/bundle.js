@@ -79252,7 +79252,7 @@ var NewExpenseModal = _react2['default'].createClass({
                 ),
                 _react2['default'].createElement(
                     ReactBootstrap.Button,
-                    { bsStyle: 'primary', onClick: this.handleSubmit },
+                    { bsStyle: 'primary', onClick: this.handleSubmit, disabled: this.state.requestInProgress },
                     'Save'
                 )
             )
