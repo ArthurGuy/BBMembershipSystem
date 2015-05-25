@@ -2,6 +2,7 @@
 
 use BB\Exceptions\ImageFailedException;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
 
 class ExpensesController extends \BaseController {
 
@@ -9,20 +10,39 @@ class ExpensesController extends \BaseController {
      * @var \BB\Validators\ExpenseValidator
      */
     private $expenseValidator;
+    /**
+     * @var \BB\Repo\ExpenseRepository
+     */
+    private $expenseRepository;
 
-    function __construct(\BB\Validators\ExpenseValidator $expenseValidator)
+    /**
+     * @param \BB\Validators\ExpenseValidator $expenseValidator
+     * @param \BB\Repo\ExpenseRepository      $expenseRepository
+     */
+    function __construct(\BB\Validators\ExpenseValidator $expenseValidator, \BB\Repo\ExpenseRepository $expenseRepository)
     {
         $this->expenseValidator = $expenseValidator;
+        $this->expenseRepository = $expenseRepository;
     }
 
     /**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     * @throws \BB\Exceptions\AuthenticationException
+     */
 	public function index()
 	{
-		return \BB\Entities\Expense::where('user_id', Auth::user()->id)->get();
+        if (Request::ajax()) {
+            return \BB\Entities\Expense::where('user_id', Auth::user()->id)->get();
+        }
+
+        $sortBy       = Request::get('sortBy', 'created_at');
+        $direction    = Request::get('direction', 'desc');
+
+        $expenses = $this->expenseRepository->getPaginated(compact('sortBy', 'direction'));
+
+        return View::make('expenses.index')->with('expenses', $expenses);
 	}
 
 
@@ -46,9 +66,8 @@ class ExpensesController extends \BaseController {
      */
 	public function store()
 	{
+        Log::debug('store hit');
 		$data = Request::only(['category', 'description', 'amount', 'expense_date', 'file']);
-        $data['user_id'] = Auth::user()->id;
-        $data['expense_date'] = Carbon::now();
 
         $this->expenseValidator->validate($data);
 
@@ -79,9 +98,11 @@ class ExpensesController extends \BaseController {
             }
         }
 
-        $expense = \BB\Entities\Expense::create($data);
+        $data['user_id'] = Auth::user()->id;
 
-        return $expense;
+        $expense = $this->expenseRepository->create($data);
+
+        return Response::json($expense, 201);
 	}
 
 
@@ -109,20 +130,39 @@ class ExpensesController extends \BaseController {
 	}
 
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @return Response
+     * @throws \BB\Exceptions\AuthenticationException
+     */
 	public function update($id)
 	{
-        $data = Request::only(['category', 'description', 'amount', 'expense_date']);
+        /**
+        if (Request::ajax()) {
+            $data = Request::only(['category', 'description', 'amount', 'expense_date']);
 
-        $expense = \BB\Entities\Expense::findOrFail($id);
-        $expense = $expense->update($data);
+            $expense = \BB\Entities\Expense::findOrFail($id);
+            $expense = $expense->update($data);
 
-        return $expense;
+            return $expense;
+        }
+        */
+
+        if ( ! Auth::user()->hasRole('admin')) {
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
+        $data = Request::only('approve', 'decline');
+        if ( ! empty($data['approve'])) {
+            $this->expenseRepository->approveExpense($id, Auth::user()->id);
+        }
+        if ( ! empty($data['decline'])) {
+            $this->expenseRepository->declineExpense($id, Auth::user()->id);
+        }
+
+        return Redirect::route('expenses.index');
 	}
 
 
@@ -134,8 +174,8 @@ class ExpensesController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-        $expense = \BB\Entities\Expense::findOrFail($id);
-        $expense->delete();
+        //$expense = \BB\Entities\Expense::findOrFail($id);
+        //$expense->delete();
 	}
 
 

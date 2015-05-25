@@ -179,6 +179,7 @@ Route::group(array('before' => 'role:member'), function() {
 });
 
 
+
 Route::post('camera/event/store', function() {
 
     $s3 = AWS::get('s3');
