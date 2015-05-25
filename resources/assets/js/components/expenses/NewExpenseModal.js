@@ -13,9 +13,9 @@ const NewExpenseModal = React.createClass({
     validatorTypes:  {
         category: Joi.string().required().label('Category'),
         description: Joi.string().required().min(2).label('Description'),
-        amount: Joi.number().precision(2).positive().max(200).required().label('Amount'),
-        date: Joi.date().format('YYYY-MM-DD').required().label('Purchase Date'),
-        file:  Joi.required().label('Receipt')
+        amount: Joi.number().precision(2).positive().max(1000).required().label('Amount'),
+        expense_date: Joi.date().max('now').format('D/M/YY').required().label('Purchase Date'),
+        file:  Joi.string().required().label('Receipt')
     },
 
     getInitialState: function() {
@@ -23,7 +23,7 @@ const NewExpenseModal = React.createClass({
             category: null,
             description: null,
             amount: null,
-            date: null,
+            expense_date: null,
             file: null,
             requestInProgress: false,
             dirty: [],
@@ -45,33 +45,47 @@ const NewExpenseModal = React.createClass({
 
     handleSubmit: function(event) {
         event.preventDefault();
-        this.setState({submitAttempt:true});
+
+        this.setState({submitAttempt:true, requestInProgress:true});
+
         var onValidate = function(error, validationErrors) {
-            if (!error) {
+            if (error) {
+
+                this.setState({requestInProgress:false});
+
+            } else {
+
                 var submitAmount = this.state.amount * 100; //values are stored in pence
+
                 var file = $('#fileUpload')[0].files[0];
-                this.props.collection.on('progress', (data) => {console.log('Collection Progress: ', data)});
-                this.props.collection.on('all', (data) => {console.log('Collection All: ', data)});
-                //this.props.collection.on('add', () => { this.props.onRequestHide(); });
-                //this.props.collection.on('error', (model, error) => { console.log(error); var errors = jQuery.parseJSON(error.responseText); console.log(errors); this.setState({feedback:errors[0]}); });
-                //this.props.collection.create({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
+
+                //Create an instance of an expense model to save our data to
                 var expense = new this.props.collection.model();
+
+                //On an error display the details
                 expense.on('error', (model, error) => {
-                    //console.log(error);
                     var errors = jQuery.parseJSON(error.responseText);
-                    console.log(errors);
-                    this.setState({feedback:errors});
+                    this.setState({errors:errors, requestInProgress:false});
                 });
+
+                //If the model syncs successfully close the modal and save back to the collection
                 expense.on('sync', () => {
                     this.props.onRequestHide();
                     this.props.collection.add(expense);
+                    this.setState({requestInProgress:false});
                 });
-                expense.on('progress', (data) => {console.log('Progress: ', data)});
 
+                expense.on('progress', (data) => {console.log('File Progress: ', data)});
+                expense.on('all', (data) => {console.log('All: ', data)});
 
-                expense.save({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.date, file:file}, {wait: true});
+                //Save the new model to the server
+                expense.save({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.expense_date, file:file}, {wait: true});
+                //this.setState({requestInProgress:false});
             }
+
         }.bind(this);
+
+        //Validate and submit the data
         this.validate(onValidate);
     },
 
@@ -121,12 +135,15 @@ const NewExpenseModal = React.createClass({
 
                     <ReactBootstrap.Input type='text' label='Amount' help={this.validationMessage('amount')} placeholder='4.99' value={this.state.amount} onChange={this.handleChange('amount')} bsStyle={this.fieldStyle('amount')} />
 
-                    <ReactBootstrap.Input className='js-date-select' type='text' label='Date' help={this.validationMessage('date')} placeholder='2015-03-24' value={this.state.date} onChange={this.handleChange('date')} bsStyle={this.fieldStyle('date')} />
+                    <ReactBootstrap.Input className='js-date-select' type='text' label='Date' help={this.validationMessage('expense_date')} placeholder='24/3/15' value={this.state.expense_date} onChange={this.handleChange('expense_date')} bsStyle={this.fieldStyle('expense_date')} />
 
                     <ReactBootstrap.Input id="fileUpload" type='file' label='Receipt' help={this.validationMessage('file')} value={this.state.file} onChange={this.handleChange('file')} bsStyle={this.fieldStyle('file')} />
 
                 </div>
                 <div className='modal-footer'>
+                    <div className={this.state.requestInProgress ? 'has-feedback has-success' : 'hidden'}>
+                        <span className="help-block">Please wait, processing...</span>
+                    </div>
                     <ReactBootstrap.Button onClick={this.props.onRequestHide}>Close</ReactBootstrap.Button>
                     <ReactBootstrap.Button bsStyle='primary' onClick={this.handleSubmit}>Save</ReactBootstrap.Button>
                 </div>

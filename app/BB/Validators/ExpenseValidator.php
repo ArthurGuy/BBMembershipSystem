@@ -11,8 +11,8 @@ class ExpenseValidator extends FormValidator
     protected $rules = [
         'category'     => 'required',
         'description'  => 'required',
-        'amount'       => 'required',
-        'expense_date' => 'required|date_format:Y-m-d|before:tomorrow',
+        'amount'       => 'required|integer|max:100000',
+        'expense_date' => 'required|date_format:d/m/y|before:tomorrow',
         'file'         => 'required|mimes:jpeg,png,pdf',
     ];
 

@@ -11,7 +11,8 @@ var Expense = Backbone.Model.extend({
         description: null,
         amount: null,
         approved: false,
-        declined: false
+        declined: false,
+        expense_date: null
     },
 
     fileAttribute: 'file',

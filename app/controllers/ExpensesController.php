@@ -97,6 +97,9 @@ class ExpensesController extends \BaseController {
             }
         }
 
+        //Reformat from d/m/y to YYYY-MM-DD
+        $data['expense_date'] = Carbon::createFromFormat('j/n/y', $data['expense_date']);
+
         $data['user_id'] = Auth::user()->id;
 
         $expense = $this->expenseRepository->create($data);
