@@ -66,6 +66,9 @@ const NewExpenseModal = React.createClass({
                 expense.on('error', (model, error) => {
                     var errors = jQuery.parseJSON(error.responseText);
                     this.setState({errors:errors, requestInProgress:false});
+                    if (errors.general) {
+                        this.setState({feedback: errors.general});
+                    }
                 });
 
                 //If the model syncs successfully close the modal and save back to the collection
@@ -79,8 +82,7 @@ const NewExpenseModal = React.createClass({
                 expense.on('all', (data) => {console.log('All: ', data)});
 
                 //Save the new model to the server
-                expense.save({description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.expense_date, file:file}, {wait: true});
-                //this.setState({requestInProgress:false});
+                expense.save({user_id:this.props.userId, description:this.state.description, category:this.state.category, amount:submitAmount, expense_date:this.state.expense_date, file:file}, {wait: true});
             }
 
         }.bind(this);

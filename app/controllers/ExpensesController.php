@@ -33,13 +33,17 @@ class ExpensesController extends \BaseController {
      */
 	public function index()
 	{
-        if (Request::ajax()) {
-            return \BB\Entities\Expense::where('user_id', Auth::user()->id)->get();
-        }
-
+        $userId       = Request::get('user_id', '');
         $sortBy       = Request::get('sortBy', 'created_at');
         $direction    = Request::get('direction', 'desc');
 
+        if (Request::ajax()) {
+            return \BB\Entities\Expense::where('user_id', $userId)->get();
+        }
+
+        if ($userId) {
+            $this->expenseRepository->memberFilter($userId);
+        }
         $expenses = $this->expenseRepository->getPaginated(compact('sortBy', 'direction'));
 
         return View::make('expenses.index')->with('expenses', $expenses);
@@ -66,7 +70,7 @@ class ExpensesController extends \BaseController {
      */
 	public function store()
 	{
-		$data = Request::only(['category', 'description', 'amount', 'expense_date', 'file']);
+		$data = Request::only(['user_id', 'category', 'description', 'amount', 'expense_date', 'file']);
 
         $this->expenseValidator->validate($data);
 
@@ -100,7 +104,9 @@ class ExpensesController extends \BaseController {
         //Reformat from d/m/y to YYYY-MM-DD
         $data['expense_date'] = Carbon::createFromFormat('j/n/y', $data['expense_date']);
 
-        $data['user_id'] = Auth::user()->id;
+        if ($data['user_id'] != Auth::user()->id) {
+            throw new \BB\Exceptions\FormValidationException('You can only submit expenses for yourself', new \Illuminate\Support\MessageBag(['general'=>'You can only submit expenses for yourself']));
+        }
 
         $expense = $this->expenseRepository->create($data);
 

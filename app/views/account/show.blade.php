@@ -183,7 +183,7 @@
 
         <div class="row">
             <div class="col-xs-12 col-lg-12 pull-left">
-                @include('account.partials.expenses-panel')
+                <div id="memberExpenses" data-user-id="{{ $user->id }}"></div>
             </div>
         </div>
 

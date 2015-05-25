@@ -34,7 +34,7 @@ var MemberExpenses = React.createClass({
         */
 
         //Initial load of the expenses
-        this.props.expenses.fetch();
+        this.props.expenses.fetch({ data: { user_id: this.props.userId } });
     },
 
     componentDidUpdate: function () {
@@ -123,7 +123,7 @@ var MemberExpenses = React.createClass({
             <h3>Reclaim Expenses</h3>
         );
         var footer = (
-            <ReactBootstrap.ModalTrigger modal={<NewExpenseModal collection={this.props.expenses} />}>
+            <ReactBootstrap.ModalTrigger modal={<NewExpenseModal collection={this.props.expenses} userId={this.props.userId} />}>
                 <ReactBootstrap.Button bsStyle='primary'>Submit a new expense</ReactBootstrap.Button>
             </ReactBootstrap.ModalTrigger>
         );

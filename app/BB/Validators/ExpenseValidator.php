@@ -9,6 +9,7 @@ class ExpenseValidator extends FormValidator
      * @var array
      */
     protected $rules = [
+        'user_id'      => 'required',
         'category'     => 'required',
         'description'  => 'required',
         'amount'       => 'required|integer|max:100000',

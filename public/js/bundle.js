@@ -57,13 +57,15 @@ if (document.getElementById('paymentModuleTest')) {
     React.render(React.createElement(PaymentModule, { description: 'Sample Description', reason: 'balance', email: memberEmail, userId: userId, onSuccess: handleSuccess }), document.getElementById('paymentModuleTest'));
 }
 
-if (document.getElementById('memberExpensesTest')) {
+var memberExpensesPanel = jQuery('#memberExpenses');
+if (memberExpensesPanel.length) {
 
     var MemberExpenses = require('./components/expenses/MemberExpenses');
     var Expenses = require('./collections/Expenses');
     var expenses = new Expenses();
-    global.expenses = expenses;
-    React.render(React.createElement(MemberExpenses, { expenses: expenses }), document.getElementById('memberExpensesTest'));
+    //global.expenses = expenses;
+    var userId = memberExpensesPanel.data('userId');
+    React.render(React.createElement(MemberExpenses, { expenses: expenses, userId: userId }), memberExpensesPanel[0]);
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -78935,7 +78937,7 @@ var MemberExpenses = _react2['default'].createClass({
         */
 
         //Initial load of the expenses
-        this.props.expenses.fetch();
+        this.props.expenses.fetch({ data: { user_id: this.props.userId } });
     },
 
     componentDidUpdate: function componentDidUpdate() {},
@@ -79049,7 +79051,7 @@ var MemberExpenses = _react2['default'].createClass({
         );
         var footer = _react2['default'].createElement(
             ReactBootstrap.ModalTrigger,
-            { modal: _react2['default'].createElement(NewExpenseModal, { collection: this.props.expenses }) },
+            { modal: _react2['default'].createElement(NewExpenseModal, { collection: this.props.expenses, userId: this.props.userId }) },
             _react2['default'].createElement(
                 ReactBootstrap.Button,
                 { bsStyle: 'primary' },
@@ -79163,6 +79165,9 @@ var NewExpenseModal = _react2['default'].createClass({
                 expense.on('error', function (model, error) {
                     var errors = jQuery.parseJSON(error.responseText);
                     _this2.setState({ errors: errors, requestInProgress: false });
+                    if (errors.general) {
+                        _this2.setState({ feedback: errors.general });
+                    }
                 });
 
                 //If the model syncs successfully close the modal and save back to the collection
@@ -79180,8 +79185,7 @@ var NewExpenseModal = _react2['default'].createClass({
                 });
 
                 //Save the new model to the server
-                expense.save({ description: this.state.description, category: this.state.category, amount: submitAmount, expense_date: this.state.expense_date, file: file }, { wait: true });
-                //this.setState({requestInProgress:false});
+                expense.save({ user_id: this.props.userId, description: this.state.description, category: this.state.category, amount: submitAmount, expense_date: this.state.expense_date, file: file }, { wait: true });
             }
         }).bind(this);
 
