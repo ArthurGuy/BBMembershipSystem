@@ -73,6 +73,22 @@ abstract class DBRepository
         return $this->getById($recordId)->update($recordData);
     }
 
+    /**
+     * Return a sortable paginated list
+     *
+     * @param array $params
+     * @return mixed
+     */
+    public function getPaginated(array $params)
+    {
+        $model = $this->model;
+
+        if ($this->isSortable($params)) {
+            return $model->orderBy($params['sortBy'], $params['direction'])->paginate($this->perPage);
+        }
+
+        return $model->paginate($this->perPage);
+    }
 
     /**
      * @param array $params
