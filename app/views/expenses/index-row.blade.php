@@ -1,6 +1,6 @@
 <tr>
     <td>{{ $expense->present()->expense_date }}</td>
-    <td><a href="{{ route('account.show', $expense->user->id) }}">{{ $expense->user->name }}</a></td>
+    <td><a href="{{ route('members.show', $expense->user->id) }}">{{ $expense->user->name }}</a></td>
     <td>{{ $expense->present()->category }}</td>
     <td>{{ $expense->present()->description }}</td>
     <td>{{ $expense->present()->amount }}</td>
