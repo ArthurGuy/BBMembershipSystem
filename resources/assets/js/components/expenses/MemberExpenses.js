@@ -105,9 +105,11 @@ var MemberExpenses = React.createClass({
                 <table fill className="table">
                     <thead>
                         <tr>
+                            <th>Date</th>
                             <th>Category</th>
                             <th>Description</th>
                             <th>Amount</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>

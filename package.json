@@ -37,6 +37,7 @@
     "bootstrap-datepicker": "^1.4.0",
     "joi": "^6.4.1",
     "jquery": "^2.1.4",
+    "moment": "^2.10.3",
     "react": "^0.13.2",
     "react-bootstrap": "^0.22.4",
     "react-notification": "^1.2.0",

@@ -23,7 +23,7 @@ const NewExpenseModal = React.createClass({
             category: null,
             description: null,
             amount: null,
-            date: '2015-05-10',
+            date: null,
             file: null,
             requestInProgress: false,
             dirty: [],
@@ -95,7 +95,14 @@ const NewExpenseModal = React.createClass({
 
     render: function() {
 
-        var dropdownOptions = [{key:'', value:''},{key:'consumables', value:'Consumables'}, {key:'food', value:'Food'}];
+        var dropdownOptions = [
+            {key:'', value:''},
+            {key:'consumables', value:'Consumables'},
+            {key:'food', value:'Food'},
+            {key:'equipment-repair', value:'Equipment Repair'},
+            {key:'tools', value:'Tools'},
+            {key:'infrastructure', value:'Infrastructure'},
+        ];
 
         var feedback = null;
         if (this.state.feedback) {
@@ -114,7 +121,7 @@ const NewExpenseModal = React.createClass({
 
                     <ReactBootstrap.Input type='text' label='Amount' help={this.validationMessage('amount')} placeholder='4.99' value={this.state.amount} onChange={this.handleChange('amount')} bsStyle={this.fieldStyle('amount')} />
 
-                    <ReactBootstrap.Input type='text' label='Date' help={this.validationMessage('date')} placeholder='2015-03-24' value={this.state.date} onChange={this.handleChange('date')} bsStyle={this.fieldStyle('date')} />
+                    <ReactBootstrap.Input className='js-date-select' type='text' label='Date' help={this.validationMessage('date')} placeholder='2015-03-24' value={this.state.date} onChange={this.handleChange('date')} bsStyle={this.fieldStyle('date')} />
 
                     <ReactBootstrap.Input id="fileUpload" type='file' label='Receipt' help={this.validationMessage('file')} value={this.state.file} onChange={this.handleChange('file')} bsStyle={this.fieldStyle('file')} />
 
