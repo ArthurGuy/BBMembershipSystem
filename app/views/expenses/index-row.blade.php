@@ -4,7 +4,9 @@
     <td>{{ $expense->present()->category }}</td>
     <td>{{ $expense->present()->description }}</td>
     <td>{{ $expense->present()->amount }}</td>
+    @if (Auth::user()->hasRole('admin'))
     <td><a href="{{ $expense->present()->file }}">View / Download</a></td>
+    @endif
     <td>
         @if ($expense->approved)
             Approved by {{ $expense->approved_by->given_name }}

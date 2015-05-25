@@ -21,7 +21,9 @@
             <th>{{ HTML::sortBy('category', 'Category', 'expenses.index') }}</th>
             <th>{{ HTML::sortBy('description', 'Description', 'expenses.index') }}</th>
             <th>{{ HTML::sortBy('amount', 'Amount', 'expenses.index') }}</th>
+            @if (Auth::user()->hasRole('admin'))
             <th>Receipt</th>
+            @endif
             <th></th>
         </tr>
     </thead>

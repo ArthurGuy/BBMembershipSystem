@@ -66,7 +66,6 @@ class ExpensesController extends \BaseController {
      */
 	public function store()
 	{
-        Log::debug('store hit');
 		$data = Request::only(['category', 'description', 'amount', 'expense_date', 'file']);
 
         $this->expenseValidator->validate($data);
