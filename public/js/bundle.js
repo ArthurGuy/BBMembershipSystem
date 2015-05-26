@@ -79154,7 +79154,7 @@ var NewExpenseModal = _react2['default'].createClass({
                 this.setState({ requestInProgress: false });
             } else {
 
-                var submitAmount = this.state.amount * 100; //values are stored in pence
+                var submitAmount = Math.round(this.state.amount * 100); //values are stored in pence
 
                 var file = $('#fileUpload')[0].files[0];
 
