@@ -125,6 +125,8 @@ class StatementImportController extends \BaseController
                         echo '<td>Sub Charge: ' . $subCharge->amount . '</td>';
                     } else {
                         echo '<td>No Sub Charge</td>';
+                        $subPayment = false;
+                        $reasonString = 'balance';
                     }
                 }
             } else {
@@ -141,15 +143,9 @@ class StatementImportController extends \BaseController
 
             if ( ! $testProcess && $matchedUser) {
                 if ($subPayment) {
-                    //$subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
                     if (isset($subCharge) && $subCharge) {
                         $paymentReference = $subCharge->id;
-                        if ($subCharge->amount == $row[4]) {
-                            $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $date);
-                        } else {
-                            //@TODO: Handle partial payments
-                            \Log::debug("Sub charge handling - bank statement partial payment");
-                        }
+                        $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $date, $row[4]);
                     }
                 }
 

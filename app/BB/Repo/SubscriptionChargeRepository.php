@@ -91,10 +91,11 @@ class SubscriptionChargeRepository extends DBRepository
     }
 
     /**
-     * @param $chargeId
-     * @param $paymentDate
+     * @param integer      $chargeId
+     * @param              $paymentDate
+     * @param null|integer $amount
      */
-    public function markChargeAsPaid($chargeId, $paymentDate = null)
+    public function markChargeAsPaid($chargeId, $paymentDate = null, $amount = null)
     {
         if (is_null($paymentDate)) {
             $paymentDate = new Carbon();
@@ -102,6 +103,9 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = $paymentDate;
         $subCharge->status = 'paid';
+        if ($amount) {
+            $subCharge->amount = $amount;
+        }
         $subCharge->save();
 
         \Event::fire('sub-charge.paid', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
