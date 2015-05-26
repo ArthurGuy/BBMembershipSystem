@@ -69,6 +69,7 @@ Route::get('account/{account}/payment/gocardless/manual-return', ['as'=>'account
 
 //Cash
 Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
+Route::delete('account/{account}/payment/cash', ['as'=>'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
 
 //DD Migration to variable payments
 Route::post('account/payment/migrate-direct-debit', ['as'=>'account.payment.gocardless-migrate', 'uses' => 'PaymentController@migrateDD', 'before'=>'role:member']);

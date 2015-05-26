@@ -1,5 +1,7 @@
 <?php namespace BB\Services;
 
+use BB\Entities\User;
+use BB\Exceptions\InvalidDataException;
 use BB\Exceptions\NotImplementedException;
 use BB\Repo\PaymentRepository;
 use BB\Repo\UserRepository;
@@ -41,6 +43,9 @@ class Credit
 
     public function recalculate()
     {
+        if (! $this->user instanceof User) {
+            throw new InvalidDataException("User not set");
+        }
         $runningTotal = 0;
         $positivePayments = $this->paymentRepository->getUserPaymentsByReason($this->userId, 'balance');
         $negativePayments = $this->paymentRepository->getUserPaymentsBySource($this->userId, 'balance');
