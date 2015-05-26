@@ -78991,7 +78991,7 @@ var MemberExpenses = _react2['default'].createClass({
         var main = _react2['default'].createElement(
             'p',
             null,
-            'Bought an item for Build Brighton, claim the money back here'
+            'Bought an item for Build Brighton, claim the money back here. If your planning on spending over £10 please confirm the purchase with a trustee first.'
         );
         var expenses = this.props.expenses;
 

@@ -92,7 +92,8 @@ var MemberExpenses = React.createClass({
     },
 
     render: function () {
-        var main = <p>Bought an item for Build Brighton, claim the money back here</p>;
+        var main = <p>Bought an item for Build Brighton, claim the money back here. If your planning on spending over £10
+            please confirm the purchase with a trustee first.</p>;
         var expenses = this.props.expenses;
 
 

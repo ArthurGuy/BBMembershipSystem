@@ -11,6 +11,22 @@
 
 @section('content')
 
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">Reclaiming Expenses</h3></div>
+            <div class="panel-body">
+                <p>
+                    If you want to spend less than &pound;10 on some consumables or a replacement part please go ahead and do it,
+                    if you want to spend more than this please contact the <a href="trustees@buildbrighton.com">trustees@buildbrighton.com</a>
+                    first to ensure we have the money available.
+                </p>
+                <p>
+                    If you want to reclaim an expense you can do this through your membership page. You will need the receipt,
+                    either a pdf or photo, this will need to be submitted along with a description, amount and the date.
+                </p>
+            </div>
+        </div>
+    </div>
 
 {{ HTML::sortablePaginatorLinks($expenses) }}
 <table class="table memberList">
