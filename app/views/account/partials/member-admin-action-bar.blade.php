@@ -145,22 +145,24 @@
 
     <div class="col-xs-12 col-sm-6">
 
-        {{ Form::open(['method'=>'POST', 'route' => ['account.payment.cash.destroy', $user->id], 'class'=>'form-horizontal']) }}
+        {{ Form::open(['method'=>'DELETE', 'route' => ['account.payment.cash.destroy', $user->id], 'class'=>'form-horizontal']) }}
 
         <div class="form-group">
-            {{ Form::label('number', 'Cash Withdrawal', ['class'=>'col-sm-4 control-label']) }}
-            <div class="col-sm-5">
+            {{ Form::label('number', 'Withdraw', ['class'=>'col-sm-3 control-label']) }}
+            <div class="col-sm-3">
                 <div class="input-group">
                     <div class="input-group-addon">&pound;</div>
                     {{ Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'required'=>'required']) }}
                 </div>
             </div>
             <div class="col-sm-3">
+                {{ Form::select('ref', ['cash'=>'Cash', 'bank-transfer'=>'Bank Transfer'], null, ['class'=>'form-control']) }}
+            </div>
+            <div class="col-sm-3">
                 {{ Form::submit('Remove Credit', array('class'=>'btn btn-primary')) }}
             </div>
         </div>
 
-        {{ Form::hidden('reason', 'balance') }}
         {{ Form::hidden('return_path', 'account/'.$user->id) }}
         {{ Form::close() }}
 

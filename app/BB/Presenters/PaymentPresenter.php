@@ -22,6 +22,8 @@ class PaymentPresenter extends Presenter
                 return 'Balance Top Up';
             case 'equipment-fee':
                 return 'Equipment Costs';
+            case 'withdrawal':
+                return 'Withdrawal';
             default:
                 return $this->entity->reason;
         }
