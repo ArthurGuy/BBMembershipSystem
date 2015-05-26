@@ -6,8 +6,6 @@ use BB\Repo\SubscriptionChargeRepository;
 
 class StatementImportController extends \BaseController
 {
-
-    protected $layout = 'layouts.main';
     /**
      * @var SubscriptionChargeRepository
      */
@@ -26,7 +24,7 @@ class StatementImportController extends \BaseController
      */
     public function create()
     {
-        $this->layout->content = View::make('statement-import.create');
+        return View::make('statement-import.create');
     }
 
 

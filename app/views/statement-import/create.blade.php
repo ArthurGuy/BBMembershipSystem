@@ -1,4 +1,15 @@
+@extends('layouts.main')
 
+@section('meta-title')
+    Statement Import
+@stop
+
+@section('page-title')
+    Statement Import
+@stop
+
+
+@section('content')
 
 
     <div class="col-xs-12">
@@ -35,3 +46,5 @@
 
         {{ Form::close() }}
     </div>
+
+@stop
