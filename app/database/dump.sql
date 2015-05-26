@@ -561,6 +561,24 @@ VALUES
 	(20, 'Saw', '', '', '', 'yellow', 'workshop', 'on the wall', 'saw', '', '', '', NULL, 0, NULL, 1, 0, 0, 0, '', 0, NULL, '2014-04-01', '0000-00-00', '2015-04-29 22:54:21', '2015-04-29 22:54:36');
 
 
+
+CREATE TABLE `expenses` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `category` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `amount` int(11) NOT NULL,
+  `approved` tinyint(1) NOT NULL DEFAULT '0',
+  `declined` tinyint(1) NOT NULL DEFAULT '0',
+  `approved_by_user` int(11) NOT NULL,
+  `file` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `expense_date` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

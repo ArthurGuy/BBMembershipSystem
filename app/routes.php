@@ -174,6 +174,13 @@ Route::get('resources', ['uses'=>'ResourcesController@index', 'before'=>'role:me
 Route::get('resources/policy/{title}', ['uses'=>'ResourcesController@viewPolicy', 'before'=>'', 'as'=>'resources.policy.view']);
 
 
+#Expenses
+Route::group(array('before' => 'role:member'), function() {
+    Route::resource('expenses', 'ExpensesController');
+});
+
+
+
 Route::post('camera/event/store', function() {
 
     $s3 = AWS::get('s3');

@@ -2,8 +2,8 @@
 use BB\Entities\User;
 
 $I = new FunctionalTester($scenario);
-$I->am('member');
-$I->wantTo('confirm I cant create manual payments');
+$I->am('an admin');
+$I->wantTo('confirm I can create manual payments');
 
 //Load and login a known member
 $adminUser = User::find(3);

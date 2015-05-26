@@ -15,10 +15,6 @@ class PaymentRepository extends DBRepository
     public static $SUBSCRIPTION = 'subscription';
     public static $INDUCTION = 'induction';
 
-
-    private $startDate = null;
-    private $endDate = null;
-    private $memberId = null;
     private $reason = null;
     private $source = null;
 
@@ -290,20 +286,6 @@ class PaymentRepository extends DBRepository
     public function canDelete($recordId)
     {
         throw new NotImplementedException();
-    }
-
-    /**
-     * Used for the getPaginated and getTotalAmount method
-     * @param $memberFilter
-     */
-    public function memberFilter($memberFilter)
-    {
-        $this->memberId = $memberFilter;
-    }
-
-    private function hasMemberFilter()
-    {
-        return ! is_null($this->memberId);
     }
 
     /**

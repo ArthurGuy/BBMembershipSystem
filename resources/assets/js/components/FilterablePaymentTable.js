@@ -1,5 +1,6 @@
-import React from 'react';
-
+//import React from 'react';
+'use strict';
+var React = require('react');
 var PaymentTable = require('./PaymentTable');
 
 

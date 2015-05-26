@@ -257,6 +257,7 @@ class PaymentController extends \BaseController
      * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      * @return Illuminate\Http\RedirectResponse
+     * @deprecated
      */
     public function store($userId)
     {
@@ -265,6 +266,8 @@ class PaymentController extends \BaseController
         if ( ! Auth::user()->hasRole('admin')) {
             throw new \BB\Exceptions\AuthenticationException;
         }
+
+        Log::debug('Manual payment endpoint getting hit. account/{id}/payment. paymentController@store '.json_encode(Input::all()));
 
         $reason = Input::get('reason');
 

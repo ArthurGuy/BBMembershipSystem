@@ -9,6 +9,9 @@ abstract class DBRepository
     protected $model;
 
     protected $perPage;
+    protected $memberId;
+    protected $startDate = null;
+    protected $endDate = null;
 
     /**
      * @param $model
@@ -73,6 +76,26 @@ abstract class DBRepository
         return $this->getById($recordId)->update($recordData);
     }
 
+    /**
+     * Return a sortable paginated list
+     *
+     * @param array $params
+     * @return mixed
+     */
+    public function getPaginated(array $params)
+    {
+        $model = $this->model;
+
+        if ($this->hasMemberFilter()) {
+            $model = $model->where('user_id', $this->memberId);
+        }
+
+        if ($this->isSortable($params)) {
+            return $model->orderBy($params['sortBy'], $params['direction'])->paginate($this->perPage);
+        }
+
+        return $model->paginate($this->perPage);
+    }
 
     /**
      * @param array $params
@@ -89,5 +112,19 @@ abstract class DBRepository
     public function setPerPage($perPage)
     {
         $this->perPage = $perPage;
+    }
+
+    /**
+     * Used for the getPaginated and getTotalAmount method
+     * @param $memberFilter
+     */
+    public function memberFilter($memberFilter)
+    {
+        $this->memberId = $memberFilter;
+    }
+
+    protected function hasMemberFilter()
+    {
+        return ! is_null($this->memberId);
     }
 } 
