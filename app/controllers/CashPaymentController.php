@@ -15,7 +15,7 @@ class CashPaymentController extends \BaseController
     {
         $this->paymentRepository = $paymentRepository;
 
-        $this->beforeFilter('role:admin', array('only' => ['store']));
+        $this->beforeFilter('role:admin', array('only' => ['store', 'destroy']));
     }
 
 
@@ -41,4 +41,8 @@ class CashPaymentController extends \BaseController
         return Redirect::to($returnPath);
     }
 
+    public function destroy($userId)
+    {
+
+    }
 }

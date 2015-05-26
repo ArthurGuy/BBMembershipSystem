@@ -125,7 +125,7 @@
         {{ Form::open(['method'=>'POST', 'route' => ['account.payment.cash.create', $user->id], 'class'=>'form-horizontal']) }}
 
         <div class="form-group">
-            {{ Form::label('key_fob', 'Balance', ['class'=>'col-sm-4 control-label']) }}
+            {{ Form::label('number', 'Balance Cash Top up', ['class'=>'col-sm-4 control-label']) }}
             <div class="col-sm-5">
                 <div class="input-group">
                     <div class="input-group-addon">&pound;</div>
@@ -133,7 +133,30 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                {{ Form::submit('Credit', array('class'=>'btn btn-primary')) }}
+                {{ Form::submit('Add Credit', array('class'=>'btn btn-primary')) }}
+            </div>
+        </div>
+
+        {{ Form::hidden('reason', 'balance') }}
+        {{ Form::hidden('return_path', 'account/'.$user->id) }}
+        {{ Form::close() }}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6">
+
+        {{ Form::open(['method'=>'POST', 'route' => ['account.payment.cash.destroy', $user->id], 'class'=>'form-horizontal']) }}
+
+        <div class="form-group">
+            {{ Form::label('number', 'Cash Withdrawal', ['class'=>'col-sm-4 control-label']) }}
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <div class="input-group-addon">&pound;</div>
+                    {{ Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'required'=>'required']) }}
+                </div>
+            </div>
+            <div class="col-sm-3">
+                {{ Form::submit('Remove Credit', array('class'=>'btn btn-primary')) }}
             </div>
         </div>
 
