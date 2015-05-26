@@ -20,7 +20,11 @@
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-53813063-1', 'auto');
+        @if (Auth::guest())
+            ga('create', 'UA-53813063-1', 'auto');
+        @else
+            ga('create', 'UA-53813063-1', { 'userId': '{{ Auth::user()->id }}', cookieDomain: 'auto' });
+        @endif
         ga('send', 'pageview');
     </script>
     @endif
