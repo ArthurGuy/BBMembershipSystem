@@ -51,12 +51,7 @@ class PaypalIPNController extends \BaseController
             $subCharge = $this->subscriptionChargeRepository->findCharge($user->id, $paymentDate);
             if ($subCharge) {
                 $ref = $subCharge->id;
-                if ($subCharge->amount == $ipnData['mc_gross']) {
-                    $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
-                } else {
-                    //@TODO: Handle partial payments
-                    \Log::debug("Sub charge handling - paypal partial payment");
-                }
+                $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate, $ipnData['mc_gross']);
             } else {
                 //No sub charge exists
                 if ($user->status == 'setting-up') {
