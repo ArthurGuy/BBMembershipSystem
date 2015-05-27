@@ -184,7 +184,7 @@ class GoCardlessWebhookController extends \BaseController
         //Preauths are handled at creation
         foreach ($preAuthList as $preAuth) {
             if ($preAuth['status'] == 'cancelled') {
-                $user = User::where('payment_method', 'gocardless')->where('subscription_id', $preAuth['id'])->first();
+                $user = User::where('payment_method', 'gocardless-variable')->where('subscription_id', $preAuth['id'])->first();
                 if ($user) {
                     $user->cancelSubscription();
                 }
