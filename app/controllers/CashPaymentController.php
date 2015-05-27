@@ -67,7 +67,7 @@ class CashPaymentController extends \BaseController
 
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance('withdrawal');
 
-        if (($user->cash_balance + ($minimumBalance * 100)) <= ($amount * 100)) {
+        if (($user->cash_balance + ($minimumBalance * 100)) < ($amount * 100)) {
             Notification::error("Not enough money");
             return Redirect::to($returnPath);
         }
