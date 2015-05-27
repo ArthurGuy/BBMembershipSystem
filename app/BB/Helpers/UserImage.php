@@ -22,7 +22,7 @@ class UserImage
         try {
             $this->correctImageRotation($filePath);
         } catch (\Exception $e) {
-            \Log::exception($e);
+            \Log::error($e);
             //Continue on - this isnt that important
         }
 
@@ -49,7 +49,7 @@ class UserImage
                 'ServerSideEncryption' => 'AES256',
             ));
         } catch(\Exception $e) {
-            \Log::exception($e);
+            \Log::error($e);
             throw new UserImageFailedException();
         }
 
@@ -63,7 +63,7 @@ class UserImage
                 'ServerSideEncryption' => 'AES256',
             ));
         } catch(\Exception $e) {
-            \Log::exception($e);
+            \Log::error($e);
             throw new UserImageFailedException();
         }
 
