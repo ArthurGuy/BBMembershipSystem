@@ -167,6 +167,17 @@ class SubscriptionChargeRepository extends DBRepository
     }
 
     /**
+     * Return a members most recent paid up subscription charge record
+     *
+     * @param $userId
+     * @return SubscriptionCharge
+     */
+    public function getMembersLatestPaidCharge($userId)
+    {
+        return $this->model->where('user_id', $userId)->where('status', 'paid')->orderBy('charge_date', 'DESC')->first();
+    }
+
+    /**
      * Return a paginated list of member payments
      *
      * @return mixed
