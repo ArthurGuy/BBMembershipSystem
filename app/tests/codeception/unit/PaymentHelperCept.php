@@ -13,17 +13,13 @@ $I->assertFalse($date, 'Date should be false as no payments exist');
 
 
 //Create some payment records
-Payment::create(
-    [
-        'reason'           => 'subscription',
-        'source'           => 'other',
-        'user_id'          => $user->id,
-        'amount'           => 20,
-        'amount_minus_fee' => 20,
-        'status'           => 'pending',
-        'created_at'       => '2014-06-01'
-    ]
-);
+
+\BB\Entities\SubscriptionCharge::create([
+    'user_id'        => $user->id,
+    'charge_date'    => '2014-01-01',
+    'payment_date'   => '2014-01-01',
+    'status'         => 'paid',
+]);
 Payment::create(
     [
         'reason'           => 'subscription',
@@ -35,6 +31,29 @@ Payment::create(
         'created_at'       => '2014-01-01'
     ]
 );
+
+\BB\Entities\SubscriptionCharge::create([
+    'user_id'       => $user->id,
+    'charge_date'   => '2014-06-01',
+    'status'        => 'processing',
+]);
+Payment::create(
+    [
+        'reason'           => 'subscription',
+        'source'           => 'other',
+        'user_id'          => $user->id,
+        'amount'           => 20,
+        'amount_minus_fee' => 20,
+        'status'           => 'pending',
+        'created_at'       => '2014-06-01'
+    ]
+);
+
+\BB\Entities\SubscriptionCharge::create([
+    'user_id'       => $user->id,
+    'charge_date'   => '2014-08-01',
+    'status'        => 'cancelled',
+]);
 Payment::create(
     [
         'reason'           => 'subscription',
@@ -47,11 +66,12 @@ Payment::create(
     ]
 );
 
+
 //Now we have some payments re-fetch the last payment date
 $date = \BB\Helpers\MembershipPayments::lastUserPaymentDate($user->id);
 
 //Make sure its a date that's returned
 $I->assertEquals(get_parent_class($date), 'DateTime');
 
-//Confirm the datetime is now, when the record above was created.
-$I->assertEquals(new \Carbon\Carbon('2014-06-01'), $date);
+//Confirm the datetime matched the first payment record, the only paid one
+$I->assertEquals(new \Carbon\Carbon('2014-01-01'), $date);
