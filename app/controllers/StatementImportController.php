@@ -161,8 +161,6 @@ class StatementImportController extends \BaseController
                     'reference' => $paymentReference
                 ]);
                 if ($subPayment) {
-                    $matchedUser->extendMembership($matchedUser->payment_method, $date->addMonth());
-
                     if ($matchedUser->payment_method == 'standing-order') {
                         $matchedUser->monthly_subscription = $row[4];
                     }

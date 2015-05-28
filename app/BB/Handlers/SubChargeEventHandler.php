@@ -51,6 +51,7 @@ class SubChargeEventHandler
     public function onPaid($chargeId, $userId, Carbon $paymentDate, $amount)
     {
         $user = $this->userRepository->getById($userId);
+        /** @var $user \BB\Entities\User */
 
         $user->extendMembership(null, $paymentDate->addMonth());
     }
@@ -66,6 +67,7 @@ class SubChargeEventHandler
     public function onProcessing($chargeId, $userId, Carbon $paymentDate, $amount)
     {
         $user = $this->userRepository->getById($userId);
+        /** @var $user \BB\Entities\User */
 
         $user->extendMembership(null, $paymentDate->addMonth());
     }
@@ -83,6 +85,7 @@ class SubChargeEventHandler
         $paidUntil = MembershipPayments::lastUserPaymentExpires($userId);
         if ($paidUntil) {
             $user = $this->userRepository->getById($userId);
+            /** @var $user \BB\Entities\User */
             $user->extendMembership(null, $paidUntil);
         } else {
             \Log::warning('Unable to update member expiry date - payment cancelled. User ID:' . $userId);

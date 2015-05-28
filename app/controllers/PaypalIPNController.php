@@ -78,7 +78,6 @@ class PaypalIPNController extends \BaseController
                 ]
             );
 
-            $user->extendMembership('paypal', $paymentDate->addMonth());
         } elseif (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_cancel')) {
             $user = User::where('email', $ipnData['payer_email'])->first();
             if ($user) {
