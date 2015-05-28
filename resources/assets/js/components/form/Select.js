@@ -18,7 +18,6 @@ class Select extends React.Component {
         }
 
         var help = '';
-
         if (this.props.help) {
             help = <span className="help-block">{this.props.help}</span>;
         }
