@@ -1,6 +1,4 @@
-language:
-  - php
-  - node_js
+language: php
 php:
   - 5.5
 node_js:
@@ -11,7 +9,9 @@ before_script:
   - mysql -e 'create database bbms_acceptance_testing;'
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-script: vendor/bin/codecept run  --coverage-xml
+script:
+  - vendor/bin/codecept run  --coverage-xml
+  - npm test
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover app/tests/codeception/_output/coverage.xml
