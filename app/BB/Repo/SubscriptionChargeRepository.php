@@ -7,7 +7,6 @@ use Carbon\Carbon;
 class SubscriptionChargeRepository extends DBRepository
 {
 
-
     /**
      * @var SubscriptionCharge
      */
