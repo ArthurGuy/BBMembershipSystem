@@ -38,23 +38,13 @@ jQuery('.paymentModule').each(function () {
     var memberEmail = document.getElementById('memberEmail').value;
     var userId = document.getElementById('userId').value;
     var stripeKey = document.getElementById('stripePublicKey').value;
+    var csrfToken = document.getElementById('csrfToken').value;
 
     var handleSuccess = () => { document.location.reload(true) };
 
-    React.render(<PaymentModule description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} reference={ref} stripeKey={stripeKey} />, jQuery(this)[0]);
-
+    React.render(<PaymentModule csrfToken={csrfToken} description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} reference={ref} stripeKey={stripeKey} />, jQuery(this)[0]);
 });
 
-if (document.getElementById('paymentModuleTest')) {
-
-    var handleSuccess = function () {
-        console.log('refresh');
-        document.location.reload(true);
-    };
-
-    React.render(<PaymentModule description="Sample Description" reason="balance" email={memberEmail} userId={userId} onSuccess={handleSuccess} />, document.getElementById('paymentModuleTest'));
-
-}
 
 var memberExpensesPanel = jQuery('#memberExpenses');
 if (memberExpensesPanel.length) {

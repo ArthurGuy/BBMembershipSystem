@@ -6,19 +6,15 @@ var Loader = require('halogen/PulseLoader');
 
 class PaymentModule extends React.Component {
 
-    availableMethods = [];
-
     constructor(props) {
         super(props);
 
-        var csrfToken = document.getElementById('csrfToken').value;
-
         this.state = {
-            amount: this.props.amount || 10,
+            amount: this.props.amount,
             method: 'gocardless',
             stripeToken: null,
             stripeLowValueWarning: false,
-            csrfToken,
+            csrfToken: this.props.csrfToken,
             requestInProgress: false,
             desiredPaymentMethods: this.props.methods.split(',')
         };
@@ -184,7 +180,7 @@ class PaymentModule extends React.Component {
         }
 
         return (
-            <div className="form-inline">
+            <div className="form-inline multi-payment-form">
 
                 { amountField }
 
@@ -207,10 +203,16 @@ class PaymentModule extends React.Component {
 
 PaymentModule.defaultProps = {
     name: 'Build Brighton',
+    email: null,
+    userId: null,
+    amount: null,
     buttonLabel: 'Pay Now',
     onSuccess: function() {},
     methods: 'gocardless,stripe,balance',
-    reference: null
+    reference: null,
+    reason: null,
+    description: null,
+    stripeKey: ''
 };
 
 export default PaymentModule;

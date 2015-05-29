@@ -1,15 +1,14 @@
 class StripePayment {
 
-    stripeKey       = null;
-    stripeHandler   = null;
-    name            = null;
-    email           = null;
-    currency        = 'GBP';
-    isLoaded        = false;
-    onTokenCallback = null;
-
     constructor() {
 
+        this.stripeKey       = null;
+        this.stripeHandler   = null;
+        this.name            = null;
+        this.email           = null;
+        this.currency        = 'GBP';
+        this.isLoaded        = false;
+        this.onTokenCallback = null;
 
     }
 

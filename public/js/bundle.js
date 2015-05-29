@@ -47,16 +47,6 @@ jQuery('.paymentModule').each(function () {
     React.render(React.createElement(PaymentModule, { description: displayReason, reason: reason, amount: amount, email: memberEmail, userId: userId, onSuccess: handleSuccess, buttonLabel: buttonLabel, methods: methods, reference: ref, stripeKey: stripeKey }), jQuery(this)[0]);
 });
 
-if (document.getElementById('paymentModuleTest')) {
-
-    var handleSuccess = function handleSuccess() {
-        console.log('refresh');
-        document.location.reload(true);
-    };
-
-    React.render(React.createElement(PaymentModule, { description: 'Sample Description', reason: 'balance', email: memberEmail, userId: userId, onSuccess: handleSuccess }), document.getElementById('paymentModuleTest'));
-}
-
 var memberExpensesPanel = jQuery('#memberExpenses');
 if (memberExpensesPanel.length) {
 
@@ -78554,7 +78544,7 @@ var PaymentModule = (function (_React$Component) {
 
             return _react2['default'].createElement(
                 'div',
-                { className: 'form-inline' },
+                { className: 'form-inline multi-payment-form' },
                 amountField,
                 _react2['default'].createElement(Select, { value: this.state.method, onChange: this.handleMethodChange, options: this.getPaymentMethodArray(), style: { width: 150 } }),
                 _react2['default'].createElement(
@@ -78591,10 +78581,16 @@ var PaymentModule = (function (_React$Component) {
 
 PaymentModule.defaultProps = {
     name: 'Build Brighton',
+    email: null,
+    userId: null,
+    amount: null,
     buttonLabel: 'Pay Now',
     onSuccess: function onSuccess() {},
     methods: 'gocardless,stripe,balance',
-    reference: null
+    reference: null,
+    reason: null,
+    description: null,
+    stripeKey: ''
 };
 
 exports['default'] = PaymentModule;
@@ -79325,7 +79321,6 @@ var Select = (function (_React$Component) {
             }
 
             var help = '';
-
             if (this.props.help) {
                 help = _react2['default'].createElement(
                     'span',
