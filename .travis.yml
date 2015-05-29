@@ -11,6 +11,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 script:
   - vendor/bin/codecept run  --coverage-xml
+  - npm install
   - npm test
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
