@@ -3,7 +3,6 @@
     "babel": "^5.4.4",
     "backbone": "^1.2.0",
     "backbone-model-file-upload": "^1.0.0",
-    "backbone.localstorage": "^1.1.16",
     "bootstrap": "^3.3.4",
     "bootstrap-datepicker": "^1.4.0",
     "halogen": "^0.1.8",
@@ -21,8 +20,8 @@
     "brfs": "^1.4.0",
     "browserify": "^10.2.1",
     "browserify-shim": "^3.8.7",
-    "del": "^1.1.1",
-    "gulp": "^3.8.8",
+    "del": "~1.2.0",
+    "gulp": "~3.8.11",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "~2.4.1",
     "gulp-jshint": "~1.8.4",
@@ -49,6 +48,6 @@
     "bootstrap-datepicker": "./node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"
   },
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers Firefox"
+    "test": "./node_modules/karma/bin/karma start --single-run --browsers Firefox"
   }
 }
