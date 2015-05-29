@@ -22,6 +22,7 @@
     "karma-bro": "^0.11.1",
     "karma-browserify": "^4.1.2",
     "karma-chrome-launcher": "^0.1.12",
+    "karma-firefox-launcher": "^0.1.6",
     "karma-jasmine": "^0.2.2",
     "karma-phantomjs-launcher": "^0.1.4",
     "laravel-elixir": "^1.0.0",
@@ -52,6 +53,6 @@
     "bootstrap-datepicker": "./node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"
   },
   "scripts": {
-    "test": "karma start"
+    "test": "./node_modules/.bin/karma start --single-run --browsers Firefox"
   }
 }
