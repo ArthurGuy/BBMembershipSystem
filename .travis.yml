@@ -1,8 +1,6 @@
 language: php
 php:
   - 5.5
-node_js:
-  - 0.8
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --prefer-source --no-interaction
@@ -22,7 +20,7 @@ notifications:
   email: false
   webhooks:
     urls:
-    - https://forge.laravel.com/servers/6535/sites/13543/deploy/http?token=xQRcFZIu84lgF0M4td5w6fj5vqmyDpCY3KY8SBcT
+     secure: kBzy6wGjnnbBgFEZaThifhjAvIPZ2X/DxfmQIti7k9uzfe0rhXV0KcCWwSwjJY9oxXgOIib1COd3/N470pY3uG3ujeUMPa1D+bbgoafOgALmSZwxKTl1ctttYr8+QD5LXOG3V9BALvUFfJALXexksvkcr/W+6ZAdqrrp/T8VMuo=
     on_success: always
     on_failure: never
   slack:

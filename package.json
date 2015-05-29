@@ -1,4 +1,10 @@
 {
+  "name": "BBMS",
+  "private": true,
+  "author": {
+    "name": "Arthur Guy",
+    "email": "arthur@arthurguy.co.uk"
+  },
   "dependencies": {
     "babel": "^5.4.4",
     "backbone": "^1.2.0",
