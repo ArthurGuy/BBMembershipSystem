@@ -138,7 +138,15 @@ class UserRepository extends DBRepository
         //If the user doesn't have any charges currently processing or they dont have an expiry date or are past their expiry data create a charge
         if ( ! $outstandingCharges && ( ! $user->subscription_expires || $user->subscription_expires->lt(Carbon::now()))) {
             //create a charge
-            $this->subscriptionChargeRepository->createChargeAndBillDD($userId, Carbon::now(), $user->monthly_subscription, 'due', $user->subscription_id);
+
+            $chargeDate = Carbon::now();
+
+            //If we are passed the end of month cutoff push the charge date forward to their actual charge date
+            if ((Carbon::now()->day > 28) && $user->payment_day === 1) {
+                $chargeDate = $chargeDate->day(1)->addMonth();
+            }
+
+            $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, 'due', $user->subscription_id);
         }
     }
 
