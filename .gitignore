@@ -1,9 +1,7 @@
 /vendor
 /node_modules
 .env
-
 composer.phar
-composer.lock
 .DS_Store
 Thumbs.db
 tests/codeception/_output/*
