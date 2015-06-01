@@ -205,7 +205,7 @@ class SubscriptionChargeRepoCest
         $authId     = str_random();
         $amount     = rand(5, 30);
         $userId     = 31;
-        $chargeDate = Carbon::now();
+        $chargeDate = Carbon::now()->day(10);
 
         //Generate helper mock
         $goCardlessHelper = m::mock('\BB\Helpers\GoCardlessHelper');
