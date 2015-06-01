@@ -1,19 +1,46 @@
 <?php
 
+require __DIR__.'/support/ViewHelpers.php';
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
+
+    use ViewHelpers;
+
+    /**
+     * Default preparation for each test
+     *
+     */
+    public function setUp()
+    {
+        parent::setUp(); // Don't forget this!
+
+        $this->prepareForTests();
+    }
 
 	/**
 	 * Creates the application.
 	 *
-	 * @return \Illuminate\Foundation\Application
+	 * @return \Symfony\Component\HttpKernel\HttpKernelInterface
 	 */
 	public function createApplication()
 	{
-		$app = require __DIR__.'/../bootstrap/app.php';
+		$unitTesting = true;
 
-		$app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+		$testEnvironment = 'testing';
 
-		return $app;
+		require __DIR__.'/../bootstrap/autoload.php';
+        return require __DIR__.'/../bootstrap/app.php';
 	}
+
+    /**
+     * Migrates the database and set the mailer to 'pretend'.
+     * This will cause the tests to run quickly.
+     *
+     */
+    private function prepareForTests()
+    {
+        //Artisan::call('migrate');
+        Mail::pretend(true);
+    }
 
 }

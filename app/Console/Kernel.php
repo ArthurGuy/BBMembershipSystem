@@ -1,4 +1,4 @@
-<?php namespace App\Console;
+<?php namespace BB\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -11,7 +11,14 @@ class Kernel extends ConsoleKernel {
 	 * @var array
 	 */
 	protected $commands = [
-		'App\Console\Commands\Inspire',
+		'BB\Console\Commands\Inspire',
+		'BB\Console\Commands\CheckMembershipStatus',
+		'BB\Console\Commands\RecalculateUserBalances',
+		'BB\Console\Commands\CalculateProposalVotes',
+		'BB\Console\Commands\CheckFixEquipmentLog',
+		'BB\Console\Commands\CalculateEquipmentFees',
+		'BB\Console\Commands\CreateTodaysSubCharges',
+		'BB\Console\Commands\BillMembers',
 	];
 
 	/**

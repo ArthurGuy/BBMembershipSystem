@@ -1,0 +1,8 @@
+class_name: ApiTester
+modules:
+    enabled: [REST, ApiHelper, Laravel5, Db, Asserts]
+    config:
+        Laravel5:
+            cleanup: false
+            environment_file: .env.testing
+

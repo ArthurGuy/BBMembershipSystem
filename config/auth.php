@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'model' => 'App\User',
+	'model' => 'BB\Entities\User',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -59,8 +59,8 @@ return [
 	*/
 
 	'password' => [
-		'email' => 'emails.password',
-		'table' => 'password_resets',
+		'email' => 'emails.auth.reminder',
+		'table' => 'password_reminders',
 		'expire' => 60,
 	],
 

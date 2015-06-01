@@ -51,10 +51,10 @@ return [
 
 		'sqs' => [
 			'driver' => 'sqs',
-			'key'    => 'your-public-key',
-			'secret' => 'your-secret-key',
-			'queue'  => 'your-queue-url',
-			'region' => 'us-east-1',
+			'key'    => env('AWS_KEY', 'key'),
+			'secret' => env('AWS_SECRET', 'secret'),
+			'queue'  => env('AWS_QUEUE_URL', 'queue'),
+			'region' => 'eu-west-1',
 		],
 
 		'iron' => [

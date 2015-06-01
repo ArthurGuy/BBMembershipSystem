@@ -78,7 +78,7 @@ return [
 	|
 	*/
 
-	'key' => env('APP_KEY', 'SomeRandomString'),
+	'key' => env('ENCRYPTION_KEY', 'SomeRandomString'),
 
 	'cipher' => MCRYPT_RIJNDAEL_128,
 
@@ -135,15 +135,32 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
+        'Illuminate\Html\HtmlServiceProvider',
 
 		/*
 		 * Application Service Providers...
 		 */
-		'App\Providers\AppServiceProvider',
-		'App\Providers\BusServiceProvider',
-		'App\Providers\ConfigServiceProvider',
-		'App\Providers\EventServiceProvider',
-		'App\Providers\RouteServiceProvider',
+		'BB\Providers\AppServiceProvider',
+		'BB\Providers\BusServiceProvider',
+		'BB\Providers\ConfigServiceProvider',
+		'BB\Providers\EventServiceProvider',
+		'BB\Providers\RouteServiceProvider',
+		'BB\Providers\StripeServiceProvider',
+		'BB\Providers\ValidatorServiceProvider',
+		'BB\Providers\NotificationServiceProvider',
+		'BB\Providers\HtmlServiceProvider',
+
+
+        /*
+		 * 3rd Party Providers...
+		 */
+        'Aws\Laravel\AwsServiceProvider',
+        'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
+        'Laracasts\Utilities\JavaScript\JavaScriptServiceProvider',
+        'Jenssegers\Rollbar\RollbarServiceProvider',
+        'Maknz\Slack\SlackServiceProvider',
+        //'Artdarek\Pusherer\PushererServiceProvider',
+        'Intervention\Image\ImageServiceProvider',
 
 	],
 
@@ -158,41 +175,47 @@ return [
 	|
 	*/
 
-	'aliases' => [
+    'aliases' => [
 
-		'App'       => 'Illuminate\Support\Facades\App',
-		'Artisan'   => 'Illuminate\Support\Facades\Artisan',
-		'Auth'      => 'Illuminate\Support\Facades\Auth',
-		'Blade'     => 'Illuminate\Support\Facades\Blade',
-		'Bus'       => 'Illuminate\Support\Facades\Bus',
-		'Cache'     => 'Illuminate\Support\Facades\Cache',
-		'Config'    => 'Illuminate\Support\Facades\Config',
-		'Cookie'    => 'Illuminate\Support\Facades\Cookie',
-		'Crypt'     => 'Illuminate\Support\Facades\Crypt',
-		'DB'        => 'Illuminate\Support\Facades\DB',
-		'Eloquent'  => 'Illuminate\Database\Eloquent\Model',
-		'Event'     => 'Illuminate\Support\Facades\Event',
-		'File'      => 'Illuminate\Support\Facades\File',
-		'Hash'      => 'Illuminate\Support\Facades\Hash',
-		'Input'     => 'Illuminate\Support\Facades\Input',
-		'Inspiring' => 'Illuminate\Foundation\Inspiring',
-		'Lang'      => 'Illuminate\Support\Facades\Lang',
-		'Log'       => 'Illuminate\Support\Facades\Log',
-		'Mail'      => 'Illuminate\Support\Facades\Mail',
-		'Password'  => 'Illuminate\Support\Facades\Password',
-		'Queue'     => 'Illuminate\Support\Facades\Queue',
-		'Redirect'  => 'Illuminate\Support\Facades\Redirect',
-		'Redis'     => 'Illuminate\Support\Facades\Redis',
-		'Request'   => 'Illuminate\Support\Facades\Request',
-		'Response'  => 'Illuminate\Support\Facades\Response',
-		'Route'     => 'Illuminate\Support\Facades\Route',
-		'Schema'    => 'Illuminate\Support\Facades\Schema',
-		'Session'   => 'Illuminate\Support\Facades\Session',
-		'Storage'   => 'Illuminate\Support\Facades\Storage',
-		'URL'       => 'Illuminate\Support\Facades\URL',
-		'Validator' => 'Illuminate\Support\Facades\Validator',
-		'View'      => 'Illuminate\Support\Facades\View',
+        'App'          => 'Illuminate\Support\Facades\App',
+        'Artisan'      => 'Illuminate\Support\Facades\Artisan',
+        'Auth'         => 'Illuminate\Support\Facades\Auth',
+        'Blade'        => 'Illuminate\Support\Facades\Blade',
+        'Bus'          => 'Illuminate\Support\Facades\Bus',
+        'Cache'        => 'Illuminate\Support\Facades\Cache',
+        'Config'       => 'Illuminate\Support\Facades\Config',
+        'Cookie'       => 'Illuminate\Support\Facades\Cookie',
+        'Crypt'        => 'Illuminate\Support\Facades\Crypt',
+        'DB'           => 'Illuminate\Support\Facades\DB',
+        'Eloquent'     => 'Illuminate\Database\Eloquent\Model',
+        'Event'        => 'Illuminate\Support\Facades\Event',
+        'File'         => 'Illuminate\Support\Facades\File',
+        'Hash'         => 'Illuminate\Support\Facades\Hash',
+        'Input'        => 'Illuminate\Support\Facades\Input',
+        'Inspiring'    => 'Illuminate\Foundation\Inspiring',
+        'Lang'         => 'Illuminate\Support\Facades\Lang',
+        'Log'          => 'Illuminate\Support\Facades\Log',
+        'Mail'         => 'Illuminate\Support\Facades\Mail',
+        'Password'     => 'Illuminate\Support\Facades\Password',
+        'Queue'        => 'Illuminate\Support\Facades\Queue',
+        'Redirect'     => 'Illuminate\Support\Facades\Redirect',
+        'Redis'        => 'Illuminate\Support\Facades\Redis',
+        'Request'      => 'Illuminate\Support\Facades\Request',
+        'Response'     => 'Illuminate\Support\Facades\Response',
+        'Route'        => 'Illuminate\Support\Facades\Route',
+        'Schema'       => 'Illuminate\Support\Facades\Schema',
+        'Session'      => 'Illuminate\Support\Facades\Session',
+        'Storage'      => 'Illuminate\Support\Facades\Storage',
+        'URL'          => 'Illuminate\Support\Facades\URL',
+        'Validator'    => 'Illuminate\Support\Facades\Validator',
+        'View'         => 'Illuminate\Support\Facades\View',
+        'Form'         => 'Illuminate\Html\FormFacade',
+        'HTML'         => 'Illuminate\Html\HtmlFacade',
+        'Notification' => 'BB\Notifications\NotificationFacade',
+        'AWS'          => 'Aws\Laravel\AwsFacade',
+        'Image'        => 'Intervention\Image\Facades\Image',
+        'Slack'        => 'Maknz\Slack\Facades\Slack',
 
-	],
+    ],
 
 ];

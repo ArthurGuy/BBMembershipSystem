@@ -30,9 +30,14 @@ return [
 	],
 
 	'stripe' => [
-		'model'  => 'App\User',
+		'model'  => 'BB\Entities\User',
 		'key' => '',
 		'secret' => '',
 	],
+
+    'rollbar' => [
+        'access_token' => env('ROLLBAR_TOKEN', 'token'),
+        'level' => 'warning'
+    ],
 
 ];

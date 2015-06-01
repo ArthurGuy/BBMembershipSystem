@@ -1,5 +1,5 @@
 suites:
     main:
-        namespace: App
-        psr4_prefix: App
+        namespace: BB
+        psr4_prefix: BB
         src_path: app

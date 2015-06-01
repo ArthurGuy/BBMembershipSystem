@@ -1,4 +1,4 @@
-<?php namespace App\Providers;
+<?php namespace BB\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -11,9 +11,30 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		'event.name' => [
-			'EventListener',
-		],
+		'payment.create' => [
+			'BB\Handlers\PaymentEventHandler@onCreate',
+		]
+        ,'payment.delete' => [
+			'BB\Handlers\PaymentEventHandler@onDelete',
+		]
+        ,'payment.cancelled' => [
+			'BB\Handlers\PaymentEventHandler@onCancel',
+		]
+        ,'payment.paid' => [
+			'BB\Handlers\PaymentEventHandler@onPaid',
+		]
+        ,'sub-charge.paid' => [
+			'BB\Handlers\SubChargeEventHandler@onPaid',
+		]
+        ,'sub-charge.processing' => [
+			'BB\Handlers\SubChargeEventHandler@onProcessing',
+		]
+        ,'sub-charge.payment-failed' => [
+			'BB\Handlers\SubChargeEventHandler@onPaymentFailure',
+		]
+        ,'expense.approved' => [
+			'BB\Handlers\ExpenseEventHandler@onApprove',
+		]
 	];
 
 	/**

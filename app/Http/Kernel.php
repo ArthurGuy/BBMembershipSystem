@@ -1,4 +1,4 @@
-<?php namespace App\Http;
+<?php namespace BB\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -10,12 +10,14 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $middleware = [
+        'BB\Http\Middleware\ACSSessionControl',
 		'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
 		'Illuminate\Cookie\Middleware\EncryptCookies',
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'App\Http\Middleware\VerifyCsrfToken',
+		//'BB\Http\Middleware\VerifyCsrfToken',
+		'BB\Http\Middleware\SSLOnly',
 	];
 
 	/**
@@ -24,9 +26,10 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth' => 'App\Http\Middleware\Authenticate',
+		'auth' => 'BB\Http\Middleware\Authenticate',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
+		'guest' => 'BB\Http\Middleware\RedirectIfAuthenticated',
+		'role' => 'BB\Http\Middleware\HasRole',
 	];
 
 }
