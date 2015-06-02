@@ -13,7 +13,7 @@ class SSLOnly
      */
     public function handle($request, Closure $next)
     {
-        if( ! $request->isSecure()) {
+        if( ! $request->isSecure() && (env('APP_ENV', 'production') !== 'testing')) {
             if ((strpos($request->path(), 'access-control/') !== 0) && ($request->path() !== 'acs')) {
                 return redirect()->secure($request->path());
             }
