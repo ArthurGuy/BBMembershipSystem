@@ -1,46 +1,27 @@
 <?php
 
-require __DIR__.'/support/ViewHelpers.php';
 
-class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
-    use ViewHelpers;
+class TestCase extends Illuminate\Foundation\Testing\TestCase
+{
+    /**
+     * The base URL to use while testing the application.
+     *
+     * @var string
+     */
+    //protected $baseUrl = 'https://bbms.buildbrighton.com';
 
     /**
-     * Default preparation for each test
+     * Creates the application.
      *
+     * @return \Illuminate\Foundation\Application
      */
-    public function setUp()
+    public function createApplication()
     {
-        parent::setUp(); // Don't forget this!
+        $app = require __DIR__.'/../bootstrap/app.php';
 
-        $this->prepareForTests();
+        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+
+        return $app;
     }
-
-	/**
-	 * Creates the application.
-	 *
-	 * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-	 */
-	public function createApplication()
-	{
-		$unitTesting = true;
-
-		$testEnvironment = 'testing';
-
-		require __DIR__.'/../bootstrap/autoload.php';
-        return require __DIR__.'/../bootstrap/app.php';
-	}
-
-    /**
-     * Migrates the database and set the mailer to 'pretend'.
-     * This will cause the tests to run quickly.
-     *
-     */
-    private function prepareForTests()
-    {
-        //Artisan::call('migrate');
-        Mail::pretend(true);
-    }
-
 }
