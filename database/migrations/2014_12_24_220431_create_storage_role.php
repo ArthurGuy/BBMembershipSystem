@@ -1,5 +1,6 @@
 <?php
 
+use BB\Entities\Role;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
