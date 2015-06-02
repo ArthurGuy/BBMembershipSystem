@@ -1,7 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Helpers\StatsHelper;
-use JavaScript;
 
 class StatsController extends Controller
 {
@@ -113,10 +112,10 @@ class StatsController extends Controller
         $numActiveUsersQuarter = count(array_unique($userArray));
 
 
-        JavaScript::put([
-                'paymentMethods' => $paymentMethods,
-                'monthlyAmounts' => $monthlyAmountsData
-        ]);
+        //JavaScript::put([
+        //        'paymentMethods' => $paymentMethods,
+        //        'monthlyAmounts' => $monthlyAmountsData
+        //]);
 
         return \View::make('stats.index')
             ->with('averageMonthlyAmount', round($averageMonthlyAmount))
@@ -149,9 +148,9 @@ class StatsController extends Controller
             ]
         ];
 
-        JavaScript::put([
-            'paymentMethods' => $paymentMethods
-        ]);
+        //JavaScript::put([
+        //    'paymentMethods' => $paymentMethods
+        //]);
 
         return \View::make('stats.dd-switch');
     }

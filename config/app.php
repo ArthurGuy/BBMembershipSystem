@@ -156,7 +156,6 @@ return [
 		 */
         'Aws\Laravel\AwsServiceProvider',
         'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
-        'Laracasts\Utilities\JavaScript\JavaScriptServiceProvider',
         'Jenssegers\Rollbar\RollbarServiceProvider',
         'Maknz\Slack\SlackServiceProvider',
         //'Artdarek\Pusherer\PushererServiceProvider',
