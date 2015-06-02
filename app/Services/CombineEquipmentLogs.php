@@ -19,12 +19,12 @@ class CombineEquipmentLogs
     public function __construct(EquipmentLogRepository $equipmentLogRepository)
     {
         $this->equipmentLogRepository = $equipmentLogRepository;
-
-        $this->logEntries = $this->equipmentLogRepository->getUnbilledRecords();
     }
 
     public function run()
     {
+        $this->logEntries = $this->equipmentLogRepository->getUnbilledRecords();
+
         $updating = true;
 
         while ($updating) {
