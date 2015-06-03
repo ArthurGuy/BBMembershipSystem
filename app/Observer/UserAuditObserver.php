@@ -20,7 +20,7 @@ class UserAuditObserver
 
         foreach ($user->getAuditFields() as $field) {
             //See if any audit fields have changed
-            if (array_key_exists($field, $changed)) {
+            if (array_key_exists($field, $changed) && array_key_exists($field, $original)) {
                 $changedData[] = $field . ' [is ' . $changed[$field] . ', was ' . $original[$field] . ']';
             }
         }
