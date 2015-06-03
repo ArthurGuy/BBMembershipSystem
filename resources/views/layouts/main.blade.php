@@ -92,7 +92,6 @@
 
     @include('partials/js-data')
 
-    <!--<script src="https://checkout.stripe.com/checkout.js"></script>-->
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
     <script src="/js/bundle.js"></script>
 
@@ -100,8 +99,6 @@
 
 
     @yield('footer-js')
-
-
 
 </body>
 </html>
