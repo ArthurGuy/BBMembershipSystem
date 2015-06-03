@@ -76,6 +76,7 @@
                         @endif
                     </span>
                     <span class="text-muted pull-right hidden-xs">
+                        env: {{ env('APP_ENV', 'unknown') }} |
                         Hosted on <a href="https://www.digitalocean.com/?refcode=b71ca038f612">Digital Ocean</a> using <a href="https://forge.laravel.com">Laravel Forge</a>
                     </span>
                 </div>
