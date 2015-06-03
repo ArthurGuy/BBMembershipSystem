@@ -30,7 +30,12 @@ class Kernel extends ConsoleKernel {
 	protected function schedule(Schedule $schedule)
 	{
 		$schedule->command('inspire')
-				 ->hourly();
+				 ->hourly()
+                ->thenPing('http://beats.envoyer.io/heartbeat/Q50p5xuh47v6p7k');
+
+        $schedule->command('bb:calculate-proposal-votes')
+                ->daily()
+                ->thenPing('http://beats.envoyer.io/heartbeat/6DTzrLToHiS0Op6');
 	}
 
 }
