@@ -8,16 +8,22 @@ class LoginTest extends TestCase
 {
 
     //use WithoutMiddleware;
+    use DatabaseMigrations;
 
     /** @test */
     public function i_can_login()
     {
+        $password = str_random(10);
+        $user = factory('BB\Entities\User')->create(['password' => $password]);
+        factory('BB\Entities\ProfileData')->create(['user_id' => $user->id]);
+
         $this->visit('/login')
             ->see('Login')
-            ->type('jondoe@example.com', 'email')
-            ->type('123456789', 'password')
+            ->type($user->email, 'email')
+            ->type($password, 'password')
             ->press('Go')
-            ->seePageIs('account/10');
+            ->seePageIs('account/'.$user->id)
+            ->see($user->given_name);
     }
 
     /** @test */
