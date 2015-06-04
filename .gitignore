@@ -8,3 +8,4 @@ Thumbs.db
 tests/codeception/_output/*
 npm-debug.log
 storage/tmp
+database.sqlite
