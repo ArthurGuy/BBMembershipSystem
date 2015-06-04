@@ -36,3 +36,4 @@ env:
     - CACHE_DRIVER=array
     - SESSION_DRIVER=array
     - QUEUE_DRIVER=sync
+    - ENCRYPTION_KEY=abqvo347fhtbv3ap89ny1lc6
