@@ -21,8 +21,8 @@ after_success:
 notifications:
   email: false
   webhooks:
-      on_success: always
-      on_failure: never
+    on_success: always
+    on_failure: never
     slack:
       secure: h4TcrEDPz8p92zFEXVu9IjmjfQhRnrbWas9sOE95pinxhOTe5DQ77fFetifDXeExCMmCKgVmJcQtJMmvx3oEUfTTyIxfdUGw+/uTk/X/wY2204IIL/WVxuBVGSKh4dt6BENLm8dZKDIeFsQxhUHdsH8gTBNlKJv+3Tht9vsDoK8=
 env:
