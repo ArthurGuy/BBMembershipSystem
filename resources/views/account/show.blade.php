@@ -57,7 +57,7 @@
                 @elseif (!$user->key_deposit_payment_id)
                     <p>If you would like a door key you need to pay a £10 deposit.</p>
 
-                    @include('partials/payment-form', ['reason'=>'door-key', 'displayReason'=>'Door Key Deposit', 'returnPath'=>route('account.show', [$user->id], false), 'amount'=>10, 'buttonLabel'=>'Pay Now', 'methods'=>['gocardless', 'stripe', 'balance']])
+                    <div class="paymentModule" data-reason="door-key" data-display-reason="Door Key Deposit" data-button-label="Pay Now" data-methods="gocardless,balance,stripe" data-amount="10"></div>
 
                     <small>If you want to pay using cash please find a trustee who can top up your balance.</small>
                 @else
