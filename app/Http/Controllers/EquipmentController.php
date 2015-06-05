@@ -109,7 +109,7 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
 
-        return \View::make('equipment.create')->with('memberList', $memberList)->with('roleList', $roleList);
+        return \View::make('equipment.create')->with('memberList', $memberList)->with('roleList', $roleList->toArray());
     }
 
 
@@ -146,8 +146,10 @@ class EquipmentController extends Controller
         $equipment = $this->equipmentRepository->findByKey($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
+        //$roleList->prepend(null);
+        //dd($roleList);
 
-        return \View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList)->with('roleList', $roleList);
+        return \View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList)->with('roleList', $roleList->toArray());
     }
 
 
