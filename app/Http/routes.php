@@ -180,7 +180,7 @@ Route::group(array('middleware' => 'role:member'), function() {
 });
 
 
-Route::get('logviewer', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', 'middleware' => 'role:admin']);
+Route::get('logviewer', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', 'middleware' => '']);
 
 
 Route::post('camera/event/store', function() {
