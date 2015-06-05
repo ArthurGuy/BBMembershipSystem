@@ -142,19 +142,20 @@ return [
 		 */
 		'BB\Providers\AppServiceProvider',
 		'BB\Providers\BusServiceProvider',
-		'BB\Providers\ConfigServiceProvider',
-		'BB\Providers\EventServiceProvider',
-		'BB\Providers\RouteServiceProvider',
-		'BB\Providers\StripeServiceProvider',
-		'BB\Providers\ValidatorServiceProvider',
-		'BB\Providers\NotificationServiceProvider',
-		'BB\Providers\HtmlServiceProvider',
+        'BB\Providers\ConfigServiceProvider',
+        'BB\Providers\EventServiceProvider',
+        'BB\Providers\RouteServiceProvider',
+        'BB\Providers\AwsServiceProvider',
+        'BB\Providers\StripeServiceProvider',
+        'BB\Providers\ValidatorServiceProvider',
+        'BB\Providers\NotificationServiceProvider',
+        'BB\Providers\HtmlServiceProvider',
 
 
         /*
 		 * 3rd Party Providers...
 		 */
-        'Aws\Laravel\AwsServiceProvider',
+        //'Aws\Laravel\AwsServiceProvider',
         'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
         'Jenssegers\Rollbar\RollbarServiceProvider',
         'Maknz\Slack\SlackServiceProvider',
