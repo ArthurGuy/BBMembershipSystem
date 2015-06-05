@@ -16,8 +16,8 @@ class UserImage
 
     public function uploadPhoto($userId, $filePath, $newImage = false)
     {
-        $tmpFilePath = storage_path('tmp') . '/' . $userId . '.png';
-        $tmpFilePathThumb = storage_path('tmp') . '/' . $userId . '-thumb.png';
+        $tmpFilePath = storage_path('app') . '/' . $userId . '.png';
+        $tmpFilePathThumb = storage_path('app') . '/' . $userId . '-thumb.png';
 
 
         try {
