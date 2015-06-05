@@ -15,7 +15,7 @@ return [
 	|
 	*/
 
-	'default' => 'local',
+	'default' => 's3',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -50,10 +50,10 @@ return [
 
 		's3' => [
 			'driver' => 's3',
-			'key'    => 'your-key',
-			'secret' => 'your-secret',
-			'region' => 'your-region',
-			'bucket' => 'your-bucket',
+			'key'    => env('AWS_KEY'),
+			'secret' => env('AWS_SECRET'),
+			'region' => env('AWS_REGION', 'eu-west-1'),
+			'bucket' => env('S3_BUCKET'),
 		],
 
 		'rackspace' => [

@@ -30,19 +30,6 @@
     */
     'region' => env('AWS_REGION', 'eu-west-1'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | AWS Config File Location
-    |--------------------------------------------------------------------------
-    |
-    | Instead of specifying your credentials and region here, you can specify
-    | the location of an AWS SDK for PHP config file to use. These files provide
-    | more granular control over what credentials and regions you are using for
-    | each service. If you specify a filepath for this configuration setting,
-    | the others in this file will be ignored. See the SDK user guide for more
-    | information: http://docs.aws.amazon.com/aws-sdk-php-2/guide/latest/configuration.html#using-a-custom-configuration-file
-    |
-    */
-    'config_file' => env('AWS_CONFIG_FILE'),
+    'version' => 'latest',
 
 ];

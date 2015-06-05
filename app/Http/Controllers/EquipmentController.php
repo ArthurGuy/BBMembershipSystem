@@ -6,6 +6,7 @@ use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 use BB\Validators\EquipmentValidator;
+use Illuminate\Support\Facades\Storage;
 
 class EquipmentController extends Controller
 {
@@ -200,26 +201,17 @@ class EquipmentController extends Controller
                 $filePath = \Input::file('photo')->getRealPath();
                 $ext = \Input::file('photo')->guessClientExtension();
                 $mimeType = \Input::file('photo')->getMimeType();
-                $fileData = Image::make($filePath)->fit(1000)->encode($ext);
+                $fileData = \Image::make($filePath)->fit(1000)->encode($ext);
 
                 $newFilename = str_random() . '.' . $ext;
 
-
-                $s3 = \AWS::get('s3');
-                $s3->putObject(array(
-                    'Bucket'        => getenv('S3_BUCKET'),
-                    'Key'           => $equipment->getPhotoBasePath() . $newFilename,
-                    'Body'          => $fileData,
-                    'ACL'           => 'public-read',
-                    'ContentType'   => $mimeType,
-                    'ServerSideEncryption' => 'AES256',
-                ));
+                Storage::put($equipment->getPhotoBasePath() . $newFilename, (string)$fileData, 'public');
 
                 $equipment->addPhoto($newFilename);
 
             } catch(\Exception $e) {
-                \Log::exception($e);
-                throw new ImageFailedException();
+                \Log::error($e);
+                throw new ImageFailedException($e->getMessage());
             }
         }
 
@@ -233,12 +225,8 @@ class EquipmentController extends Controller
         $photo = $equipment->photos[$photoId];
         $equipment->removePhoto($photoId);
 
-        //delete photo
-        $s3 = \AWS::get('s3');
-        $s3->deleteObject(array(
-            'Bucket' => getenv('S3_BUCKET'),
-            'Key'    => $equipment->getPhotoBasePath() . $photo['path']
-        ));
+        Storage::delete($equipment->getPhotoBasePath() . $photo['path']);
+
         \Notification::success("Image deleted");
         return \Redirect::route('equipment.edit', $equipmentId);
     }

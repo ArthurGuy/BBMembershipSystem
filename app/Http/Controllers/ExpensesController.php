@@ -3,6 +3,7 @@
 use BB\Exceptions\ImageFailedException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ExpensesController extends Controller {
 
@@ -83,21 +84,13 @@ class ExpensesController extends Controller {
 
                 $newFilename = \App::environment().'/expenses/' . str_random() . '.' . $ext;
 
-                $s3 = \AWS::get('s3');
-                $s3->putObject(array(
-                    'Bucket'        => getenv('S3_BUCKET'),
-                    'Key'           => $newFilename,
-                    'Body'          => file_get_contents($filePath),
-                    'ACL'           => 'public-read',
-                    'ContentType'   => $mimeType,
-                    'ServerSideEncryption' => 'AES256',
-                ));
+                Storage::put($newFilename, file_get_contents($filePath), 'public');
 
                 $data['file'] = $newFilename;
 
             } catch(\Exception $e) {
-                \Log::exception($e);
-                throw new ImageFailedException();
+                \Log::error($e);
+                throw new ImageFailedException($e->getMessage());
             }
         }
 

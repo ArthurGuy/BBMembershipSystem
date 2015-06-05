@@ -1,6 +1,7 @@
 <?php namespace BB\Helpers;
 
 use BB\Exceptions\UserImageFailedException;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 class UserImage
@@ -38,6 +39,9 @@ class UserImage
             $newThumbFilename = \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
         }
 
+        Storage::put($newFilename, file_get_contents($tmpFilePath), 'public');
+        Storage::put($newThumbFilename, file_get_contents($tmpFilePathThumb), 'public');
+/*
         $s3 = \AWS::get('s3');
         try {
             $s3->putObject(array(
@@ -66,7 +70,7 @@ class UserImage
             \Log::error($e);
             throw new UserImageFailedException();
         }
-
+*/
         \File::delete($tmpFilePath);
         \File::delete($tmpFilePathThumb);
     }
@@ -84,6 +88,25 @@ class UserImage
         $targetFilename      = \App::environment() . '/user-photo/' . md5($userId) . '.png';
         $targetThumbFilename = \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
 
+
+        if (Storage::exists($targetFilename)) {
+            Storage::delete($targetFilename);
+        }
+        if (Storage::exists($targetThumbFilename)) {
+            Storage::delete($targetThumbFilename);
+        }
+
+        Storage::move($sourceFilename, $targetFilename);
+        Storage::move($sourceThumbFilename, $targetThumbFilename);
+
+        if (Storage::exists($sourceFilename)) {
+            Storage::delete($sourceFilename);
+        }
+        if (Storage::exists($sourceThumbFilename)) {
+            Storage::delete($sourceThumbFilename);
+        }
+
+        /*
         $s3 = \AWS::get('s3');
         $s3->copyObject(array(
             'Bucket'     => self::$bucket,
@@ -110,6 +133,7 @@ class UserImage
             'Bucket' => self::$bucket,
             'Key'    => $sourceThumbFilename
         ));
+        */
     }
 
     public static function imageUrl($userId)
