@@ -3,6 +3,7 @@
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -14,7 +15,10 @@ class Handler extends ExceptionHandler {
 	 * @var array
 	 */
 	protected $dontReport = [
-		'Symfony\Component\HttpKernel\Exception\HttpException'
+        HttpException::class,
+        NotFoundHttpException::class,
+        ModelNotFoundException::class,
+        MethodNotAllowedHttpException::class,
 	];
 
 	/**
@@ -27,8 +31,8 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $e)
 	{
-        \Log::error($e);
-		return parent::report($e);
+        //The parent will log exceptions that aren't of the types above
+		parent::report($e);
 	}
 
 	/**
@@ -75,18 +79,11 @@ class Handler extends ExceptionHandler {
             return \Response::view('errors.403', [], 403);
         }
 
-        if ($e instanceof NotFoundHttpException) {
-            return \Response::view('errors.404', [], 404);
-        }
         if ($e instanceof ModelNotFoundException) {
-            return \Response::view('errors.404', [], 404);
-        }
-        if ($e instanceof MethodNotAllowedHttpException) {
-            return \Response::view('errors.404', [], 404);
+            throw new HttpException(404, $e->getMessage());
         }
 
-
-        if (config('app.debug'))
+        if (config('app.debug') && $this->shouldReport($e))
         {
             return $this->renderExceptionWithWhoops($e);
         }
