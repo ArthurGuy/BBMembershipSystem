@@ -170,7 +170,7 @@ class UserImage
         $exif_data = @exif_read_data($filePath);
 
         //Auto image rotation
-        if (array_key_exists('Orientation', $exif_data) && array_key_exists('MimeType', $exif_data)) {
+        if ($exif_data && array_key_exists('Orientation', $exif_data) && array_key_exists('MimeType', $exif_data)) {
             $orientation = $exif_data['Orientation'];
             if ($exif_data['MimeType'] == 'image/jpeg') {
                 if ($orientation == '1') {
