@@ -8,16 +8,11 @@ before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 script:
-  - DEPLOY_ENV=production
-  - if [ $TRAVIS_BRANCH = 'L5' ]; then DEPLOY_ENV=staging; fi
-  - if [ $TRAVIS_BRANCH = 'develop' ]; then DEPLOY_ENV=develop; fi
   - vendor/bin/codecept run  --coverage-xml
   - phpunit
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover app/tests/codeception/_output/coverage.xml
-after_success:
-  - curl https://api.rollbar.com/api/1/deploy/ --silent -F access_token=$ROLLBAR_API_KEY -F environment=$DEPLOY_ENV -F revision=$TRAVIS_COMMIT
 notifications:
   email: false
   webhooks:
