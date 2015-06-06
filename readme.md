@@ -30,8 +30,6 @@ New members can join and create accounts, payments are tracked and managed throu
 * RFID access control for equipment and usage logging
 * Auto billing for equipment usage
 * Proposal system for member voting
-
-###Upcomming Features
 * Equipment/asset management
 * Member expense reimbursement
 
@@ -40,7 +38,7 @@ New members can join and create accounts, payments are tracked and managed throu
 There are a variety of member statuses which are used for various scenarios.
 * Setting Up - just signed up, no subscription setup, no access to space
 * Active
-* Payment Warning - subscription payment had been cancelled - will move to leaving the next day
+* Suspended - missed payment - dd is still active but the member doesn't have access to the workshop
 * Leaving - The user has said they are leaving or they were in a payment warning state
 * Left - Leaving users move here once their last payment expires.
 
@@ -53,17 +51,17 @@ The system also has support for scanning and processing payments from bank state
 
 
 ###Seting It Up
-The system is build on the Laravel 4 framework so familiarity with that would help.
+The system is build on the Laravel 5 framework so familiarity with that would help.
 
 A .env file needs to be setup, please take a look at the example one for the options that are needed.
 This file can be renamed by removing the .example from the end.
 
 Composer needs to be available and the install command run to load the required assets.
 
-The app/storage directory needs to be writable. 
+The storage directory needs to be writable. 
 
 Some of the config options wont be needed.<br />
-AWS is used for avatar storage.<br />
+AWS is used for file storage although a lcal option can be specified.<br />
 The system is built for a MySQL DB but a similar system will work<br />
 GoCardless as above<br />
 MailGun is completely optional<br />
