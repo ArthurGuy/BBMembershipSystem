@@ -7,7 +7,7 @@ use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EmailMemberAboutDeclinedExpense
+class EmailMemberAboutDeclinedExpense implements ShouldQueue
 {
     /**
      * @var Mailer
