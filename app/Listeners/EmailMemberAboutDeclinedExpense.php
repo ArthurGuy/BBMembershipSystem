@@ -2,12 +2,12 @@
 
 namespace BB\Listeners;
 
-use BB\Events\ExpenseWasApproved;
+use BB\Events\ExpenseWasDeclined;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EmailMemberAboutExpense
+class EmailMemberAboutDeclinedExpense
 {
     /**
      * @var Mailer
@@ -27,14 +27,14 @@ class EmailMemberAboutExpense
     /**
      * Handle the event.
      *
-     * @param  ExpenseWasApproved  $event
+     * @param  ExpenseWasDeclined  $event
      * @return void
      */
-    public function handle(ExpenseWasApproved $event)
+    public function handle(ExpenseWasDeclined $event)
     {
         $user = $event->expense->user;
-        $this->mailer->send('emails.expense-approved', ['user' => $event->expense->user, 'expense' => $event->expense], function ($m) use ($user) {
-            $m->to($user->email, $user->name)->subject('Your expense was approved');
+        $this->mailer->send('emails.expense-declined', ['user' => $event->expense->user, 'expense' => $event->expense], function ($m) use ($user) {
+            $m->to($user->email, $user->name)->subject('Your expense was declined');
         });
     }
 }

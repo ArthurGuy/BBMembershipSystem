@@ -2,6 +2,7 @@
 
 use BB\Entities\Expense;
 use BB\Events\ExpenseWasApproved;
+use BB\Events\ExpenseWasDeclined;
 
 class ExpenseRepository extends DBRepository
 {
@@ -49,7 +50,7 @@ class ExpenseRepository extends DBRepository
         $expense->save();
 
         //This event currently doesn't do anything
-        \Event::fire('expense.declined', [$id]);
+        event(new ExpenseWasDeclined($expense));
     }
 
 

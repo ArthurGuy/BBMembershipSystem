@@ -36,8 +36,11 @@ class EventServiceProvider extends ServiceProvider {
             'BB\Listeners\EmailTrusteesAboutExpense',
         ]
         ,'BB\Events\ExpenseWasApproved' => [
-            'BB\Listeners\EmailMemberAboutExpense',
+            'BB\Listeners\EmailMemberAboutApprovedExpense',
             'BB\Listeners\AddApprovedExpenseToBalance',
+        ]
+        ,'BB\Events\ExpenseWasDeclined' => [
+            'BB\Listeners\EmailMemberAboutDeclinedExpense',
         ]
 	];
 
