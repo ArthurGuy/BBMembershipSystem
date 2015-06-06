@@ -33,3 +33,4 @@ env:
     - QUEUE_DRIVER=sync
     - ENCRYPTION_KEY=emd3liEAgqQIPi4m396yQBkLSwS0n4KT
     - FILE_STORE=local
+    - MAIL_DRIVER=log
