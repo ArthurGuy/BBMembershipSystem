@@ -25,16 +25,6 @@ class ExpenseEventHandler
     }
 
     /**
-     * Subscribe to the payment events
-     *
-     * @param $events
-     */
-    public function subscribe($events)
-    {
-        $events->listen('expense.approved', 'BB\Handlers\ExpenseEventHandler@onApprove');
-    }
-
-    /**
      * An expense has been approved, create the balance topup payment
      *
      * @param $expenseId

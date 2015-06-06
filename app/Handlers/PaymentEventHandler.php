@@ -43,20 +43,6 @@ class PaymentEventHandler
 
 
     /**
-     * Subscribe to the payment events
-     *
-     * @param $events
-     */
-    public function subscribe($events)
-    {
-        $events->listen('payment.create', 'BB\Handlers\PaymentEventHandler@onCreate');
-        $events->listen('payment.delete', 'BB\Handlers\PaymentEventHandler@onDelete');
-        $events->listen('payment.cancelled', 'BB\Handlers\PaymentEventHandler@onCancel');
-        $events->listen('payment.paid', 'BB\Handlers\PaymentEventHandler@onPaid');
-    }
-
-
-    /**
      * New payment record is created
      *
      * @param $userId

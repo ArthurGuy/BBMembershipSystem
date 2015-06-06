@@ -29,18 +29,6 @@ class SubChargeEventHandler
 
 
     /**
-     * Subscribe to the payment events
-     * @param $events
-     */
-    public function subscribe($events)
-    {
-        $events->listen('sub-charge.paid', 'BB\Handlers\SubChargeEventHandler@onPaid');
-        $events->listen('sub-charge.processing', 'BB\Handlers\SubChargeEventHandler@onProcessing');
-        $events->listen('sub-charge.payment-failed', 'BB\Handlers\SubChargeEventHandler@onPaymentFailure');
-    }
-
-
-    /**
      * A subscription charge has been marked as paid
      *
      * @param integer $chargeId
