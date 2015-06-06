@@ -7,8 +7,6 @@ use Intervention\Image\Facades\Image;
 class UserImage
 {
 
-    protected static $bucket = 'buildbrighton-bbms';
-
     public function __construct()
     {
 
@@ -41,36 +39,7 @@ class UserImage
 
         Storage::put($newFilename, file_get_contents($tmpFilePath), 'public');
         Storage::put($newThumbFilename, file_get_contents($tmpFilePathThumb), 'public');
-/*
-        $s3 = \AWS::get('s3');
-        try {
-            $s3->putObject(array(
-                'Bucket'        => self::$bucket,
-                'Key'           => $newFilename,
-                'Body'          => file_get_contents($tmpFilePath),
-                'ACL'           => 'public-read',
-                'ContentType'   => 'image/png',
-                'ServerSideEncryption' => 'AES256',
-            ));
-        } catch(\Exception $e) {
-            \Log::error($e);
-            throw new UserImageFailedException();
-        }
 
-        try {
-            $s3->putObject(array(
-                'Bucket'        => self::$bucket,
-                'Key'           => $newThumbFilename,
-                'Body'          => file_get_contents($tmpFilePathThumb),
-                'ACL'           => 'public-read',
-                'ContentType'   => 'image/png',
-                'ServerSideEncryption' => 'AES256',
-            ));
-        } catch(\Exception $e) {
-            \Log::error($e);
-            throw new UserImageFailedException();
-        }
-*/
         \File::delete($tmpFilePath);
         \File::delete($tmpFilePathThumb);
     }
@@ -106,49 +75,21 @@ class UserImage
             Storage::delete($sourceThumbFilename);
         }
 
-        /*
-        $s3 = \AWS::get('s3');
-        $s3->copyObject(array(
-            'Bucket'     => self::$bucket,
-            'Key'        => $targetFilename,
-            'CopySource' => self::$bucket . '/' . $sourceFilename,
-            'ACL'           => 'public-read',
-            'ContentType'   => 'image/png',
-            'ServerSideEncryption' => 'AES256',
-        ));
-        $s3->deleteObject(array(
-            'Bucket' => self::$bucket,
-            'Key'    => $sourceFilename
-        ));
-
-        $s3->copyObject(array(
-            'Bucket'     => self::$bucket,
-            'Key'        => $targetThumbFilename,
-            'CopySource' => self::$bucket . '/' . $sourceThumbFilename,
-            'ACL'           => 'public-read',
-            'ContentType'   => 'image/png',
-            'ServerSideEncryption' => 'AES256',
-        ));
-        $s3->deleteObject(array(
-            'Bucket' => self::$bucket,
-            'Key'    => $sourceThumbFilename
-        ));
-        */
     }
 
     public static function imageUrl($userId)
     {
-        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket . '/' . \App::environment() . '/user-photo/' . md5($userId) . '.png';
+        return 'https://s3-eu-west-1.amazonaws.com/' . env('S3_BUCKET') . '/' . \App::environment() . '/user-photo/' . md5($userId) . '.png';
     }
 
     public static function thumbnailUrl($userId)
     {
-        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket . '/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
+        return 'https://s3-eu-west-1.amazonaws.com/' . env('S3_BUCKET') . '/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb.png';
     }
 
     public static function newThumbnailUrl($userId)
     {
-        return 'https://s3-eu-west-1.amazonaws.com/' . self::$bucket . '/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb-new.png';
+        return 'https://s3-eu-west-1.amazonaws.com/' . env('S3_BUCKET') . '/' . \App::environment() . '/user-photo/' . md5($userId) . '-thumb-new.png';
     }
 
     public static function gravatar($email)
