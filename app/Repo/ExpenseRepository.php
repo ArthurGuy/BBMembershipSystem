@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\Expense;
+use BB\Events\ExpenseWasApproved;
 
 class ExpenseRepository extends DBRepository
 {
@@ -32,7 +33,7 @@ class ExpenseRepository extends DBRepository
         $expense->save();
 
         //Fire an event - this will create the payment
-        \Event::fire('expense.approved', [$id]);
+        event(new ExpenseWasApproved($expense));
     }
 
     /**

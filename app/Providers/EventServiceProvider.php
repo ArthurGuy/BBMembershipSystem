@@ -32,9 +32,13 @@ class EventServiceProvider extends ServiceProvider {
         ,'sub-charge.payment-failed' => [
 			'BB\Handlers\SubChargeEventHandler@onPaymentFailure',
 		]
-        ,'expense.approved' => [
-			'BB\Handlers\ExpenseEventHandler@onApprove',
-		]
+        ,'BB\Events\NewExpenseSubmitted' => [
+            'BB\Listeners\EmailTrusteesAboutExpense',
+        ]
+        ,'BB\Events\ExpenseWasApproved' => [
+            'BB\Listeners\EmailMemberAboutExpense',
+            'BB\Listeners\AddApprovedExpenseToBalance',
+        ]
 	];
 
 	/**

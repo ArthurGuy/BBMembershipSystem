@@ -1,5 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Events\NewExpenseSubmitted;
 use BB\Exceptions\ImageFailedException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
@@ -102,6 +103,8 @@ class ExpensesController extends Controller {
         }
 
         $expense = $this->expenseRepository->create($data);
+
+        event(new NewExpenseSubmitted($expense));
 
         return \Response::json($expense, 201);
 	}
