@@ -15,7 +15,6 @@
 		"gocardless/gocardless": "0.4.2",
         "nesbot/Carbon": "~1.19",
         "rap2hpoutre/laravel-log-viewer": "~0.2",
-        "aws/aws-sdk-php": "~3.0",
         "nuovo/spreadsheet-reader": "~0.5",
         "intervention/image": "2.*",
         "paypal/merchant-sdk-php":"3.8.*",
