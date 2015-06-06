@@ -6,7 +6,7 @@ use BB\Entities\Expense;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewExpenseSubmitted extends Event
+class NewExpenseSubmitted extends Event implements ShouldBroadcast
 {
     use SerializesModels;
 
@@ -32,6 +32,27 @@ class NewExpenseSubmitted extends Event
      */
     public function broadcastOn()
     {
-        return [];
+        return ['user.' . $this->expense->user->id];
+    }
+
+    /**
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        return [
+            'expense' => [
+                'id'          => $this->expense->id,
+                'category'    => $this->expense->category,
+                'description' => $this->expense->description,
+                'amount'      => $this->expense->amount,
+                'file'        => $this->expense->file,
+            ],
+            'user'    => [
+                'id'          => $this->expense->user->id,
+                'name'        => $this->expense->user->name,
+                'hash'        => $this->expense->user->hash,
+            ]
+        ];
     }
 }
