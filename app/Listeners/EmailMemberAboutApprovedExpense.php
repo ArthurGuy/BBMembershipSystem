@@ -30,7 +30,7 @@ class EmailMemberAboutApprovedExpense
      * @param  ExpenseWasApproved  $event
      * @return void
      */
-    public function expenseApproved(ExpenseWasApproved $event)
+    public function handle(ExpenseWasApproved $event)
     {
         $user = $event->expense->user;
         $this->mailer->send('emails.expense-approved', ['user' => $event->expense->user, 'expense' => $event->expense], function ($m) use ($user) {
