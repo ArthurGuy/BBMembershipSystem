@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d852e5305645d78c5dc651a9801af0f7",
+    "hash": "d447285997eed63343e4486a80fbf80c",
     "packages": [
         {
             "name": "artdarek/pusherer",
@@ -915,16 +915,16 @@
         },
         {
             "name": "jenssegers/rollbar",
-            "version": "v1.4.3",
+            "version": "v1.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-rollbar.git",
-                "reference": "58cb2db22ff7e7f671dcaf4c766883a3c5ae4d2c"
+                "reference": "063f9c317ab0314a457dbd19bf4ed81deee1d8d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-rollbar/zipball/58cb2db22ff7e7f671dcaf4c766883a3c5ae4d2c",
-                "reference": "58cb2db22ff7e7f671dcaf4c766883a3c5ae4d2c",
+                "url": "https://api.github.com/repos/jenssegers/laravel-rollbar/zipball/063f9c317ab0314a457dbd19bf4ed81deee1d8d1",
+                "reference": "063f9c317ab0314a457dbd19bf4ed81deee1d8d1",
                 "shasum": ""
             },
             "require": {
@@ -961,7 +961,7 @@
                 "monitoring",
                 "rollbar"
             ],
-            "time": "2015-05-24 09:40:39"
+            "time": "2015-06-06 08:23:36"
         },
         {
             "name": "jeremeamia/SuperClosure",
@@ -1073,12 +1073,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "2d3b48101b3e683a2845fa399aca43af22754aba"
+                "reference": "32628293c7458921edff7c2de82913dcd9d0a610"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/2d3b48101b3e683a2845fa399aca43af22754aba",
-                "reference": "2d3b48101b3e683a2845fa399aca43af22754aba",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/32628293c7458921edff7c2de82913dcd9d0a610",
+                "reference": "32628293c7458921edff7c2de82913dcd9d0a610",
                 "shasum": ""
             },
             "require": {
@@ -1193,7 +1193,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-06-05 19:24:41"
+            "time": "2015-06-06 02:20:29"
         },
         {
             "name": "league/flysystem",
@@ -1280,16 +1280,16 @@
         },
         {
             "name": "league/flysystem-aws-s3-v3",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-aws-s3-v3.git",
-                "reference": "9aaa5b1a58e6ba09f2fbd7fb12f81b6ee2434433"
+                "reference": "558e9d31ec5cf07e58a2c8be0499f760ab5a2beb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-aws-s3-v3/zipball/9aaa5b1a58e6ba09f2fbd7fb12f81b6ee2434433",
-                "reference": "9aaa5b1a58e6ba09f2fbd7fb12f81b6ee2434433",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-aws-s3-v3/zipball/558e9d31ec5cf07e58a2c8be0499f760ab5a2beb",
+                "reference": "558e9d31ec5cf07e58a2c8be0499f760ab5a2beb",
                 "shasum": ""
             },
             "require": {
@@ -1323,7 +1323,7 @@
                 }
             ],
             "description": "Flysystem adapter for the AWS S3 SDK v3.x",
-            "time": "2015-05-31 09:38:00"
+            "time": "2015-06-06 10:11:49"
         },
         {
             "name": "maknz/slack",
@@ -3116,25 +3116,25 @@
     "packages-dev": [
         {
             "name": "codeception/codeception",
-            "version": "2.0.9",
+            "version": "2.1.0-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "0094191ac0d6e87821fba41de002103ebe79a279"
+                "reference": "58fff4a6fdad40fd24b6e458bc43b498e1dc6e13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/0094191ac0d6e87821fba41de002103ebe79a279",
-                "reference": "0094191ac0d6e87821fba41de002103ebe79a279",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/58fff4a6fdad40fd24b6e458bc43b498e1dc6e13",
+                "reference": "58fff4a6fdad40fd24b6e458bc43b498e1dc6e13",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "facebook/webdriver": "~0.4",
+                "facebook/webdriver": "~0.4|~0.5",
                 "guzzlehttp/guzzle": "~4.0|~5.0",
                 "php": ">=5.4.0",
-                "phpunit/phpunit": "~4.0",
+                "phpunit/phpunit": "~4.6.0",
                 "symfony/browser-kit": "~2.4",
                 "symfony/console": "~2.4",
                 "symfony/css-selector": "~2.4",
@@ -3145,12 +3145,10 @@
             },
             "require-dev": {
                 "codeception/specify": "~0.3",
-                "codegyre/robo-ci": "@dev",
                 "facebook/php-sdk": "~3.2",
-                "flow/jsonpath": "~0.1",
+                "flow/jsonpath": "~0.2",
                 "monolog/monolog": "~1.8",
                 "pda/pheanstalk": "~2.0",
-                "phpseclib/phpseclib": "~0.3.6",
                 "videlalvaro/php-amqplib": "~2.4"
             },
             "suggest": {
@@ -3170,8 +3168,9 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Codeception": "src"
+                "psr-4": {
+                    "Codeception\\": "src\\Codeception",
+                    "Codeception\\Extension\\": "ext"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3194,7 +3193,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2014-12-19 23:54:20"
+            "time": "2015-05-02 02:02:01"
         },
         {
             "name": "codeception/mockery-module",
@@ -3712,16 +3711,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.1.3",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "28a6b34e91d789b2608072ab3c82eaae7cdb973c"
+                "reference": "3703c4bb67c8700957dd41c843254658539d091d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/28a6b34e91d789b2608072ab3c82eaae7cdb973c",
-                "reference": "28a6b34e91d789b2608072ab3c82eaae7cdb973c",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/3703c4bb67c8700957dd41c843254658539d091d",
+                "reference": "3703c4bb67c8700957dd41c843254658539d091d",
                 "shasum": ""
             },
             "require": {
@@ -3770,7 +3769,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-03 07:01:01"
+            "time": "2015-06-06 08:33:23"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -3958,16 +3957,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.7.1",
+            "version": "4.6.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "bdd15c9ec6e16a307398d5385b3445673608e805"
+                "reference": "7b5fe98b28302a8b25693b2298bca74463336975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bdd15c9ec6e16a307398d5385b3445673608e805",
-                "reference": "bdd15c9ec6e16a307398d5385b3445673608e805",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7b5fe98b28302a8b25693b2298bca74463336975",
+                "reference": "7b5fe98b28302a8b25693b2298bca74463336975",
                 "shasum": ""
             },
             "require": {
@@ -3978,7 +3977,7 @@
                 "ext-spl": "*",
                 "php": ">=5.3.3",
                 "phpspec/prophecy": "~1.3,>=1.3.1",
-                "phpunit/php-code-coverage": "~2.1",
+                "phpunit/php-code-coverage": "~2.0,>=2.0.11",
                 "phpunit/php-file-iterator": "~1.4",
                 "phpunit/php-text-template": "~1.2",
                 "phpunit/php-timer": "~1.0",
@@ -4000,7 +3999,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.7.x-dev"
+                    "dev-master": "4.6.x-dev"
                 }
             },
             "autoload": {
@@ -4026,7 +4025,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-05 13:25:13"
+            "time": "2015-06-03 05:03:30"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -4562,7 +4561,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "laravel/framework": 20
+        "laravel/framework": 20,
+        "codeception/codeception": 10
     },
     "prefer-stable": false,
     "prefer-lowest": false,

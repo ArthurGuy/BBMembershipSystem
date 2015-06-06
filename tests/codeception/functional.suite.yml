@@ -11,3 +11,5 @@ modules:
         Laravel5:
             cleanup: false
             environment_file: .env.testing
+        REST:
+            depends: Laravel5
