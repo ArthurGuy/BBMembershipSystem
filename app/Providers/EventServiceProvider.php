@@ -1,5 +1,6 @@
 <?php namespace BB\Providers;
 
+use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -13,35 +14,38 @@ class EventServiceProvider extends ServiceProvider {
 	protected $listen = [
 		'payment.create' => [
 			'BB\Handlers\PaymentEventHandler@onCreate',
-		]
-        ,'payment.delete' => [
+		],
+        'payment.delete' => [
 			'BB\Handlers\PaymentEventHandler@onDelete',
-		]
-        ,'payment.cancelled' => [
+		],
+        'payment.cancelled' => [
 			'BB\Handlers\PaymentEventHandler@onCancel',
-		]
-        ,'payment.paid' => [
+		],
+        'payment.paid' => [
 			'BB\Handlers\PaymentEventHandler@onPaid',
-		]
-        ,'sub-charge.paid' => [
+		],
+        'sub-charge.paid' => [
 			'BB\Handlers\SubChargeEventHandler@onPaid',
-		]
-        ,'sub-charge.processing' => [
+		],
+        'sub-charge.processing' => [
 			'BB\Handlers\SubChargeEventHandler@onProcessing',
-		]
-        ,'sub-charge.payment-failed' => [
+		],
+        'sub-charge.payment-failed' => [
 			'BB\Handlers\SubChargeEventHandler@onPaymentFailure',
-		]
-        ,'BB\Events\NewExpenseSubmitted' => [
+		],
+        'BB\Events\NewExpenseSubmitted' => [
             'BB\Listeners\EmailTrusteesAboutExpense',
-        ]
-        ,'BB\Events\ExpenseWasApproved' => [
+        ],
+        'BB\Events\ExpenseWasApproved' => [
             'BB\Listeners\EmailMemberAboutApprovedExpense',
             'BB\Listeners\AddApprovedExpenseToBalance',
-        ]
-        ,'BB\Events\ExpenseWasDeclined' => [
+        ],
+        'BB\Events\ExpenseWasDeclined' => [
             'BB\Listeners\EmailMemberAboutDeclinedExpense',
-        ]
+        ],
+        'BB\Events\MemberPhotoWasDeclined' => [
+            EmailMemberAboutDeclinedPhoto::class,
+        ],
 	];
 
 	/**

@@ -2,6 +2,7 @@
 
 
 use BB\Entities\User;
+use BB\Events\MemberPhotoWasDeclined;
 
 class AccountController extends Controller
 {
@@ -253,6 +254,7 @@ class AccountController extends Controller
                 $profile->update(['new_profile_photo' => false, 'profile_photo' => true]);
             } else {
                 $profile->update(['new_profile_photo' => false]);
+                event(new MemberPhotoWasDeclined($user));
             }
         }
 
