@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $key_fob_id
  * @property integer $user_id
- * @property string $service
- * @property string $response
- * @property bool $delayed
- * @property Carbon $created_at
+ * @property User    $user
+ * @property string  $service
+ * @property string  $response
+ * @property bool    $delayed
+ * @property Carbon  $created_at
  * @package BB\Entities
  */
 class Activity extends Model

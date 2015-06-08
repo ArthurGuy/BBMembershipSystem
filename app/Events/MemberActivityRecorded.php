@@ -51,12 +51,11 @@ class MemberActivityRecorded extends Event implements ShouldBroadcast
                 'time'       => $this->activity->created_at->toTimeString(),
             ]
         ];
-        $user = User::find($this->activity->user_id);
-        if ($user) {
+        if ($this->activity->user) {
             $data['user'] = [
-                'id'   => $user->id,
-                'name' => $user->name,
-                'hash' => $this->user->hash,
+                'id'   => $this->activity->user->id,
+                'name' => $this->activity->user->name,
+                'hash' => $this->activity->user->hash,
             ];
         }
 
