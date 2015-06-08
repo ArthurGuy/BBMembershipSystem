@@ -13,13 +13,9 @@ class MemberActivityRecorded extends Event implements ShouldBroadcast
     use SerializesModels;
 
     /**
-     * @var User
-     */
-    protected $user;
-    /**
      * @var Activity
      */
-    private $activity;
+    public $activity;
 
     /**
      * Create a new event instance.
@@ -29,7 +25,6 @@ class MemberActivityRecorded extends Event implements ShouldBroadcast
     public function __construct(Activity $activity)
     {
         $this->activity = $activity;
-        $this->user     = User::find($activity->user_id);
     }
 
     /**
@@ -56,10 +51,11 @@ class MemberActivityRecorded extends Event implements ShouldBroadcast
                 'time'       => $this->activity->created_at->toTimeString(),
             ]
         ];
-        if ($this->user) {
+        $user = User::find($this->activity->user_id);
+        if ($user) {
             $data['user'] = [
-                'id'   => $this->user->id,
-                'name' => $this->user->name,
+                'id'   => $user->id,
+                'name' => $user->name,
                 'hash' => $this->user->hash,
             ];
         }
