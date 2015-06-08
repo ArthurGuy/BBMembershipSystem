@@ -150,6 +150,7 @@ return [
         'BB\Providers\ValidatorServiceProvider',
         'BB\Providers\NotificationServiceProvider',
         'BB\Providers\HtmlServiceProvider',
+        \BB\Providers\ObserverServiceProvider::class,
 
 
         /*
