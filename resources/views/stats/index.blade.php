@@ -55,7 +55,12 @@ Stats
     </div>
 </div>
 <script>
-google.load("visualization", "1", {packages:["corechart"]});
+
+    BB.chartData = BB.chartData || {};
+    BB.chartData.paymentMethods = {!! json_encode($paymentMethods) !!};
+    BB.chartData.monthlyAmounts = {!! json_encode($monthlyAmountsData) !!};
+
+    google.load("visualization", "1", {packages:["corechart"]});
 
 
     google.setOnLoadCallback(drawPaymentMethodsChart);

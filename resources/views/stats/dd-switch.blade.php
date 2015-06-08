@@ -19,7 +19,11 @@ GoCardless > Switch to variable DD
     </div>
 </div>
 <script>
-google.load("visualization", "1", {packages:["corechart"]});
+
+    BB.chartData = BB.chartData || {};
+    BB.chartData.paymentMethods = {!! json_encode($paymentMethods) !!};
+
+    google.load("visualization", "1", {packages:["corechart"]});
 
 
     google.setOnLoadCallback(drawPaymentMethodsChart);

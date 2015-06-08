@@ -111,17 +111,13 @@ class StatsController extends Controller
         }
         $numActiveUsersQuarter = count(array_unique($userArray));
 
-
-        //JavaScript::put([
-        //        'paymentMethods' => $paymentMethods,
-        //        'monthlyAmounts' => $monthlyAmountsData
-        //]);
-
         return \View::make('stats.index')
             ->with('averageMonthlyAmount', round($averageMonthlyAmount))
             ->with('numMembers', $numMembers)
             ->with('numActiveUsers', $numActiveUsers)
-            ->with('numActiveUsersQuarter', $numActiveUsersQuarter);
+            ->with('numActiveUsersQuarter', $numActiveUsersQuarter)
+            ->with('paymentMethods', $paymentMethods)
+            ->with('monthlyAmountsData', $monthlyAmountsData);
     }
 
     public function ddSwitch()
@@ -148,11 +144,8 @@ class StatsController extends Controller
             ]
         ];
 
-        //JavaScript::put([
-        //    'paymentMethods' => $paymentMethods
-        //]);
-
-        return \View::make('stats.dd-switch');
+        return \View::make('stats.dd-switch')
+            ->with('paymentMethods', $paymentMethods);
     }
 
 }
