@@ -1,6 +1,5 @@
 <?php namespace BB\Observer;
 
-use Artdarek\Pusherer\Facades\Pusherer;
 use BB\Entities\User;
 use BB\Helpers\UserImage;
 use Illuminate\Support\Facades\Log;
@@ -29,19 +28,6 @@ class ActivityObserver
                     $userImageUrl = UserImage::imageUrl($user->hash);
                 }
             }
-
-            Pusherer::trigger(
-                'activity',
-                $accessLog->service,
-                array(
-                    'user_id'    => $accessLog->user_id,
-                    'response'   => $accessLog->response,
-                    'key_fob_id' => $accessLog->key_fob_id,
-                    'user_name'  => $userName,
-                    'user_image' => $userImageUrl,
-                    'time'       => $accessLog->created_at->toTimeString()
-                )
-            );
 
             if (\App::environment('production')) {
                 \Slack::send($userName . ' is in the space');

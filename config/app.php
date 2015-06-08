@@ -156,11 +156,9 @@ return [
         /*
 		 * 3rd Party Providers...
 		 */
-        //'Aws\Laravel\AwsServiceProvider',
         'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
         'Jenssegers\Rollbar\RollbarServiceProvider',
         'Maknz\Slack\SlackServiceProvider',
-        //'Artdarek\Pusherer\PushererServiceProvider',
         'Intervention\Image\ImageServiceProvider',
 
 	],

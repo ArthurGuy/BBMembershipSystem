@@ -4,60 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "814a3f00bd1563a950300a8d481205b7",
+    "hash": "0fb9f60a58291f9db78e1c86492bad75",
     "packages": [
-        {
-            "name": "artdarek/pusherer",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/artdarek/pusherer.git",
-                "reference": "f37a689ee7cc99fe0cc7a2dde7f41bfbc0a944c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/artdarek/pusherer/zipball/f37a689ee7cc99fe0cc7a2dde7f41bfbc0a944c3",
-                "reference": "f37a689ee7cc99fe0cc7a2dde7f41bfbc0a944c3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "pusher/pusher-php-server": "2.1.*"
-            },
-            "require-dev": {
-                "illuminate/support": "4.0.*"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/migrations"
-                ],
-                "psr-0": {
-                    "Artdarek\\Pusherer": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Artdarek",
-                    "email": "artdarek@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Pusher.com service provider for Laravel 4.",
-            "homepage": "https://github.com/artdarek/pusherer",
-            "keywords": [
-                "Pusher.com",
-                "laravel",
-                "laravel4",
-                "notifications",
-                "pusher"
-            ],
-            "time": "2014-08-08 14:37:33"
-        },
         {
             "name": "aws/aws-sdk-php",
             "version": "3.0.3",
@@ -1073,12 +1021,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "4433dc44a6f46054b3bd81d27e96461dd17d0b60"
+                "reference": "5796036e3f0114fd3dfdecd26b0dfd1e896faf38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/4433dc44a6f46054b3bd81d27e96461dd17d0b60",
-                "reference": "4433dc44a6f46054b3bd81d27e96461dd17d0b60",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5796036e3f0114fd3dfdecd26b0dfd1e896faf38",
+                "reference": "5796036e3f0114fd3dfdecd26b0dfd1e896faf38",
                 "shasum": ""
             },
             "require": {
@@ -1193,7 +1141,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-06-08 10:28:56"
+            "time": "2015-06-08 18:25:15"
         },
         {
             "name": "league/flysystem",
@@ -1992,21 +1940,24 @@
         },
         {
             "name": "pusher/pusher-php-server",
-            "version": "v2.1.3",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pusher/pusher-http-php.git",
-                "reference": "4bb96195dd9109c1197aedc7d1d1de09cac02279"
+                "reference": "79d755cc5d5b02b67779e2a40782fd6e3726657d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/4bb96195dd9109c1197aedc7d1d1de09cac02279",
-                "reference": "4bb96195dd9109c1197aedc7d1d1de09cac02279",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/79d755cc5d5b02b67779e2a40782fd6e3726657d",
+                "reference": "79d755cc5d5b02b67779e2a40782fd6e3726657d",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "php": ">=5.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
             },
             "type": "library",
             "autoload": {
@@ -2029,7 +1980,7 @@
                 "rest",
                 "trigger"
             ],
-            "time": "2012-12-22 01:50:13"
+            "time": "2015-05-13 11:01:46"
         },
         {
             "name": "rap2hpoutre/laravel-log-viewer",

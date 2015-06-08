@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\Activity;
+use BB\Events\MemberActivityRecorded;
 use Carbon\Carbon;
 
 class ActivityRepository extends DBRepository
@@ -81,13 +82,19 @@ class ActivityRepository extends DBRepository
         if (empty($time)) {
             $time = Carbon::now();
         }
-        return $this->model->create([
+        $activity = $this->model->create([
             'user_id'    => $userId,
             'key_fob_id' => $keyFobId,
             'service'    => $deviceKey,
             'response'   => 200,
             'created_at' => $time
         ]);
+
+        if ($activity) {
+            event(new MemberActivityRecorded($activity));
+        }
+
+        return $activity;
     }
 
 
