@@ -1,5 +1,6 @@
 <?php namespace BB\Http;
 
+use BB\Http\Middleware\BrandingHeaders;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -19,6 +20,7 @@ class Kernel extends HttpKernel
         'Illuminate\View\Middleware\ShareErrorsFromSession',
         //'BB\Http\Middleware\VerifyCsrfToken',
         'BB\Http\Middleware\SSLOnly',
+        BrandingHeaders::class,
     ];
 
     /**
