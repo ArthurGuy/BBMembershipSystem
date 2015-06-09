@@ -14,7 +14,7 @@ class BrandingHeaders {
 	public function handle($request, Closure $next)
 	{
         //Don't add the header to acs requests
-        if ((strpos($request->path(), 'access-control/') === 0) || ($request->path() === 'acs')) {
+        if ((strpos($request->path(), 'access-control/') !== 0) && ($request->path() !== 'acs') && ($request->path() !== 'acs/spark')) {
             return $next($request);
         }
 
