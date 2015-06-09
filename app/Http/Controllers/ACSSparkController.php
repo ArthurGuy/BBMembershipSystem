@@ -29,33 +29,16 @@ class ACSSparkController extends Controller
 
     public function handle()
     {
-        $data = \Request::only(['event', 'data', 'published_at', 'coreid']);
+        $data = \Request::only(['device', 'tag', 'service']);
         \Log::debug(json_encode($data));
 
         try {
-            $keyFob = $this->keyFobAccess->lookupKeyFob($data['data']);
-        } catch (Exception $e) {
-
-            $client = new \GuzzleHttp\Client();
-            $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
-                'body' => [
-                    'args' => json_encode(['name'=>'', 'status'=>'Unknown', 'balance'=>'', 'success'=>false]),
-                    'access_token' => env('SPARK_ACCESS_TOKEN', '')
-                ]
-            ]);
-
-            return \Response::make(json_encode(['valid'=>'0']), 404);
+            $keyFob = $this->keyFobAccess->lookupKeyFob($data['tag']);
+        } catch (\Exception $e) {
+            return \Response::make(false, 404);
         }
         $user = $keyFob->user()->first();
-
-        $client = new \GuzzleHttp\Client();
-        $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
-            'body' => [
-                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance / 100), 2), 'success'=>true]),
-                'access_token' => env('SPARK_ACCESS_TOKEN', '')
-            ]
-        ]);
-
-        return \Response::make(json_encode(['name'=>$user->name]), 200);
+        
+        return \Response::make('OK', 201);
     }
 }
