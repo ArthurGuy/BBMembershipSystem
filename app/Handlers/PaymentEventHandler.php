@@ -154,8 +154,9 @@ class PaymentEventHandler
 
     private function updateSubPayment($paymentId, $userId, $status)
     {
-        $payment = $this->paymentRepository->getById($paymentId);
+        $payment   = $this->paymentRepository->getById($paymentId);
         $subCharge = $this->subscriptionChargeRepository->findCharge($userId);
+
         if ( ! $subCharge) {
             \Log::warning('Subscription payment without a sub charge. Payment ID:' . $paymentId);
             return;
@@ -166,7 +167,7 @@ class PaymentEventHandler
             $payment->reference = $subCharge->id;
             $payment->save();
         } else if ($payment->reference != $subCharge->id) {
-            throw new PaymentException('Attempting to update sub charge (' . $subCharge->id . ') but payment (' . $payment->id . ') doesn\'t match');
+            throw new PaymentException('Attempting to update sub charge (' . $subCharge->id . ') but payment (' . $payment->id . ') doesn\'t match. Sub charge has an existing reference on it.');
         }
 
         if ($status == 'paid') {

@@ -335,9 +335,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function updateSubscription($paymentMethod, $paymentDay)
     {
-        //We might need to do something about the payment day to ensure its before the 28th
+        if ($paymentDay > 28) {
+            $paymentDay = 1;
+        }
+
         $this->attributes['payment_method'] = $paymentMethod;
-        $this->attributes['payment_day'] = $paymentDay;
+        $this->attributes['payment_day']    = $paymentDay;
 
         $this->save();
     }

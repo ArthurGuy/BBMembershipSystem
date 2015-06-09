@@ -3,18 +3,26 @@
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Helpers\PayPalConfig;
+use BB\Repo\PaymentRepository;
+use BB\Repo\SubscriptionChargeRepository;
+use Carbon\Carbon;
 
 class PaypalIPNController extends Controller
 {
 
     /**
-     * @var \BB\Repo\SubscriptionChargeRepository
+     * @var SubscriptionChargeRepository
      */
     private $subscriptionChargeRepository;
+    /**
+     * @var PaymentRepository
+     */
+    private $paymentRepository;
 
-    function __construct(\BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository)
+    function __construct(SubscriptionChargeRepository $subscriptionChargeRepository, PaymentRepository $paymentRepository)
     {
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+        $this->paymentRepository = $paymentRepository;
     }
 
     public function receiveNotification()
@@ -26,8 +34,6 @@ class PaypalIPNController extends Controller
         }
 
         $ipnData = $ipnMessage->getRawData();
-
-        //\Log::debug(json_encode($ipnData));
 
         if (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_payment')) {
             if ($ipnData['payment_status'] != 'Completed') {
@@ -43,40 +49,13 @@ class PaypalIPNController extends Controller
                 return;
             }
 
-            $paymentDate = new \Carbon\Carbon();
-
-
-            //See if there is a subscription charge the user needs to pay for
-            $ref = null;
-            $subCharge = $this->subscriptionChargeRepository->findCharge($user->id, $paymentDate);
-            if ($subCharge) {
-                $ref = $subCharge->id;
-                $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate, $ipnData['mc_gross']);
-            } else {
-                //No sub charge exists
-                if ($user->status == 'setting-up') {
-                    $subCharge = $this->setupNewMember($user, $ipnData['mc_gross'], $paymentDate);
-                    $ref = $subCharge->id;
-                } else {
-                    //member who cancelled and restarted
-                    //  or changed their amount by cancelling and starting again
-                    \Log::debug("No pp charge found and status is not setting up. User ID: " . $user->id);
-                }
+            //If its a new user set them up by creating the first sub charge record and setting the payment day
+            if ($user->status == 'setting-up') {
+                $this->setupNewMember($user, $ipnData['mc_gross']);
             }
 
-            Payment::create(
-                [
-                    'reason'           => 'subscription',
-                    'source'           => 'paypal',
-                    'source_id'        => $ipnData['txn_id'],
-                    'user_id'          => $user->id,
-                    'amount'           => $ipnData['mc_gross'],
-                    'fee'              => $ipnData['mc_fee'],
-                    'amount_minus_fee' => ($ipnData['mc_gross'] - $ipnData['mc_fee']),
-                    'status'           => 'paid',
-                    'reference'        => $ref,
-                ]
-            );
+            //Record the subscription payment, this will automatically deal with locating the sub charge and updating that
+            $this->paymentRepository->recordSubscriptionPayment($user->id, 'paypal', $ipnData['txn_id'], $ipnData['mc_gross'], 'paid', $ipnData['mc_fee']);
 
         } elseif (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_cancel')) {
             $user = User::where('email', $ipnData['payer_email'])->first();
@@ -94,20 +73,14 @@ class PaypalIPNController extends Controller
     /**
      * @param $user
      * @param $amount
-     * @param Carbon $paymentDate
-     * @return BB\Entities\SubscriptionCharge
+     * @return void
      */
-    private function setupNewMember($user, $amount, $paymentDate)
+    private function setupNewMember($user, $amount)
     {
         //At this point the day of the month hasn't been set for the user, set it now
-        $user->updateSubscription('paypal', $paymentDate->day);
+        $user->updateSubscription('paypal', Carbon::now()->day);
 
         //if this is blank then the user hasn't been setup yet
-        $subCharge = $this->subscriptionChargeRepository->createCharge($user->id, $paymentDate, $amount);
-
-        //Now mark it as paid
-        $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id, $paymentDate);
-
-        return $subCharge;
+        $subCharge = $this->subscriptionChargeRepository->createCharge($user->id, Carbon::now(), $amount);
     }
 } 
