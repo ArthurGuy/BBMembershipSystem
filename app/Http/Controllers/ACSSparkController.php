@@ -35,10 +35,10 @@ class ACSSparkController extends Controller
         try {
             $keyFob = $this->keyFobAccess->lookupKeyFob($data['tag']);
         } catch (\Exception $e) {
-            return \Response::make(false, 404);
+            return \Response::make('Not found', 404);
         }
         $user = $keyFob->user()->first();
-        
+
         return \Response::make('OK', 201);
     }
 }
