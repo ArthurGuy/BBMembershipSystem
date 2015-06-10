@@ -2,6 +2,7 @@
 
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\RecordMemberActivity;
+use BB\Listeners\SlackActivityNotification;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -49,6 +50,7 @@ class EventServiceProvider extends ServiceProvider {
         ],
         'BB\Events\MemberActivity' => [
             RecordMemberActivity::class,
+            SlackActivityNotification::class
         ],
 	];
 
