@@ -1,9 +1,9 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Events\MemberActivity;
 use BB\Repo\DeviceRepository;
 use BB\Repo\PaymentRepository;
 use BB\Services\KeyFobAccess;
-use BB\Validators\ACSValidator;
 
 class ACSSparkController extends Controller
 {
@@ -41,6 +41,8 @@ class ACSSparkController extends Controller
         $user = $keyFob->user()->first();
 
         $this->paymentRepository->recordPayment($data['service'], $user->id, 'balance', null, 0.05, 'paid', 0, $data['device']);
+
+        event(new MemberActivity($keyFob, $data['service']));
 
         return \Response::make('OK', 201);
     }
