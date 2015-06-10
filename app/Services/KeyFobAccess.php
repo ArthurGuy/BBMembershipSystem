@@ -2,6 +2,7 @@
 
 use BB\Entities\KeyFob;
 use BB\Entities\User;
+use BB\Events\MemberActivity;
 use BB\Exceptions\ValidationException;
 use BB\Repo\ActivityRepository;
 use Carbon\Carbon;
@@ -209,12 +210,16 @@ class KeyFobAccess
 
     public function logSuccess()
     {
+        event(new MemberActivity($this->keyFob, 'main-door', $this->time, $this->messageDelayed));
+
+        /*
         $activity = $this->activityRepository->recordMemberActivity($this->user->id, $this->keyFob->id, 'main-door', $this->time);
 
         if ($this->messageDelayed) {
             $activity->delayed = true;
             $activity->save();
         }
+        */
     }
 
     /**

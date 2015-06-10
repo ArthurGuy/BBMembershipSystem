@@ -23,6 +23,10 @@ class MemberActivity extends Event
      * @var Carbon
      */
     public $date;
+    /**
+     * @var bool
+     */
+    public $delayed;
 
     /**
      * Create a new event instance.
@@ -30,12 +34,14 @@ class MemberActivity extends Event
      * @param KeyFob $keyFob
      * @param string $service
      * @param Carbon $date
+     * @param bool   $delayed The old door entry system sends over historical records
      */
-    public function __construct(KeyFob $keyFob, $service, Carbon $date = null)
+    public function __construct(KeyFob $keyFob, $service, Carbon $date = null, $delayed = false)
     {
-        $this->keyFob = $keyFob;
+        $this->keyFob  = $keyFob;
         $this->service = $service;
-        $this->date = $date;
+        $this->date    = $date;
+        $this->delayed = $delayed;
     }
 
     /**

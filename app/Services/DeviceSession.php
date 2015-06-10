@@ -1,5 +1,6 @@
 <?php namespace BB\Services;
 
+use BB\Events\MemberActivity;
 use BB\Exceptions\ValidationException;
 use BB\Repo\ActivityRepository;
 use BB\Repo\EquipmentLogRepository;
@@ -132,7 +133,8 @@ class DeviceSession extends KeyFobAccess
         $this->equipmentLogRepository->recordStartCloseExisting($this->user->id, $this->keyFob->id, $this->deviceKey);
 
         //Create a general entry in the activity log
-        $this->activityRepository->recordMemberActivity($this->user->id, $this->keyFob->id, $this->deviceKey);
+        //$this->activityRepository->recordMemberActivity($this->user->id, $this->keyFob->id, $this->deviceKey);
+        event(new MemberActivity($this->keyFob, $this->deviceKey));
     }
 
     private function processPingAction()
