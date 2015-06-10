@@ -31,11 +31,11 @@ class ACSSparkController extends Controller
     public function handle()
     {
         $data = \Request::only(['device', 'tag', 'service']);
-        \Log::debug(json_encode($data));
 
         try {
             $keyFob = $this->keyFobAccess->lookupKeyFob($data['tag']);
         } catch (\Exception $e) {
+            \Log::debug(json_encode($data));
             return \Response::make('Not found', 404);
         }
         $user = $keyFob->user()->first();
