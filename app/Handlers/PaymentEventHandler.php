@@ -76,6 +76,10 @@ class PaymentEventHandler
 
             $this->updateBalance($userId);
 
+        } elseif ($reason == 'costs') {
+
+            $this->updateBalance($userId);
+
         } else {
             
         }
