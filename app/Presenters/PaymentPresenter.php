@@ -24,8 +24,8 @@ class PaymentPresenter extends Presenter
                 return 'Equipment Costs';
             case 'withdrawal':
                 return 'Withdrawal';
-            case 'costs':
-                return 'Costs';
+            case 'consumables':
+                return 'Consumables (' . $this->entity->reference . ')';
             default:
                 return $this->entity->reason;
         }
