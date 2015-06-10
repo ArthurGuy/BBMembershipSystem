@@ -127,38 +127,4 @@ class AccessControlController extends Controller
         return \Response::make(PHP_EOL, 200);
     }
 
-
-    public function sparkStatus()
-    {
-        $data = \Request::only(['event', 'data', 'published_at', 'coreid']);
-
-        \Log::debug($data);
-
-        try {
-            $keyFob = $this->lookupKeyFob($data['data']);
-        } catch (\Exception $e) {
-
-            $client = new \GuzzleHttp\Client();
-            $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
-                'body' => [
-                    'args' => json_encode(['name'=>'', 'status'=>'Unknown', 'balance'=>'', 'success'=>false]),
-                    'access_token' => env('SPARK_ACCESS_TOKEN', '')
-                ]
-            ]);
-
-            return \Response::make(json_encode(['valid'=>'0']), 404);
-        }
-        $user = $keyFob->user()->first();
-
-        $client = new \GuzzleHttp\Client();
-        $client->post('https://api.spark.io/v1/devices/' . $data['coreid'] . '/chk-resp', [
-            'body' => [
-                'args' => json_encode(['name'=>$user->name, 'status'=>$user->status, 'balance'=>number_format(($user->cash_balance / 100), 2), 'success'=>true]),
-                'access_token' => env('SPARK_ACCESS_TOKEN', '')
-            ]
-        ]);
-
-        return \Response::make(json_encode(['name'=>$user->name]), 200);
-    }
-
 } 
