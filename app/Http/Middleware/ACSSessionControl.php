@@ -33,7 +33,7 @@ class ACSSessionControl
     public function handle($request, Closure $next)
     {
 
-        if ((strpos($request->path(), 'access-control/') !== 0) && ($request->path() !== 'acs') && ($request->path() !== 'acs/spark')) {
+        if ((strpos($request->path(), 'access-control/') === 0) || ($request->path() === 'acs') || ($request->path() === 'acs/spark')) {
             $this->app['config']->set('session.driver', 'array');
         }
 
