@@ -148,7 +148,7 @@ class KeyFobAccess
         $this->setAccessTime($time);
 
         //Make sure the user is active
-        $this->user = $this->keyFob->user()->first();
+        $this->user = $this->keyFob->user;
         if ( ! $this->user || ! $this->user->active) {
             $this->logFailure();
             throw new ValidationException('Not a member');
