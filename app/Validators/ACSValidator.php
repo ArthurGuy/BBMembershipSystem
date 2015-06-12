@@ -4,11 +4,11 @@ class ACSValidator extends FormValidator
 {
 
     protected $rules = [
-        'device'  => 'required|max:25',
-        'key_fob' => 'max:15',
-        'message' => 'required|in:boot,heartbeat,lookup,start,stop,archive-lookup',
-        'type'    => 'required|in:door,equipment',
-        'time'    => 'max:10',
+        'device'  => 'required|max:25|exists:devices,device_id',
+        'service' => 'required|in:entry,usage,consumable,shop,status',
+        'message' => 'required|in:boot,heartbeat,lookup,start,stop,charge,error',
+        'tag'     => 'max:15',
+        'time'    => 'max:10|integer',
     ];
 
 } 

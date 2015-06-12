@@ -120,8 +120,8 @@ Route::get('access-control/status', ['uses' => 'AccessControlController@status']
 Route::post('access-control/device', ['uses' => 'DeviceAccessControlController@device']);
 
 //New ACS System
-Route::post('acs', ['uses' => 'ACSController@update']);
-Route::get('acs', ['uses' => 'ACSController@get']);
+Route::post('acs', ['uses' => 'ACSController@store']);
+//Route::get('acs', ['uses' => 'ACSController@get']);
 
 //spark core - printer charges
 Route::post('acs/spark', ['uses' => 'ACSSparkController@handle']);

@@ -31,9 +31,9 @@ class ACSController extends Controller
 
     }
 
-    public function update()
+    public function store()
     {
-        $data = \Request::only('device', 'key_fob', 'message', 'type', 'time');
+        $data = \Request::only('device', 'service', 'message', 'tag', 'time');
 
         $this->ACSValidator->validate($data);
 
@@ -42,16 +42,27 @@ class ACSController extends Controller
 
         //System messages
         if (in_array($data['message'], ['boot', 'heartbeat'])) {
-            return $this->handleSystemCheckIn($data['message'], $data['device']);
+            return $this->handleSystemCheckIn($data['message'], $data['device'], $data['service']);
         }
 
 
 
-        switch($data['type']) {
-            case 'door':
+        switch($data['service']) {
+            case 'entry':
                 return $this->handleDoor($data);
-            case 'equipment':
+            case 'usage':
                 return $this->handleDevice($data);
+            case 'consumable':
+
+                break;
+            case 'shop':
+
+                break;
+            case 'status':
+
+                break;
+            default:
+                //unknown
         }
     }
 
@@ -101,11 +112,12 @@ class ACSController extends Controller
     /**
      * System checkins are common across all devices
      * Record the time and return pending status messages
+     *
      * @param $message
      * @param $device
      * @return Response
      */
-    private function handleSystemCheckIn($message, $device)
+    private function handleSystemCheckIn($message, $device, $service)
     {
         switch ($message) {
             case 'boot':
@@ -119,8 +131,18 @@ class ACSController extends Controller
         //The command comes from the database and will instruct the door entry system to clear its memory if set
         $cmd = $this->deviceRepository->popCommand($device);
 
-        //The status of the device attached to th acs - used to lock down/disable equipment
-        $deviceStatus = '1';
+        switch ($service) {
+            case 'entry':
+                //we don't have a system for this at the moment but could have a global shutdown option
+                $deviceStatus = '1';
+                break;
+            case 'usage':
+                //lookup the piece of equipment from the device id and get the status
+                $deviceStatus = '1';
+                break;
+            default:
+                $deviceStatus = '1';
+        }
 
         $responseData = ['cmd'=>$cmd, 'deviceStatus'=>$deviceStatus];
         return $this->sendResponse($responseData);
@@ -128,6 +150,7 @@ class ACSController extends Controller
 
     /**
      * Json encode the response data and return
+     *
      * @param array $responseData
      * @return \Response
      */
