@@ -14,7 +14,8 @@ class ACSCest
 
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'message'=>'boot', 'type'=>'door']);
+        $I->haveHttpHeader('Accept', 'application/json');
+        $I->sendPOST('/acs', ['device'=>'main-door', 'message'=>'boot', 'service'=>'entry']);
 
         $I->canSeeResponseCodeIs(200);
 
@@ -32,7 +33,8 @@ class ACSCest
 
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'key_fob'=>$keyFob->key_id, 'message'=>'lookup', 'type'=>'door']);
+        $I->haveHttpHeader('Accept', 'application/json');
+        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>$keyFob->key_id, 'message'=>'lookup', 'service'=>'entry']);
 
         $I->canSeeResponseCodeIs(200);
 
@@ -48,7 +50,7 @@ class ACSCest
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'', 'key_fob'=>'ABCDEF123456', 'message'=>'boot', 'type'=>'door']);
+        $I->sendPOST('/acs', ['device'=>'', 'tag'=>'ABCDEF123456', 'message'=>'boot', 'service'=>'entry']);
         $I->canSeeResponseCodeIs(422);
 
     }
@@ -61,19 +63,19 @@ class ACSCest
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'key_fob'=>'ABCDEF123456', 'message'=>'', 'type'=>'door']);
+        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>'ABCDEF123456', 'message'=>'', 'service'=>'entry']);
         $I->canSeeResponseCodeIs(422);
     }
 
-    public function missingType(ApiTester $I)
+    public function missingService(ApiTester $I)
     {
         $I->am('an invalid device');
-        $I->wantTo('verify the endpoint returns validation failures - missing type');
+        $I->wantTo('verify the endpoint returns validation failures - missing service');
 
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'key_fob'=>'ABCDEF123456', 'message'=>'boot', 'type'=>'']);
+        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>'ABCDEF123456', 'message'=>'boot', 'service'=>'']);
         $I->canSeeResponseCodeIs(422);
     }
 
@@ -85,7 +87,7 @@ class ACSCest
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'key_fob'=>'ABCDEF123456', 'message'=>'boot', 'type'=>'door', 'time'=>'10000000000']);
+        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>'ABCDEF123456', 'message'=>'boot', 'service'=>'entry', 'time'=>'10000000000']);
         $I->canSeeResponseCodeIs(422);
     }
 
