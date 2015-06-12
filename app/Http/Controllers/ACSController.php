@@ -73,7 +73,7 @@ class ACSController extends Controller
         //Door entry is quite simple - this will just deal with lookups
 
         try {
-            $this->keyFobAccess->verifyForEntry($data['key_fob'], 'main-door', $data['time']);
+            $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
 
             $this->keyFobAccess->logSuccess();
         } catch(\Exception $e) {
@@ -100,7 +100,7 @@ class ACSController extends Controller
             $this->deviceRepository->logHeartbeat($data['device']);
         }
 
-        //$member = $this->keyFobAccess->verifyForDevice($data['key_fob'], 'laser');
+        //$member = $this->keyFobAccess->verifyForDevice($data['tag'], 'laser');
 
         $deviceStatus = 'ok';
 
