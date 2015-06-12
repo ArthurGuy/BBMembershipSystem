@@ -474,6 +474,12 @@ CREATE TABLE `devices` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+INSERT INTO `devices` (`id`, `device_id`, `queued_command`, `last_boot`, `last_heartbeat`, `created_at`, `updated_at`)
+VALUES
+	(1, 'main-door', '', '2015-06-10 23:29:33', '0000-00-00 00:00:00', '2014-12-01 23:53:04', '2015-06-10 23:29:33'),
+	(2, 'laser', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2015-05-02 11:07:06', '0000-00-00 00:00:00');
+
+
 
 CREATE TABLE `user_address` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
