@@ -9,6 +9,7 @@ class LoginTest extends TestCase
 
     //use WithoutMiddleware;
     use DatabaseMigrations;
+    //use DatabaseTransactions;
 
     /** @test */
     public function i_can_login()

@@ -1,7 +1,5 @@
 <?php
 
-
-
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**
@@ -20,17 +18,20 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         $app = require __DIR__.'/../bootstrap/app.php';
 
-        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+        $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
         return $app;
     }
 
+
     public function setUp()
     {
-        parent::setUp();
 
         //Create an empty file for the sqlite db to go into
-        exec('touch ' . storage_path('database.sqlite'));
+        //exec('rm ' . storage_path('database.sqlite'));
+        //exec('touch ' . storage_path('database.sqlite'));
+
+        parent::setUp();
     }
 
 
