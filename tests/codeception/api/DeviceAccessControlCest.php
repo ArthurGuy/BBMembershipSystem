@@ -58,6 +58,9 @@ class DeviceAccessControlCest
         //The device endpoint always returns 200
         $I->canSeeResponseCodeIs(200);
 
+        $I->dontSeeHttpHeader('Set-Cookie');
+        $I->dontSeeHttpHeader('Built-By');
+
         //Make sure a success is returned and a session started
         $I->canSeeResponseContainsJson(['valid'=>'1']);
         $I->seeInDatabase('equipment_log', ['user_id'=>$user->id, 'device'=>'laser', 'active'=>1]);
@@ -84,6 +87,10 @@ class DeviceAccessControlCest
 
         $I->sendPOST('/access-control/device', ['data'=>$keyFob->key_id.'|welder|end']);
         $I->canSeeResponseCodeIs(200);
+
+        $I->dontSeeHttpHeader('Set-Cookie');
+        $I->dontSeeHttpHeader('Built-By');
+
         $I->canSeeResponseContainsJson(['valid'=>'1']);
 
         //Make sure our database record is not active
