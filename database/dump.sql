@@ -367,6 +367,7 @@ CREATE TABLE `profile_data` (
   `description` text COLLATE utf8_unicode_ci,
   `skills_array` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
   `profile_photo` tinyint(1) NOT NULL,
+  `profile_photo_on_wall` tinyint(1) NOT NULL,
   `profile_photo_private` tinyint(1) NOT NULL,
   `new_profile_photo` tinyint(1) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
