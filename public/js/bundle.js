@@ -78766,11 +78766,6 @@ var PaymentModule = (function (_React$Component) {
             //this doesn't allow decimal places to be entered by hand
             var amount = parseFloat(event.target.value);
 
-            //The amount needs to be at least £5
-            if (!amount || amount < 5) {
-                amount = 5;
-            }
-
             if (amount > 200) {}
 
             this.setState({ amount: amount });
@@ -78805,6 +78800,10 @@ var PaymentModule = (function (_React$Component) {
             var $ = require('jquery');
 
             if (this.state.stripeLowValueWarning) {
+                return;
+            }
+
+            if (this.state.amount == 0) {
                 return;
             }
 
@@ -78960,7 +78959,7 @@ PaymentModule.defaultProps = {
     name: 'Build Brighton',
     email: null,
     userId: null,
-    amount: null,
+    amount: 0,
     buttonLabel: 'Pay Now',
     onSuccess: function onSuccess() {},
     methods: 'gocardless,stripe,balance',
