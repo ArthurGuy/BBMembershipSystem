@@ -26,6 +26,13 @@ class ProfileData extends Model
 
     protected $auditFields = array('profile_photo', 'profile_photo_on_wall');
 
+    protected $attributes = [
+        'profile_photo'         => 0,
+        'profile_photo_private' => 0,
+        'new_profile_photo'     => 0,
+        'profile_photo_on_wall' => 0,
+    ];
+
 
     public static function boot()
     {
