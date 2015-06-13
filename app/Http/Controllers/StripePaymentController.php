@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use Stripe_Charge;
 
 class StripePaymentController extends Controller
 {
