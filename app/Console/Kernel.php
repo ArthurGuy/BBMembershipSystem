@@ -46,7 +46,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('bb:calculate-equipment-fees')->dailyAt('02:00')
             ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/tFdRdkUoqSa8X66'); } );
 
-        $schedule->command('bb:recalculate-balances')->dailyAt('03:00')
+        $schedule->command('bb:update-balances')->dailyAt('03:00')
             ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/TSmoQANsHU9jbtU'); } );
 
         $schedule->command('bb:create-todays-sub-charges')->dailyAt('01:00')

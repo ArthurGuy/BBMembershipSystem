@@ -10,7 +10,7 @@ class RecalculateUserBalances extends Command
      *
      * @var string
      */
-    protected $name = 'bb:recalculate-balances';
+    protected $name = 'bb:update-balances';
 
     /**
      * The console command description.
@@ -42,11 +42,18 @@ class RecalculateUserBalances extends Command
     public function fire()
     {
         $users = $this->userRepo->getAll();
+
+        $this->output->progressStart($users->count());
+
         foreach ($users as $user) {
             $memberCreditService = \App::make('\BB\Services\Credit');
             $memberCreditService->setUserId($user->id);
             $memberCreditService->recalculate();
+
+            $this->output->progressAdvance();
         }
+
+        $this->output->progressFinish();
     }
 
 
