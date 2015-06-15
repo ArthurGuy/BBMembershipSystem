@@ -246,7 +246,7 @@ class GoCardlessPaymentController extends Controller
     private function getReference($reason)
     {
         if ($reason == 'induction') {
-            return \Request::get('induction_key');
+            return \Request::get('ref');
         } elseif ($reason == 'balance') {
             return \Request::get('reference');
         }
