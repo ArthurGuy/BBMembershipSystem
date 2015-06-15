@@ -63,7 +63,7 @@ class ACSController extends Controller
 
                 break;
             case 'device-scanner':
-                $this->logDetectedDevice($data);
+                $this->logDetectedDevices($data);
                 break;
             default:
                 \Log::debug(json_encode($data));
@@ -170,10 +170,12 @@ class ACSController extends Controller
         return $response;
     }
 
-    private function logDetectedDevice($data)
+    private function logDetectedDevices($data)
     {
-        //\Log::debug(json_encode($data['payload']['bluetooth_devices']));
+        //this isn't strictly a heartbeat but the updates occur at a regular interval so they will do
+        $this->deviceRepository->logHeartbeat($data['device']);
 
+        //See if any devices have been detected, if so log them
         foreach (array_keys($data['payload']['bluetooth_devices']) as $macAddress) {
             DetectedDevice::create([
                 'type'         => 'bluetooth',
