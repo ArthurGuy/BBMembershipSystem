@@ -21,9 +21,17 @@ class DetectedDevicesController extends Controller
         $devices = DetectedDevice::orderBy('created_at', 'desc')->get();
         $uniqueDevices = $devices->unique('mac_address');
 
+        //Attach the count of the number of occurrences to each record
         $uniqueDevices->each(function ($item, $key) use ($devices) {
 
             $item['occurrences'] = $devices->where('mac_address', $item['mac_address'])->count();
+
+        });
+
+        //Ensure the display name is always present and doesn't get overridden by a newer blank name
+        $uniqueDevices->each(function ($item, $key) use ($devices) {
+
+            $item['display_name'] = $devices->where('mac_address', $item['mac_address'])->sortByDesc('display_name')->first()->display_name;
 
         });
 
