@@ -183,3 +183,5 @@ Route::get('logviewer', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerContr
 
 
 Route::post('camera/event/store', ['uses' => 'CCTVController@store']);
+
+Route::post('device-scanner', ['uses' => 'DeviceScannerController@store']);
