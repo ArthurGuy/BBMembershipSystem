@@ -1,5 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Entities\DetectedDevice;
 use BB\Repo\DeviceRepository;
 use BB\Validators\ACSValidator;
 
@@ -19,8 +20,11 @@ class ACSController extends Controller
      */
     private $keyFobAccess;
 
-    function __construct(DeviceRepository $deviceRepository, ACSValidator $ACSValidator, \BB\Services\KeyFobAccess $keyFobAccess)
-    {
+    function __construct(
+        DeviceRepository $deviceRepository,
+        ACSValidator $ACSValidator,
+        \BB\Services\KeyFobAccess $keyFobAccess
+    ) {
         $this->deviceRepository = $deviceRepository;
         $this->ACSValidator     = $ACSValidator;
         $this->keyFobAccess     = $keyFobAccess;
@@ -44,8 +48,7 @@ class ACSController extends Controller
         }
 
 
-
-        switch($data['service']) {
+        switch ($data['service']) {
             case 'entry':
                 return $this->handleDoor($data);
             case 'usage':
@@ -60,11 +63,10 @@ class ACSController extends Controller
 
                 break;
             case 'device-scanner':
-                \Log::debug(json_encode($data['payload']['bluetooth_devices']));
+                $this->logDetectedDevice($data);
                 break;
             default:
                 \Log::debug(json_encode($data));
-                //unknown
         }
     }
 
@@ -78,17 +80,18 @@ class ACSController extends Controller
             $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
 
             $this->keyFobAccess->logSuccess();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $error = true;
         }
 
         $cmd = $this->deviceRepository->popCommand($data['device']);
 
-        if (!$error) {
+        if ( ! $error) {
             $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
         } else {
             $responseData = ['valid' => '0', 'cmd' => $cmd];
         }
+
         return $this->sendResponse($responseData);
     }
 
@@ -106,7 +109,8 @@ class ACSController extends Controller
 
         $deviceStatus = 'ok';
 
-        $responseData = ['deviceStatus'=>$deviceStatus];
+        $responseData = ['deviceStatus' => $deviceStatus];
+
         return $this->sendResponse($responseData);
     }
 
@@ -146,7 +150,8 @@ class ACSController extends Controller
                 $deviceStatus = '1';
         }
 
-        $responseData = ['cmd'=>$cmd, 'deviceStatus'=>$deviceStatus];
+        $responseData = ['cmd' => $cmd, 'deviceStatus' => $deviceStatus];
+
         return $this->sendResponse($responseData);
     }
 
@@ -159,9 +164,25 @@ class ACSController extends Controller
     private function sendResponse(array $responseData)
     {
         $responseData['time'] = time();
-        $response = \Response::json($responseData);
+        $response             = \Response::json($responseData);
         $response->headers->set('Content-Length', strlen($response->getContent()));
+
         return $response;
+    }
+
+    private function logDetectedDevice($data)
+    {
+        //\Log::debug(json_encode($data['payload']['bluetooth_devices']));
+
+        foreach (array_keys($data['payload']['bluetooth_devices']) as $macAddress) {
+            DetectedDevice::create([
+                'type'         => 'bluetooth',
+                'mac_address'  => $macAddress,
+                'display_name' => $data['payload']['bluetooth_devices'][$macAddress],
+            ]);
+        }
+
+
     }
 
 } 
