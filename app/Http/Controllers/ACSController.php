@@ -37,8 +37,6 @@ class ACSController extends Controller
 
         $this->ACSValidator->validate($data);
 
-        \Log::debug(json_encode($data));
-
 
         //System messages
         if (in_array($data['message'], ['boot', 'heartbeat'])) {
@@ -61,7 +59,11 @@ class ACSController extends Controller
             case 'status':
 
                 break;
+            case 'device-scanner':
+                \Log::debug(json_encode($data['payload']['bluetooth_devices']));
+                break;
             default:
+                \Log::debug(json_encode($data));
                 //unknown
         }
     }
