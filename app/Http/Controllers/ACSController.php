@@ -33,7 +33,7 @@ class ACSController extends Controller
 
     public function store()
     {
-        $data = \Request::only('device', 'service', 'message', 'tag', 'time');
+        $data = \Request::only('device', 'service', 'message', 'tag', 'time', 'payload');
 
         $this->ACSValidator->validate($data);
 
