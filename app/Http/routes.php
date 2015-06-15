@@ -187,3 +187,7 @@ Route::post('camera/event/store', ['uses' => 'CCTVController@store']);
 Route::group(array('middleware' => 'role:admin'), function() {
     Route::resource('detected_devices', 'DetectedDevicesController');
 });
+
+Route::group(array('middleware' => 'role:admin'), function() {
+    Route::resource('devices', 'DeviceController');
+});
