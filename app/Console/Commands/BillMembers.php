@@ -12,7 +12,7 @@ class BillMembers extends Command
      *
      * @var string
      */
-    protected $name = 'bb:bill-members';
+    protected $signature = 'bb:bill-members';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class BillMembers extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         //Update the payments status from pending to due
         $this->subscriptionChargeService->makeChargesDue();

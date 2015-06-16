@@ -11,7 +11,7 @@ class CheckFixEquipmentLog extends Command
      *
      * @var string
      */
-    protected $name = 'bb:fix-equipment-log';
+    protected $signature = 'bb:fix-equipment-log';
 
     /**
      * The console command description.
@@ -45,7 +45,7 @@ class CheckFixEquipmentLog extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         //Close records that were left open
         $records = $this->equipmentLogRepository->getActiveRecords();

@@ -10,7 +10,7 @@ class CheckMembershipStatus extends Command
      *
      * @var string
      */
-    protected $name = 'bb:check-memberships';
+    protected $signature = 'bb:check-memberships';
 
     /**
      * The console command description.
@@ -54,7 +54,7 @@ class CheckMembershipStatus extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         //Users with a status of payment warning
         $this->info("Checking users with payment warnings");

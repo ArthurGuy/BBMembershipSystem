@@ -1,6 +1,6 @@
 <?php namespace BB\Console\Commands;
 
-use BB\Services\DeviceCharge;
+use BB\Services\EquipmentCharge;
 use Illuminate\Console\Command;
 
 
@@ -12,7 +12,7 @@ class CalculateEquipmentFees extends Command
      *
      * @var string
      */
-    protected $name = 'bb:calculate-equipment-fees';
+    protected $signature = 'bb:calculate-equipment-fees';
 
     /**
      * The console command description.
@@ -48,10 +48,10 @@ class CalculateEquipmentFees extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        $deviceCharging = new DeviceCharge();
-        $deviceCharging->calculatePendingDeviceFees();
+        $deviceCharging = new EquipmentCharge();
+        $deviceCharging->calculatePendingFees();
     }
 
 

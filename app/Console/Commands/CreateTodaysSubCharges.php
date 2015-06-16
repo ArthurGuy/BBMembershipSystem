@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
 
 class CreateTodaysSubCharges extends Command
 {
@@ -12,7 +11,7 @@ class CreateTodaysSubCharges extends Command
      *
      * @var string
      */
-    protected $name = 'bb:create-todays-sub-charges';
+    protected $signature = 'bb:create-todays-sub-charges {dayOffset=3}';
 
     /**
      * The console command description.
@@ -42,7 +41,7 @@ class CreateTodaysSubCharges extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $dayOffset = $this->argument('dayOffset');
 
@@ -55,17 +54,5 @@ class CreateTodaysSubCharges extends Command
         //in case yesterdays process failed we will rerun the past two days, this should pickup and stragglers
         $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-1 day
         $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-2 days
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return array(
-            array('dayOffset', InputArgument::OPTIONAL, 'Day Offset', 3),
-        );
     }
 }

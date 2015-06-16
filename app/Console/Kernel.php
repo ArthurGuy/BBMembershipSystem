@@ -13,14 +13,13 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'BB\Console\Commands\Inspire',
-        'BB\Console\Commands\CheckMembershipStatus',
-        'BB\Console\Commands\RecalculateUserBalances',
-        'BB\Console\Commands\CalculateProposalVotes',
-        'BB\Console\Commands\CheckFixEquipmentLog',
-        'BB\Console\Commands\CalculateEquipmentFees',
-        'BB\Console\Commands\CreateTodaysSubCharges',
-        'BB\Console\Commands\BillMembers',
+        Commands\CheckMembershipStatus::class,
+        Commands\RecalculateUserBalances::class,
+        Commands\CalculateProposalVotes::class,
+        Commands\CheckFixEquipmentLog::class,
+        Commands\CalculateEquipmentFees::class,
+        Commands\CreateTodaysSubCharges::class,
+        Commands\BillMembers::class,
     ];
 
     /**
@@ -31,8 +30,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('inspire')->hourly()
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/Q50p5xuh47v6p7k'); } );
 
         $schedule->command('bb:calculate-proposal-votes')->hourly()
             ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/U6l211ROnnZR1vI'); } );

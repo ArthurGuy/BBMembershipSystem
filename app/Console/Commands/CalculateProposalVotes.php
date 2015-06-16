@@ -10,7 +10,7 @@ class CalculateProposalVotes extends Command
      *
      * @var string
      */
-    protected $name = 'bb:calculate-proposal-votes';
+    protected $signature = 'bb:calculate-proposal-votes';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class CalculateProposalVotes extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $proposals = $this->proposalRepository->getUnprocessedFinishedProposals();
         foreach ($proposals as $proposal) {

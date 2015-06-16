@@ -10,7 +10,7 @@ class RecalculateUserBalances extends Command
      *
      * @var string
      */
-    protected $name = 'bb:update-balances';
+    protected $signature = 'bb:update-balances';
 
     /**
      * The console command description.
@@ -39,7 +39,7 @@ class RecalculateUserBalances extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $users = $this->userRepo->getAll();
 
