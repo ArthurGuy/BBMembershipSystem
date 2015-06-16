@@ -15,8 +15,11 @@ class CreateDevicesTable extends Migration {
 		Schema::create('devices', function(Blueprint $table)
 		{
 			$table->increments('id');
+            $table->string('name', 100);
             $table->string('device_id', 30);
-            $table->string('queued_command', 100)->nullable();;
+            $table->string('queued_command', 100)->nullable();
+            $table->boolean('monitor_heartbeat');
+            $table->string('key', 100);
             $table->dateTime('last_boot');
             $table->dateTime('last_heartbeat');
 			$table->timestamps();

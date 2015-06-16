@@ -466,8 +466,11 @@ VALUES
 
 CREATE TABLE `devices` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `device_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `queued_command` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `monitor_heartbeat` tinyint(1) NOT NULL,
+  `key` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `last_boot` datetime NOT NULL,
   `last_heartbeat` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
