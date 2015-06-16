@@ -101,13 +101,4 @@ class Credit
     }
 
 
-    public static function getDeviceFee($device)
-    {
-        switch ($device) {
-            case 'laser':
-                return 3.00;
-        }
-        throw new NotImplementedException('No fee exists for this device');
-    }
-
 } 

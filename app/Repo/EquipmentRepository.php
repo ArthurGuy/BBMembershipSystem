@@ -40,7 +40,7 @@ class EquipmentRepository extends DBRepository
     /**
      * Return a device by its string key
      * @param $key
-     * @return bool|object
+     * @return Equipment
      */
     public function findByKey($key)
     {

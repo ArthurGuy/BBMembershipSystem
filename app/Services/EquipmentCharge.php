@@ -1,7 +1,7 @@
 <?php namespace BB\Services;
 
 
-class DeviceCharge
+class EquipmentCharge
 {
 
     /**
@@ -14,32 +14,45 @@ class DeviceCharge
      */
     protected $paymentRepository;
 
+    /**
+     * @var \BB\Repo\EquipmentRepository
+     */
+    protected $equipmentRepository;
+
     public function __construct()
     {
         $this->equipmentLogRepository = \App::make('\BB\Repo\EquipmentLogRepository');
         $this->paymentRepository = \App::make('\BB\Repo\PaymentRepository');
+        $this->equipmentRepository = \App::make('\BB\Repo\EquipmentRepository');
     }
 
-    public function calculatePendingDeviceFees()
+    public function calculatePendingFees()
     {
         $records = $this->equipmentLogRepository->getFinishedUnbilledRecords();
         foreach ($records as $record) {
-            $feePerHour = Credit::getDeviceFee($record->device);
 
-            $feePerSecond = $this->costPerSecond($feePerHour);
+            $equipment = $this->equipmentRepository->findByKey($record->device);
+            if ($equipment->hasUsageCharge()) {
 
-            //How may seconds was the device in use
-            $secondsActive = $record->finished->diffInSeconds($record->started);
+                $feePerHour = ($equipment->usageCost / 100); //stored in pence
 
-            //Charges are for a minimum of 5 minutes
-            $secondsActive = $this->roundUpSecondsActive($secondsActive);
+                $feePerSecond = $this->costPerSecond($feePerHour);
 
-            $incurredFee = $this->sessionFee($feePerSecond, $secondsActive);
+                //How may seconds was the device in use
+                $secondsActive = $record->finished->diffInSeconds($record->started);
 
-            //If the reason is empty then its not a special case and should be billed
-            if (empty($record->reason)) {
-                //Create a payment against the user
-                $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '', $incurredFee, 'paid', 0, $record->id . ':' . $record->device);
+                //Charges are for a minimum of 5 minutes
+                $secondsActive = $this->roundUpSecondsActive($secondsActive);
+
+                $incurredFee = $this->sessionFee($feePerSecond, $secondsActive);
+
+                //If the reason is empty then its not a special case and should be billed
+                if (empty($record->reason)) {
+                    //Create a payment against the user
+                    $this->paymentRepository->recordPayment('equipment-fee', $record->user_id, 'balance', '',
+                        $incurredFee, 'paid', 0, $record->id . ':' . $record->device);
+                }
+
             }
 
             //Mark this log as being billed and complete

@@ -7,11 +7,12 @@ use Laracasts\Presenter\PresentableTrait;
 /**
  * Class Equipment
  *
- * @property array  $photos
- * @property string $key
- * @property array  $ppe
- * @property Carbon $obtained_at
- * @property Carbon $removed_at
+ * @property array   $photos
+ * @property string  $key
+ * @property array   $ppe
+ * @property Carbon  $obtained_at
+ * @property Carbon  $removed_at
+ * @property integer $usageCost
  * @package BB\Entities
  */
 class Equipment extends Model

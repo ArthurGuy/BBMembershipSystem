@@ -1,5 +1,5 @@
 <?php
-use BB\Services\DeviceCharge;
+use BB\Services\EquipmentCharge;
 
 $I = new FunctionalTester($scenario);
 $I->wantTo('confirm device charges get generated correctly');
@@ -11,8 +11,8 @@ $I->dontSeeInDatabase('payments', ['reason'=>'equipment-fee', 'reference'=>'1:la
 
 
 
-$deviceCharging = new DeviceCharge();
-$deviceCharging->calculatePendingDeviceFees();
+$deviceCharging = new EquipmentCharge();
+$deviceCharging->calculatePendingFees();
 
 
 //The record that hasn't been removed should have been billed
