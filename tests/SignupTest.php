@@ -10,6 +10,12 @@ class SignupTest extends TestCase {
     //use DatabaseTransactions;
 
     /** @test */
+    public function i_can_visit_the_signup_page()
+    {
+        $this->visit('/register')->see('Join');
+    }
+
+
     public function i_can_sign_up_successfully()
     {
         $faker = Faker\Factory::create();
