@@ -15,10 +15,11 @@
 <table class="table memberList">
     <thead>
         <tr>
+            <th>Name</th>
             <th>Device ID</th>
             <th>Queued Commands</th>
-            <th>Last Boot</th>
             <th>Last Heartbeat</th>
+            <th>Last Boot</th>
         </tr>
     </thead>
     <tbody>

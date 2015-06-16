@@ -1,17 +1,20 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Device
  *
- * @property string $device_key
- * @property bool $requires_induction
- * @property integer $usageCost
- * @property bool $working
- * @property bool $permaloan
- * @property integer $managing_role_id
- * @property $photos
+ * @property string $name
+ * @property string $device_id
+ * @property string $queued_command
+ * @property bool   $monitor_heartbeat
+ * @property string $key
+ * @property Carbon $last_boot
+ * @property Carbon $last_heartbeat
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @package BB\Entities
  */
 class Device extends Model
@@ -37,6 +40,16 @@ class Device extends Model
     public function getDates()
     {
         return array('created_at', 'updated_at', 'last_boot', 'last_heartbeat');
+    }
+
+    public function heartbeatWarning()
+    {
+        //If the last heartbeat was more than an hour ago there is an issue
+        if ( $this->monitor_heartbeat && ($this->last_heartbeat < Carbon::now()->subHour())) {
+            return true;
+        }
+
+        return false;
     }
 
 } 
