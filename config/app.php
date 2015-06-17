@@ -148,7 +148,6 @@ return [
         'BB\Providers\RouteServiceProvider',
         'BB\Providers\StripeServiceProvider',
         'BB\Providers\ValidatorServiceProvider',
-        'BB\Providers\NotificationServiceProvider',
         'BB\Providers\HtmlServiceProvider',
         \BB\Providers\ObserverServiceProvider::class,
 
@@ -160,6 +159,7 @@ return [
         'Jenssegers\Rollbar\RollbarServiceProvider',
         'Maknz\Slack\SlackServiceProvider',
         'Intervention\Image\ImageServiceProvider',
+        ArthurGuy\Notifications\NotificationServiceProvider::class,
 
 	],
 
@@ -210,7 +210,7 @@ return [
         'View'         => 'Illuminate\Support\Facades\View',
         'Form'         => 'Illuminate\Html\FormFacade',
         'HTML'         => 'Illuminate\Html\HtmlFacade',
-        'Notification' => 'BB\Notifications\NotificationFacade',
+        'Notification' => \ArthurGuy\Notifications\NotificationFacade::class,
         'Image'        => 'Intervention\Image\Facades\Image',
         'Slack'        => 'Maknz\Slack\Facades\Slack',
 
