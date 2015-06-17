@@ -128,11 +128,10 @@ class ProposalsCest
         $I->amOnPage('/proposals');
         $I->canSee('Proposal 4');
 
-        //Confirm that posting directly generates a validation exception
-        $I->sendPOST('/proposals/4', ['vote'=>'+1']);
-
-        $I->assertTrue(\Notification::hasMessage());
-        $I->assertEquals('The proposal isn\'t open for voting', \Notification::getMessage());
+        $I->seeExceptionThrown('BB\Exceptions\ValidationException', function($I) {
+            //Confirm that posting directly generates a validation exception
+            $I->sendPOST('/proposals/4', ['vote'=>'+1']);
+        });
     }
 
     public function adminCanEditUnstartedProposal(FunctionalTester $I)

@@ -44,12 +44,9 @@ class EquipmentLogCest
 
         $I->selectOption('form[name=equipmentLog] select[name=reason]', 'testing');
 
-        $I->click('Update');
-
-        $I->assertTrue(\Notification::hasMessage());
-        $I->assertEquals('You can\'t update your own record', \Notification::getMessage());
-
-        //$I->canSeeResponseCodeIs(302);
+        $I->seeExceptionThrown('BB\Exceptions\ValidationException', function($I) {
+            $I->click('Update');
+        });
 
     }
 
