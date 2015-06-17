@@ -19,9 +19,9 @@ class CreateDevicesTable extends Migration {
             $table->string('device_id', 30);
             $table->string('queued_command', 100)->nullable();
             $table->boolean('monitor_heartbeat');
-            $table->string('key', 100);
-            $table->dateTime('last_boot');
-            $table->dateTime('last_heartbeat');
+            $table->string('key', 100)->nullable();
+            $table->dateTime('last_boot')->nullable();
+            $table->dateTime('last_heartbeat')->nullable();
 			$table->timestamps();
 		});
 	}

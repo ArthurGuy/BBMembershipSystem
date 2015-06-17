@@ -10,6 +10,8 @@
 | database. Just tell the factory how a default model should look.
 |
 */
+use Carbon\Carbon;
+
 $factory->define('BB\Entities\User', function ($faker) {
     return [
         'given_name'          => $faker->firstName,
@@ -33,6 +35,16 @@ $factory->define('BB\Entities\ProfileData', function ($faker) {
         'new_profile_photo'     => false,
         'profile_photo_private' => false,
         'profile_photo_on_wall' => false,
-        'tagline'               => $faker->sentence
+        'tagline'               => $faker->sentence,
+    ];
+});
+
+$factory->define('BB\Entities\Device', function ($faker) {
+    return [
+        'name'              => $faker->word,
+        'device_id'         => $faker->word,
+        'queued_command'    => null,
+        'monitor_heartbeat' => false,
+        'key'               => $faker->word,
     ];
 });

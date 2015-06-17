@@ -43,6 +43,7 @@
             {!! HTML::sideNavLink('Members (Admin)', 'account.index') !!}
             {!! HTML::sideNavLink('Roles (Admin)', 'roles.index') !!}
             {!! HTML::sideNavLink('Payments (Admin)', 'payments.index') !!}
+            {!! HTML::sideNavLink('Devices (Admin)', 'devices.index') !!}
         @endif
     </ul>
 
