@@ -63,8 +63,11 @@ class ProfileController extends Controller
         unset($input['new_profile_photo']);
 
         if (empty($input['profile_photo_private'])) {
-                    $input['profile_photo_private'] = false;
+            $input['profile_photo_private'] = false;
         }
+
+        //Trim all the data so some of the validation doesn't choke on spaces
+        $input = array_map('trim', $input);
 
         $this->profileValidator->validate($input, $userId);
 
