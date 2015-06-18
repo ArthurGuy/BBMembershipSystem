@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class SignupTest extends TestCase {
 
-    use DatabaseMigrations;
     //use DatabaseTransactions;
 
     /** @test */

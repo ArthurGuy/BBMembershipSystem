@@ -26,12 +26,17 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     public function setUp()
     {
+        parent::setUp();
+
+        $this->artisan('migrate');
+
+        $this->beforeApplicationDestroyed(function () {
+            $this->artisan('migrate:rollback');
+        });
 
         //Create an empty file for the sqlite db to go into
         //exec('rm ' . storage_path('database.sqlite'));
         //exec('touch ' . storage_path('database.sqlite'));
-
-        parent::setUp();
     }
 
 

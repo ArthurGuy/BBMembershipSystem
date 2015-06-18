@@ -7,9 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class LoginTest extends TestCase
 {
 
-    //use WithoutMiddleware;
-    use DatabaseMigrations;
-    //use DatabaseTransactions;
+    use DatabaseTransactions;
 
     /** @test */
     public function i_can_login()

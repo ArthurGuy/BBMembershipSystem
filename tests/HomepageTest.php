@@ -7,8 +7,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 Class HomepageTest extends TestCase
 {
 
-    //use WithoutMiddleware;
-
     /** @test */
     public function i_can_visit_home_page()
     {

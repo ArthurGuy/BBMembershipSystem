@@ -21,10 +21,12 @@ $factory->define('BB\Entities\User', function ($faker) {
         'remember_token'      => str_random(10),
         'hash'                => str_random(32),
         'status'              => 'active',
+        'active'              => true,
         'induction_completed' => false,
         'trusted'             => false,
         'key_holder'          => false,
         'phone'               => false,
+        'profile_private'     => false,
     ];
 });
 
