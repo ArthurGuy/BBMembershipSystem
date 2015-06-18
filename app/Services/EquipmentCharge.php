@@ -34,9 +34,7 @@ class EquipmentCharge
             $equipment = $this->equipmentRepository->findByKey($record->device);
             if ($equipment->hasUsageCharge()) {
 
-                $feePerHour = ($equipment->usageCost / 100); //stored in pence
-
-                $feePerSecond = $this->costPerSecond($feePerHour);
+                $feePerSecond = $this->costPerSecond($equipment->usageCost);
 
                 //How may seconds was the device in use
                 $secondsActive = $record->finished->diffInSeconds($record->started);
