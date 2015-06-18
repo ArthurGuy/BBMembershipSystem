@@ -79583,6 +79583,14 @@ var NewExpenseModal = _react2['default'].createClass({
         return this.getValidationMessages(key).pop();
     },
 
+    fileHelpMessage: function fileHelpMessage() {
+        var validationMessage = this.validationMessage('file');
+        if (validationMessage) {
+            return validationMessage;
+        }
+        return 'This needs to be an image of the receipt or invoice for the expense to be approved';
+    },
+
     render: function render() {
 
         var dropdownOptions = [{ key: '', value: '' }, { key: 'consumables', value: 'Consumables' }, { key: 'food', value: 'Food' }, { key: 'equipment-repair', value: 'Equipment Repair' }, { key: 'tools', value: 'Tools' }, { key: 'infrastructure', value: 'Infrastructure' }];
@@ -79607,7 +79615,7 @@ var NewExpenseModal = _react2['default'].createClass({
                 _react2['default'].createElement(ReactBootstrap.Input, { type: 'text', label: 'Description', help: this.validationMessage('description'), placeholder: 'New saw blades', value: this.state.description, onChange: this.handleChange('description'), bsStyle: this.fieldStyle('description') }),
                 _react2['default'].createElement(ReactBootstrap.Input, { type: 'text', label: 'Amount', help: this.validationMessage('amount'), placeholder: '4.99', value: this.state.amount, onChange: this.handleChange('amount'), bsStyle: this.fieldStyle('amount') }),
                 _react2['default'].createElement(ReactBootstrap.Input, { className: 'js-date-select', type: 'text', label: 'Date', help: this.validationMessage('expense_date'), placeholder: '24/3/15', value: this.state.expense_date, onChange: this.handleChange('expense_date'), bsStyle: this.fieldStyle('expense_date') }),
-                _react2['default'].createElement(ReactBootstrap.Input, { id: 'fileUpload', type: 'file', label: 'Receipt', help: this.validationMessage('file'), value: this.state.file, onChange: this.handleChange('file'), bsStyle: this.fieldStyle('file') })
+                _react2['default'].createElement(ReactBootstrap.Input, { id: 'fileUpload', type: 'file', label: 'Receipt', help: this.fileHelpMessage(), value: this.state.file, onChange: this.handleChange('file'), bsStyle: this.fieldStyle('file') })
             ),
             _react2['default'].createElement(
                 'div',

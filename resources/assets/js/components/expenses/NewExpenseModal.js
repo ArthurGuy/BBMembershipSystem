@@ -109,6 +109,14 @@ const NewExpenseModal = React.createClass({
         return this.getValidationMessages(key).pop();
     },
 
+    fileHelpMessage: function() {
+        var validationMessage = this.validationMessage('file');
+        if (validationMessage) {
+            return validationMessage;
+        }
+        return 'This needs to be an image of the receipt or invoice for the expense to be approved';
+    },
+
     render: function() {
 
         var dropdownOptions = [
@@ -139,7 +147,7 @@ const NewExpenseModal = React.createClass({
 
                     <ReactBootstrap.Input className='js-date-select' type='text' label='Date' help={this.validationMessage('expense_date')} placeholder='24/3/15' value={this.state.expense_date} onChange={this.handleChange('expense_date')} bsStyle={this.fieldStyle('expense_date')} />
 
-                    <ReactBootstrap.Input id="fileUpload" type='file' label='Receipt' help={this.validationMessage('file')} value={this.state.file} onChange={this.handleChange('file')} bsStyle={this.fieldStyle('file')} />
+                    <ReactBootstrap.Input id="fileUpload" type='file' label='Receipt' help={this.fileHelpMessage()} value={this.state.file} onChange={this.handleChange('file')} bsStyle={this.fieldStyle('file')} />
 
                 </div>
                 <div className='modal-footer'>
