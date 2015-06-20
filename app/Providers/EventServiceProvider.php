@@ -1,6 +1,10 @@
 <?php namespace BB\Providers;
 
+use BB\Listeners\AddApprovedExpenseToBalance;
+use BB\Listeners\EmailMemberAboutApprovedExpense;
+use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
+use BB\Listeners\EmailTrusteesAboutExpense;
 use BB\Listeners\RecordMemberActivity;
 use BB\Listeners\SlackActivityNotification;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
@@ -36,14 +40,14 @@ class EventServiceProvider extends ServiceProvider {
 			'BB\Handlers\SubChargeEventHandler@onPaymentFailure',
 		],
         'BB\Events\NewExpenseSubmitted' => [
-            'BB\Listeners\EmailTrusteesAboutExpense',
+            EmailTrusteesAboutExpense::class,
         ],
         'BB\Events\ExpenseWasApproved' => [
-            'BB\Listeners\EmailMemberAboutApprovedExpense',
-            'BB\Listeners\AddApprovedExpenseToBalance',
+            EmailMemberAboutApprovedExpense::class,
+            AddApprovedExpenseToBalance::class,
         ],
         'BB\Events\ExpenseWasDeclined' => [
-            'BB\Listeners\EmailMemberAboutDeclinedExpense',
+            EmailMemberAboutDeclinedExpense::class,
         ],
         'BB\Events\MemberPhotoWasDeclined' => [
             EmailMemberAboutDeclinedPhoto::class,
