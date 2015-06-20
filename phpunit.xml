@@ -22,5 +22,6 @@
         <env name="DB_DATABASE" value="bbms_acceptance_testing"/>
         <env name="DB_DEFAULT" value="sqlite"/>
         <env name="MAIL_DRIVER" value="log"/>
+        <env name="FORCE_SECURE" value="false"/>
     </php>
 </phpunit>
