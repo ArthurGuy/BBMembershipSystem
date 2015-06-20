@@ -37,9 +37,21 @@ class ACSController extends Controller
 
     public function store()
     {
-        $data = \Request::only('device', 'service', 'message', 'tag', 'time', 'payload');
+        $data = \Request::only('device', 'service', 'message', 'tag', 'time', 'payload', 'signature', 'nonce');
+
+        //device = the device id from the devices table - unique to each piece of hardware
+        //service = what the request is for, entry, usage, consumable
+        //message = system message, heartbeat, boot
+        //tag = the keyfob id
+        //time = the time of the action
+        //payload = any extra data relavent to the request
+        //signature = an encoded value generated using a secret key - oauth style
+        //nonce = a unique value suitable to stop replay attacks
 
         $this->ACSValidator->validate($data);
+
+
+
 
 
         //System messages
@@ -68,6 +80,15 @@ class ACSController extends Controller
             default:
                 \Log::debug(json_encode($data));
         }
+
+        $responseArray = [
+            'time'      => time(),
+            'command'   => null,      //stored command for the device to process
+            'valid'     => true,      //member request
+            'available' => true,      //device status - remote shutdown,
+            'member'    => null,      //member name
+        ];
+
     }
 
     private function handleDoor($data)
