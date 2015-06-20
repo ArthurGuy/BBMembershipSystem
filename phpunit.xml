@@ -21,5 +21,6 @@
         <env name="QUEUE_DRIVER" value="sync"/>
         <env name="DB_DATABASE" value="bbms_acceptance_testing"/>
         <env name="DB_DEFAULT" value="sqlite"/>
+        <env name="MAIL_DRIVER" value="log"/>
     </php>
 </phpunit>
