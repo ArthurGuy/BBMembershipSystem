@@ -32,9 +32,11 @@ class EquipmentLogController extends Controller
 
         $equipmentLog = $this->equipmentLogRepository->getById($logEntryId);
 
+        /*
         if ($equipmentLog->user_id == \Auth::user()->id) {
             throw new \BB\Exceptions\ValidationException("You can't update your own record");
         }
+        */
 
         if ( ! \Auth::user()->hasRole($equipmentLog->device) && ! \Auth::user()->isAdmin()) {
             throw new \BB\Exceptions\ValidationException("You don't have permission to alter this record");
