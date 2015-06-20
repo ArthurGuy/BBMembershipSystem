@@ -60,7 +60,8 @@ Tools and Equipment
 
                     <br />
 
-                    {!! $equipment->present()->description !!}<br />
+                    {!! $equipment->present()->description !!}
+                    <br />
 
                     @if ($equipment->help_text)
                         <a data-toggle="modal" data-target="#helpModal" href="#">Help</a><br />
@@ -68,20 +69,29 @@ Tools and Equipment
 
 
                     @if ($equipment->requiresInduction())
+
                         To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
                         Equipment access fee: &pound{{ $equipment->access_fee }}<br />
                         <br />
+
                         @if (!$userInduction)
+
                             <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="Pay Now" data-methods="gocardless,stripe,balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
 
                         @elseif ($userInduction->is_trained)
+
                             Trained
+
                         @elseif ($userInduction)
+
                             Access fee paid, induction to be completed
+
                         @endif
 
                     @else
+
                         No fee required
+
                     @endif
 
 
