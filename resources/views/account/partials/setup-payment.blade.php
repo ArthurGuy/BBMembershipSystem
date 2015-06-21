@@ -25,6 +25,9 @@
         {!! Form::hidden('p3', '1') !!}
         {!! Form::hidden('t3', 'M') !!}
         {!! Form::hidden('lc', 'GB') !!}
+        {!! Form::hidden('src', '1') !!}
+        {!! Form::hidden('no_note', '1') !!}
+        {!! Form::hidden('no_shipping', '1') !!}
         {!! Form::hidden('hosted_button_i', '3H4YABLMVW6RC') !!}
         {!! Form::close() !!}
     </p>
