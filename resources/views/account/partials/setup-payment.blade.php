@@ -1,8 +1,7 @@
 
 
-
-        <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit</a>
-        <br /><br />
+    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit</a>
+    <br /><br />
     <p>
         Your subscription payments will be taken on the day you complete this process unless stated otherwise on this page.<br />
         You can cancel the Direct Debit at any point through this website or your bank giving you full control over the payments.
@@ -34,14 +33,3 @@
     <p class="hidden">
         If neither of these options are suitable please send us an email explaining the situation <a href="mailto:trustees@buildbrighton.com">trustees@buildbrighton.com</a>
     </p>
-    @if (Auth::user()->isAdmin())
-    {!! Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) !!}
-    <p>
-        <span class="label label-danger pull-right">Admin</span>
-        Add a manual payment (with todays date) to this account and activate it
-    </p>
-    {!! Form::hidden('reason', 'subscription') !!}
-    {!! Form::select('source', ['other'=>'Other', 'paypal'=>'PayPal', 'cash'=>'Cash', 'standing-order'=>'Standing Order'], null, ['class'=>'form-control']) !!}
-    {!! Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) !!}
-    {!! Form::close() !!}
-    @endif
