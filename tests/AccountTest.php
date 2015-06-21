@@ -80,4 +80,21 @@ class AccountTest extends TestCase
             ->see($user2->name);
     }
 
+
+    public function i_can_edit_my_profile()
+    {
+        $user = factory('BB\Entities\User')->create();
+        factory('BB\Entities\ProfileData')->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $this->visit('/account/' . $user->id . '/profile/edit')
+            ->see('Fill in your profile')
+            ->select(['skill1', 'skill2'], '.skills-dropdown')
+            ->press('Save')
+            ->see('Setting up');
+
+        //$this->seeInDatabase('users', ['email' => $email, 'given_name' => $firstName]);
+    }
+
 }

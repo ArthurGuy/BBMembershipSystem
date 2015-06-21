@@ -67,7 +67,11 @@ class ProfileController extends Controller
         }
 
         //Trim all the data so some of the validation doesn't choke on spaces
-        $input = array_map('trim', $input);
+        foreach ($input as $key => $value) {
+            if (is_string($value)) {
+                $input[$key] = trim($value);
+            }
+        }
 
         $this->profileValidator->validate($input, $userId);
 
