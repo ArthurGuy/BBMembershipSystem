@@ -2,6 +2,7 @@
 
 
 use BB\Entities\User;
+use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
 
 class AccountController extends Controller
@@ -228,7 +229,14 @@ class AccountController extends Controller
     {
         $user = User::findWithPermission($id);
 
+        $madeTrusted = false;
+
+
         if (\Input::has('trusted')) {
+            if ( ! $user->trusted && \Input::get('trusted')) {
+                //User has been made a trusted member
+                $madeTrusted = true;
+            }
             $user->trusted = \Input::get('trusted');
         }
 
@@ -268,6 +276,9 @@ class AccountController extends Controller
             }
         }
 
+        if ($madeTrusted) {
+            event(new MemberGivenTrustedStatus($user));
+        }
 
 
         if (\Request::wantsJson()) {

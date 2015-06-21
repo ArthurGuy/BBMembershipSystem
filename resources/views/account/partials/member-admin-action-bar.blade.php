@@ -5,14 +5,17 @@
     <div class="col-xs-12 col-sm-6">
         <div class="row">
             <div class="col-xs-12">
-                {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) !!}
+                {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
                 <div class="form-group">
                     {!! Form::label('trusted', 'Trusted Member', ['class'=>'col-sm-4 control-label']) !!}
-                    <div class="col-sm-8">
-                        {!! Form::select('trusted', ['0'=>'No', '1'=>'Yes'], $user->trusted, ['class'=>'form-control']) !!}
-                    </div>
+                @if ($user->trusted)
+                    {!! Form::hidden('trusted', 0) !!}
+                    {!! Form::submit('Remove Trusted Status', array('class'=>'btn btn-default')) !!}
+                @else
+                    {!! Form::hidden('trusted', 1) !!}
+                    {!! Form::submit('Make Trusted', array('class'=>'btn btn-default')) !!}
+                @endif
                 </div>
-
                 {!! Form::close() !!}
             </div>
         </div>

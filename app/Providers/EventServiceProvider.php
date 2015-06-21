@@ -4,6 +4,7 @@ use BB\Listeners\AddApprovedExpenseToBalance;
 use BB\Listeners\EmailMemberAboutApprovedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
+use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\EmailTrusteesAboutExpense;
 use BB\Listeners\ExtendMembership;
 use BB\Listeners\RecordMemberActivity;
@@ -57,6 +58,9 @@ class EventServiceProvider extends ServiceProvider {
             RecordMemberActivity::class,
             SlackActivityNotification::class
         ],
+        'BB\Events\MemberGivenTrustedStatus' => [
+            EmailMemberAboutTrustedStatus::class
+        ]
 	];
 
 	/**
