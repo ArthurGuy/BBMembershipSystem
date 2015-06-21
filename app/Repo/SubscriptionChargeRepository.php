@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\SubscriptionCharge;
+use BB\Events\SubscriptionChargePaid;
 use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 
@@ -107,7 +108,7 @@ class SubscriptionChargeRepository extends DBRepository
         }
         $subCharge->save();
 
-        \Event::fire('sub-charge.paid', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
+        event(new SubscriptionChargePaid($subCharge));
     }
 
     /**

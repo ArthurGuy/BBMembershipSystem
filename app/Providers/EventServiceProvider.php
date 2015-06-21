@@ -5,6 +5,7 @@ use BB\Listeners\EmailMemberAboutApprovedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailTrusteesAboutExpense;
+use BB\Listeners\ExtendMembership;
 use BB\Listeners\RecordMemberActivity;
 use BB\Listeners\SlackActivityNotification;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
@@ -30,9 +31,9 @@ class EventServiceProvider extends ServiceProvider {
         'payment.paid' => [
 			'BB\Handlers\PaymentEventHandler@onPaid',
 		],
-        'sub-charge.paid' => [
-			'BB\Handlers\SubChargeEventHandler@onPaid',
-		],
+        'BB\Events\SubscriptionChargePaid' => [
+            ExtendMembership::class
+        ],
         'sub-charge.processing' => [
 			'BB\Handlers\SubChargeEventHandler@onProcessing',
 		],
