@@ -167,7 +167,7 @@
             <div class="input-group-addon">&pound;</div>
             {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01']) !!}
             <div class="input-group-addon">
-            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram'], null, ['class'=>'']) !!}
+            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'']) !!}
             </div>
         </div>
         <p class="help-block">Does the equipment cost anything to use?</p>

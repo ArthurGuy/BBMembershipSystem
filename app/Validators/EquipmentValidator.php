@@ -28,7 +28,7 @@ class EquipmentValidator extends FormValidator
         'permaloan_user_id'  => 'exists:users,id|required_if:permaloan,1',
         'access_fee'         => 'integer',
         'usage_cost'         => 'numeric',
-        'usage_cost_per'     => 'in:hour,gram',
+        'usage_cost_per'     => 'in:hour,gram,page',
         'photo'              => 'image',
         'archive'            => 'boolean',
         'asset_tag_id'       => 'unique:equipment,asset_tag_id',
