@@ -51,9 +51,7 @@ Tools and Equipment
                         </div>
                         <div class="col-md-12 col-lg-6">
 
-                            @if ($equipment->hasPhoto())
-                                <img src="{{ $equipment->getPhotoUrl(0) }}" class="img-thumbnail pull-right" width="200" />
-                            @endif
+
 
                         </div>
                     </div>
@@ -90,12 +88,33 @@ Tools and Equipment
 
                     @else
 
-                        No fee required
+                        No access fee required
 
                     @endif
 
 
                 </div>
+            </div>
+
+
+            <div class="col-sm-12 col-lg-6">
+
+                @if ($equipment->hasPhoto())
+                    @for($i=0; $i < $equipment->getNumPhotos(); $i++)
+                        <img src="{{ $equipment->getPhotoUrl($i) }}" width="170" data-toggle="modal" data-target="#image{{ $i }}" style="margin:3px 1px; padding:0;" />
+
+                        <div class="modal fade" id="image{{ $i }}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <img src="{{ $equipment->getPhotoUrl($i) }}" width="100%" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endfor
+                @endif
+
             </div>
 
             <div class="col-sm-12 col-lg-6">
