@@ -237,7 +237,7 @@ if (memberExpensesPanel.length) {
 
 },{"backbone":3,"jquery":49,"underscore":477}],3:[function(require,module,exports){
 (function (global){
-//     Backbone.js 1.2.0
+//     Backbone.js 1.2.1
 
 //     (c) 2010-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Backbone may be freely distributed under the MIT license.
@@ -279,12 +279,11 @@ if (memberExpensesPanel.length) {
   // restored later on, if `noConflict` is used.
   var previousBackbone = root.Backbone;
 
-  // Create local references to array methods we'll want to use later.
-  var array = [];
-  var slice = array.slice;
+  // Create a local reference to a common array method we'll want to use later.
+  var slice = [].slice;
 
   // Current version of the library. Keep in sync with `package.json`.
-  Backbone.VERSION = '1.2.0';
+  Backbone.VERSION = '1.2.1';
 
   // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
   // the `$` variable.
@@ -307,6 +306,35 @@ if (memberExpensesPanel.length) {
   // `application/x-www-form-urlencoded` instead and will send the model in a
   // form param named `model`.
   Backbone.emulateJSON = false;
+
+  // Proxy Underscore methods to a Backbone class' prototype using a
+  // particular attribute as the data argument
+  var addMethod = function(length, method, attribute) {
+    switch (length) {
+      case 1: return function() {
+        return _[method](this[attribute]);
+      };
+      case 2: return function(value) {
+        return _[method](this[attribute], value);
+      };
+      case 3: return function(iteratee, context) {
+        return _[method](this[attribute], iteratee, context);
+      };
+      case 4: return function(iteratee, defaultVal, context) {
+        return _[method](this[attribute], iteratee, defaultVal, context);
+      };
+      default: return function() {
+        var args = slice.call(arguments);
+        args.unshift(this[attribute]);
+        return _[method].apply(_, args);
+      };
+    }
+  };
+  var addUnderscoreMethods = function(Class, methods, attribute) {
+    _.each(methods, function(length, method) {
+      if (_[method]) Class.prototype[method] = addMethod(length, method, attribute);
+    });
+  };
 
   // Backbone.Events
   // ---------------
@@ -335,6 +363,7 @@ if (memberExpensesPanel.length) {
     var i = 0, names;
     if (name && typeof name === 'object') {
       // Handle event maps.
+      if (callback !== void 0 && 'context' in opts && opts.context === void 0) opts.context = callback;
       for (names = _.keys(name); i < names.length ; i++) {
         memo = iteratee(memo, names[i], name[names[i]], opts);
       }
@@ -444,7 +473,7 @@ if (memberExpensesPanel.length) {
     // No events to consider.
     if (!events) return;
 
-    var i = 0, length, listening;
+    var i = 0, listening;
     var context = options.context, listeners = options.listeners;
 
     // Delete all events listeners and "drop" events.
@@ -513,7 +542,7 @@ if (memberExpensesPanel.length) {
   };
 
   // Reduces the event callbacks into a map of `{event: onceWrapper}`.
-  // `offer` unbinds the `onceWrapper` after it as been called.
+  // `offer` unbinds the `onceWrapper` after it has been called.
   var onceMap = function(map, name, callback, offer) {
     if (callback) {
       var once = map[name] = _.once(function() {
@@ -564,35 +593,6 @@ if (memberExpensesPanel.length) {
       case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2, a3); return;
       default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args); return;
     }
-  };
-
-  // Proxy Underscore methods to a Backbone class' prototype using a
-  // particular attribute as the data argument
-  var addMethod = function(length, method, attribute) {
-    switch (length) {
-      case 1: return function() {
-        return _[method](this[attribute]);
-      };
-      case 2: return function(value) {
-        return _[method](this[attribute], value);
-      };
-      case 3: return function(iteratee, context) {
-        return _[method](this[attribute], iteratee, context);
-      };
-      case 4: return function(iteratee, defaultVal, context) {
-        return _[method](this[attribute], iteratee, defaultVal, context);
-      };
-      default: return function() {
-        var args = slice.call(arguments);
-        args.unshift(this[attribute]);
-        return _[method].apply(_, args);
-      };
-    }
-  };
-  var addUnderscoreMethods = function(Class, methods, attribute) {
-    _.each(methods, function(length, method) {
-      if (_[method]) Class.prototype[method] = addMethod(length, method, attribute);
-    });
   };
 
   // Aliases for backwards compatibility.
@@ -683,10 +683,10 @@ if (memberExpensesPanel.length) {
     // the core primitive operation of a model, updating the data and notifying
     // anyone who needs to know about the change in state. The heart of the beast.
     set: function(key, val, options) {
-      var attr, attrs, unset, changes, silent, changing, prev, current;
       if (key == null) return this;
 
       // Handle both `"key", value` and `{key: value}` -style arguments.
+      var attrs;
       if (typeof key === 'object') {
         attrs = key;
         options = val;
@@ -700,29 +700,32 @@ if (memberExpensesPanel.length) {
       if (!this._validate(attrs, options)) return false;
 
       // Extract attributes and options.
-      unset           = options.unset;
-      silent          = options.silent;
-      changes         = [];
-      changing        = this._changing;
-      this._changing  = true;
+      var unset      = options.unset;
+      var silent     = options.silent;
+      var changes    = [];
+      var changing   = this._changing;
+      this._changing = true;
 
       if (!changing) {
         this._previousAttributes = _.clone(this.attributes);
         this.changed = {};
       }
-      current = this.attributes, prev = this._previousAttributes;
+
+      var current = this.attributes;
+      var changed = this.changed;
+      var prev    = this._previousAttributes;
 
       // Check for changes of `id`.
       if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
 
       // For each `set` attribute, update or delete the current value.
-      for (attr in attrs) {
+      for (var attr in attrs) {
         val = attrs[attr];
         if (!_.isEqual(current[attr], val)) changes.push(attr);
         if (!_.isEqual(prev[attr], val)) {
-          this.changed[attr] = val;
+          changed[attr] = val;
         } else {
-          delete this.changed[attr];
+          delete changed[attr];
         }
         unset ? delete current[attr] : current[attr] = val;
       }
@@ -778,13 +781,14 @@ if (memberExpensesPanel.length) {
     // determining if there *would be* a change.
     changedAttributes: function(diff) {
       if (!diff) return this.hasChanged() ? _.clone(this.changed) : false;
-      var val, changed = false;
       var old = this._changing ? this._previousAttributes : this.attributes;
+      var changed = {};
       for (var attr in diff) {
-        if (_.isEqual(old[attr], (val = diff[attr]))) continue;
-        (changed || (changed = {}))[attr] = val;
+        var val = diff[attr];
+        if (_.isEqual(old[attr], val)) continue;
+        changed[attr] = val;
       }
-      return changed;
+      return _.size(changed) ? changed : false;
     },
 
     // Get the previous value of an attribute, recorded at the time the last
@@ -803,12 +807,12 @@ if (memberExpensesPanel.length) {
     // Fetch the model from the server, merging the response with the model's
     // local attributes. Any changed attributes will trigger a "change" event.
     fetch: function(options) {
-      options = options ? _.clone(options) : {};
-      if (options.parse === void 0) options.parse = true;
+      options = _.extend({parse: true}, options);
       var model = this;
       var success = options.success;
       options.success = function(resp) {
-        if (!model.set(model.parse(resp, options), options)) return false;
+        var serverAttrs = options.parse ? model.parse(resp, options) : resp;
+        if (!model.set(serverAttrs, options)) return false;
         if (success) success.call(options.context, model, resp, options);
         model.trigger('sync', model, resp, options);
       };
@@ -820,9 +824,8 @@ if (memberExpensesPanel.length) {
     // If the server returns an attributes hash that differs, the model's
     // state will be `set` again.
     save: function(key, val, options) {
-      var attrs, method, xhr, attributes = this.attributes, wait;
-
       // Handle both `"key", value` and `{key: value}` -style arguments.
+      var attrs;
       if (key == null || typeof key === 'object') {
         attrs = key;
         options = val;
@@ -830,8 +833,8 @@ if (memberExpensesPanel.length) {
         (attrs = {})[key] = val;
       }
 
-      options = _.extend({validate: true}, options);
-      wait = options.wait;
+      options = _.extend({validate: true, parse: true}, options);
+      var wait = options.wait;
 
       // If we're not waiting and attributes exist, save acts as
       // `set(attr).save(null, opts)` with validation. Otherwise, check if
@@ -842,35 +845,31 @@ if (memberExpensesPanel.length) {
         if (!this._validate(attrs, options)) return false;
       }
 
-      // Set temporary attributes if `{wait: true}`.
-      if (attrs && wait) {
-        this.attributes = _.extend({}, attributes, attrs);
-      }
-
       // After a successful server-side save, the client is (optionally)
       // updated with the server-side state.
-      if (options.parse === void 0) options.parse = true;
       var model = this;
       var success = options.success;
+      var attributes = this.attributes;
       options.success = function(resp) {
         // Ensure attributes are restored during synchronous saves.
         model.attributes = attributes;
         var serverAttrs = options.parse ? model.parse(resp, options) : resp;
-        if (wait) serverAttrs = _.extend(attrs || {}, serverAttrs);
-        if (_.isObject(serverAttrs) && !model.set(serverAttrs, options)) {
-          return false;
-        }
+        if (wait) serverAttrs = _.extend({}, attrs, serverAttrs);
+        if (serverAttrs && !model.set(serverAttrs, options)) return false;
         if (success) success.call(options.context, model, resp, options);
         model.trigger('sync', model, resp, options);
       };
       wrapError(this, options);
 
-      method = this.isNew() ? 'create' : (options.patch ? 'patch' : 'update');
+      // Set temporary attributes if `{wait: true}` to properly find new ids.
+      if (attrs && wait) this.attributes = _.extend({}, attributes, attrs);
+
+      var method = this.isNew() ? 'create' : (options.patch ? 'patch' : 'update');
       if (method === 'patch' && !options.attrs) options.attrs = attrs;
-      xhr = this.sync(method, this, options);
+      var xhr = this.sync(method, this, options);
 
       // Restore attributes.
-      if (attrs && wait) this.attributes = attributes;
+      this.attributes = attributes;
 
       return xhr;
     },
@@ -915,8 +914,8 @@ if (memberExpensesPanel.length) {
         _.result(this.collection, 'url') ||
         urlError();
       if (this.isNew()) return base;
-      var id = this.id || this.attributes[this.idAttribute];
-      return base.replace(/([^\/])$/, '$1/') + encodeURIComponent(id);
+      var id = this.get(this.idAttribute);
+      return base.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
     },
 
     // **parse** converts a response into the hash of attributes to be `set` on
@@ -937,7 +936,7 @@ if (memberExpensesPanel.length) {
 
     // Check if the model is currently in a valid state.
     isValid: function(options) {
-      return this._validate({}, _.extend(options || {}, { validate: true }));
+      return this._validate({}, _.defaults({validate: true}, options));
     },
 
     // Run validation against the next complete set of model attributes,
@@ -1000,7 +999,7 @@ if (memberExpensesPanel.length) {
     // The JSON representation of a Collection is an array of the
     // models' attributes.
     toJSON: function(options) {
-      return this.map(function(model){ return model.toJSON(options); });
+      return this.map(function(model) { return model.toJSON(options); });
     },
 
     // Proxy `Backbone.sync` by default.
@@ -1015,12 +1014,12 @@ if (memberExpensesPanel.length) {
 
     // Remove a model, or a list of models from the set.
     remove: function(models, options) {
-      var singular = !_.isArray(models), removed;
+      options = _.extend({}, options);
+      var singular = !_.isArray(models);
       models = singular ? [models] : _.clone(models);
-      options || (options = {});
-      removed = this._removeModels(models, options);
+      var removed = this._removeModels(models, options);
       if (!options.silent && removed) this.trigger('update', this, options);
-      return singular ? models[0] : models;
+      return singular ? removed[0] : removed;
     },
 
     // Update a collection by `set`-ing a new list of models, adding new ones,
@@ -1029,7 +1028,7 @@ if (memberExpensesPanel.length) {
     // the core operation for updating the data contained by the collection.
     set: function(models, options) {
       options = _.defaults({}, options, setOptions);
-      if (options.parse) models = this.parse(models, options);
+      if (options.parse && !this._isModel(models)) models = this.parse(models, options);
       var singular = !_.isArray(models);
       models = singular ? (models ? [models] : []) : models.slice();
       var id, model, attrs, existing, sort;
@@ -1149,8 +1148,7 @@ if (memberExpensesPanel.length) {
     // Remove a model from the end of the collection.
     pop: function(options) {
       var model = this.at(this.length - 1);
-      this.remove(model, options);
-      return model;
+      return this.remove(model, options);
     },
 
     // Add a model to the beginning of the collection.
@@ -1161,8 +1159,7 @@ if (memberExpensesPanel.length) {
     // Remove a model from the beginning of the collection.
     shift: function(options) {
       var model = this.at(0);
-      this.remove(model, options);
-      return model;
+      return this.remove(model, options);
     },
 
     // Slice out a sub-array of models from the collection.
@@ -1225,8 +1222,7 @@ if (memberExpensesPanel.length) {
     // collection when they arrive. If `reset: true` is passed, the response
     // data will be passed through the `reset` method instead of `set`.
     fetch: function(options) {
-      options = options ? _.clone(options) : {};
-      if (options.parse === void 0) options.parse = true;
+      options = _.extend({parse: true}, options);
       var success = options.success;
       var collection = this;
       options.success = function(resp) {
@@ -1245,7 +1241,8 @@ if (memberExpensesPanel.length) {
     create: function(model, options) {
       options = options ? _.clone(options) : {};
       var wait = options.wait;
-      if (!(model = this._prepareModel(model, options))) return false;
+      model = this._prepareModel(model, options);
+      if (!model) return false;
       if (!wait) this.add(model, options);
       var collection = this;
       var success = options.success;
@@ -1299,31 +1296,27 @@ if (memberExpensesPanel.length) {
       return false;
     },
 
-    // Internal method called by both remove and set. Does not trigger any
-    // additional events. Returns true if anything was actually removed.
+    // Internal method called by both remove and set.
+    // Returns removed models, or false if nothing is removed.
     _removeModels: function(models, options) {
-      var i, l, index, model, removed = false;
-      for (var i = 0, j = 0; i < models.length; i++) {
-        var model = models[i] = this.get(models[i]);
+      var removed = [];
+      for (var i = 0; i < models.length; i++) {
+        var model = this.get(models[i]);
         if (!model) continue;
-        var id = this.modelId(model.attributes);
-        if (id != null) delete this._byId[id];
-        delete this._byId[model.cid];
+
         var index = this.indexOf(model);
         this.models.splice(index, 1);
         this.length--;
+
         if (!options.silent) {
           options.index = index;
           model.trigger('remove', model, this, options);
         }
-        models[j++] = model;
+
+        removed.push(model);
         this._removeReference(model, options);
-        removed = true;
       }
-      // We only need to slice if models array should be smaller, which is
-      // caused by some models not actually getting removed.
-      if (models.length !== j) models = models.slice(0, j);
-      return removed;
+      return removed.length ? removed : false;
     },
 
     // Method for checking whether an object should be considered a model for
@@ -1342,6 +1335,9 @@ if (memberExpensesPanel.length) {
 
     // Internal method to sever a model's ties to a collection.
     _removeReference: function(model, options) {
+      delete this._byId[model.cid];
+      var id = this.modelId(model.attributes);
+      if (id != null) delete this._byId[id];
       if (this === model.collection) delete model.collection;
       model.off('all', this._onModelEvent, this);
     },
@@ -1372,7 +1368,7 @@ if (memberExpensesPanel.length) {
   var collectionMethods = { forEach: 3, each: 3, map: 3, collect: 3, reduce: 4,
       foldl: 4, inject: 4, reduceRight: 4, foldr: 4, find: 3, detect: 3, filter: 3,
       select: 3, reject: 3, every: 3, all: 3, some: 3, any: 3, include: 2,
-      contains: 2, invoke: 2, max: 3, min: 3, toArray: 1, size: 1, first: 3,
+      contains: 2, invoke: 0, max: 3, min: 3, toArray: 1, size: 1, first: 3,
       head: 3, take: 3, initial: 3, rest: 3, tail: 3, drop: 3, last: 3,
       without: 0, difference: 0, indexOf: 3, shuffle: 1, lastIndexOf: 3,
       isEmpty: 1, chain: 1, sample: 3, partition: 3 };
@@ -1409,7 +1405,6 @@ if (memberExpensesPanel.length) {
   // if an existing element is not provided...
   var View = Backbone.View = function(options) {
     this.cid = _.uniqueId('view');
-    options || (options = {});
     _.extend(this, _.pick(options, viewOptions));
     this._ensureElement();
     this.initialize.apply(this, arguments);
@@ -1492,11 +1487,12 @@ if (memberExpensesPanel.length) {
     // Uses event delegation for efficiency.
     // Omitting the selector binds the event to `this.el`.
     delegateEvents: function(events) {
-      if (!(events || (events = _.result(this, 'events')))) return this;
+      events || (events = _.result(this, 'events'));
+      if (!events) return this;
       this.undelegateEvents();
       for (var key in events) {
         var method = events[key];
-        if (!_.isFunction(method)) method = this[events[key]];
+        if (!_.isFunction(method)) method = this[method];
         if (!method) continue;
         var match = key.match(delegateEventSplitter);
         this.delegate(match[1], match[2], _.bind(method, this));
@@ -1509,6 +1505,7 @@ if (memberExpensesPanel.length) {
     // `blur`, and not `change`, `submit`, and `reset` in Internet Explorer.
     delegate: function(eventName, selector, listener) {
       this.$el.on(eventName + '.delegateEvents' + this.cid, selector, listener);
+      return this;
     },
 
     // Clears all callbacks previously bound to the view by `delegateEvents`.
@@ -1523,6 +1520,7 @@ if (memberExpensesPanel.length) {
     // `selector` and `listener` are both optional.
     undelegate: function(eventName, selector, listener) {
       this.$el.off(eventName + '.delegateEvents' + this.cid, selector, listener);
+      return this;
     },
 
     // Produces a DOM element to be assigned to your view. Exposed for
@@ -1886,15 +1884,16 @@ if (memberExpensesPanel.length) {
       // support the `hashchange` event, HTML5 history, or the user wants
       // `hashChange` but not `pushState`.
       if (!this._hasHashChange && this._wantsHashChange && !this._usePushState) {
-        var iframe = document.createElement('iframe');
-        iframe.src = 'javascript:0';
-        iframe.style.display = 'none';
-        iframe.tabIndex = -1;
+        this.iframe = document.createElement('iframe');
+        this.iframe.src = 'javascript:0';
+        this.iframe.style.display = 'none';
+        this.iframe.tabIndex = -1;
         var body = document.body;
         // Using `appendChild` will throw on IE < 9 if the document is not ready.
-        this.iframe = body.insertBefore(iframe, body.firstChild).contentWindow;
-        this.iframe.document.open().close();
-        this.iframe.location.hash = '#' + this.fragment;
+        var iWindow = body.insertBefore(this.iframe, body.firstChild).contentWindow;
+        iWindow.document.open();
+        iWindow.document.close();
+        iWindow.location.hash = '#' + this.fragment;
       }
 
       // Add a cross-platform `addEventListener` shim for older browsers.
@@ -1932,7 +1931,7 @@ if (memberExpensesPanel.length) {
 
       // Clean up the iframe if necessary.
       if (this.iframe) {
-        document.body.removeChild(this.iframe.frameElement);
+        document.body.removeChild(this.iframe);
         this.iframe = null;
       }
 
@@ -1955,7 +1954,7 @@ if (memberExpensesPanel.length) {
       // If the user pressed the back button, the iframe's hash will have
       // changed and we should use that for comparison.
       if (current === this.fragment && this.iframe) {
-        current = this.getHash(this.iframe);
+        current = this.getHash(this.iframe.contentWindow);
       }
 
       if (current === this.fragment) return false;
@@ -2013,12 +2012,18 @@ if (memberExpensesPanel.length) {
       // fragment to store history.
       } else if (this._wantsHashChange) {
         this._updateHash(this.location, fragment, options.replace);
-        if (this.iframe && (fragment !== this.getHash(this.iframe))) {
+        if (this.iframe && (fragment !== this.getHash(this.iframe.contentWindow))) {
+          var iWindow = this.iframe.contentWindow;
+
           // Opening and closing the iframe tricks IE7 and earlier to push a
           // history entry on hash-tag change.  When replace is true, we don't
           // want this.
-          if (!options.replace) this.iframe.document.open().close();
-          this._updateHash(this.iframe.location, fragment, options.replace);
+          if (!options.replace) {
+            iWindow.document.open();
+            iWindow.document.close();
+          }
+
+          this._updateHash(iWindow.location, fragment, options.replace);
         }
 
       // If you've told us that you explicitly don't want fallback hashchange-
@@ -3907,7 +3912,7 @@ require('../../js/tab.js')
 require('../../js/affix.js')
 },{"../../js/affix.js":6,"../../js/alert.js":7,"../../js/button.js":8,"../../js/carousel.js":9,"../../js/collapse.js":10,"../../js/dropdown.js":11,"../../js/modal.js":12,"../../js/popover.js":13,"../../js/scrollspy.js":14,"../../js/tab.js":15,"../../js/tooltip.js":16,"../../js/transition.js":17}],6:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: affix.js v3.3.4
+ * Bootstrap: affix.js v3.3.5
  * http://getbootstrap.com/javascript/#affix
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -3936,7 +3941,7 @@ require('../../js/affix.js')
     this.checkPosition()
   }
 
-  Affix.VERSION  = '3.3.4'
+  Affix.VERSION  = '3.3.5'
 
   Affix.RESET    = 'affix affix-top affix-bottom'
 
@@ -3986,7 +3991,7 @@ require('../../js/affix.js')
     var offset       = this.options.offset
     var offsetTop    = offset.top
     var offsetBottom = offset.bottom
-    var scrollHeight = $(document.body).height()
+    var scrollHeight = Math.max($(document).height(), $(document.body).height())
 
     if (typeof offset != 'object')         offsetBottom = offsetTop = offset
     if (typeof offsetTop == 'function')    offsetTop    = offset.top(this.$element)
@@ -4071,7 +4076,7 @@ require('../../js/affix.js')
 
 },{}],7:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: alert.js v3.3.4
+ * Bootstrap: alert.js v3.3.5
  * http://getbootstrap.com/javascript/#alerts
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -4090,7 +4095,7 @@ require('../../js/affix.js')
     $(el).on('click', dismiss, this.close)
   }
 
-  Alert.VERSION = '3.3.4'
+  Alert.VERSION = '3.3.5'
 
   Alert.TRANSITION_DURATION = 150
 
@@ -4167,7 +4172,7 @@ require('../../js/affix.js')
 
 },{}],8:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: button.js v3.3.4
+ * Bootstrap: button.js v3.3.5
  * http://getbootstrap.com/javascript/#buttons
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -4187,7 +4192,7 @@ require('../../js/affix.js')
     this.isLoading = false
   }
 
-  Button.VERSION  = '3.3.4'
+  Button.VERSION  = '3.3.5'
 
   Button.DEFAULTS = {
     loadingText: 'loading...'
@@ -4199,7 +4204,7 @@ require('../../js/affix.js')
     var val  = $el.is('input') ? 'val' : 'html'
     var data = $el.data()
 
-    state = state + 'Text'
+    state += 'Text'
 
     if (data.resetText == null) $el.data('resetText', $el[val]())
 
@@ -4224,15 +4229,19 @@ require('../../js/affix.js')
     if ($parent.length) {
       var $input = this.$element.find('input')
       if ($input.prop('type') == 'radio') {
-        if ($input.prop('checked') && this.$element.hasClass('active')) changed = false
-        else $parent.find('.active').removeClass('active')
+        if ($input.prop('checked')) changed = false
+        $parent.find('.active').removeClass('active')
+        this.$element.addClass('active')
+      } else if ($input.prop('type') == 'checkbox') {
+        if (($input.prop('checked')) !== this.$element.hasClass('active')) changed = false
+        this.$element.toggleClass('active')
       }
-      if (changed) $input.prop('checked', !this.$element.hasClass('active')).trigger('change')
+      $input.prop('checked', this.$element.hasClass('active'))
+      if (changed) $input.trigger('change')
     } else {
       this.$element.attr('aria-pressed', !this.$element.hasClass('active'))
+      this.$element.toggleClass('active')
     }
-
-    if (changed) this.$element.toggleClass('active')
   }
 
 
@@ -4275,7 +4284,7 @@ require('../../js/affix.js')
       var $btn = $(e.target)
       if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
       Plugin.call($btn, 'toggle')
-      e.preventDefault()
+      if (!($(e.target).is('input[type="radio"]') || $(e.target).is('input[type="checkbox"]'))) e.preventDefault()
     })
     .on('focus.bs.button.data-api blur.bs.button.data-api', '[data-toggle^="button"]', function (e) {
       $(e.target).closest('.btn').toggleClass('focus', /^focus(in)?$/.test(e.type))
@@ -4285,7 +4294,7 @@ require('../../js/affix.js')
 
 },{}],9:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: carousel.js v3.3.4
+ * Bootstrap: carousel.js v3.3.5
  * http://getbootstrap.com/javascript/#carousel
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -4316,7 +4325,7 @@ require('../../js/affix.js')
       .on('mouseleave.bs.carousel', $.proxy(this.cycle, this))
   }
 
-  Carousel.VERSION  = '3.3.4'
+  Carousel.VERSION  = '3.3.5'
 
   Carousel.TRANSITION_DURATION = 600
 
@@ -4524,7 +4533,7 @@ require('../../js/affix.js')
 
 },{}],10:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: collapse.js v3.3.4
+ * Bootstrap: collapse.js v3.3.5
  * http://getbootstrap.com/javascript/#collapse
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -4554,7 +4563,7 @@ require('../../js/affix.js')
     if (this.options.toggle) this.toggle()
   }
 
-  Collapse.VERSION  = '3.3.4'
+  Collapse.VERSION  = '3.3.5'
 
   Collapse.TRANSITION_DURATION = 350
 
@@ -4737,7 +4746,7 @@ require('../../js/affix.js')
 
 },{}],11:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: dropdown.js v3.3.4
+ * Bootstrap: dropdown.js v3.3.5
  * http://getbootstrap.com/javascript/#dropdowns
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -4757,7 +4766,41 @@ require('../../js/affix.js')
     $(element).on('click.bs.dropdown', this.toggle)
   }
 
-  Dropdown.VERSION = '3.3.4'
+  Dropdown.VERSION = '3.3.5'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget)
+    })
+  }
 
   Dropdown.prototype.toggle = function (e) {
     var $this = $(this)
@@ -4772,7 +4815,10 @@ require('../../js/affix.js')
     if (!isActive) {
       if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
         // if mobile we use a backdrop because click events don't delegate
-        $('<div class="dropdown-backdrop"/>').insertAfter($(this)).on('click', clearMenus)
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
       }
 
       var relatedTarget = { relatedTarget: this }
@@ -4805,55 +4851,23 @@ require('../../js/affix.js')
     var $parent  = getParent($this)
     var isActive = $parent.hasClass('open')
 
-    if ((!isActive && e.which != 27) || (isActive && e.which == 27)) {
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
       if (e.which == 27) $parent.find(toggle).trigger('focus')
       return $this.trigger('click')
     }
 
     var desc = ' li:not(.disabled):visible a'
-    var $items = $parent.find('[role="menu"]' + desc + ', [role="listbox"]' + desc)
+    var $items = $parent.find('.dropdown-menu' + desc)
 
     if (!$items.length) return
 
     var index = $items.index(e.target)
 
-    if (e.which == 38 && index > 0)                 index--                        // up
-    if (e.which == 40 && index < $items.length - 1) index++                        // down
-    if (!~index)                                      index = 0
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
 
     $items.eq(index).trigger('focus')
-  }
-
-  function clearMenus(e) {
-    if (e && e.which === 3) return
-    $(backdrop).remove()
-    $(toggle).each(function () {
-      var $this         = $(this)
-      var $parent       = getParent($this)
-      var relatedTarget = { relatedTarget: this }
-
-      if (!$parent.hasClass('open')) return
-
-      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
-
-      if (e.isDefaultPrevented()) return
-
-      $this.attr('aria-expanded', 'false')
-      $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget)
-    })
-  }
-
-  function getParent($this) {
-    var selector = $this.attr('data-target')
-
-    if (!selector) {
-      selector = $this.attr('href')
-      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
-    }
-
-    var $parent = selector && $(selector)
-
-    return $parent && $parent.length ? $parent : $this.parent()
   }
 
 
@@ -4893,14 +4907,13 @@ require('../../js/affix.js')
     .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
     .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
     .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
-    .on('keydown.bs.dropdown.data-api', '[role="menu"]', Dropdown.prototype.keydown)
-    .on('keydown.bs.dropdown.data-api', '[role="listbox"]', Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
 
 }(jQuery);
 
 },{}],12:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: modal.js v3.3.4
+ * Bootstrap: modal.js v3.3.5
  * http://getbootstrap.com/javascript/#modals
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -4934,7 +4947,7 @@ require('../../js/affix.js')
     }
   }
 
-  Modal.VERSION  = '3.3.4'
+  Modal.VERSION  = '3.3.5'
 
   Modal.TRANSITION_DURATION = 300
   Modal.BACKDROP_TRANSITION_DURATION = 150
@@ -4991,9 +5004,7 @@ require('../../js/affix.js')
         that.$element[0].offsetWidth // force reflow
       }
 
-      that.$element
-        .addClass('in')
-        .attr('aria-hidden', false)
+      that.$element.addClass('in')
 
       that.enforceFocus()
 
@@ -5027,7 +5038,6 @@ require('../../js/affix.js')
 
     this.$element
       .removeClass('in')
-      .attr('aria-hidden', true)
       .off('click.dismiss.bs.modal')
       .off('mouseup.dismiss.bs.modal')
 
@@ -5091,7 +5101,8 @@ require('../../js/affix.js')
     if (this.isShown && this.options.backdrop) {
       var doAnimate = $.support.transition && animate
 
-      this.$backdrop = $('<div class="modal-backdrop ' + animate + '" />')
+      this.$backdrop = $(document.createElement('div'))
+        .addClass('modal-backdrop ' + animate)
         .appendTo(this.$body)
 
       this.$element.on('click.dismiss.bs.modal', $.proxy(function (e) {
@@ -5241,7 +5252,7 @@ require('../../js/affix.js')
 
 },{}],13:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: popover.js v3.3.4
+ * Bootstrap: popover.js v3.3.5
  * http://getbootstrap.com/javascript/#popovers
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -5261,7 +5272,7 @@ require('../../js/affix.js')
 
   if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
 
-  Popover.VERSION  = '3.3.4'
+  Popover.VERSION  = '3.3.5'
 
   Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
     placement: 'right',
@@ -5351,7 +5362,7 @@ require('../../js/affix.js')
 
 },{}],14:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: scrollspy.js v3.3.4
+ * Bootstrap: scrollspy.js v3.3.5
  * http://getbootstrap.com/javascript/#scrollspy
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -5380,7 +5391,7 @@ require('../../js/affix.js')
     this.process()
   }
 
-  ScrollSpy.VERSION  = '3.3.4'
+  ScrollSpy.VERSION  = '3.3.5'
 
   ScrollSpy.DEFAULTS = {
     offset: 10
@@ -5525,7 +5536,7 @@ require('../../js/affix.js')
 
 },{}],15:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: tab.js v3.3.4
+ * Bootstrap: tab.js v3.3.5
  * http://getbootstrap.com/javascript/#tabs
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -5540,10 +5551,12 @@ require('../../js/affix.js')
   // ====================
 
   var Tab = function (element) {
+    // jscs:disable requireDollarBeforejQueryAssignment
     this.element = $(element)
+    // jscs:enable requireDollarBeforejQueryAssignment
   }
 
-  Tab.VERSION = '3.3.4'
+  Tab.VERSION = '3.3.5'
 
   Tab.TRANSITION_DURATION = 150
 
@@ -5591,7 +5604,7 @@ require('../../js/affix.js')
     var $active    = container.find('> .active')
     var transition = callback
       && $.support.transition
-      && (($active.length && $active.hasClass('fade')) || !!container.find('> .fade').length)
+      && ($active.length && $active.hasClass('fade') || !!container.find('> .fade').length)
 
     function next() {
       $active
@@ -5680,7 +5693,7 @@ require('../../js/affix.js')
 
 },{}],16:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: tooltip.js v3.3.4
+ * Bootstrap: tooltip.js v3.3.5
  * http://getbootstrap.com/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ========================================================================
@@ -5702,11 +5715,12 @@ require('../../js/affix.js')
     this.timeout    = null
     this.hoverState = null
     this.$element   = null
+    this.inState    = null
 
     this.init('tooltip', element, options)
   }
 
-  Tooltip.VERSION  = '3.3.4'
+  Tooltip.VERSION  = '3.3.5'
 
   Tooltip.TRANSITION_DURATION = 150
 
@@ -5731,7 +5745,8 @@ require('../../js/affix.js')
     this.type      = type
     this.$element  = $(element)
     this.options   = this.getOptions(options)
-    this.$viewport = this.options.viewport && $(this.options.viewport.selector || this.options.viewport)
+    this.$viewport = this.options.viewport && $($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
+    this.inState   = { click: false, hover: false, focus: false }
 
     if (this.$element[0] instanceof document.constructor && !this.options.selector) {
       throw new Error('`selector` option must be specified when initializing ' + this.type + ' on the window.document object!')
@@ -5790,14 +5805,18 @@ require('../../js/affix.js')
     var self = obj instanceof this.constructor ?
       obj : $(obj.currentTarget).data('bs.' + this.type)
 
-    if (self && self.$tip && self.$tip.is(':visible')) {
-      self.hoverState = 'in'
-      return
-    }
-
     if (!self) {
       self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
       $(obj.currentTarget).data('bs.' + this.type, self)
+    }
+
+    if (obj instanceof $.Event) {
+      self.inState[obj.type == 'focusin' ? 'focus' : 'hover'] = true
+    }
+
+    if (self.tip().hasClass('in') || self.hoverState == 'in') {
+      self.hoverState = 'in'
+      return
     }
 
     clearTimeout(self.timeout)
@@ -5811,6 +5830,14 @@ require('../../js/affix.js')
     }, self.options.delay.show)
   }
 
+  Tooltip.prototype.isInStateTrue = function () {
+    for (var key in this.inState) {
+      if (this.inState[key]) return true
+    }
+
+    return false
+  }
+
   Tooltip.prototype.leave = function (obj) {
     var self = obj instanceof this.constructor ?
       obj : $(obj.currentTarget).data('bs.' + this.type)
@@ -5819,6 +5846,12 @@ require('../../js/affix.js')
       self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
       $(obj.currentTarget).data('bs.' + this.type, self)
     }
+
+    if (obj instanceof $.Event) {
+      self.inState[obj.type == 'focusout' ? 'focus' : 'hover'] = false
+    }
+
+    if (self.isInStateTrue()) return
 
     clearTimeout(self.timeout)
 
@@ -5866,6 +5899,7 @@ require('../../js/affix.js')
         .data('bs.' + this.type, this)
 
       this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+      this.$element.trigger('inserted.bs.' + this.type)
 
       var pos          = this.getPosition()
       var actualWidth  = $tip[0].offsetWidth
@@ -5873,13 +5907,12 @@ require('../../js/affix.js')
 
       if (autoPlace) {
         var orgPlacement = placement
-        var $container   = this.options.container ? $(this.options.container) : this.$element.parent()
-        var containerDim = this.getPosition($container)
+        var viewportDim = this.getPosition(this.$viewport)
 
-        placement = placement == 'bottom' && pos.bottom + actualHeight > containerDim.bottom ? 'top'    :
-                    placement == 'top'    && pos.top    - actualHeight < containerDim.top    ? 'bottom' :
-                    placement == 'right'  && pos.right  + actualWidth  > containerDim.width  ? 'left'   :
-                    placement == 'left'   && pos.left   - actualWidth  < containerDim.left   ? 'right'  :
+        placement = placement == 'bottom' && pos.bottom + actualHeight > viewportDim.bottom ? 'top'    :
+                    placement == 'top'    && pos.top    - actualHeight < viewportDim.top    ? 'bottom' :
+                    placement == 'right'  && pos.right  + actualWidth  > viewportDim.width  ? 'left'   :
+                    placement == 'left'   && pos.left   - actualWidth  < viewportDim.left   ? 'right'  :
                     placement
 
         $tip
@@ -5920,8 +5953,8 @@ require('../../js/affix.js')
     if (isNaN(marginTop))  marginTop  = 0
     if (isNaN(marginLeft)) marginLeft = 0
 
-    offset.top  = offset.top  + marginTop
-    offset.left = offset.left + marginLeft
+    offset.top  += marginTop
+    offset.left += marginLeft
 
     // $.fn.offset doesn't round pixel values
     // so we use setOffset directly with our own function B-0
@@ -6003,7 +6036,7 @@ require('../../js/affix.js')
 
   Tooltip.prototype.fixTitle = function () {
     var $e = this.$element
-    if ($e.attr('title') || typeof ($e.attr('data-original-title')) != 'string') {
+    if ($e.attr('title') || typeof $e.attr('data-original-title') != 'string') {
       $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
     }
   }
@@ -6058,7 +6091,7 @@ require('../../js/affix.js')
       var rightEdgeOffset = pos.left + viewportPadding + actualWidth
       if (leftEdgeOffset < viewportDimensions.left) { // left overflow
         delta.left = viewportDimensions.left - leftEdgeOffset
-      } else if (rightEdgeOffset > viewportDimensions.width) { // right overflow
+      } else if (rightEdgeOffset > viewportDimensions.right) { // right overflow
         delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset
       }
     }
@@ -6084,7 +6117,13 @@ require('../../js/affix.js')
   }
 
   Tooltip.prototype.tip = function () {
-    return (this.$tip = this.$tip || $(this.options.template))
+    if (!this.$tip) {
+      this.$tip = $(this.options.template)
+      if (this.$tip.length != 1) {
+        throw new Error(this.type + ' `template` option must consist of exactly 1 top-level element!')
+      }
+    }
+    return this.$tip
   }
 
   Tooltip.prototype.arrow = function () {
@@ -6113,7 +6152,13 @@ require('../../js/affix.js')
       }
     }
 
-    self.tip().hasClass('in') ? self.leave(self) : self.enter(self)
+    if (e) {
+      self.inState.click = !self.inState.click
+      if (self.isInStateTrue()) self.enter(self)
+      else self.leave(self)
+    } else {
+      self.tip().hasClass('in') ? self.leave(self) : self.enter(self)
+    }
   }
 
   Tooltip.prototype.destroy = function () {
@@ -6121,6 +6166,12 @@ require('../../js/affix.js')
     clearTimeout(this.timeout)
     this.hide(function () {
       that.$element.off('.' + that.type).removeData('bs.' + that.type)
+      if (that.$tip) {
+        that.$tip.detach()
+      }
+      that.$tip = null
+      that.$arrow = null
+      that.$viewport = null
     })
   }
 
@@ -6158,7 +6209,7 @@ require('../../js/affix.js')
 
 },{}],17:[function(require,module,exports){
 /* ========================================================================
- * Bootstrap: transition.js v3.3.4
+ * Bootstrap: transition.js v3.3.5
  * http://getbootstrap.com/javascript/#transitions
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -6222,6 +6273,9 @@ var React = require('react');
 var assign = require('react-kit/appendVendorPrefix');
 var insertKeyframesRule = require('react-kit/insertKeyframesRule');
 
+/**
+ * @type {Object}
+ */
 var keyframes = {
     '0%': {
         transform: 'scale(1)',
@@ -6237,56 +6291,95 @@ var keyframes = {
     }
 };
 
+/**
+ * @type {String}
+ */
 var animationName = insertKeyframesRule(keyframes);
 
 var Loader = React.createClass({displayName: "Loader",
+    /**
+     * @type {Object}
+     */
     propTypes: {
+        loading: React.PropTypes.bool,
         color: React.PropTypes.string,
         size: React.PropTypes.string,
         margin: React.PropTypes.string
     },
-    getDefaultProps: function(){
+
+    /**
+     * @return {Object}
+     */
+    getDefaultProps: function() {
         return {
+            loading: true,
             color: '#ffffff',
             size: '15px',
             margin: '2px'
         };
     },
-    getBallStyle: function () {
+
+    /**
+     * @return {Object}
+     */
+    getBallStyle: function() {
         return {
             backgroundColor: this.props.color,
             width: this.props.size,
             height: this.props.size,
             margin: this.props.margin,
             borderRadius: '100%'
-        }
+        };
     },
-    getAnimationStyle: function (i) {
+
+    /**
+     * @param  {Number} i
+     * @return {Object}
+     */
+    getAnimationStyle: function(i) {
         var animation = [animationName, '0.75s', (i * 0.12) + 's', 'infinite', 'cubic-bezier(.2,.68,.18,1.08)'].join(' ');
         var animationFillMode = 'both';
 
         return {
             animation: animation,
             animationFillMode: animationFillMode
-        }
+        };
     },
-    getStyle: function (i) {
 
+    /**
+     * @param  {Number} i
+     * @return {Object}
+     */
+    getStyle: function(i) {
         return assign(
             this.getBallStyle(i),
             this.getAnimationStyle(i),
             {
                 display: 'inline-block'
             }
-        )
+        );
     },
-    render: function () {
 
-        return (React.createElement("div", null, 
-            React.createElement("div", {style: this.getStyle(1)}), 
-            React.createElement("div", {style: this.getStyle(2)}), 
-            React.createElement("div", {style: this.getStyle(3)})
-        ));
+    /**
+     * @param  {Boolean} loading
+     * @return {ReactComponent || null}
+     */
+    renderLoader: function(loading) {
+        if (loading) {
+            return (
+                React.createElement("div", {id: this.props.id, className: this.props.className}, 
+                    React.createElement("div", {style: this.getStyle(1)}), 
+                    React.createElement("div", {style: this.getStyle(2)}), 
+                    React.createElement("div", {style: this.getStyle(3)})
+                )
+            );
+        }
+
+        return null;
+    },
+    
+    render: function() {
+        return this.renderLoader(this.props.loading);
     }
 });
 
@@ -23810,14 +23903,14 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 },{}],54:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      nBits = -7,
-      i = isLE ? (nBytes - 1) : 0,
-      d = isLE ? -1 : 1,
-      s = buffer[offset + i]
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
 
   i += d
 
@@ -23843,14 +23936,14 @@ exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 }
 
 exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
-      i = isLE ? 0 : (nBytes - 1),
-      d = isLE ? 1 : -1,
-      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
 
   value = Math.abs(value)
 
@@ -27735,6 +27828,7 @@ BaseCurve.prototype.validate = function validate() {
 };
 
 BaseCurve.prototype._fixedNafMul = function _fixedNafMul(p, k) {
+  assert(p.precomputed);
   var doubles = p._getDoubles();
 
   var naf = getNAF(k, 1);
@@ -27952,6 +28046,17 @@ BasePoint.prototype.precompute = function precompute(power) {
   this.precomputed = precomputed;
 
   return this;
+};
+
+BasePoint.prototype._hasDoubles = function _hasDoubles(k) {
+  if (!this.precomputed)
+    return false;
+
+  var doubles = this.precomputed.doubles;
+  if (!doubles)
+    return false;
+
+  return doubles.points.length >= Math.ceil((k.bitLength() + 1) / doubles.step);
 };
 
 BasePoint.prototype._getDoubles = function _getDoubles(step, power) {
@@ -28324,7 +28429,7 @@ Point.prototype.add = function add(p) {
 };
 
 Point.prototype.mul = function mul(k) {
-  if (this.precomputed && this.precomputed.doubles)
+  if (this._hasDoubles(k))
     return this.curve._fixedNafMul(this, k);
   else
     return this.curve._wnafMul(this, k);
@@ -28967,7 +29072,7 @@ Point.prototype.getY = function getY() {
 Point.prototype.mul = function mul(k) {
   k = new bn(k, 16);
 
-  if (this.precomputed && this.precomputed.doubles)
+  if (this._hasDoubles(k))
     return this.curve._fixedNafMul(this, k);
   else if (this.curve.endo)
     return this.curve._endoWnafMulAdd([ this ], [ k ]);
@@ -29738,7 +29843,8 @@ EC.prototype.sign = function sign(msg, key, enc, options) {
     if (kp.isInfinity())
       continue;
 
-    var r = kp.getX().mod(this.n);
+    var kpX = kp.getX();
+    var r = kpX.mod(this.n);
     if (r.cmpn(0) === 0)
       continue;
 
@@ -29750,7 +29856,10 @@ EC.prototype.sign = function sign(msg, key, enc, options) {
     if (options.canonical && s.cmp(this.nh) > 0)
       s = this.n.sub(s);
 
-    return new Signature({ r: r, s: s });
+    var recoveryParam = (kp.getY().isOdd() ? 1 : 0) |
+                        (kpX.cmp(r) !== 0 ? 2 : 0);
+
+    return new Signature({ r: r, s: s, recoveryParam: recoveryParam });
   } while (true);
 };
 
@@ -29777,6 +29886,45 @@ EC.prototype.verify = function verify(msg, signature, key, enc) {
     return false;
 
   return p.getX().mod(this.n).cmp(r) === 0;
+};
+
+EC.prototype.recoverPubKey = function(msg, signature, j, enc) {
+  assert((3 & j) === j, 'The recovery param is more than two bits');
+  signature = new Signature(signature, enc);
+
+  var n = this.n;
+  var e = new bn(msg);
+  var r = signature.r;
+  var s = signature.s;
+
+  // A set LSB signifies that the y-coordinate is odd
+  var isYOdd = j & 1;
+  var isSecondKey = j >> 1;
+  if (r.cmp(this.curve.p.mod(this.curve.n)) >= 0 && isSecondKey)
+    throw new Error('Unable to find sencond key candinate');
+
+  // 1.1. Let x = r + jn.
+  r = this.curve.pointFromX(isYOdd, r);
+  var eNeg = e.neg().mod(n);
+
+  // 1.6.1 Compute Q = r^-1 (sR -  eG)
+  //               Q = r^-1 (sR + -eG)
+  var rInv = signature.r.invm(n);
+  return r.mul(s).add(this.g.mul(eNeg)).mul(rInv);
+};
+
+EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
+  signature = new Signature(signature, enc);
+  if (signature.recoveryParam !== null)
+    return signature.recoveryParam;
+
+  for (var i = 0; i < 4; i++) {
+    var Qprime = this.recoverPubKey(e, signature, i);
+
+    if (Qprime.eq(Q))
+      return i;
+  }
+  throw new Error('Unable to find valid recovery factor');
 };
 
 },{"../../elliptic":80,"./key":88,"./signature":89,"bn.js":78}],88:[function(require,module,exports){
@@ -29950,6 +30098,10 @@ function Signature(options, enc) {
   assert(options.r && options.s, 'Signature without r or s');
   this.r = new bn(options.r, 16);
   this.s = new bn(options.s, 16);
+  if (options.recoveryParam !== null)
+    this.recoveryParam = options.recoveryParam;
+  else
+    this.recoveryParam = null;
 }
 module.exports = Signature;
 
@@ -29977,6 +30129,7 @@ Signature.prototype._importDER = function _importDER(data, enc) {
 
   this.r = new bn(data.slice(4, 4 + rlen));
   this.s = new bn(data.slice(4 + rlen + 2, 4 + rlen + 2 + slen));
+  this.recoveryParam = null;
 
   return true;
 };
@@ -32241,7 +32394,7 @@ exports.shr64_lo = shr64_lo;
 },{"inherits":194}],100:[function(require,module,exports){
 module.exports={
   "name": "elliptic",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "description": "EC cryptography",
   "main": "lib/elliptic.js",
   "scripts": {
@@ -32274,17 +32427,17 @@ module.exports={
     "uglify-js": "^2.4.13"
   },
   "dependencies": {
-    "bn.js": "^2.0.0",
+    "bn.js": "^2.0.3",
     "brorand": "^1.0.1",
     "hash.js": "^1.0.0",
     "inherits": "^2.0.1"
   },
-  "gitHead": "c8d7cf551fdf2ce3ecc5264b29084244ae6aa2b2",
-  "_id": "elliptic@3.0.3",
-  "_shasum": "865c9b420bfbe55006b9f969f97a0d2c44966595",
+  "gitHead": "d86cd2a8178f7e7cecbd6dd92eea084e2ab44c13",
+  "_id": "elliptic@3.1.0",
+  "_shasum": "c21682ef762769b56a74201609105da11d5f60cc",
   "_from": "elliptic@>=3.0.0 <4.0.0",
-  "_npmVersion": "2.5.1",
-  "_nodeVersion": "1.3.0",
+  "_npmVersion": "2.11.0",
+  "_nodeVersion": "2.2.1",
   "_npmUser": {
     "name": "indutny",
     "email": "fedor@indutny.com"
@@ -32296,11 +32449,11 @@ module.exports={
     }
   ],
   "dist": {
-    "shasum": "865c9b420bfbe55006b9f969f97a0d2c44966595",
-    "tarball": "http://registry.npmjs.org/elliptic/-/elliptic-3.0.3.tgz"
+    "shasum": "c21682ef762769b56a74201609105da11d5f60cc",
+    "tarball": "http://registry.npmjs.org/elliptic/-/elliptic-3.1.0.tgz"
   },
   "directories": {},
-  "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-3.0.3.tgz",
+  "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-3.1.0.tgz",
   "readme": "ERROR: No README data found!"
 }
 
@@ -32769,7 +32922,7 @@ function EncoderBuffer(value, reporter) {
   if (Array.isArray(value)) {
     this.length = 0;
     this.value = value.map(function(item) {
-      if (!item || item.constructor.name !== 'EncoderBuffer')
+      if (!(item instanceof EncoderBuffer))
         item = new EncoderBuffer(item, reporter);
       this.length += item.length;
       return item;
@@ -35108,9 +35261,9 @@ module.exports = ripemd160
 }).call(this,require("buffer").Buffer)
 },{"buffer":52}],149:[function(require,module,exports){
 (function (Buffer){
-//prototype class for hash functions
+// prototype class for hash functions
 function Hash (blockSize, finalSize) {
-  this._block = new Buffer(blockSize) //new Uint32Array(blockSize/4)
+  this._block = new Buffer(blockSize)
   this._finalSize = finalSize
   this._blockSize = blockSize
   this._len = 0
@@ -35118,8 +35271,8 @@ function Hash (blockSize, finalSize) {
 }
 
 Hash.prototype.update = function (data, enc) {
-  if ("string" === typeof data) {
-    enc = enc || "utf8"
+  if (typeof data === 'string') {
+    enc = enc || 'utf8'
     data = new Buffer(data, enc)
   }
 
@@ -35180,12 +35333,14 @@ module.exports = Hash
 
 }).call(this,require("buffer").Buffer)
 },{"buffer":52}],150:[function(require,module,exports){
-var exports = module.exports = function (alg) {
-  var Alg = exports[alg.toLowerCase()]
-  if(!Alg) throw new Error(alg + ' is not supported (we accept pull requests)')
-  return new Alg()
-}
+var exports = module.exports = function SHA (algorithm) {
+  algorithm = algorithm.toLowerCase()
 
+  var Algorithm = exports[algorithm]
+  if (!Algorithm) throw new Error(algorithm + ' is not supported (we accept pull requests)')
+
+  return new Algorithm()
+}
 
 exports.sha = require('./sha')
 exports.sha1 = require('./sha1')
@@ -35209,7 +35364,7 @@ var Hash = require('./hash')
 
 var W = new Array(80)
 
-function Sha() {
+function Sha () {
   this.init()
   this._w = W
 
@@ -35219,11 +35374,11 @@ function Sha() {
 inherits(Sha, Hash)
 
 Sha.prototype.init = function () {
-  this._a = 0x67452301
-  this._b = 0xefcdab89
-  this._c = 0x98badcfe
-  this._d = 0x10325476
-  this._e = 0xc3d2e1f0
+  this._a = 0x67452301 | 0
+  this._b = 0xefcdab89 | 0
+  this._c = 0x98badcfe | 0
+  this._d = 0x10325476 | 0
+  this._e = 0xc3d2e1f0 | 0
 
   return this
 }
@@ -35231,8 +35386,8 @@ Sha.prototype.init = function () {
 /*
  * Bitwise rotate a 32-bit number to the left.
  */
-function rol(num, cnt) {
-  return (num << cnt) | (num >>> (32 - cnt));
+function rol (num, cnt) {
+  return (num << cnt) | (num >>> (32 - cnt))
 }
 
 Sha.prototype._update = function (M) {
@@ -35250,8 +35405,8 @@ Sha.prototype._update = function (M) {
    * SHA-1 has a bitwise rotate left operation. But, SHA is not
    * function calcW() { return rol(W[j - 3] ^ W[j -  8] ^ W[j - 14] ^ W[j - 16], 1) }
    */
-  function calcW() { return W[j - 3] ^ W[j -  8] ^ W[j - 14] ^ W[j - 16] }
-  function loop(w, f) {
+  function calcW () { return W[j - 3] ^ W[j - 8] ^ W[j - 14] ^ W[j - 16] }
+  function loop (w, f) {
     W[j] = w
 
     var t = rol(a, 5) + f + e + w + k
@@ -35284,11 +35439,11 @@ Sha.prototype._update = function (M) {
 Sha.prototype._hash = function () {
   var H = new Buffer(20)
 
-  H.writeInt32BE(this._a|0, 0)
-  H.writeInt32BE(this._b|0, 4)
-  H.writeInt32BE(this._c|0, 8)
-  H.writeInt32BE(this._d|0, 12)
-  H.writeInt32BE(this._e|0, 16)
+  H.writeInt32BE(this._a | 0, 0)
+  H.writeInt32BE(this._b | 0, 4)
+  H.writeInt32BE(this._c | 0, 8)
+  H.writeInt32BE(this._d | 0, 12)
+  H.writeInt32BE(this._e | 0, 16)
 
   return H
 }
@@ -35313,7 +35468,7 @@ var Hash = require('./hash')
 
 var W = new Array(80)
 
-function Sha1() {
+function Sha1 () {
   this.init()
   this._w = W
 
@@ -35323,11 +35478,11 @@ function Sha1() {
 inherits(Sha1, Hash)
 
 Sha1.prototype.init = function () {
-  this._a = 0x67452301
-  this._b = 0xefcdab89
-  this._c = 0x98badcfe
-  this._d = 0x10325476
-  this._e = 0xc3d2e1f0
+  this._a = 0x67452301 | 0
+  this._b = 0xefcdab89 | 0
+  this._c = 0x98badcfe | 0
+  this._d = 0x10325476 | 0
+  this._e = 0xc3d2e1f0 | 0
 
   return this
 }
@@ -35335,8 +35490,8 @@ Sha1.prototype.init = function () {
 /*
  * Bitwise rotate a 32-bit number to the left.
  */
-function rol(num, cnt) {
-  return (num << cnt) | (num >>> (32 - cnt));
+function rol (num, cnt) {
+  return (num << cnt) | (num >>> (32 - cnt))
 }
 
 Sha1.prototype._update = function (M) {
@@ -35350,8 +35505,8 @@ Sha1.prototype._update = function (M) {
 
   var j = 0, k
 
-  function calcW() { return rol(W[j - 3] ^ W[j -  8] ^ W[j - 14] ^ W[j - 16], 1) }
-  function loop(w, f) {
+  function calcW () { return rol(W[j - 3] ^ W[j - 8] ^ W[j - 14] ^ W[j - 16], 1) }
+  function loop (w, f) {
     W[j] = w
 
     var t = rol(a, 5) + f + e + w + k
@@ -35384,17 +35539,16 @@ Sha1.prototype._update = function (M) {
 Sha1.prototype._hash = function () {
   var H = new Buffer(20)
 
-  H.writeInt32BE(this._a|0, 0)
-  H.writeInt32BE(this._b|0, 4)
-  H.writeInt32BE(this._c|0, 8)
-  H.writeInt32BE(this._d|0, 12)
-  H.writeInt32BE(this._e|0, 16)
+  H.writeInt32BE(this._a | 0, 0)
+  H.writeInt32BE(this._b | 0, 4)
+  H.writeInt32BE(this._c | 0, 8)
+  H.writeInt32BE(this._d | 0, 12)
+  H.writeInt32BE(this._e | 0, 16)
 
   return H
 }
 
 module.exports = Sha1
-
 
 }).call(this,require("buffer").Buffer)
 },{"./hash":149,"buffer":52,"inherits":194}],153:[function(require,module,exports){
@@ -35408,12 +35562,12 @@ module.exports = Sha1
  */
 
 var inherits = require('inherits')
-var SHA256 = require('./sha256')
+var Sha256 = require('./sha256')
 var Hash = require('./hash')
 
 var W = new Array(64)
 
-function Sha224() {
+function Sha224 () {
   this.init()
 
   this._w = W // new Array(64)
@@ -35421,17 +35575,17 @@ function Sha224() {
   Hash.call(this, 64, 56)
 }
 
-inherits(Sha224, SHA256)
+inherits(Sha224, Sha256)
 
 Sha224.prototype.init = function () {
-  this._a = 0xc1059ed8|0
-  this._b = 0x367cd507|0
-  this._c = 0x3070dd17|0
-  this._d = 0xf70e5939|0
-  this._e = 0xffc00b31|0
-  this._f = 0x68581511|0
-  this._g = 0x64f98fa7|0
-  this._h = 0xbefa4fa4|0
+  this._a = 0xc1059ed8 | 0
+  this._b = 0x367cd507 | 0
+  this._c = 0x3070dd17 | 0
+  this._d = 0xf70e5939 | 0
+  this._e = 0xffc00b31 | 0
+  this._f = 0x68581511 | 0
+  this._g = 0x64f98fa7 | 0
+  this._h = 0xbefa4fa4 | 0
 
   return this
 }
@@ -35439,9 +35593,9 @@ Sha224.prototype.init = function () {
 Sha224.prototype._hash = function () {
   var H = new Buffer(28)
 
-  H.writeInt32BE(this._a,  0)
-  H.writeInt32BE(this._b,  4)
-  H.writeInt32BE(this._c,  8)
+  H.writeInt32BE(this._a, 0)
+  H.writeInt32BE(this._b, 4)
+  H.writeInt32BE(this._c, 8)
   H.writeInt32BE(this._d, 12)
   H.writeInt32BE(this._e, 16)
   H.writeInt32BE(this._f, 20)
@@ -35487,7 +35641,7 @@ var K = [
 
 var W = new Array(64)
 
-function Sha256() {
+function Sha256 () {
   this.init()
 
   this._w = W // new Array(64)
@@ -35498,51 +35652,51 @@ function Sha256() {
 inherits(Sha256, Hash)
 
 Sha256.prototype.init = function () {
-  this._a = 0x6a09e667|0
-  this._b = 0xbb67ae85|0
-  this._c = 0x3c6ef372|0
-  this._d = 0xa54ff53a|0
-  this._e = 0x510e527f|0
-  this._f = 0x9b05688c|0
-  this._g = 0x1f83d9ab|0
-  this._h = 0x5be0cd19|0
+  this._a = 0x6a09e667 | 0
+  this._b = 0xbb67ae85 | 0
+  this._c = 0x3c6ef372 | 0
+  this._d = 0xa54ff53a | 0
+  this._e = 0x510e527f | 0
+  this._f = 0x9b05688c | 0
+  this._g = 0x1f83d9ab | 0
+  this._h = 0x5be0cd19 | 0
 
   return this
 }
 
 function S (X, n) {
-  return (X >>> n) | (X << (32 - n));
+  return (X >>> n) | (X << (32 - n))
 }
 
 function R (X, n) {
-  return (X >>> n);
+  return (X >>> n)
 }
 
 function Ch (x, y, z) {
-  return ((x & y) ^ ((~x) & z));
+  return ((x & y) ^ ((~x) & z))
 }
 
 function Maj (x, y, z) {
-  return ((x & y) ^ (x & z) ^ (y & z));
+  return ((x & y) ^ (x & z) ^ (y & z))
 }
 
 function Sigma0256 (x) {
-  return (S(x, 2) ^ S(x, 13) ^ S(x, 22));
+  return (S(x, 2) ^ S(x, 13) ^ S(x, 22))
 }
 
 function Sigma1256 (x) {
-  return (S(x, 6) ^ S(x, 11) ^ S(x, 25));
+  return (S(x, 6) ^ S(x, 11) ^ S(x, 25))
 }
 
 function Gamma0256 (x) {
-  return (S(x, 7) ^ S(x, 18) ^ R(x, 3));
+  return (S(x, 7) ^ S(x, 18) ^ R(x, 3))
 }
 
 function Gamma1256 (x) {
-  return (S(x, 17) ^ S(x, 19) ^ R(x, 10));
+  return (S(x, 17) ^ S(x, 19) ^ R(x, 10))
 }
 
-Sha256.prototype._update = function(M) {
+Sha256.prototype._update = function (M) {
   var W = this._w
 
   var a = this._a | 0
@@ -35556,21 +35710,21 @@ Sha256.prototype._update = function(M) {
 
   var j = 0
 
-  function calcW() { return Gamma1256(W[j - 2]) + W[j - 7] + Gamma0256(W[j - 15]) + W[j - 16] }
-  function loop(w) {
+  function calcW () { return Gamma1256(W[j - 2]) + W[j - 7] + Gamma0256(W[j - 15]) + W[j - 16] }
+  function loop (w) {
     W[j] = w
 
     var T1 = h + Sigma1256(e) + Ch(e, f, g) + K[j] + w
-    var T2 = Sigma0256(a) + Maj(a, b, c);
+    var T2 = Sigma0256(a) + Maj(a, b, c)
 
-    h = g;
-    g = f;
-    f = e;
-    e = d + T1;
-    d = c;
-    c = b;
-    b = a;
-    a = T1 + T2;
+    h = g
+    g = f
+    f = e
+    e = d + T1
+    d = c
+    c = b
+    b = a
+    a = T1 + T2
 
     j++
   }
@@ -35586,14 +35740,14 @@ Sha256.prototype._update = function(M) {
   this._f = (f + this._f) | 0
   this._g = (g + this._g) | 0
   this._h = (h + this._h) | 0
-};
+}
 
 Sha256.prototype._hash = function () {
   var H = new Buffer(32)
 
-  H.writeInt32BE(this._a,  0)
-  H.writeInt32BE(this._b,  4)
-  H.writeInt32BE(this._c,  8)
+  H.writeInt32BE(this._a, 0)
+  H.writeInt32BE(this._b, 4)
+  H.writeInt32BE(this._c, 8)
   H.writeInt32BE(this._d, 12)
   H.writeInt32BE(this._e, 16)
   H.writeInt32BE(this._f, 20)
@@ -35609,12 +35763,12 @@ module.exports = Sha256
 },{"./hash":149,"buffer":52,"inherits":194}],155:[function(require,module,exports){
 (function (Buffer){
 var inherits = require('inherits')
-var SHA512 = require('./sha512');
+var SHA512 = require('./sha512')
 var Hash = require('./hash')
 
 var W = new Array(160)
 
-function Sha384() {
+function Sha384 () {
   this.init()
   this._w = W
 
@@ -35624,23 +35778,23 @@ function Sha384() {
 inherits(Sha384, SHA512)
 
 Sha384.prototype.init = function () {
-  this._a = 0xcbbb9d5d|0
-  this._b = 0x629a292a|0
-  this._c = 0x9159015a|0
-  this._d = 0x152fecd8|0
-  this._e = 0x67332667|0
-  this._f = 0x8eb44a87|0
-  this._g = 0xdb0c2e0d|0
-  this._h = 0x47b5481d|0
+  this._a = 0xcbbb9d5d | 0
+  this._b = 0x629a292a | 0
+  this._c = 0x9159015a | 0
+  this._d = 0x152fecd8 | 0
+  this._e = 0x67332667 | 0
+  this._f = 0x8eb44a87 | 0
+  this._g = 0xdb0c2e0d | 0
+  this._h = 0x47b5481d | 0
 
-  this._al = 0xc1059ed8|0
-  this._bl = 0x367cd507|0
-  this._cl = 0x3070dd17|0
-  this._dl = 0xf70e5939|0
-  this._el = 0xffc00b31|0
-  this._fl = 0x68581511|0
-  this._gl = 0x64f98fa7|0
-  this._hl = 0xbefa4fa4|0
+  this._al = 0xc1059ed8 | 0
+  this._bl = 0x367cd507 | 0
+  this._cl = 0x3070dd17 | 0
+  this._dl = 0xf70e5939 | 0
+  this._el = 0xffc00b31 | 0
+  this._fl = 0x68581511 | 0
+  this._gl = 0x64f98fa7 | 0
+  this._hl = 0xbefa4fa4 | 0
 
   return this
 }
@@ -35648,7 +35802,7 @@ Sha384.prototype.init = function () {
 Sha384.prototype._hash = function () {
   var H = new Buffer(48)
 
-  function writeInt64BE(h, l, offset) {
+  function writeInt64BE (h, l, offset) {
     H.writeInt32BE(h, offset)
     H.writeInt32BE(l, offset + 4)
   }
@@ -35716,7 +35870,7 @@ var K = [
 
 var W = new Array(160)
 
-function Sha512() {
+function Sha512 () {
   this.init()
   this._w = W
 
@@ -35726,23 +35880,23 @@ function Sha512() {
 inherits(Sha512, Hash)
 
 Sha512.prototype.init = function () {
-  this._a = 0x6a09e667|0
-  this._b = 0xbb67ae85|0
-  this._c = 0x3c6ef372|0
-  this._d = 0xa54ff53a|0
-  this._e = 0x510e527f|0
-  this._f = 0x9b05688c|0
-  this._g = 0x1f83d9ab|0
-  this._h = 0x5be0cd19|0
+  this._a = 0x6a09e667 | 0
+  this._b = 0xbb67ae85 | 0
+  this._c = 0x3c6ef372 | 0
+  this._d = 0xa54ff53a | 0
+  this._e = 0x510e527f | 0
+  this._f = 0x9b05688c | 0
+  this._g = 0x1f83d9ab | 0
+  this._h = 0x5be0cd19 | 0
 
-  this._al = 0xf3bcc908|0
-  this._bl = 0x84caa73b|0
-  this._cl = 0xfe94f82b|0
-  this._dl = 0x5f1d36f1|0
-  this._el = 0xade682d1|0
-  this._fl = 0x2b3e6c1f|0
-  this._gl = 0xfb41bd6b|0
-  this._hl = 0x137e2179|0
+  this._al = 0xf3bcc908 | 0
+  this._bl = 0x84caa73b | 0
+  this._cl = 0xfe94f82b | 0
+  this._dl = 0x5f1d36f1 | 0
+  this._el = 0xade682d1 | 0
+  this._fl = 0x2b3e6c1f | 0
+  this._gl = 0xfb41bd6b | 0
+  this._hl = 0x137e2179 | 0
 
   return this
 }
@@ -35752,14 +35906,14 @@ function S (X, Xl, n) {
 }
 
 function Ch (x, y, z) {
-  return ((x & y) ^ ((~x) & z));
+  return ((x & y) ^ ((~x) & z))
 }
 
 function Maj (x, y, z) {
-  return ((x & y) ^ (x & z) ^ (y & z));
+  return ((x & y) ^ (x & z) ^ (y & z))
 }
 
-Sha512.prototype._update = function(M) {
+Sha512.prototype._update = function (M) {
   var W = this._w
 
   var a = this._a | 0
@@ -35782,33 +35936,33 @@ Sha512.prototype._update = function(M) {
 
   var i = 0, j = 0
   var Wi, Wil
-  function calcW() {
-    var x  = W[j - 15*2]
-    var xl = W[j - 15*2 + 1]
-    var gamma0  = S(x, xl, 1) ^ S(x, xl, 8) ^ (x >>> 7)
+  function calcW () {
+    var x = W[j - 15 * 2]
+    var xl = W[j - 15 * 2 + 1]
+    var gamma0 = S(x, xl, 1) ^ S(x, xl, 8) ^ (x >>> 7)
     var gamma0l = S(xl, x, 1) ^ S(xl, x, 8) ^ S(xl, x, 7)
 
-    x  = W[j - 2*2]
-    xl = W[j - 2*2 + 1]
-    var gamma1  = S(x, xl, 19) ^ S(xl, x, 29) ^ (x >>> 6)
+    x = W[j - 2 * 2]
+    xl = W[j - 2 * 2 + 1]
+    var gamma1 = S(x, xl, 19) ^ S(xl, x, 29) ^ (x >>> 6)
     var gamma1l = S(xl, x, 19) ^ S(x, xl, 29) ^ S(xl, x, 6)
 
     // W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16]
-    var Wi7  = W[j - 7*2]
-    var Wi7l = W[j - 7*2 + 1]
+    var Wi7 = W[j - 7 * 2]
+    var Wi7l = W[j - 7 * 2 + 1]
 
-    var Wi16  = W[j - 16*2]
-    var Wi16l = W[j - 16*2 + 1]
+    var Wi16 = W[j - 16 * 2]
+    var Wi16l = W[j - 16 * 2 + 1]
 
     Wil = gamma0l + Wi7l
-    Wi  = gamma0  + Wi7 + ((Wil >>> 0) < (gamma0l >>> 0) ? 1 : 0)
+    Wi = gamma0 + Wi7 + ((Wil >>> 0) < (gamma0l >>> 0) ? 1 : 0)
     Wil = Wil + gamma1l
-    Wi  = Wi  + gamma1  + ((Wil >>> 0) < (gamma1l >>> 0) ? 1 : 0)
+    Wi = Wi + gamma1 + ((Wil >>> 0) < (gamma1l >>> 0) ? 1 : 0)
     Wil = Wil + Wi16l
-    Wi  = Wi  + Wi16 + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0)
+    Wi = Wi + Wi16 + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0)
   }
 
-  function loop() {
+  function loop () {
     W[j] = Wi
     W[j + 1] = Wil
 
@@ -35840,22 +35994,22 @@ Sha512.prototype._update = function(M) {
     var t2l = sigma0l + majl
     var t2 = sigma0h + maj + ((t2l >>> 0) < (sigma0l >>> 0) ? 1 : 0)
 
-    h  = g
+    h = g
     hl = gl
-    g  = f
+    g = f
     gl = fl
-    f  = e
+    f = e
     fl = el
     el = (dl + t1l) | 0
-    e  = (d + t1 + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0
-    d  = c
+    e = (d + t1 + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0
+    d = c
     dl = cl
-    c  = b
+    c = b
     cl = bl
-    b  = a
+    b = a
     bl = al
     al = (t1l + t2l) | 0
-    a  = (t1 + t2 + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0
+    a = (t1 + t2 + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0
 
     i++
     j += 2
@@ -35895,7 +36049,7 @@ Sha512.prototype._update = function(M) {
 Sha512.prototype._hash = function () {
   var H = new Buffer(64)
 
-  function writeInt64BE(h, l, offset) {
+  function writeInt64BE (h, l, offset) {
     H.writeInt32BE(h, offset)
     H.writeInt32BE(l, offset + 4)
   }
@@ -79593,7 +79747,7 @@ var NewExpenseModal = _react2['default'].createClass({
 
     render: function render() {
 
-        var dropdownOptions = [{ key: '', value: '' }, { key: 'consumables', value: 'Consumables' }, { key: 'food', value: 'Food' }, { key: 'equipment-repair', value: 'Equipment Repair' }, { key: 'tools', value: 'Tools' }, { key: 'infrastructure', value: 'Infrastructure' }];
+        var dropdownOptions = [{ key: '', value: '' }, { key: 'consumables', value: 'Consumables' }, { key: 'food', value: 'Food' }, { key: 'equipment-repair', value: 'Equipment Repair' }, { key: 'tools', value: 'Tools' }, { key: 'infrastructure', value: 'Infrastructure' }, { key: 'promotion', value: 'Promotional Materials' }];
 
         var feedback = null;
         if (this.state.feedback) {

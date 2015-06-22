@@ -126,6 +126,7 @@ const NewExpenseModal = React.createClass({
             {key:'equipment-repair', value:'Equipment Repair'},
             {key:'tools', value:'Tools'},
             {key:'infrastructure', value:'Infrastructure'},
+            {key:'promotion', value:'Promotional Materials'},
         ];
 
         var feedback = null;

@@ -10,6 +10,16 @@ class ExpensePresenter extends Presenter
         switch ($this->entity->category) {
             case 'consumables':
                 return 'Consumables';
+            case 'food':
+                return 'Food';
+            case 'equipment-repair':
+                return 'Equipment Repair';
+            case 'tools':
+                return 'Tools';
+            case 'infrastructure':
+                return 'Infrastructure';
+            case 'promotion':
+                return 'Promotional Materials';
             default:
                 return $this->entity->category;
         }
