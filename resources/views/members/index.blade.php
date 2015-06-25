@@ -23,7 +23,7 @@ Members
                     </div>
                     <span class="memberFlags">
                     @if ($user->keyholderStatus())
-                        <span class="glyphicon glyphicon-lock" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
+                        <span class="glyphicon glyphicon-key" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
                     @endif
                     @if ($user->director)
                         <span class="glyphicon glyphicon-asterisk" data-toggle="tooltip" data-placement="top" title="Trustee"></span>
