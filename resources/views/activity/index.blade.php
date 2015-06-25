@@ -54,7 +54,7 @@ Activity Log
 
                 <span class="memberFlags">
                     @if ($logEntry->user->keyholderStatus())
-                        <span class="glyphicon glyphicon-lock" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
+                        <span class="glyphicon glyphicon-key" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
                     @endif
                 </span>
             </div>
