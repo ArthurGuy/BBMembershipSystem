@@ -4,6 +4,7 @@
 use BB\Entities\User;
 use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
+use BB\Exceptions\ValidationException;
 
 class AccountController extends Controller
 {
@@ -347,6 +348,12 @@ class AccountController extends Controller
 
     public function updateSubscriptionAmount($id)
     {
+        $amount = \Input::get('monthly_subscription');
+
+        if ($amount < 5) {
+            throw new ValidationException('The minimum subscription is 5 GBP');
+        }
+
         $user = User::findWithPermission($id);
         $user->updateSubAmount(\Input::get('monthly_subscription'));
         \Notification::success('Details Updated');
