@@ -8,7 +8,7 @@ class ACSValidator extends FormValidator
         'service'   => 'required|in:entry,usage,consumable,shop,status,device-scanner,sensor',
         'message'   => 'required|in:boot,heartbeat,lookup,start,stop,charge,error,update',
         'tag'       => 'max:15',
-        'time'      => 'max:10|integer',
+        'time'      => 'integer',
         'signature' => '',
         'nonce'     => 'max:12',
     ];
