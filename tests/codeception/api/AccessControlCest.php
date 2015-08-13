@@ -1,5 +1,4 @@
 <?php
-use \ApiTester;
 
 class AccessControlCest
 {

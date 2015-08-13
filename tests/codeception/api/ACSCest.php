@@ -1,5 +1,4 @@
 <?php
-use \ApiTester;
 
 class ACSCest
 {
@@ -34,7 +33,7 @@ class ACSCest
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>$keyFob->key_id, 'message'=>'lookup', 'service'=>'entry']);
+        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>$keyFob->key_id, 'message'=>'lookup', 'service'=>'entry', 'time'=>time()]);
 
         $I->canSeeResponseCodeIs(200);
 
@@ -87,7 +86,7 @@ class ACSCest
         //Send a bad code to the endpoint
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>'ABCDEF123456', 'message'=>'boot', 'service'=>'entry', 'time'=>'10000000000']);
+        $I->sendPOST('/acs', ['device'=>'main-door', 'tag'=>'ABCDEF123456', 'message'=>'boot', 'service'=>'entry', 'time'=>'abcdefgh']);
         $I->canSeeResponseCodeIs(422);
     }
 
