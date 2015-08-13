@@ -84,6 +84,12 @@ class EquipmentController extends Controller
 
         $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipment->device_key);
 
+        $usageTimes = [];
+        $usageTimes['billed'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, true);
+        $usageTimes['unbilled'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, false);
+        $usageTimes['training'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'training');
+        $usageTimes['testing'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'testing');
+
         $userInduction = $this->inductionRepository->getUserForEquipment(\Auth::user()->id, $equipment->induction_category);
 
         $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipment->induction_category);
@@ -97,7 +103,8 @@ class EquipmentController extends Controller
             ->with('equipmentLog', $equipmentLog)
             ->with('userInduction', $userInduction)
             ->with('trainedUsers', $trainedUsers)
-            ->with('usersPendingInduction', $usersPendingInduction);
+            ->with('usersPendingInduction', $usersPendingInduction)
+            ->with('usageTimes', $usageTimes);
     }
 
     /**

@@ -115,7 +115,7 @@ class EquipmentLogRepository extends DBRepository
 
     /**
      * @param $deviceKey
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllForEquipment($deviceKey)
     {
@@ -133,8 +133,36 @@ class EquipmentLogRepository extends DBRepository
     }
 
     /**
+     * @param string $deviceKey
+     * @param bool   $billedTime
+     * @param null   $reason
+     * @return int
+     */
+    public function getTotalTime($deviceKey, $billedTime = null, $reason = null)
+    {
+        $totalTime = 0;
+        $query     = $this->model->where('device', $deviceKey)->where('active', false);
+
+        if ($billedTime !== null) {
+            $query = $query->where('billed', $billedTime);
+        }
+        if ($reason !== null) {
+            $query = $query->where('reason', $reason);
+        }
+
+        $query->chunk(100, function ($results) use (&$totalTime) {
+            /** @var EquipmentLog[] $results */
+            foreach ($results as $result) {
+                $totalTime += $result->started->diffInMinutes($result->finished);
+            }
+        });
+
+        return $totalTime;
+    }
+
+    /**
      * Return all records that are currently listed as active
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getActiveRecords()
     {
@@ -143,7 +171,7 @@ class EquipmentLogRepository extends DBRepository
 
     /**
      * Return all records that have been checked over but not billed
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getFinishedUnbilledRecords()
     {
@@ -152,7 +180,7 @@ class EquipmentLogRepository extends DBRepository
 
     /**
      * Get all records that haven't been billed yet
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getUnbilledRecords()
     {

@@ -151,6 +151,17 @@ Tools and Equipment
                 @endif
             </tr>
         </thead>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <strong>Total times in minutes:</strong>
+                    Billed: {{ number_format($usageTimes['billed']) }} |
+                    Unbilled: {{ number_format($usageTimes['unbilled']) }} |
+                    Training: {{ number_format($usageTimes['training']) }} |
+                    Testing: {{ number_format($usageTimes['testing']) }}
+                </td>
+            </tr>
+        </tfoot>
         <tbody>
         @foreach($equipmentLog as $log)
             <tr>
