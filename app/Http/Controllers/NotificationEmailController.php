@@ -3,7 +3,6 @@
 use BB\Exceptions\AuthenticationException;
 use BB\Exceptions\NotImplementedException;
 use BB\Mailer\UserMailer;
-use BB\Notifications\Notification;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 use BB\Validators\EmailNotificationValidator;
@@ -21,10 +20,6 @@ class NotificationEmailController extends Controller
      */
     private $emailNotificationValidator;
     /**
-     * @var Notification
-     */
-    private $notifications;
-    /**
      * @var InductionRepository
      */
     private $inductionRepository;
@@ -32,19 +27,16 @@ class NotificationEmailController extends Controller
     /**
      * @param UserRepository               $userRepository
      * @param EmailNotificationValidator   $emailNotificationValidator
-     * @param Notification                 $notifications
      * @param InductionRepository $inductionRepository
      * @throws AuthenticationException
      */
     public function __construct(
         UserRepository $userRepository,
         EmailNotificationValidator $emailNotificationValidator,
-        Notification $notifications,
         InductionRepository $inductionRepository
     ) {
         $this->userRepository             = $userRepository;
         $this->emailNotificationValidator = $emailNotificationValidator;
-        $this->notifications              = $notifications;
         $this->inductionRepository        = $inductionRepository;
     }
 
@@ -103,7 +95,7 @@ class NotificationEmailController extends Controller
         }
 
 
-        $this->notifications->success("Email Queued to Send");
+        \Notification::success('Email Queued to Send');
         return \Redirect::route('notificationemail.create');
     }
 } 
