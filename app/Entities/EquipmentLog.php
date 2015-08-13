@@ -1,8 +1,20 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
+/**
+ * Class EquipmentLog
+ *
+ * @property integer $id
+ * @property Carbon  $started
+ * @property Carbon  $last_update
+ * @property Carbon  $finished
+ * @property Carbon  $updated_at
+ * @property Carbon  $created_at
+ * @package BB\Entities
+ */
 class EquipmentLog extends Model
 {
 

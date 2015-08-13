@@ -13,6 +13,8 @@ use Laracasts\Presenter\PresentableTrait;
  * @property Carbon  $obtained_at
  * @property Carbon  $removed_at
  * @property integer $usageCost
+ * @property string  $device_key
+ * @property string  $induction_category
  * @package BB\Entities
  */
 class Equipment extends Model
