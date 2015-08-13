@@ -1,5 +1,4 @@
 <?php
-use \UnitTester;
 use \Mockery as m;
 use \Carbon\Carbon as Carbon;
 

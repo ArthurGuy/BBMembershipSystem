@@ -1,6 +1,5 @@
 <?php
 use Carbon\Carbon;
-use \FunctionalTester;
 
 class TestPaymentProcessesCest
 {

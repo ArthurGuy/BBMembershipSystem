@@ -1,7 +1,6 @@
 <?php
 use BB\Entities\User;
 use Carbon\Carbon;
-use \FunctionalTester;
 
 class ProposalsCest
 {

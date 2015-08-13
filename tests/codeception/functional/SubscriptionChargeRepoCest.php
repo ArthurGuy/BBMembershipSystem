@@ -1,6 +1,5 @@
 <?php
 use Carbon\Carbon;
-use \FunctionalTester;
 Use Mockery as m;
 
 class SubscriptionChargeRepoCest
