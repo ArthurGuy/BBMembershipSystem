@@ -34,7 +34,11 @@ class PaymentOverviewController extends Controller
         $this->paymentRepository->resetFilters();
         $this->paymentRepository->reasonFilter('door-key');
         $doorKeyLiability = $this->paymentRepository->getTotalAmount();
+        
 
-        return \View::make('payment_overview.index')->with(compact('balancePaidIn', 'balancePaidOut', 'balanceLiability', 'storageBoxLiability', 'doorKeyLiability'));
+        $laserCutterInvestment = $this->paymentRepository->getPaymentsByReference('laser-cutter')->sum('amount');
+        $laserCutterMoneySpent = $this->paymentRepository->getEquipmentFeePayments('laser')->sum('amount');
+
+        return \View::make('payment_overview.index')->with(compact('balancePaidIn', 'balancePaidOut', 'balanceLiability', 'storageBoxLiability', 'doorKeyLiability', 'laserCutterInvestment', 'laserCutterMoneySpent'));
     }
 }

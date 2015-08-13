@@ -60,6 +60,21 @@ Payment Stats
             </p>
         </div>
     </div>
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <div class="well">
+            <h3 class="text-center">Laser Cutter</h3>
+
+            <h4 class="text-center">Initial Investment</h4>
+            <p class="text-center">
+                <span class="key-figure">&pound;{{ $laserCutterInvestment }}</span>
+            </p>
+
+            <h4 class="text-center">Fees Collected</h4>
+            <p class="text-center">
+                <span class="key-figure">&pound;{{ $laserCutterMoneySpent }}</span>
+            </p>
+        </div>
+    </div>
 
 </div>
 
