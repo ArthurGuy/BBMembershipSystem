@@ -3,6 +3,7 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\Notification;
+use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Http\Request;
 use Auth;
 use BB\Http\Requests;
@@ -74,7 +75,20 @@ class NotificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //dd($request->all());
+        $this->validate($request, [
+            'unread' => 'boolean'
+        ]);
+
+        $notification = Notification::findOrFail($id);
+
+        if ($notification->user_id !== Auth::id()) {
+            throw new UnauthorizedException();
+        }
+
+        $notification->update($request->only('unread'));
+
+        return $notification;
     }
 
     /**

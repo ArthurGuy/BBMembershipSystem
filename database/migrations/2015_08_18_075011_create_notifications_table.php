@@ -24,7 +24,7 @@ class CreateNotificationsTable extends Migration
             $table->dateTime('notified_at');
             $table->string('notified_method', 100);
 
-            $table->boolean('read');
+            $table->boolean('unread')->default(true);
 
             $table->timestamps();
         });

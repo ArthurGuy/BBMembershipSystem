@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    protected $fillable = ['user_id', 'message', 'type', 'hash'];
+    protected $fillable = ['user_id', 'message', 'type', 'hash', 'unread'];
 
     /**
      * Record a notification for the user but make sure there are no duplicates first
@@ -29,5 +29,15 @@ class Notification extends Model
             'type'    => $type,
             'hash'    => $hash
         ]);
+    }
+
+    /**
+     * Scope a query to only include unread notifications
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnread($query)
+    {
+        return $query->where('unread', true);
     }
 }

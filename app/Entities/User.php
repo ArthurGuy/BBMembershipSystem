@@ -146,6 +146,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasOne('\BB\Entities\Address')->orderBy('approved', 'asc');
     }
 
+    public function notifications()
+    {
+        return $this->hasOne(Notification::class)->orderBy('created_at', 'desc');
+    }
+
 
 
     /*

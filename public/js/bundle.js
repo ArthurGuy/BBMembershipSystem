@@ -78596,6 +78596,16 @@ var SiteInteraction = function SiteInteraction() {
         jQuery(this).hide();
     });
 
+    jQuery(".js-notification-row").click(function (event) {
+        event.preventDefault();
+        var id = jQuery(this).data("id");
+        var that = this;
+        jQuery.post("notifications/" + id, { read: true, _method: "PUT" }, function () {
+            jQuery(that).removeClass("success");
+            jQuery(that).find(".js-unread").text("");
+        });
+    });
+
     //Activity page - Date picker, auto form submit
     jQuery("#activityDatePicker").find("input").on("change", function (e) {
         jQuery("#activityDatePicker").submit();

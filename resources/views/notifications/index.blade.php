@@ -18,7 +18,7 @@
             <th>Message</th>
             <th>Type</th>
             <th>Date</th>
-            <th>Read</th>
+            <th>Unread</th>
         </tr>
     </thead>
     <tbody>
