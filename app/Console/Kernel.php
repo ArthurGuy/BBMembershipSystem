@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('bb:bill-members')->dailyAt('01:30')
             ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/nxAz59P6LXlu2P1'); } );
 
-        $schedule->command('device:check-online')->hourly()
+        $schedule->command('device:check-online')->everyTenMinutes()
             ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/WU4zql7LwZs1CzT'); } );
     }
 
