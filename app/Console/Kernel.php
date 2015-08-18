@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\CalculateEquipmentFees::class,
         Commands\CreateTodaysSubCharges::class,
         Commands\BillMembers::class,
+        Commands\CheckDeviceOnlineStatuses::class,
     ];
 
     /**
@@ -51,6 +52,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('bb:bill-members')->dailyAt('01:30')
             ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/nxAz59P6LXlu2P1'); } );
+
+        $schedule->command('device:check-online')->hourly()
+            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/WU4zql7LwZs1CzT'); } );
     }
 
     protected function pingIfProduction($url)
