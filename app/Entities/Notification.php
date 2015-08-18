@@ -2,11 +2,25 @@
 
 namespace BB\Entities;
 
+use BB\Events\NewMemberNotification;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property User     user
+ * @property integer  user_id
+ * @property string   message
+ * @property string   type
+ * @property string   hash
+ * @property boolean  unread
+ */
 class Notification extends Model
 {
-    protected $fillable = ['user_id', 'message', 'type', 'hash', 'unread'];
+    protected $fillable = ['user_id', 'message', 'type', 'hash', 'unread', 'notified_method', 'notified_at'];
+
+    public function getDates()
+    {
+        return array('created_at', 'updated_at', 'notified_at');
+    }
 
     /**
      * Record a notification for the user but make sure there are no duplicates first
@@ -23,12 +37,21 @@ class Notification extends Model
             return $existingNotifications;
         }
 
-        return parent::create([
+        $newNotification = parent::create([
             'user_id' => $userId,
             'message' => $message,
             'type'    => $type,
             'hash'    => $hash
         ]);
+
+        event(new NewMemberNotification($newNotification));
+
+        return $newNotification;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)->first();
     }
 
     /**

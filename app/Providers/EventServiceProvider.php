@@ -9,6 +9,7 @@ use BB\Listeners\EmailTrusteesAboutExpense;
 use BB\Listeners\ExtendMembership;
 use BB\Listeners\RecordMemberActivity;
 use BB\Listeners\SlackActivityNotification;
+use BB\Listeners\SlackMemberNotification;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -60,6 +61,9 @@ class EventServiceProvider extends ServiceProvider {
         ],
         'BB\Events\MemberGivenTrustedStatus' => [
             EmailMemberAboutTrustedStatus::class
+        ],
+        'BB\Events\NewMemberNotification' => [
+            SlackMemberNotification::class
         ]
 	];
 

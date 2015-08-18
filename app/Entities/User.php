@@ -18,6 +18,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  *
  * @property integer $id
  * @property string $email
+ * @property string $slack_username
  * @property string $name
  * @property string $given_name
  * @property string $family_name
@@ -148,7 +149,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function notifications()
     {
-        return $this->hasOne(Notification::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Notification::class)->orderBy('created_at', 'desc');
     }
 
 
