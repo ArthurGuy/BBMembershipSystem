@@ -4,6 +4,17 @@
 
 var React = require('react');
 
+//Configure a global private pusher channel
+var userId = document.getElementById('userId').value;
+
+if (typeof Pusher != 'undefined') {
+    Pusher.log = function (message) {
+        window.console.log(message);
+    };
+    var pusher = new Pusher('76cf385da8c9087f9d68', { authEndpoint: '/session/pusher' });
+    global.privateMemberChannel = pusher.subscribe('private-' + userId);
+}
+
 var SiteInteraction = require('./SiteInteraction');
 new SiteInteraction();
 
@@ -26,6 +37,11 @@ require('bootstrap');
 var Notifications = require('./collections/Notifications');
 var notifications = new Notifications();
 notifications.fetch(); //fetch the current data once so it can be used in various places
+
+//If a new notification is received by pusher add it to the collection
+privateMemberChannel.bind('BB\\Events\\NewMemberNotification', function (data) {
+    notifications.add(data.notification);
+});
 
 jQuery('.js-notifications-table').each(function () {
     var NotificationsTable = require('./components/notifications/NotificationsTable');

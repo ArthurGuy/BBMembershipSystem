@@ -6,7 +6,7 @@ use BB\Entities\Notification;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewMemberNotification extends Event
+class NewMemberNotification extends Event implements ShouldBroadcast
 {
     use SerializesModels;
     /**
@@ -31,6 +31,6 @@ class NewMemberNotification extends Event
      */
     public function broadcastOn()
     {
-        return [];
+        return ['private-' . $this->notification->user_id];
     }
 }

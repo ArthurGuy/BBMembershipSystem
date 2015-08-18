@@ -14,3 +14,10 @@
 <div class="js-notifications-table"></div>
 
 @stop
+
+@section('footer-js')
+<script type="text/javascript">
+
+
+</script>
+@stop
