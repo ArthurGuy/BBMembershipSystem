@@ -14,13 +14,15 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $notifications = Notification::where('user_id', Auth::id())->get();
-
-        return view('notifications.index', ['notifications' => $notifications]);
+        if ($request->wantsJson()) {
+            return Notification::where('user_id', Auth::id())->get();
+        }
+        return view('notifications.index');
     }
 
     /**

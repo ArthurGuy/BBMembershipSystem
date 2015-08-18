@@ -11,19 +11,6 @@
 
 @section('content')
 
-
-<table class="table memberList">
-    <thead>
-        <tr>
-            <th>Message</th>
-            <th>Type</th>
-            <th>Date</th>
-            <th>Unread</th>
-        </tr>
-    </thead>
-    <tbody>
-        @each('notifications.index-row', $notifications, 'notification')
-    </tbody>
-</table>
+<div class="js-notifications-table"></div>
 
 @stop

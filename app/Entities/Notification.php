@@ -17,6 +17,10 @@ class Notification extends Model
 {
     protected $fillable = ['user_id', 'message', 'type', 'hash', 'unread', 'notified_method', 'notified_at'];
 
+    protected $casts = [
+        'unread' => 'boolean'
+    ];
+
     public function getDates()
     {
         return array('created_at', 'updated_at', 'notified_at');

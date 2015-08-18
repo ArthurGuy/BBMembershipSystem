@@ -22,6 +22,21 @@ new FeedbackWidget();
 global.jQuery = require('jquery');
 require('bootstrap');
 
+//Site wide notification loading
+var Notifications = require('./collections/Notifications');
+var notifications = new Notifications();
+notifications.fetch(); //fetch the current data once so it can be used in various places
+
+jQuery('.js-notifications-table').each(function () {
+    var NotificationsTable = require('./components/notifications/NotificationsTable');
+    React.render(React.createElement(NotificationsTable, { notifications: notifications }), jQuery(this)[0]);
+});
+
+jQuery('.js-notifications-count').each(function () {
+    var NotificationCount = require('./components/notifications/NotificationCount');
+    React.render(React.createElement(NotificationCount, { notifications: notifications }), jQuery(this)[0]);
+});
+
 if (jQuery('body').hasClass('payment-page')) {
     var FilterablePaymentTable = require('./components/FilterablePaymentTable');
     React.render(React.createElement(FilterablePaymentTable, null), document.getElementById('react-test'));
@@ -60,7 +75,7 @@ if (memberExpensesPanel.length) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AdminForms":478,"./FeedbackWidget":479,"./SiteInteraction":480,"./Snackbar":481,"./collections/Expenses":482,"./components/FilterablePaymentTable":483,"./components/PaymentModule":484,"./components/expenses/MemberExpenses":488,"bootstrap":5,"jquery":49,"react":475}],2:[function(require,module,exports){
+},{"./AdminForms":478,"./FeedbackWidget":479,"./SiteInteraction":480,"./Snackbar":481,"./collections/Expenses":482,"./collections/Notifications":483,"./components/FilterablePaymentTable":484,"./components/PaymentModule":485,"./components/expenses/MemberExpenses":490,"./components/notifications/NotificationCount":493,"./components/notifications/NotificationsTable":495,"bootstrap":5,"jquery":49,"react":475}],2:[function(require,module,exports){
 //     Backbone.Model File Upload v1.0.0
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
@@ -78768,7 +78783,29 @@ var Expenses = Backbone.Collection.extend({
 exports['default'] = Expenses;
 module.exports = exports['default'];
 
-},{"../models/Expense":492,"backbone":3}],483:[function(require,module,exports){
+},{"../models/Expense":497,"backbone":3}],483:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+var Backbone = require('backbone');
+
+var Notifications = Backbone.Collection.extend({
+    // Reference to this collection's model.
+    model: require('../models/Notification'),
+
+    url: '/notifications',
+
+    unread: function unread() {
+        return this.where({ unread: true });
+    }
+});
+
+exports['default'] = Notifications;
+module.exports = exports['default'];
+
+},{"../models/Notification":498,"backbone":3}],484:[function(require,module,exports){
 //import React from 'react';
 'use strict';
 Object.defineProperty(exports, '__esModule', {
@@ -78865,7 +78902,7 @@ var FilterablePaymentTable = (function (_React$Component) {
 exports['default'] = FilterablePaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTable":485,"react":475,"select2":476}],484:[function(require,module,exports){
+},{"./PaymentTable":486,"react":475,"select2":476}],485:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79138,7 +79175,7 @@ module.exports = exports['default'];
 
 //We should probably do something here as gocardless will most likely fail
 
-},{"../services/StripePayment":493,"./form/Select":490,"halogen/PulseLoader":18,"jquery":49,"react":475}],485:[function(require,module,exports){
+},{"../services/StripePayment":499,"./form/Select":492,"halogen/PulseLoader":18,"jquery":49,"react":475}],486:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79248,7 +79285,7 @@ var PaymentTable = (function (_React$Component) {
 exports['default'] = PaymentTable;
 module.exports = exports['default'];
 
-},{"./PaymentTableRow":486,"react":475}],486:[function(require,module,exports){
+},{"./PaymentTableRow":487,"react":475}],487:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79331,7 +79368,54 @@ var PaymentTableRow = (function (_React$Component) {
 exports['default'] = PaymentTableRow;
 module.exports = exports['default'];
 
-},{"react":475}],487:[function(require,module,exports){
+},{"react":475}],488:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var Tick = (function (_React$Component) {
+    function Tick() {
+        _classCallCheck(this, Tick);
+
+        if (_React$Component != null) {
+            _React$Component.apply(this, arguments);
+        }
+    }
+
+    _inherits(Tick, _React$Component);
+
+    _createClass(Tick, [{
+        key: "render",
+        value: function render() {
+
+            if (this.props.ticked) {
+                return _react2["default"].createElement("span", { className: "glyphicon glyphicon-ok", title: this.props.title });
+            }
+            return null;
+        }
+    }]);
+
+    return Tick;
+})(_react2["default"].Component);
+
+exports["default"] = Tick;
+module.exports = exports["default"];
+
+},{"react":475}],489:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79425,7 +79509,7 @@ var ExpenseItem = (function (_React$Component) {
 exports['default'] = ExpenseItem;
 module.exports = exports['default'];
 
-},{"moment":215,"react":475}],488:[function(require,module,exports){
+},{"moment":215,"react":475}],490:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79613,7 +79697,7 @@ module.exports = exports['default'];
 //    expense.save();
 //});
 
-},{"../../mixins/Backbone":491,"./ExpenseItem":487,"./NewExpenseModal":489,"react":475,"react-bootstrap":272}],489:[function(require,module,exports){
+},{"../../mixins/Backbone":496,"./ExpenseItem":489,"./NewExpenseModal":491,"react":475,"react-bootstrap":272}],491:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79811,7 +79895,7 @@ var NewExpenseModal = _react2['default'].createClass({
 exports['default'] = NewExpenseModal;
 module.exports = exports['default'];
 
-},{"../form/Select":490,"backbone-model-file-upload":2,"joi":33,"jquery":49,"react":475,"react-bootstrap":272,"react-validation-mixin":287}],490:[function(require,module,exports){
+},{"../form/Select":492,"backbone-model-file-upload":2,"joi":33,"jquery":49,"react":475,"react-bootstrap":272,"react-validation-mixin":287}],492:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79902,7 +79986,224 @@ var Select = (function (_React$Component) {
 exports['default'] = Select;
 module.exports = exports['default'];
 
-},{"react":475}],491:[function(require,module,exports){
+},{"react":475}],493:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var BackboneMixin = require('../../mixins/Backbone');
+
+var NotificationCount = _react2['default'].createClass({
+    displayName: 'NotificationCount',
+
+    mixins: [BackboneMixin],
+
+    getBackboneCollections: function getBackboneCollections() {
+        return [this.props.notifications];
+    },
+
+    render: function render() {
+
+        var notificationCount = this.props.notifications.unread().length;
+
+        return _react2['default'].createElement(
+            'span',
+            null,
+            notificationCount
+        );
+    }
+
+});
+
+exports['default'] = NotificationCount;
+module.exports = exports['default'];
+
+},{"../../mixins/Backbone":496,"react":475}],494:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var moment = require('moment');
+
+var Tick = require('./../elements/Tick');
+
+var NotificationTableRow = (function (_React$Component) {
+    function NotificationTableRow(props) {
+        _classCallCheck(this, NotificationTableRow);
+
+        _get(Object.getPrototypeOf(NotificationTableRow.prototype), 'constructor', this).call(this, props);
+
+        this.markAsRead = this.markAsRead.bind(this);
+    }
+
+    _inherits(NotificationTableRow, _React$Component);
+
+    _createClass(NotificationTableRow, [{
+        key: 'markAsRead',
+        value: function markAsRead() {
+            this.props.notification.save({ unread: false }, { wait: true });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+
+            var date = moment(this.props.notification.get('created_at'));
+
+            var unread = '';
+            var rowClass = '';
+            if (this.props.notification.get('unread')) {
+                unread = '<span class="glyphicon glyphicon-ok" title="Unread"></span>';
+                rowClass = 'success';
+            }
+
+            var rowStyle = {
+                cursor: 'pointer'
+            };
+
+            return _react2['default'].createElement(
+                'tr',
+                { className: rowClass, onClick: this.markAsRead, style: rowStyle },
+                _react2['default'].createElement(
+                    'td',
+                    null,
+                    this.props.notification.get('message')
+                ),
+                _react2['default'].createElement(
+                    'td',
+                    null,
+                    this.props.notification.get('type')
+                ),
+                _react2['default'].createElement(
+                    'td',
+                    null,
+                    date.format('MMM D, YYYY')
+                ),
+                _react2['default'].createElement(
+                    'td',
+                    null,
+                    _react2['default'].createElement(Tick, { ticked: this.props.notification.get('unread'), title: 'Unread' })
+                )
+            );
+        }
+    }]);
+
+    return NotificationTableRow;
+})(_react2['default'].Component);
+
+exports['default'] = NotificationTableRow;
+module.exports = exports['default'];
+
+},{"./../elements/Tick":488,"moment":215,"react":475}],495:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var NotificationTableRow = require('./NotificationTableRow');
+var BackboneMixin = require('../../mixins/Backbone');
+
+var NotificationsTable = _react2['default'].createClass({
+    displayName: 'NotificationsTable',
+
+    mixins: [BackboneMixin],
+
+    getBackboneCollections: function getBackboneCollections() {
+        return [this.props.notifications];
+    },
+
+    componentDidMount: function componentDidMount() {},
+
+    render: function render() {
+
+        var notifications = this.props.notifications;
+
+        var notificationItems = notifications.map(function (notification) {
+            return _react2['default'].createElement(NotificationTableRow, { key: notification.get('id'), notification: notification });
+        }, this);
+
+        return _react2['default'].createElement(
+            'div',
+            null,
+            _react2['default'].createElement(
+                'table',
+                { className: 'table' },
+                _react2['default'].createElement(
+                    'thead',
+                    null,
+                    _react2['default'].createElement(
+                        'tr',
+                        null,
+                        _react2['default'].createElement(
+                            'th',
+                            null,
+                            'Message'
+                        ),
+                        _react2['default'].createElement(
+                            'th',
+                            null,
+                            'Type'
+                        ),
+                        _react2['default'].createElement(
+                            'th',
+                            null,
+                            'Date'
+                        ),
+                        _react2['default'].createElement(
+                            'th',
+                            null,
+                            'Unread'
+                        )
+                    )
+                ),
+                _react2['default'].createElement(
+                    'tbody',
+                    null,
+                    notificationItems
+                )
+            )
+        );
+    }
+
+});
+
+exports['default'] = NotificationsTable;
+module.exports = exports['default'];
+
+//Notifications are loaded in the main app file and the connection is passed in
+//this.props.notifications.fetch();
+
+},{"../../mixins/Backbone":496,"./NotificationTableRow":494,"react":475}],496:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79933,7 +80234,7 @@ var BackboneMixin = {
 exports['default'] = BackboneMixin;
 module.exports = exports['default'];
 
-},{}],492:[function(require,module,exports){
+},{}],497:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79968,7 +80269,38 @@ var Expense = Backbone.Model.extend({
 exports['default'] = Expense;
 module.exports = exports['default'];
 
-},{"backbone":3}],493:[function(require,module,exports){
+},{"backbone":3}],498:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var Backbone = require('backbone');
+
+var Notification = Backbone.Model.extend({
+
+    urlRoot: '/notifications',
+
+    defaults: {
+        user_id: null,
+        message: null,
+        type: null,
+        date: null,
+        unread: true
+    },
+
+    seen: function seen() {
+        this.save({
+            unread: false
+        });
+    }
+});
+
+exports['default'] = Notification;
+module.exports = exports['default'];
+
+},{"backbone":3}],499:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {

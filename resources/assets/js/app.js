@@ -20,6 +20,20 @@ new FeedbackWidget();
 global.jQuery = require('jquery');
 require('bootstrap');
 
+//Site wide notification loading
+var Notifications = require('./collections/Notifications');
+var notifications = new Notifications();
+notifications.fetch();  //fetch the current data once so it can be used in various places
+
+jQuery('.js-notifications-table').each(function () {
+    var NotificationsTable = require('./components/notifications/NotificationsTable');
+    React.render(<NotificationsTable notifications={notifications} />, jQuery(this)[0]);
+});
+
+jQuery('.js-notifications-count').each(function () {
+    var NotificationCount = require('./components/notifications/NotificationCount');
+    React.render(<NotificationCount notifications={notifications} />, jQuery(this)[0]);
+});
 
 if (jQuery('body').hasClass('payment-page')) {
     var FilterablePaymentTable = require('./components/FilterablePaymentTable');

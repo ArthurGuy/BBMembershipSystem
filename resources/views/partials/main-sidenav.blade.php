@@ -25,16 +25,7 @@
 
             {!! HTML::sideNavLink('Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
 
-            @if (Auth::user()->notifications()->unread()->count() > 0)
-                <li>
-                    <a href="{{ route('notifications.index') }}">
-                        Notifications
-                        @if (Auth::user()->notifications()->unread()->count() > 0)
-                            <span class="badge">{{ Auth::user()->notifications()->unread()->count() }}</span>
-                        @endif
-                    </a>
-                </li>
-            @endif
+            {!! HTML::sideNavLink('Notifications <span class="badge js-notifications-count"></span>', 'notifications.index') !!}
 
         </ul>
         @endif
