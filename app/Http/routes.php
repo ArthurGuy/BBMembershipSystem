@@ -92,6 +92,8 @@ Route::group(array('middleware' => 'role:member'), function() {
 # Equipment Log
 Route::post('equipment/log/{logId}', ['uses'=>'EquipmentLogController@update', 'middleware'=>'role:member', 'as'=>'equipment_log.update']);
 
+# Notifications
+Route::get('notifications', ['uses' => 'NotificationController@index', 'middleware' => 'role:member', 'as' => 'notifications.index']);
 
 # Statements
 Route::group(array('middleware' => 'role:admin'), function() {
