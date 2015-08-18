@@ -45,8 +45,12 @@ class CheckDeviceOnlineStatuses extends Command
     public function handle()
     {
         foreach ($this->deviceRepository->getAll() as $device) {
+
+            $this->info('Checking device ' . $device->name);
             /** @var $device \BB\Entities\Device */
             if ($device->heartbeatWarning()) {
+
+                $this->warn('Heartbeat warning');
 
                 //There is a warning with the device, see if people have been notified
                 $notificationHash = $device->device_id . md5($device->last_heartbeat->timestamp);
@@ -56,20 +60,9 @@ class CheckDeviceOnlineStatuses extends Command
 
                 $role = Role::findByName('infra');
                 foreach ($role->users()->get() as $user) {
-                    $this->info($user->name);
+                    $this->info('  Notifying ' . $user->name);
 
-                    //If the user already has this notification dont create another
-                    $existingNotifications = Notification::where('user_id', $user->id)->where('hash', $notificationHash)->count();
-                    if ($existingNotifications) {
-                        continue;
-                    }
-
-                    Notification::create([
-                        'user_id' => $user->id,
-                        'message' => $message,
-                        'type'    => 'device_contact',
-                        'hash'    => $notificationHash
-                    ]);
+                    Notification::logNew($user->id, $message, 'device_contact', $notificationHash);
 
                 }
 
