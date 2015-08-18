@@ -588,6 +588,20 @@ CREATE TABLE `expenses` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `notifications` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `hash` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `notified_at` datetime NOT NULL,
+  `notified_method` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `unread` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
