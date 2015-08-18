@@ -13,7 +13,7 @@ class UpdateUsersWithSlackId extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('slack_username')->after('email');
+            $table->string('slack_username')->nullable()->after('email');
         });
     }
 

@@ -55,7 +55,7 @@ class CheckDeviceOnlineStatuses extends Command
                 //There is a warning with the device, see if people have been notified
                 $notificationHash = $device->device_id . md5($device->last_heartbeat->timestamp);
 
-                $message = 'Nothing has been heard from device ' . $device->name . ' in a while. ';
+                $message = 'Nothing has been heard from device "' . $device->name . '"" in a while. ';
                 $message .= 'The last update was ' . \Carbon\Carbon::now()->diffForHumans($device->last_heartbeat, true) . ' ago.';
 
                 $role = Role::findByName('infra');
