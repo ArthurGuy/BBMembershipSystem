@@ -39,7 +39,7 @@ class EquipmentCharge
                 //How may seconds was the device in use
                 $secondsActive = $record->finished->diffInSeconds($record->started);
 
-                //Charges are for a minimum of 5 minutes
+                //Charges are for a minimum of 15 minutes
                 $secondsActive = $this->roundUpSecondsActive($secondsActive);
 
                 $incurredFee = $this->sessionFee($feePerSecond, $secondsActive);
@@ -60,14 +60,15 @@ class EquipmentCharge
     }
 
     /**
-     * Ensure the seconds are at least 300
+     * Ensure the seconds are at least 900 (15 minutes)
+     * 
      * @param $seconds int
      * @return int
      */
     private function roundUpSecondsActive($seconds)
     {
-        if ($seconds < 300) {
-            $seconds = 300;
+        if ($seconds < 900) {
+            $seconds = 900;
         }
         return $seconds;
     }
