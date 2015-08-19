@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SlackMemberNotification
+class SlackMemberNotification implements ShouldQueue
 {
     /**
      * Create the event listener.
