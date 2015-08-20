@@ -89,9 +89,7 @@
 </div>
 
 <div class="modalMask"></div>
-
-    <input type="hidden" name="userId" value="{{ Auth::id() }}" />
-
+    
     @include('partials/feedback-widget')
 
     @include('partials/js-data')

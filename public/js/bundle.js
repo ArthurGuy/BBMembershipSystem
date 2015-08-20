@@ -5,9 +5,13 @@
 var React = require('react');
 
 //Configure a global private pusher channel
-var userId = document.getElementById('userId').value;
+var userId = document.getElementById('userId');
+if (userId != null) {
+    userId = userId.value;
+}
 
-if (typeof Pusher != 'undefined') {
+global.privateMemberChannel = null;
+if (typeof Pusher != 'undefined' && userId) {
     Pusher.log = function (message) {
         window.console.log(message);
     };
@@ -34,14 +38,16 @@ global.jQuery = require('jquery');
 require('bootstrap');
 
 //Site wide notification loading
-var Notifications = require('./collections/Notifications');
-var notifications = new Notifications();
-notifications.fetch(); //fetch the current data once so it can be used in various places
+if (privateMemberChannel) {
+    var Notifications = require('./collections/Notifications');
+    var notifications = new Notifications();
+    notifications.fetch(); //fetch the current data once so it can be used in various places
 
-//If a new notification is received by pusher add it to the collection
-privateMemberChannel.bind('BB\\Events\\NewMemberNotification', function (data) {
-    notifications.add(data.notification);
-});
+    //If a new notification is received by pusher add it to the collection
+    privateMemberChannel.bind('BB\\Events\\NewMemberNotification', function (data) {
+        notifications.add(data.notification);
+    });
+}
 
 jQuery('.js-notifications-table').each(function () {
     var NotificationsTable = require('./components/notifications/NotificationsTable');

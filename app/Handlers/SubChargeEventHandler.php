@@ -76,7 +76,7 @@ class SubChargeEventHandler
             /** @var $user \BB\Entities\User */
             $user->extendMembership(null, $paidUntil);
         } else {
-            \Log::warning('Unable to update member expiry date - payment cancelled. User ID:' . $userId);
+            \Log::info('Payment cancelled, expiry date rollback failed as there is no previous payment. User ID:' . $userId);
         }
     }
 
