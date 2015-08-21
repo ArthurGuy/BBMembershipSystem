@@ -22,8 +22,8 @@
     <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">Mailing list</a> - please use the same
     email address as you did when signing up.<br />
     <br />
-    We also have an active community on <a href="https://slack.com/">Slack</a>,
-    for an invite please email the <a href="mailto:trustees@buildbrighton.com">trustees</a>
+    We also have an active community on <a href="https://slack.com/">Slack</a>, for an invite please use the following
+    site to request an invite <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a>
 </p>
 <p>
     We have a code of conduct which we expect all members to abide by and a set of rules which govern how things are run,
