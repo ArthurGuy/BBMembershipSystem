@@ -7207,6 +7207,15 @@ body.register_login #pageTitle {
     left: 20px;
   }
 }
+.ppe-image {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  margin: 3px;
+  -webkit-box-shadow: 0 0 1px black;
+  -moz-box-shadow: 0 0 1px black;
+  box-shadow: 0 0 1px black;
+}
 /*
 Version: 3.5.1 Timestamp: Tue Jul 22 18:58:56 EDT 2014
 */

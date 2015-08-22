@@ -61,6 +61,15 @@ class EquipmentController extends Controller
 
         //Only members of the equipment group can create/update records
         $this->middleware('role:equipment', array('except' => ['index', 'show']));
+
+        $this->ppeList = [
+            'eye-protection' => 'Eye protection',
+            'gloves'         => 'Gloves',
+            'face-guard'     => 'Full face guard',
+            'face-mask'      => 'Face mask',
+            'welding-mask'   => 'Welding mask',
+            'ear-protection' => 'Ear protection'
+        ];
     }
 
     /**
@@ -117,7 +126,7 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
 
-        return \View::make('equipment.create')->with('memberList', $memberList)->with('roleList', $roleList->toArray());
+        return \View::make('equipment.create')->with('memberList', $memberList)->with('roleList', $roleList->toArray())->with('ppeList', $this->ppeList);
     }
 
 
@@ -133,7 +142,7 @@ class EquipmentController extends Controller
         $data = \Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
             'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
-            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id', 'ppe',
         ]);
         $this->equipmentValidator->validate($data);
 
@@ -157,7 +166,7 @@ class EquipmentController extends Controller
         //$roleList->prepend(null);
         //dd($roleList);
 
-        return \View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList)->with('roleList', $roleList->toArray());
+        return \View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList)->with('roleList', $roleList->toArray())->with('ppeList', $this->ppeList);
     }
 
 
@@ -174,7 +183,7 @@ class EquipmentController extends Controller
         $data = \Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail',
             'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
-            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id',
+            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id', 'ppe',
         ]);
         $this->equipmentValidator->validate($data, $equipment->id);
 

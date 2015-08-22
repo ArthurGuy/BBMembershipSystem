@@ -95,6 +95,14 @@
     </div>
 </div>
 
+<div class="form-group {{ Notification::hasErrorDetail('ppe', 'has-error has-feedback') }}">
+    {!! Form::label('ppe', 'PPE', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! Form::select('ppe[]', [''=>'']+$ppeList, null, ['class'=>'form-control js-advanced-dropdown', 'multiple']) !!}
+        {!! Notification::getErrorDetail('ppe') !!}
+    </div>
+</div>
+
 <div class="form-group {{ Notification::hasErrorDetail('managing_role_id', 'has-error has-feedback') }}">
     {!! Form::label('managing_role_id', 'Managing Group', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">

@@ -51,8 +51,6 @@ Tools and Equipment
                         </div>
                         <div class="col-md-12 col-lg-6">
 
-
-
                         </div>
                     </div>
 
@@ -62,7 +60,8 @@ Tools and Equipment
                     <br />
 
                     @if ($equipment->help_text)
-                        <a data-toggle="modal" data-target="#helpModal" href="#">Help</a><br />
+                        <a data-toggle="modal" data-target="#helpModal" href="#" class="btn btn-info">Help</a>
+                        <br /><br />
                     @endif
 
 
@@ -91,8 +90,8 @@ Tools and Equipment
                         No access fee required
 
                     @endif
-
-
+                    <br />
+                    {!! $equipment->present()->ppe !!}
                 </div>
             </div>
 

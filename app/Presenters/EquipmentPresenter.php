@@ -55,5 +55,14 @@ class EquipmentPresenter extends Presenter
         }
     }
 
+    public function ppe()
+    {
+        $ppeHtml = '';
+        foreach ($this->entity->ppe as $ppe) {
+            $ppeHtml .= '<img src="/img/ppe/' . $ppe . '.jpg" height="140" class="ppe-image">';
+        }
+        return $ppeHtml;
+    }
+
 
 } 
