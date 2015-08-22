@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3dfb6b01731f5ea35ed8bc3959968931",
+    "hash": "2e29c52ea885f35566312e9b3454bed3",
     "packages": [
         {
             "name": "arthurguy/notifications",
@@ -45,16 +45,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.2.6",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "d21c2aa132bbcd55325a50435bdd1e141c7f79e5"
+                "reference": "9c2a1816e3402806741f3a22a5b38efa945c0a8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d21c2aa132bbcd55325a50435bdd1e141c7f79e5",
-                "reference": "d21c2aa132bbcd55325a50435bdd1e141c7f79e5",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9c2a1816e3402806741f3a22a5b38efa945c0a8a",
+                "reference": "9c2a1816e3402806741f3a22a5b38efa945c0a8a",
                 "shasum": ""
             },
             "require": {
@@ -114,7 +114,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2015-08-12 19:44:09"
+            "time": "2015-08-20 23:06:52"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -542,16 +542,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "3a698bd6fedbf684675ec0ecc471d07f77feea63"
+                "reference": "c8f73292bec7ab45dd6805d31b31ea9dfdf9cfa1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/3a698bd6fedbf684675ec0ecc471d07f77feea63",
-                "reference": "3a698bd6fedbf684675ec0ecc471d07f77feea63",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c8f73292bec7ab45dd6805d31b31ea9dfdf9cfa1",
+                "reference": "c8f73292bec7ab45dd6805d31b31ea9dfdf9cfa1",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": ">=2.4,<2.6-dev",
+                "doctrine/common": "~2.4",
                 "php": ">=5.3.2"
             },
             "require-dev": {
@@ -605,7 +605,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-08-10 16:07:25"
+            "time": "2015-08-21 17:47:38"
         },
         {
             "name": "doctrine/inflector",
@@ -1214,6 +1214,51 @@
                 "watermark"
             ],
             "time": "2015-08-16 15:31:59"
+        },
+        {
+            "name": "itsgoingd/clockwork",
+            "version": "v1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/itsgoingd/clockwork.git",
+                "reference": "2eb76580521f413aff6d9fff38c776df55d17dde"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/itsgoingd/clockwork/zipball/2eb76580521f413aff6d9fff38c776df55d17dde",
+                "reference": "2eb76580521f413aff6d9fff38c776df55d17dde",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "psr/log": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Clockwork": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "itsgoingd",
+                    "email": "itsgoingd@luzer.sk",
+                    "homepage": "http://twitter.com/itsgoingd"
+                }
+            ],
+            "description": "Server-side component of Clockwork, a Chrome extension for PHP development",
+            "homepage": "http://github.com/itsgoingd/clockwork",
+            "keywords": [
+                "debugging",
+                "laravel",
+                "logging",
+                "profiling"
+            ],
+            "time": "2015-07-06 17:58:12"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -2426,16 +2471,16 @@
         },
         {
             "name": "rap2hpoutre/laravel-log-viewer",
-            "version": "v0.4.0",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rap2hpoutre/laravel-log-viewer.git",
-                "reference": "7eccaae6c29e7d5b0eb46cb2a29457d6dcbd0367"
+                "reference": "ef536ba1827733cc4ab52e98b80896f8fd60c648"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rap2hpoutre/laravel-log-viewer/zipball/7eccaae6c29e7d5b0eb46cb2a29457d6dcbd0367",
-                "reference": "7eccaae6c29e7d5b0eb46cb2a29457d6dcbd0367",
+                "url": "https://api.github.com/repos/rap2hpoutre/laravel-log-viewer/zipball/ef536ba1827733cc4ab52e98b80896f8fd60c648",
+                "reference": "ef536ba1827733cc4ab52e98b80896f8fd60c648",
                 "shasum": ""
             },
             "require": {
@@ -2468,7 +2513,7 @@
                 "log-viewer",
                 "logging"
             ],
-            "time": "2015-07-19 21:36:23"
+            "time": "2015-08-19 22:57:05"
         },
         {
             "name": "react/promise",
@@ -4298,16 +4343,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.4",
+            "version": "4.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "55bf1d6092b0e13a1f26bd5eaffeef3d8ad85ea7"
+                "reference": "9b7417edaf28059ea63d86be941e6004dbfcc0cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/55bf1d6092b0e13a1f26bd5eaffeef3d8ad85ea7",
-                "reference": "55bf1d6092b0e13a1f26bd5eaffeef3d8ad85ea7",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9b7417edaf28059ea63d86be941e6004dbfcc0cc",
+                "reference": "9b7417edaf28059ea63d86be941e6004dbfcc0cc",
                 "shasum": ""
             },
             "require": {
@@ -4366,24 +4411,24 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-08-15 04:21:23"
+            "time": "2015-08-19 09:20:57"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.3.6",
+            "version": "2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "18dfbcb81d05e2296c0bcddd4db96cade75e6f42"
+                "reference": "5e2645ad49d196e020b85598d7c97e482725786a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/18dfbcb81d05e2296c0bcddd4db96cade75e6f42",
-                "reference": "18dfbcb81d05e2296c0bcddd4db96cade75e6f42",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/5e2645ad49d196e020b85598d7c97e482725786a",
+                "reference": "5e2645ad49d196e020b85598d7c97e482725786a",
                 "shasum": ""
             },
             "require": {
-                "doctrine/instantiator": "~1.0,>=1.0.2",
+                "doctrine/instantiator": "^1.0.2",
                 "php": ">=5.3.3",
                 "phpunit/php-text-template": "~1.2",
                 "sebastian/exporter": "~1.2"
@@ -4422,7 +4467,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-07-10 06:54:24"
+            "time": "2015-08-19 09:14:08"
         },
         {
             "name": "sebastian/comparator",

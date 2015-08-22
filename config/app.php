@@ -160,6 +160,7 @@ return [
         'Maknz\Slack\SlackServiceProvider',
         'Intervention\Image\ImageServiceProvider',
         ArthurGuy\Notifications\NotificationServiceProvider::class,
+		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
 
 	],
 
