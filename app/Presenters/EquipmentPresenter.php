@@ -10,6 +10,8 @@ class EquipmentPresenter extends Presenter
     public function livesIn()
     {
         $string = $this->entity->room;
+        $string = str_replace('-', ' ', $string);
+        $string = ucfirst($string);
         if ($this->entity->detail) {
             $string .= ' (' . $this->entity->detail . ')';
         }
@@ -61,6 +63,7 @@ class EquipmentPresenter extends Presenter
         foreach ($this->entity->ppe as $ppe) {
             $ppeHtml .= '<img src="/img/ppe/' . $ppe . '.jpg" height="140" class="ppe-image">';
         }
+        $ppeHtml .= '<br /><br />';
         return $ppeHtml;
     }
 

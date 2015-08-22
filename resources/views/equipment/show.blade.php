@@ -32,12 +32,10 @@ Tools and Equipment
                         <div class="col-md-12 col-lg-6">
 
                             @if ($equipment->present()->manufacturerModel) Make: {{ $equipment->present()->manufacturerModel }}<br />@endif
-                            @if ($equipment->colour) Colour: {{ $equipment->colour }}<br />@endif
+                            <!-- @if ($equipment->colour) Colour: {{ $equipment->colour }}<br />@endif -->
                             @if ($equipment->present()->livesIn) Lives in: {{ $equipment->present()->livesIn }}<br />@endif
                             @if ($equipment->present()->purchaseDate) Purchased: {{ $equipment->present()->purchaseDate }}<br />@endif
-                            @if ($equipment->requiresInduction())
-                            Induction required<br />
-                            @endif
+                            @if ($equipment->requiresInduction()) Induction required<br /> @endif
                             @if ($equipment->hasUsageCharge())
                             Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
                             @endif
@@ -65,7 +63,6 @@ Tools and Equipment
                     @endif
 
                     {!! $equipment->present()->ppe !!}
-                    <br /><br />
 
 
                     @if ($equipment->requiresInduction())
