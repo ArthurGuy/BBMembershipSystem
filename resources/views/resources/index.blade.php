@@ -17,16 +17,17 @@ Resources
             <div class="panel-heading"><h3 class="panel-title">General mailing lists</h3></div>
             <div class="panel-body">
                 <p>
-                    There are two main google groups, one public for general discussion of the space that anyone might find interesting, and one private for members only. <br />If you're using the space at all you should be signed up to the members list so you hear about announcements or other issues.<br />
+                    Build Brighton has a Slack account and a large number of members spend time over there,
+                    if you would like an invite please use the following site - <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a>
+                </p>
+                <p>
+                    In addition there are two main google groups, one public for general discussion of the space that anyone might find interesting, and one private for members only.
                 </p>
                 <ul class="list-unstyled">
                     <li><a href="https://groups.google.com/d/forum/brightonhackerspace">Public mailing list</a></li>
                     <li><a href="https://groups.google.com/d/forum/brighton-hackspace-members">Members mailing list</a></li>
                 </ul>
-                <p>
-                    Build Brighton also has a Slack account and a large number of members spend time over there,
-                    if you would like an invite please send us an email - <a href="trustees@buildbrighton.com">trustees@buildbrighton.com</a>
-                </p>
+                <p>If you're using the space at all you should be signed up to the members list or Slack so you hear about announcements or other issues.</p>
             </div>
         </div>
     </div>
