@@ -27,6 +27,12 @@ class RolesController extends Controller
         return \View::make('roles.index')->with('roles', $roles)->with('memberList', $memberList);
     }
 
+    public function memberList($roleName)
+    {
+        $role = Role::with('Users')->where('name', $roleName)->first();
+        return \View::make('roles.member-list')->with('role', $role);
+    }
+
 
     /**
      * Show the form for creating a new resource.
