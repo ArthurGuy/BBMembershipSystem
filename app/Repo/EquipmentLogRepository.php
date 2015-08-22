@@ -153,7 +153,9 @@ class EquipmentLogRepository extends DBRepository
         $query->chunk(100, function ($results) use (&$totalTime) {
             /** @var EquipmentLog[] $results */
             foreach ($results as $result) {
-                $totalTime += $result->started->diffInSeconds($result->finished);
+                if ($result->started instanceof Carbon) {
+                    $totalTime += $result->started->diffInSeconds($result->finished);
+                }
             }
         });
 
