@@ -36,7 +36,7 @@ Tools and Equipment
                             @if ($equipment->present()->livesIn) Lives in: {{ $equipment->present()->livesIn }}<br />@endif
                             @if ($equipment->present()->purchaseDate) Purchased: {{ $equipment->present()->purchaseDate }}<br />@endif
                             @if ($equipment->requiresInduction())
-                            Access Fee: {!! $equipment->present()->accessFee() !!}<br />
+                            Induction required<br />
                             @endif
                             @if ($equipment->hasUsageCharge())
                             Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
@@ -67,21 +67,22 @@ Tools and Equipment
 
                     @if ($equipment->requiresInduction())
 
-                        To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
-                        Equipment access fee: &pound{{ $equipment->access_fee }}<br />
-                        <br />
 
                         @if (!$userInduction)
+
+                            To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
+                            Equipment access fee: &pound{{ $equipment->access_fee }}<br />
+                            <br />
 
                             <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="Pay Now" data-methods="gocardless,stripe,balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
 
                         @elseif ($userInduction->is_trained)
 
-                            Trained
+                            <span class="label label-success">You have been inducted and can use this equipment</span>
 
                         @elseif ($userInduction)
 
-                            Access fee paid, induction to be completed
+                            <span class="label label-info">Access fee paid, induction to be completed</span>
 
                         @endif
 
