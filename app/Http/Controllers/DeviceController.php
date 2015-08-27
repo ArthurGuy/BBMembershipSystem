@@ -2,7 +2,7 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Entities\Device;
+use BB\Entities\ACSNode;
 use BB\Http\Requests;
 
 class DeviceController extends Controller
@@ -15,7 +15,7 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        $devices = Device::all();
+        $devices = ACSNode::all();
 
         return view('devices.index', ['devices' => $devices]);
     }

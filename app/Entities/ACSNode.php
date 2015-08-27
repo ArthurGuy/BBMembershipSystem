@@ -4,7 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Device
+ * Class ACSNode
  *
  * @property string $name
  * @property string $device_id
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $updated_at
  * @package BB\Entities
  */
-class Device extends Model
+class ACSNode extends Model
 {
 
     /**

@@ -1,6 +1,6 @@
 <?php namespace BB\Repo;
 
-use BB\Entities\Device;
+use BB\Entities\ACSNode;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -8,11 +8,11 @@ class DeviceRepository extends DBRepository
 {
 
     /**
-     * @var Device
+     * @var ACSNode
      */
     protected $model;
 
-    public function __construct(Device $model)
+    public function __construct(ACSNode $model)
     {
         $this->model = $model;
     }

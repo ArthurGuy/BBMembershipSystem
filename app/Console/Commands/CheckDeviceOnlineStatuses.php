@@ -47,7 +47,7 @@ class CheckDeviceOnlineStatuses extends Command
         foreach ($this->deviceRepository->getAll() as $device) {
 
             $this->info('Checking device ' . $device->name);
-            /** @var $device \BB\Entities\Device */
+            /** @var $device \BB\Entities\ACSNode */
             if ($device->heartbeatWarning()) {
 
                 $this->warn('Heartbeat warning');
