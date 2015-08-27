@@ -4,7 +4,7 @@ use BB\Entities\ACSNode;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DeviceRepository extends DBRepository
+class ACSNodeRepository extends DBRepository
 {
 
     /**

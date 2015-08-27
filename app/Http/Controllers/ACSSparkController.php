@@ -1,7 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Events\MemberActivity;
-use BB\Repo\DeviceRepository;
+use BB\Repo\ACSNodeRepository;
 use BB\Repo\PaymentRepository;
 use BB\Services\KeyFobAccess;
 
@@ -9,9 +9,9 @@ class ACSSparkController extends Controller
 {
 
     /**
-     * @var DeviceRepository
+     * @var ACSNodeRepository
      */
-    private $deviceRepository;
+    private $acsNodeRepository;
     /**
      * @var KeyFobAccess
      */
@@ -21,9 +21,9 @@ class ACSSparkController extends Controller
      */
     private $paymentRepository;
 
-    function __construct(DeviceRepository $deviceRepository, KeyFobAccess $keyFobAccess, PaymentRepository $paymentRepository)
+    function __construct(ACSNodeRepository $acsNodeRepository, KeyFobAccess $keyFobAccess, PaymentRepository $paymentRepository)
     {
-        $this->deviceRepository = $deviceRepository;
+        $this->acsNodeRepository = $acsNodeRepository;
         $this->keyFobAccess     = $keyFobAccess;
         $this->paymentRepository = $paymentRepository;
     }

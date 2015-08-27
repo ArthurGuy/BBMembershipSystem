@@ -4,7 +4,7 @@ namespace BB\Console\Commands;
 
 use BB\Entities\Notification;
 use BB\Entities\Role;
-use BB\Repo\DeviceRepository;
+use BB\Repo\ACSNodeRepository;
 use Illuminate\Console\Command;
 
 class CheckDeviceOnlineStatuses extends Command
@@ -24,9 +24,9 @@ class CheckDeviceOnlineStatuses extends Command
     protected $description = 'Check the devices log and ensure devices are checking in correctly';
 
     /**
-     * @var DeviceRepository
+     * @var ACSNodeRepository
      */
-    private $deviceRepository;
+    private $acsNodeRepository;
 
     /**
      * Create a new command instance.
@@ -34,7 +34,7 @@ class CheckDeviceOnlineStatuses extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->deviceRepository = \App::make('\BB\Repo\DeviceRepository');
+        $this->acsNodeRepository = \App::make('\BB\Repo\ACSNodeRepository');
     }
 
     /**
@@ -44,7 +44,7 @@ class CheckDeviceOnlineStatuses extends Command
      */
     public function handle()
     {
-        foreach ($this->deviceRepository->getAll() as $device) {
+        foreach ($this->acsNodeRepository->getAll() as $device) {
 
             $this->info('Checking device ' . $device->name);
             /** @var $device \BB\Entities\ACSNode */

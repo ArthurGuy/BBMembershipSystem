@@ -1,14 +1,14 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\DetectedDevice;
-use BB\Repo\DeviceRepository;
+use BB\Repo\ACSNodeRepository;
 use BB\Validators\ACSValidator;
 
 class ACSController extends Controller
 {
 
     /**
-     * @var DeviceRepository
+     * @var ACSNodeRepository
      */
     private $deviceRepository;
     /**
@@ -21,11 +21,11 @@ class ACSController extends Controller
     private $keyFobAccess;
 
     function __construct(
-        DeviceRepository $deviceRepository,
+        ACSNodeRepository $acsNodeRepository,
         ACSValidator $ACSValidator,
         \BB\Services\KeyFobAccess $keyFobAccess
     ) {
-        $this->deviceRepository = $deviceRepository;
+        $this->acsNodeRepository = $acsNodeRepository;
         $this->ACSValidator     = $ACSValidator;
         $this->keyFobAccess     = $keyFobAccess;
     }
@@ -105,7 +105,7 @@ class ACSController extends Controller
             $error = true;
         }
 
-        $cmd = $this->deviceRepository->popCommand($data['device']);
+        $cmd = $this->acsNodeRepository->popCommand($data['device']);
 
         if ( ! $error) {
             $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
@@ -118,12 +118,12 @@ class ACSController extends Controller
 
     private function handleDevice($data)
     {
-        $device = $this->deviceRepository->getByName($data['device']);
+        $device = $this->acsNodeRepository->getByName($data['device']);
 
         if ($data['message'] == 'boot') {
-            $this->deviceRepository->logBoot($data['device']);
+            $this->acsNodeRepository->logBoot($data['device']);
         } elseif ($data['message'] == 'heartbeat') {
-            $this->deviceRepository->logHeartbeat($data['device']);
+            $this->acsNodeRepository->logHeartbeat($data['device']);
         }
 
         //$member = $this->keyFobAccess->verifyForDevice($data['tag'], 'laser');
@@ -148,15 +148,15 @@ class ACSController extends Controller
     {
         switch ($message) {
             case 'boot':
-                $this->deviceRepository->logBoot($device);
+                $this->acsNodeRepository->logBoot($device);
                 break;
             case 'heartbeat':
-                $this->deviceRepository->logHeartbeat($device);
+                $this->acsNodeRepository->logHeartbeat($device);
                 break;
         }
 
         //The command comes from the database and will instruct the door entry system to clear its memory if set
-        $cmd = $this->deviceRepository->popCommand($device);
+        $cmd = $this->acsNodeRepository->popCommand($device);
 
         switch ($service) {
             case 'entry':
@@ -194,7 +194,7 @@ class ACSController extends Controller
     private function logDetectedDevices($data)
     {
         //this isn't strictly a heartbeat but the updates occur at a regular interval so they will do
-        $this->deviceRepository->logHeartbeat($data['device']);
+        $this->acsNodeRepository->logHeartbeat($data['device']);
 
         //See if any devices have been detected, if so log them
         foreach (array_keys($data['payload']['bluetooth_devices']) as $macAddress) {

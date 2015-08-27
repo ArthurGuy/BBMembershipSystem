@@ -12,14 +12,14 @@ class AccessControlController extends Controller
      */
     private $buildingAccess;
     /**
-     * @var \BB\Repo\DeviceRepository
+     * @var \BB\Repo\ACSNodeRepository
      */
-    private $deviceRepository;
+    private $acsNodeRepository;
 
-    function __construct(\BB\Services\BuildingAccess $buildingAccess, \BB\Repo\DeviceRepository $deviceRepository)
+    function __construct(\BB\Services\BuildingAccess $buildingAccess, \BB\Repo\ACSNodeRepository $acsNodeRepository)
     {
         $this->buildingAccess = $buildingAccess;
-        $this->deviceRepository = $deviceRepository;
+        $this->acsNodeRepository = $acsNodeRepository;
     }
 
     public function mainDoor()
@@ -117,9 +117,9 @@ class AccessControlController extends Controller
         $message = $messageParts[1];
 
         if ($message == 'boot') {
-            $this->deviceRepository->logBoot($device);
+            $this->acsNodeRepository->logBoot($device);
         } elseif ($message == 'heartbeat') {
-            $this->deviceRepository->logHeartbeat($device);
+            $this->acsNodeRepository->logHeartbeat($device);
         }
 
         //Log::debug("System Message: ".$receivedData);
