@@ -41,7 +41,7 @@ $factory->define('BB\Entities\ProfileData', function ($faker) {
     ];
 });
 
-$factory->define('BB\Entities\Device', function ($faker) {
+$factory->define('BB\Entities\ACSNode', function ($faker) {
     return [
         'name'              => $faker->word,
         'device_id'         => $faker->word,

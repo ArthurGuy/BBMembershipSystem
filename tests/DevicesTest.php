@@ -13,7 +13,7 @@ Class DevicesTest extends TestCase
     /** @test */
     public function i_can_visit_the_devices_page()
     {
-        $device = factory('BB\Entities\Device')->create();
+        $device = factory('BB\Entities\ACSNode')->create();
         $this->withoutMiddleware()
             ->visit('/devices')
             ->see('Devices')
