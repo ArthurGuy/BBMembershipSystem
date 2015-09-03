@@ -1,5 +1,6 @@
 <?php namespace BB\Console;
 
+use Doctrine\ORM\EntityManager;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use GuzzleHttp\Client as HttpClient;
@@ -21,7 +22,20 @@ class Kernel extends ConsoleKernel
         Commands\CreateTodaysSubCharges::class,
         Commands\BillMembers::class,
         Commands\CheckDeviceOnlineStatuses::class,
+        \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand::class,
+        \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand::class,
+        \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand::class,
+        \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand::class,
+        \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand::class,
+        \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class
     ];
+
+    public function bootstrap()
+    {
+        parent::bootstrap();
+
+        $em = \App::make(EntityManager::class);
+    }
 
     /**
      * Define the application's command schedule.

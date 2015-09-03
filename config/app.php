@@ -161,6 +161,7 @@ return [
         'Intervention\Image\ImageServiceProvider',
         ArthurGuy\Notifications\NotificationServiceProvider::class,
 		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
+		Brouwers\LaravelDoctrine\DoctrineServiceProvider::class,
 
 	],
 

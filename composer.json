@@ -29,8 +29,10 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "pusher/pusher-php-server": "^2.2",
         "arthurguy/notifications": "~1.0",
-        "doctrine/dbal": "^2.6@dev",
-        "itsgoingd/clockwork": "~1.8"
+        "doctrine/dbal": "^2.5",
+        "itsgoingd/clockwork": "~1.8",
+        "doctrine/migrations": "^1.0",
+        "brouwers/laravel-doctrine": "~1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
