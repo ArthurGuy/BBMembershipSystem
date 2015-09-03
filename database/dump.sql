@@ -468,15 +468,15 @@ CREATE TABLE `acs_nodes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `device_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `queued_command` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `queued_command` varchar(100) COLLATE utf8_unicode_ci DEFAULT '',
   `monitor_heartbeat` tinyint(1) NOT NULL,
-  `key` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `last_boot` datetime NOT NULL,
-  `last_heartbeat` datetime NOT NULL,
+  `key` varchar(100) COLLATE utf8_unicode_ci DEFAULT '',
+  `last_boot` datetime DEFAULT NULL,
+  `last_heartbeat` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `acs_nodes` (`id`, `device_id`, `queued_command`, `last_boot`, `last_heartbeat`, `created_at`, `updated_at`)
 VALUES
@@ -602,6 +602,15 @@ CREATE TABLE `notifications` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `detected_devices` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `mac_address` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `display_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
