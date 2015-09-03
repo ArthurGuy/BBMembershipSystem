@@ -35,6 +35,16 @@ class Kernel extends ConsoleKernel
         parent::bootstrap();
 
         $em = \App::make(EntityManager::class);
+
+        $this->getArtisan()->getHelperSet()->set(
+            new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($em->getConnection()),
+            'db'
+        );
+
+        $this->getArtisan()->getHelperSet()->set(
+            new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($em),
+            'em'
+        );
     }
 
     /**

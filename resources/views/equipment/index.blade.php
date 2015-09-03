@@ -21,6 +21,16 @@ Tools and Equipment
 
 @section('content')
 
+    <div class="row">
+    @foreach($rooms as $room)
+        <div class="col-lg-4">
+            <div class="well">
+                <h3>{{ $room->getName() }}</h3>
+            </div>
+        </div>
+    @endforeach
+    </div>
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Equipment requiring an induction</h3>

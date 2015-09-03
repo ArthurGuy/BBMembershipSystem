@@ -89,6 +89,14 @@ Route::group(array('middleware' => 'role:member'), function() {
     Route::post('equipment/{id}/photo', ['uses'=>'EquipmentController@addPhoto', 'as'=>'equipment.photo.store']);
     Route::delete('equipment/{id}/photo/{key}', ['uses'=>'EquipmentController@destroyPhoto', 'as'=>'equipment.photo.destroy']);
 });
+Route::get('room/{key}', function(\BB\Repo\RoomRepository $roomRepository, $key) {
+    $rooms = $roomRepository->findByKey($key);
+
+    foreach ($rooms->getEquipment() as $equipment) {
+        echo $equipment->getName();
+    }
+    return $rooms->getEquipment();
+});
 
 # Equipment Log
 Route::post('equipment/log/{logId}', ['uses'=>'EquipmentLogController@update', 'middleware'=>'role:member', 'as'=>'equipment_log.update']);

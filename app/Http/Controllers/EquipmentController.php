@@ -1,11 +1,17 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Domain\Infrastructure\Device;
+use BB\Domain\Infrastructure\Room;
 use BB\Exceptions\ImageFailedException;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
+use BB\Domain\Infrastructure\RoomRepository;
 use BB\Repo\UserRepository;
+use BB\Validators\EquipmentPhotoValidator;
 use BB\Validators\EquipmentValidator;
+use Doctrine\ORM\EntityManager;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class EquipmentController extends Controller
@@ -32,17 +38,22 @@ class EquipmentController extends Controller
      */
     private $equipmentValidator;
     /**
-     * @var \BB\Validators\EquipmentPhotoValidator
+     * @var EquipmentPhotoValidator
      */
     private $equipmentPhotoValidator;
+    /**
+     * @var RoomRepository
+     */
+    private $roomRepository;
 
     /**
-     * @param InductionRepository                    $inductionRepository
-     * @param EquipmentRepository                    $equipmentRepository
-     * @param EquipmentLogRepository                 $equipmentLogRepository
-     * @param UserRepository                         $userRepository
-     * @param EquipmentValidator                     $equipmentValidator
-     * @param \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
+     * @param InductionRepository     $inductionRepository
+     * @param EquipmentRepository     $equipmentRepository
+     * @param EquipmentLogRepository  $equipmentLogRepository
+     * @param UserRepository          $userRepository
+     * @param EquipmentValidator      $equipmentValidator
+     * @param EquipmentPhotoValidator $equipmentPhotoValidator
+     * @param RoomRepository          $roomRepository
      */
     function __construct(
         InductionRepository $inductionRepository,
@@ -50,7 +61,8 @@ class EquipmentController extends Controller
         EquipmentLogRepository $equipmentLogRepository,
         UserRepository $userRepository,
         EquipmentValidator $equipmentValidator,
-        \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
+        EquipmentPhotoValidator $equipmentPhotoValidator,
+        RoomRepository $roomRepository
     ) {
         $this->inductionRepository    = $inductionRepository;
         $this->equipmentRepository    = $equipmentRepository;
@@ -58,6 +70,7 @@ class EquipmentController extends Controller
         $this->userRepository         = $userRepository;
         $this->equipmentValidator = $equipmentValidator;
         $this->equipmentPhotoValidator = $equipmentPhotoValidator;
+        $this->roomRepository          = $roomRepository;
 
         //Only members of the equipment group can create/update records
         $this->middleware('role:equipment', array('except' => ['index', 'show']));
@@ -77,12 +90,24 @@ class EquipmentController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(EntityManager $em)
     {
         $requiresInduction = $this->equipmentRepository->getRequiresInduction();
         $doesntRequireInduction = $this->equipmentRepository->getDoesntRequireInduction();
 
-        return \View::make('equipment.index')->with('requiresInduction', $requiresInduction)->with('doesntRequireInduction', $doesntRequireInduction);
+        //$room = new Room('main', 'Main Space', '', []);
+        //$this->roomRepository->add($room);
+        //$em->flush();
+
+
+        $rooms = [];
+        //$rooms = $this->roomRepository->findAll();
+
+
+        return \View::make('equipment.index')
+            ->with('requiresInduction', $requiresInduction)
+            ->with('doesntRequireInduction', $doesntRequireInduction)
+            ->with('rooms', $rooms);
     }
 
     public function show($equipmentId)
@@ -137,16 +162,75 @@ class EquipmentController extends Controller
      * @throws ImageFailedException
      * @throws \BB\Exceptions\FormValidationException
      */
-    public function store()
+    public function store(Request $request)
     {
-        $data = \Request::only([
+        $data = $request->only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
             'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
             'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id', 'ppe',
-        ]);
+        ]);//24
         $this->equipmentValidator->validate($data);
 
         $this->equipmentRepository->create($data);
+
+
+        /** @var \Illuminate\Http\Request $request */
+
+
+
+        $cost = new EquipmentCost($request->get('requires_induction'), $request->get('induction_category'), $request->get('access_fee'), $request->get('usage_cost'), $request->get('usage_cost_per'));
+        $properties = new EquipmentProperties($request->get('manufacturer'), $request->get('model_number'), $request->get('serial_number'), $request->get('colour'));
+        $ownership = new Ownership($request->get('managing_role_id'), $request->get('permaloan'), $request->get('permaloan_user_id'));
+        $device = new Device($request->get('name'), $request->get('key'), $request->get('description'), $request->get('help_text'), $properties, $cost, $ownership, $request->get('obtained_at'));
+
+
+
+        $cost = new EquipmentCost($request->get('requires_induction'), $request->get('induction_category'), $request->get('access_fee'), $request->get('usage_cost'), $request->get('usage_cost_per'));
+        $device = new Device($request->get('name'), $request->get('key'));
+        $device->setDeviceCost($cost);
+        $device->setDescription($request->get('description'));
+        $device->setHelpText($request->get('help_text'));
+        $device->setManufacturer($request->get('manufacturer'));
+        $device->setModelNumber($request->get('model_number'));
+        $device->setSerialNumber($request->get('serial_number'));
+        $device->setAssetTagId($request->get('asset_tag_id'));
+        $device->setColour($request->get('colour'));
+        $device->setRoom($request->get('room'));
+        $device->setDetail($request->get('detail'));
+        $device->setWorking($request->get('working'));
+        $device->setManagingRole($request->get('managing_role_id'));
+        $device->setPpe($request->get('ppe'));
+        $device->setPermaloan($request->get('permaloan'));
+        $device->setPermaloanUser($request->get('permaloan_user_id'));
+        $device->setDateObtained($request->get('obtained_at'));
+        $device->setInductionCategory($request->get('induction_category'));
+
+
+
+
+        $cost = new EquipmentCost($request->get('requires_induction'), $request->get('induction_category'), $request->get('access_fee'), $request->get('usage_cost'), $request->get('usage_cost_per'));
+        $device = new Device($request->get('name'), $request->get('key'));
+        $device->setDeviceCost($cost);
+        $device->setProperties([
+            'description'        => $request->get('description'),
+            'help_text'          => $request->get('help_text'),
+            'manufacturer'       => $request->get('manufacturer'),
+            'model_number'       => $request->get('model_number'),
+            'serial_number'      => $request->get('serial_number'),
+            'asset_tag_id'       => $request->get('asset_tag_id'),
+            'colour'             => $request->get('colour'),
+            'room'               => $request->get('room'),
+            'detail'             => $request->get('detail'),
+            'working'            => $request->get('working'),
+            'managing_role_id'   => $request->get('managing_role_id'),
+            'ppe'                => $request->get('ppe'),
+            'permaloan'          => $request->get('permaloan'),
+            'permaloan_user_id'  => $request->get('permaloan_user_id'),
+            'obtained_at'        => $request->get('obtained_at'),
+            'induction_category' => $request->get('induction_category'),
+        ]);
+
+
 
         return \Redirect::route('equipment.edit', $data['key']);
     }

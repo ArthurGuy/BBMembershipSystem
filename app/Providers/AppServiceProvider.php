@@ -36,6 +36,11 @@ class AppServiceProvider extends ServiceProvider {
 			\Illuminate\Contracts\Auth\Registrar::class,
 			\BB\Services\Registrar::class
 		);
+
+		$this->app->singleton(RoomRepository::class, function($app) {
+			$em = $app->make(EntityManager::class);
+			return $em->getRepository(Room::class);
+		});
 	}
 
 }
