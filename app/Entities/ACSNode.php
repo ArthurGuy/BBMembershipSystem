@@ -25,7 +25,7 @@ class ACSNode extends Model
      *
      * @var string
      */
-    protected $table = 'devices';
+    protected $table = 'acs_nodes';
 
 
     /**
