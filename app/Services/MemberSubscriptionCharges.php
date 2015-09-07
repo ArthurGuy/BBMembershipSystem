@@ -77,7 +77,7 @@ class MemberSubscriptionCharges
                 $existingPayments = $this->paymentRepository->getPaymentsByReference($charge->id);
                 if ($existingPayments->count() > 0) {
                     //We will let the user retry the payment if it fails
-                    break;
+                    continue;
                 }
                 
                 $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription, $this->goCardless->getNameFromReason('subscription'));
