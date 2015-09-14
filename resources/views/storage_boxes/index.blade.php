@@ -51,7 +51,7 @@
                 Each member can claim up to 19L of member storage, this can be one 19L box or a combination of 4L and 9L boxes.
                 Each individual box requires a &pound;5 deposit.<br />
                 <br />
-                Storage is managed by the <a href="{{ route('group-listing', 'storage') }}">member storage</a> team
+                Storage is managed by the <a href="{{ route('groups.show', 'storage') }}">member storage</a> team
             </div>
             <div class="well">
                 Storage Box Payments

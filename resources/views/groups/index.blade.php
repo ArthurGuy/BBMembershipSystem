@@ -12,7 +12,7 @@
     <div class="row">
         <div class="list-group">
             @foreach($roles as $role)
-                <a href="{{ route('group-listing', $role->name) }}" class="list-group-item">
+                <a href="{{ route('groups.show', $role->name) }}" class="list-group-item">
                     <h4 class="list-group-item-heading">{{ $role->title }}</h4>
                     <p class="list-group-item-text">{{ $role->description }}</p>
                 </a>

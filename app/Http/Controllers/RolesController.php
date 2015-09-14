@@ -27,18 +27,6 @@ class RolesController extends Controller
         return \View::make('roles.index')->with('roles', $roles)->with('memberList', $memberList);
     }
 
-    public function memberList($roleName)
-    {
-        $role = Role::with('Users')->where('name', $roleName)->first();
-        return \View::make('roles.member-list')->with('role', $role);
-    }
-
-    public function groupList()
-    {
-        $roles = Role::all();
-        return \View::make('roles.group-list')->with('roles', $roles);
-    }
-
 
     /**
      * Show the form for creating a new resource.

@@ -40,7 +40,7 @@ Tools and Equipment
                             Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
                             @endif
                             @if ($equipment->isManagedByGroup())
-                                Managed By: <a href="{{ route('group-listing', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
+                                Managed By: <a href="{{ route('groups.show', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
                             @endif
 
                             @if (!$equipment->isWorking())<span class="label label-danger">Out of action</span>@endif

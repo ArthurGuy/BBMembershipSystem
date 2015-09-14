@@ -91,6 +91,6 @@ Tools and Equipment
     </div>
 
     For changes to the information on the equipment pages please contact someone on
-    the <a href="{{ route('group-listing', 'equipment') }}">equipment</a> team
+    the <a href="{{ route('groups.show', 'equipment') }}">equipment</a> team
 
 @stop
