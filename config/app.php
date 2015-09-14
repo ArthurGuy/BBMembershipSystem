@@ -150,6 +150,7 @@ return [
         'BB\Providers\ValidatorServiceProvider',
         'BB\Providers\HtmlServiceProvider',
         \BB\Providers\ObserverServiceProvider::class,
+		\BB\Providers\DoctrineServiceProvider::class,
 
 
         /*
@@ -161,7 +162,7 @@ return [
         'Intervention\Image\ImageServiceProvider',
         ArthurGuy\Notifications\NotificationServiceProvider::class,
 		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
-		Brouwers\LaravelDoctrine\DoctrineServiceProvider::class,
+		LaravelDoctrine\ORM\DoctrineServiceProvider::class,
 
 	],
 
@@ -215,7 +216,7 @@ return [
         'Notification' => \ArthurGuy\Notifications\NotificationFacade::class,
         'Image'        => 'Intervention\Image\Facades\Image',
         'Slack'        => 'Maknz\Slack\Facades\Slack',
-
+		'EntityManager' => \LaravelDoctrine\ORM\Facades\EntityManager::class,
     ],
 
 ];

@@ -27,6 +27,7 @@ return [
             'repository' => Doctrine\ORM\EntityRepository::class,
             'proxies'    => [
                 'namespace'     => false,
+                'path'          => storage_path('proxies'),
                 'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
             ],
             /*
@@ -64,9 +65,6 @@ return [
             'annotations' => [
                 'driver' => 'annotations',
                 'simple' => false,
-                'proxies'    => [
-                    'path' => storage_path('proxies'),
-                ],
             ],
             'yaml'        => [
                 'driver' => 'yaml'
@@ -85,19 +83,6 @@ return [
     ],
     /*
     |--------------------------------------------------------------------------
-    | Gedmo Doctrine Extensions
-    |--------------------------------------------------------------------------
-    |
-    | If you want to use the Doctrine Extensions from Gedmo,
-    | you'll have to set this setting to true.
-    |
-    */
-    'gedmo_extensions'          => [
-        'enabled'      => false,
-        'all_mappings' => true
-    ],
-    /*
-    |--------------------------------------------------------------------------
     | Doctrine Extensions
     |--------------------------------------------------------------------------
     |
@@ -105,16 +90,7 @@ return [
     |
     */
     'extensions'                => [
-        //Brouwers\LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\TablePrefix\TablePrefixExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\Sortable\SortableExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\Tree\TreeExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\Loggable\LoggableExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
-        //Brouwers\LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
+        //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -122,7 +98,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'custom_types'              => [
-        'json' => Brouwers\LaravelDoctrine\Types\Json::class,
+        'json' => LaravelDoctrine\ORM\Types\Json::class
         //'enum' => Doctrine\DBAL\Types\StringType::class,
         //'CarbonDate'       => DoctrineExtensions\Types\CarbonDateType::class,
         //'CarbonDateTime'   => DoctrineExtensions\Types\CarbonDateTimeType::class,
@@ -157,7 +133,7 @@ return [
     ],
     /*
     |--------------------------------------------------------------------------
-    | Doctrine custom string functions
+    | DQL custom string functions
     |--------------------------------------------------------------------------
     */
     'custom_string_functions'   => [
@@ -171,10 +147,17 @@ return [
     ],
     /*
     |--------------------------------------------------------------------------
-    | Enable Debugbar Doctrine query collection
+    | Enable query logging with laravel file logging,
+    | debugbar, clockwork or an own implementation.
+    | Setting it to false, will disable logging
+    |
+    | Available:
+    | - LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger
+    | - LaravelDoctrine\ORM\Loggers\ClockworkLogger
+    | - LaravelDoctrine\ORM\Loggers\FileLogger
     |--------------------------------------------------------------------------
     */
-    'debugbar'                  => env('DOCTRINE_DEBUGBAR', false),
+    //'logger'                  => LaravelDoctrine\ORM\Loggers\ClockworkLogger::class,
     /*
     |--------------------------------------------------------------------------
     | Cache

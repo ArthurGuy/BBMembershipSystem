@@ -1,8 +1,7 @@
-<?php namespace BB\Providers;
+<?php
 
-use BB\Domain\Infrastructure\Room;
-use BB\Domain\Infrastructure\RoomRepository;
-use Doctrine\ORM\EntityManager;
+namespace BB\Providers;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
@@ -12,13 +11,9 @@ class AppServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function boot(EntityManager $em)
+	public function boot()
 	{
-		/** @var $em \Doctrine\ORM\EntityManager */
-		$platform = $em->getConnection()->getDatabasePlatform();
 
-		//register the enum type
-		$platform->registerDoctrineTypeMapping('enum', 'string');
 	}
 
 	/**
@@ -37,10 +32,6 @@ class AppServiceProvider extends ServiceProvider {
 			\BB\Services\Registrar::class
 		);
 
-		$this->app->singleton(RoomRepository::class, function($app) {
-			$em = $app->make(EntityManager::class);
-			return $em->getRepository(Room::class);
-		});
 	}
 
 }
