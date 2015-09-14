@@ -41,6 +41,7 @@
         {!! HTML::sideNavLink('Proposals', 'proposals.index') !!}
         {!! HTML::sideNavLink('Resources', 'resources.index') !!}
         {!! HTML::sideNavLink('Expenses', 'expenses.index') !!}
+        {!! HTML::sideNavLink('Groups', 'groups') !!}
         @if (!Auth::guest() && Auth::user()->isAdmin())
             {!! HTML::sideNavLink('Members (Admin)', 'account.index') !!}
             {!! HTML::sideNavLink('Roles/Groups (Admin)', 'roles.index') !!}
