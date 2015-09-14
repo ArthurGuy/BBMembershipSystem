@@ -44,7 +44,6 @@
         {!! HTML::sideNavLink('Groups', 'groups.index') !!}
         @if (!Auth::guest() && Auth::user()->isAdmin())
             {!! HTML::sideNavLink('Members (Admin)', 'account.index') !!}
-            {!! HTML::sideNavLink('Roles/Groups (Admin)', 'roles.index') !!}
             {!! HTML::sideNavLink('Payments (Admin)', 'payments.index') !!}
             {!! HTML::sideNavLink('Devices (Admin)', 'devices.index') !!}
         @endif

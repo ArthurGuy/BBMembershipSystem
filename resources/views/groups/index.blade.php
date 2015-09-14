@@ -3,8 +3,15 @@
 @section('meta-title')
     Build Brighton Groups
 @stop
+
 @section('page-title')
     Build Brighton Groups
+@stop
+
+@section('page-action-buttons')
+    @if (!Auth::guest() && Auth::user()->hasRole('admin'))
+    <a class="btn btn-secondary" href="{{ route('roles.index') }}">Edit Groups</a>
+    @endif
 @stop
 
 @section('content')

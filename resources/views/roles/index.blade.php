@@ -1,10 +1,11 @@
 @extends('layouts.main')
 
 @section('meta-title')
-Member Roles
+Member Roles and Groups
 @stop
+
 @section('page-title')
-Member Roles
+Member Roles and Groups
 @stop
 
 @section('content')
