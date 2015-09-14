@@ -16,7 +16,7 @@
         <div class="list-group">
             @foreach($role->users as $user)
                 <a href="{{ route('members.show', $user->id) }}" class="list-group-item">
-                    {!! HTML::memberPhoto($user->profile, $user->hash, 25, '') !!}
+                    {!! HTML::memberPhoto($user->profile, $user->hash, 50, '') !!}
                     {{ $user->name }}
                 </a>
             @endforeach
