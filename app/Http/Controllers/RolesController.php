@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\Role;
+use BB\Validators\RoleValidator;
 
 class RolesController extends Controller
 {
@@ -8,10 +9,15 @@ class RolesController extends Controller
      * @var \BB\Repo\UserRepository
      */
     private $userRepository;
+    /**
+     * @var RoleValidator
+     */
+    private $roleValidator;
 
-    function __construct(\BB\Repo\UserRepository $userRepository)
+    function __construct(\BB\Repo\UserRepository $userRepository, RoleValidator $roleValidator)
     {
         $this->userRepository = $userRepository;
+        $this->roleValidator = $roleValidator;
     }
 
 
@@ -82,7 +88,14 @@ class RolesController extends Controller
      */
     public function update($id)
     {
+        $role = Role::findOrFail($id);
 
+        $formData = \Request::only(['description', 'title']);
+        $this->roleValidator->validate($formData);
+
+        $role->update($formData);
+
+        return \Redirect::back();
     }
 
 
