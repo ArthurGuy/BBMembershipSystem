@@ -89,13 +89,12 @@ Route::group(array('middleware' => 'role:member'), function() {
     Route::post('equipment/{id}/photo', ['uses'=>'EquipmentController@addPhoto', 'as'=>'equipment.photo.store']);
     Route::delete('equipment/{id}/photo/{key}', ['uses'=>'EquipmentController@destroyPhoto', 'as'=>'equipment.photo.destroy']);
 });
-Route::get('room/{key}', function(\BB\Repo\RoomRepository $roomRepository, $key) {
-    $rooms = $roomRepository->findByKey($key);
+Route::get('room/{key}', function(\BB\Domain\Infrastructure\RoomRepository $roomRepository, $key) {
+    $room = $roomRepository->findByKey($key);
 
-    foreach ($rooms->getEquipment() as $equipment) {
-        echo $equipment->getName();
-    }
-    return $rooms->getEquipment();
+    $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+    return $serializer->serialize($room, 'json');
+    //return $room->getEquipment();
 });
 
 # Equipment Log

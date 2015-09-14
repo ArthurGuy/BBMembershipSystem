@@ -31,27 +31,51 @@ class DeviceCost
     private $usageCost;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    private $usageCostPeriod;
-
-    /**
      * Cost constructor.
      *
      * @param $requiresInduction
      * @param $inductionCategory
      * @param $accessFee
      * @param $usageCost
-     * @param $usageCostPeriod
+     * @param $usageCostPer
      */
-    public function __construct($requiresInduction, $inductionCategory, $accessFee, $usageCost, $usageCostPeriod)
+    public function __construct($requiresInduction, $inductionCategory, $accessFee, $usageCost, $usageCostPer)
     {
         $this->requiresInduction = $requiresInduction;
         $this->inductionCategory = $inductionCategory;
         $this->accessFee         = $accessFee;
         $this->usageCost         = $usageCost;
-        $this->usageCostPeriod   = $usageCostPeriod;
+        $this->usageCostPer   = $usageCostPer;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRequiresInduction()
+    {
+        return $this->requiresInduction;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessFee()
+    {
+        return $this->accessFee;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsageCost()
+    {
+        return $this->usageCost;
+    }
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $usageCostPer;
 
 
 }

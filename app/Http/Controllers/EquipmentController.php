@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Domain\Infrastructure\Device;
+use BB\Domain\Infrastructure\DeviceRepository;
 use BB\Domain\Infrastructure\Room;
 use BB\Exceptions\ImageFailedException;
 use BB\Repo\EquipmentLogRepository;
@@ -90,19 +91,26 @@ class EquipmentController extends Controller
      *
      * @return Response
      */
-    public function index(EntityManager $em)
+    public function index(DeviceRepository $deviceRepository)
     {
-        $requiresInduction = $this->equipmentRepository->getRequiresInduction();
-        $doesntRequireInduction = $this->equipmentRepository->getDoesntRequireInduction();
+        $devices = $deviceRepository->findAll();
 
-        //$room = new Room('main', 'Main Space', '', []);
-        //$this->roomRepository->add($room);
-        //$em->flush();
-
+        //filter the devices into two lists
+        $requiresInduction = array_filter($devices, function($d) {
+            if ($d->getCost()->getRequiresInduction()) {
+                return true;
+            }
+            return false;
+        });
+        $doesntRequireInduction = array_filter($devices, function($d) {
+            if ( ! $d->getCost()->getRequiresInduction()) {
+                return true;
+            }
+            return false;
+        });
 
         $rooms = [];
-        //$rooms = $this->roomRepository->findAll();
-
+        $rooms = $this->roomRepository->findAll();
 
         return \View::make('equipment.index')
             ->with('requiresInduction', $requiresInduction)
@@ -148,6 +156,11 @@ class EquipmentController extends Controller
      */
     public function create()
     {
+
+        //$room = new Room('main', 'Main Space', '', []);
+        //$this->roomRepository->add($room);
+        //$em->flush();
+
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
 
@@ -162,22 +175,25 @@ class EquipmentController extends Controller
      * @throws ImageFailedException
      * @throws \BB\Exceptions\FormValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request, DeviceRepository $deviceRepository, EntityManager $em)
     {
         $data = $request->only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
             'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
             'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id', 'ppe',
         ]);//24
-        $this->equipmentValidator->validate($data);
+        //$this->equipmentValidator->validate($data);
 
-        $this->equipmentRepository->create($data);
+        //$this->equipmentRepository->create($data);
 
 
         /** @var \Illuminate\Http\Request $request */
 
+        $device = new Device($request->get('name'), $request->get('key'));
+        $deviceRepository->add($device);
+        $em->flush();
 
-
+/*
         $cost = new EquipmentCost($request->get('requires_induction'), $request->get('induction_category'), $request->get('access_fee'), $request->get('usage_cost'), $request->get('usage_cost_per'));
         $properties = new EquipmentProperties($request->get('manufacturer'), $request->get('model_number'), $request->get('serial_number'), $request->get('colour'));
         $ownership = new Ownership($request->get('managing_role_id'), $request->get('permaloan'), $request->get('permaloan_user_id'));
@@ -230,7 +246,7 @@ class EquipmentController extends Controller
             'induction_category' => $request->get('induction_category'),
         ]);
 
-
+        */
 
         return \Redirect::route('equipment.edit', $data['key']);
     }

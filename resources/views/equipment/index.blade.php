@@ -45,20 +45,20 @@ Tools and Equipment
                 <th></th>
             </tr>
             </thead>
-            @foreach($requiresInduction as $tool)
+            @foreach($requiresInduction as $device)
                 <tr>
                     <td>
-                        <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
+                        <a href="{{ route('equipment.show', $device->getKey()) }}">{{ $device->getName() }}</a>
                     </td>
-                    <td>{!! $tool->present()->accessFee() !!}</td>
-                    <td>{!! $tool->present()->usageCost() !!}</td>
+                    <td>{!! $device->getCost()->getAccessFee() !!}</td>
+                    <td>{!! $device->getCost()->getUsageCost() !!}</td>
                     <td>
-                        @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
-                        @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
+                        @if (!$device->getWorking())<span class="label label-danger">Out of action</span>@endif
+                        @if ($device->getPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
                     <td>
                         @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-                            <span class="pull-right"><a href="{{ route('equipment.edit', $tool->key) }}" class="btn-sm">Edit</a></span>
+                            <span class="pull-right"><a href="{{ route('equipment.edit', $device->getKey()) }}" class="btn-sm">Edit</a></span>
                         @endif
                     </td>
                 </tr>
@@ -80,19 +80,19 @@ Tools and Equipment
                 <th></th>
             </tr>
             </thead>
-        @foreach($doesntRequireInduction as $tool)
+        @foreach($doesntRequireInduction as $device)
             <tr>
                 <td>
-                    <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
+                    <a href="{{ route('equipment.show', $device->getKey()) }}">{{ $device->getName() }}</a>
                 </td>
-                <td>{!! $tool->present()->usageCost() !!}</td>
+                <td>{!! $device->getCost()->getUsageCost() !!}</td>
                 <td>
-                    @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
-                    @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
+                    @if (!$device->getWorking())<span class="label label-danger">Out of action</span>@endif
+                    @if ($device->getPermaloan())<span class="label label-warning">Permaloan</span>@endif
                 </td>
                 <td>
                     @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-                        <span class="pull-right"><a href="{{ route('equipment.edit', $tool->key) }}" class="btn-sm">Edit</a></span>
+                        <span class="pull-right"><a href="{{ route('equipment.edit', $device->getKey()) }}" class="btn-sm">Edit</a></span>
                     @endif
                 </td>
             </tr>
