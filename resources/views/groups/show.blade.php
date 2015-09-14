@@ -10,6 +10,8 @@
 @section('content')
 
     <div class="row">
+        <p class="lead">{{ $role->description }}</p>
+
         <h4>Group members</h4>
         <div class="list-group">
             @foreach($role->users as $user)
