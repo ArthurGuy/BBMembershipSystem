@@ -14,6 +14,7 @@ class CreateInfraRole extends Migration
     public function up()
     {
         Role::create(['name'=>'infra', 'title'=>'Infrastructure']);
+        Role::create(['name'=>'laser', 'title'=>'Laser Team']);
     }
 
     /**
@@ -24,5 +25,6 @@ class CreateInfraRole extends Migration
     public function down()
     {
         Role::where('name', 'infra')->delete();
+        Role::where('name', 'laser')->delete();
     }
 }
