@@ -1,19 +1,20 @@
 @extends('layouts.main')
 
 @section('meta-title')
-    Groups
+    Build Brighton Groups
 @stop
 @section('page-title')
-    Groups
+    Build Brighon Groups
 @stop
 
 @section('content')
-
+    
     <div class="row">
         <div class="list-group">
             @foreach($roles as $role)
                 <a href="{{ route('group-listing', $role->name) }}" class="list-group-item">
-                    {{ $role->title }} - {{ $role->description }}
+                    <h4 class="list-group-item-heading">{{ $role->title }}</h4>
+                    <p class="list-group-item-text">{{ $role->description }}</p>
                 </a>
             @endforeach
         </div>
