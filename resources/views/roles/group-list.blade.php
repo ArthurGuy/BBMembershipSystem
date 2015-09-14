@@ -4,11 +4,11 @@
     Build Brighton Groups
 @stop
 @section('page-title')
-    Build Brighon Groups
+    Build Brighton Groups
 @stop
 
 @section('content')
-    
+
     <div class="row">
         <div class="list-group">
             @foreach($roles as $role)
