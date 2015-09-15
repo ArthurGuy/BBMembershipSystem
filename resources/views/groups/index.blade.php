@@ -17,16 +17,20 @@
 @section('content')
 
     <div class="row">
-        <div class="list-group">
-            @foreach($roles as $role)
-                <a href="{{ route('groups.show', $role->name) }}" class="list-group-item">
-                    <h4 class="list-group-item-heading">{{ $role->title }}</h4>
-                    <p class="list-group-item-text">
-                        {{ $role->description }}<br />
-                        <em>{{ $role->users->count() }} Members</em>
-                    </p>
-                </a>
-            @endforeach
+        <div class="col-sm-12 col-md-9 col-lg-9">
+
+            <div class="list-group">
+                @foreach($roles as $role)
+                    <a href="{{ route('groups.show', $role->name) }}" class="list-group-item">
+                        <h4 class="list-group-item-heading">{{ $role->title }}</h4>
+                        <p class="list-group-item-text">
+                            {{ $role->description }}<br />
+                            <em>{{ $role->users->count() }} Members</em>
+                        </p>
+                    </a>
+                @endforeach
+            </div>
+
         </div>
     </div>
 
