@@ -14,7 +14,7 @@ class GroupsController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
+        $roles = Role::with('users')->get();
         return View::make('groups.index')->with('roles', $roles);
     }
 
