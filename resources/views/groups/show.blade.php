@@ -11,7 +11,12 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <p class="lead">{{ $role->description }}</p>
+            <p class="lead">
+                {{ $role->description }}
+            </p>
+            @if ($role->public_email)
+            Email: <a href="{{ $role->public_email }}">{{ $role->public_email }}</a>
+            @endif
 
             <h4>Group members</h4>
             <div class="list-group">

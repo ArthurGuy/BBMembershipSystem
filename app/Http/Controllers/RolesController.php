@@ -90,7 +90,7 @@ class RolesController extends Controller
     {
         $role = Role::findOrFail($id);
 
-        $formData = \Request::only(['description', 'title']);
+        $formData = \Request::only(['description', 'title', 'public_email', 'private_email', 'slack_channel']);
         $this->roleValidator->validate($formData);
 
         $role->update($formData);
