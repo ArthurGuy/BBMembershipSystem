@@ -13,9 +13,9 @@ class AddGroupEmailFields extends Migration
     public function up()
     {
         Schema::table('roles', function (Blueprint $table) {
-            $table->string('public_email')->nullable()->after('description');
-            $table->string('private_email')->nullable()->after('public_email');
-            $table->string('slack_channel')->nullable()->after('private_email');
+            $table->string('email_public')->nullable()->after('description');
+            $table->string('email_private')->nullable()->after('email_public');
+            $table->string('slack_channel')->nullable()->after('email_private');
         });
     }
 
@@ -27,8 +27,12 @@ class AddGroupEmailFields extends Migration
     public function down()
     {
         Schema::table('roles', function (Blueprint $table) {
-            $table->dropColumn('public_email');
-            $table->dropColumn('private_email');
+            $table->dropColumn('email_public');
+        });
+        Schema::table('roles', function (Blueprint $table) {
+            $table->dropColumn('email_private');
+        });
+        Schema::table('roles', function (Blueprint $table) {
             $table->dropColumn('slack_channel');
         });
     }
