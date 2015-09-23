@@ -31,11 +31,11 @@ Member Roles and Groups
                 </div>
                 <div class="form-group">
                     {!! Form::label('Public Email') !!}
-                    {!! Form::text('public_email', $role->public_email, ['class'=>'form-control']) !!}
+                    {!! Form::text('email_public', $role->email_public, ['class'=>'form-control']) !!}
                 </div>
                 <div class="form-group">
                     {!! Form::label('Private Email') !!}
-                    {!! Form::text('private_email', $role->private_email, ['class'=>'form-control']) !!}
+                    {!! Form::text('email_private', $role->email_private, ['class'=>'form-control']) !!}
                 </div>
                 <div class="form-group">
                     {!! Form::label('Slack Channel') !!}

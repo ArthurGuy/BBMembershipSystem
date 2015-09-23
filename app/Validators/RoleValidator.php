@@ -6,8 +6,8 @@ class RoleValidator extends FormValidator
     protected $rules = [
         'title'         => 'required',
         'description'   => '',
-        'public_email'  => 'email',
-        'private_email' => 'email',
+        'email_public'  => 'email',
+        'email_private' => 'email',
         'slack_channel' => '',
     ];
 

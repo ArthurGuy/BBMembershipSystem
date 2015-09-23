@@ -14,8 +14,8 @@
             <p class="lead">
                 {{ $role->description }}
             </p>
-            @if ($role->public_email)
-            Email: <a href="{{ $role->public_email }}">{{ $role->public_email }}</a>
+            @if ($role->email_public)
+            Email: <a href="{{ $role->email_public }}">{{ $role->email_public }}</a>
             @endif
 
             <h4>Group members</h4>
