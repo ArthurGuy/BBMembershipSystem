@@ -11,7 +11,7 @@ class Role extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'title', 'description', 'public_email', 'private_email', 'slack_channel'];
+    protected $fillable = ['name', 'title', 'description', 'email_public', 'email_private', 'slack_channel'];
 
     public function users()
     {
