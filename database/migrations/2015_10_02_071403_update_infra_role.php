@@ -25,7 +25,7 @@ class UpdateInfraRole extends Migration
      */
     public function down()
     {
-        Role::findByName('acs')->update(['name' => 'infra', 'title' => 'Infrastructure', 'description' => 'Access control systems and all things RFID']);
         Role::where('name', 'infra')->delete();
+        Role::findByName('acs')->update(['name' => 'infra', 'title' => 'Infrastructure', 'description' => 'Access control systems and all things RFID']);
     }
 }
