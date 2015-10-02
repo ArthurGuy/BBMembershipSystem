@@ -58,7 +58,7 @@ class CheckDeviceOnlineStatuses extends Command
                 $message = 'Nothing has been heard from device "' . $device->name . '"" in a while. ';
                 $message .= 'The last update was ' . \Carbon\Carbon::now()->diffForHumans($device->last_heartbeat, true) . ' ago.';
 
-                $role = Role::findByName('infra');
+                $role = Role::findByName('acs');
                 foreach ($role->users()->get() as $user) {
                     $this->info('  Notifying ' . $user->name);
 
