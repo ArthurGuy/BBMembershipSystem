@@ -17,7 +17,7 @@ class EquipmentValidator extends FormValidator
         'room'               => 'required',
         'detail'             => '',
         'key'                => 'required|alpha_dash|unique:equipment,key',
-        'device_key'         => 'exists:devices,device_id',
+        'device_key'         => 'exists:acs_nodes,device_id',
         'description'        => '',
         'help_text'          => '',
         'managing_role_id'   => 'exists:roles,id',
