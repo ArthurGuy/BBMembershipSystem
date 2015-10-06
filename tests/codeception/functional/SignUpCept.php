@@ -23,6 +23,7 @@ $I->fillField(['name'=>'address[postcode]'], 'BN3 1AN');
 $I->fillField('Phone', '0123456789');
 $I->fillField('Emergency Contact', 'Contact Details');
 $I->attachFile('Profile Photo', 'test-image.png');
+$I->checkOption('rules_agreed');
 
 //$userImageService = m::mock('\BB\Helpers\UserImage');
 //$userImageService->shouldReceive('uploadPhoto')->times(1);

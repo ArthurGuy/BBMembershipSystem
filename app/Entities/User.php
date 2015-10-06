@@ -71,7 +71,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'password', 'emergency_contact', 'phone',
-        'monthly_subscription', 'profile_private', 'hash',
+        'monthly_subscription', 'profile_private', 'hash', 'rules_agreed',
         'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status'
     ];
 
@@ -93,7 +93,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date');
+        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed');
     }
 
 
