@@ -17,7 +17,7 @@ Resources
             <div class="panel-heading"><h3 class="panel-title">General mailing lists</h3></div>
             <div class="panel-body">
                 <p>
-                    Build Brighton has a Slack account and a large number of members spend time over there,
+                    Build Brighton has a <a href="https://buildbrighton.slack.com/">Slack account</a> and a large number of members spend time over there,
                     if you would like an invite please use the following site - <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a>
                 </p>
                 <p>
