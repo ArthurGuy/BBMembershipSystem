@@ -167,12 +167,12 @@ Join Build Brighton
         </div>
     </div>
 
-    <div class="form-group {{ Notification::hasErrorDetail('rules', 'has-error has-feedback') }}">
+    <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
         <div class="col-sm-9 col-lg-7 col-sm-offset-3">
             <span class="help-block">Please read the <a href="https://bbms.buildbrighton.com/resources/policy/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
-            {!! Form::checkbox('rules', true, null, ['class'=>'']) !!}
-            {!! Form::label('rules', 'I agree to the Build Brighton rules', ['class'=>'']) !!}
-            {!! Notification::getErrorDetail('rules') !!}
+            {!! Form::checkbox('rules_agreed', true, null, ['class'=>'']) !!}
+            {!! Form::label('rules_agreed', 'I agree to the Build Brighton rules', ['class'=>'']) !!}
+            {!! Notification::getErrorDetail('rules_agreed') !!}
         </div>
     </div>
 
