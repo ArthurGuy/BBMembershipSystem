@@ -330,6 +330,7 @@ CREATE TABLE `users` (
   `banned_date` date DEFAULT NULL,
   `banned_reason` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `rules_agreed` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
