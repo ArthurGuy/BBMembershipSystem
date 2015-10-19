@@ -16,7 +16,9 @@
                     <span class="badge">{{ count(Auth::user()->getAlerts()) }}</span>
                     @endif
                 </a>
-                <a class="toggleSettings" href=""><span class="glyphicon glyphicon-cog"></span></a>
+                <a class="toggleSettings" href="">
+                    <i class="material-icons md-18">settings</i>
+                </a>
             </li>
             <ul class="nav nested-nav accountSettings">
                 {!! HTML::sideNavLink('Edit Your Account', 'account.edit', [Auth::id()]) !!}

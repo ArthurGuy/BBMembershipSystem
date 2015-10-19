@@ -1,7 +1,7 @@
 @if (!Auth::guest())
     <div class="feedbackWidgetButtonWrap hidden-sm hidden-xs">
         <div id="feedbackWidgetButton" data-toggle="modal" data-target="#feedbackWidgetModal">
-            <span class="glyphicon glyphicon-bullhorn"></span> Feedback
+            <i class="material-icons md-18">feedback</i> Feedback
         </div>
     </div>
     <div class="modal fade" id="feedbackWidgetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
