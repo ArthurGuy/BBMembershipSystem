@@ -135,9 +135,9 @@ class StatementImportController extends Controller
                 if ($subPayment) {
                     $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
                     if ($subCharge) {
-                        echo '<td>Sub Charge: ' . $subCharge->amount . '</td>';
+                        echo '<td>Subscription Payment</td>';
                     } else {
-                        echo '<td style="background-color: #ff8c14;">No Sub Charge</td>';
+                        echo '<td style="background-color: #ff8c14;">Unknown: Recording as balance top up</td>';
                         $subPayment = false;
                         $reasonString = 'balance';
                     }
