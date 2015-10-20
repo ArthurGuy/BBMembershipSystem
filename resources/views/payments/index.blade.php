@@ -8,6 +8,11 @@ Payments
 Payments
 @stop
 
+@section('page-action-buttons')
+        <!--<a class="btn btn-secondary" href="{{ route('account.create') }}">Create a new Member</a>-->
+    <a class="btn btn-secondary" href="{{ route('statement-import.create') }}">Upload Bank Statement</a>
+@stop
+
 @section('main-tab-bar')
 <nav id="mainTabBar">
     <ul class="" role="tablist">
