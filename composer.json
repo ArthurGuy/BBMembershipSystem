@@ -32,8 +32,8 @@
         "doctrine/dbal": "^2.5",
         "itsgoingd/clockwork": "~1.8",
         "doctrine/migrations": "^1.0",
-        "laravel-doctrine/orm": "dev-develop",
-        "jms/serializer": "^1.1@dev"
+        "jms/serializer": "^1.1@dev",
+        "laravel-doctrine/orm": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",

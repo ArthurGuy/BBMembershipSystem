@@ -217,6 +217,7 @@ return [
         'Image'        => 'Intervention\Image\Facades\Image',
         'Slack'        => 'Maknz\Slack\Facades\Slack',
 		'EntityManager' => \LaravelDoctrine\ORM\Facades\EntityManager::class,
+		'Registry'      => LaravelDoctrine\ORM\Facades\Registry::class,
     ],
 
 ];
