@@ -38,7 +38,7 @@ Tools and Equipment
             @foreach($requiresInduction as $tool)
                 <tr>
                     <td>
-                        <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
+                        <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
                     </td>
                     <td>{!! $tool->present()->accessFee() !!}</td>
                     <td>{!! $tool->present()->usageCost() !!}</td>
@@ -48,7 +48,7 @@ Tools and Equipment
                     </td>
                     <td>
                         @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-                            <span class="pull-right"><a href="{{ route('equipment.edit', $tool->key) }}" class="btn-sm">Edit</a></span>
+                            <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}" class="btn-sm">Edit</a></span>
                         @endif
                     </td>
                 </tr>
@@ -73,7 +73,7 @@ Tools and Equipment
         @foreach($doesntRequireInduction as $tool)
             <tr>
                 <td>
-                    <a href="{{ route('equipment.show', $tool->key) }}">{{ $tool->name }}</a>
+                    <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
                 </td>
                 <td>{!! $tool->present()->usageCost() !!}</td>
                 <td>
@@ -82,7 +82,7 @@ Tools and Equipment
                 </td>
                 <td>
                     @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-                        <span class="pull-right"><a href="{{ route('equipment.edit', $tool->key) }}" class="btn-sm">Edit</a></span>
+                        <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}" class="btn-sm">Edit</a></span>
                     @endif
                 </td>
             </tr>

@@ -16,7 +16,7 @@ class EquipmentValidator extends FormValidator
         'colour'             => '',
         'room'               => 'required',
         'detail'             => '',
-        'key'                => 'required|alpha_dash|unique:equipment,key',
+        'slug'               => 'required|alpha_dash|unique:equipment,slug',
         'device_key'         => 'exists:acs_nodes,device_id',
         'description'        => '',
         'help_text'          => '',
@@ -38,7 +38,7 @@ class EquipmentValidator extends FormValidator
 
     //During an update these rules will override the ones above
     protected $updateRules = [
-        'key'                => '',
+        'slug'               => '',
         'asset_tag_id'       => 'unique:equipment,asset_tag_id,{id}',
     ];
 

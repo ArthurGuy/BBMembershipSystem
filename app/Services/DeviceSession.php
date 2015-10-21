@@ -70,7 +70,7 @@ class DeviceSession extends KeyFobAccess
         }
         //Validate the device
         try {
-            $this->device = $this->equipmentRepository->findByKey($this->deviceKey);
+            $this->device = $this->equipmentRepository->findBySlug($this->deviceKey);
         } catch (ModelNotFoundException $e) {
             throw new ValidationException('Invalid Device Key');
         }

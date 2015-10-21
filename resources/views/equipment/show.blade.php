@@ -10,7 +10,7 @@ Tools and Equipment
 
 @section('page-action-buttons')
     @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-        <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->key) }}">Edit</a>
+        <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->slug) }}">Edit</a>
     @endif
 @stop
 

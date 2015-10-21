@@ -8,7 +8,7 @@ use Laracasts\Presenter\PresentableTrait;
  * Class Equipment
  *
  * @property array   $photos
- * @property string  $key
+ * @property string  $slug
  * @property array   $ppe
  * @property Carbon  $obtained_at
  * @property Carbon  $removed_at
@@ -32,7 +32,7 @@ class Equipment extends Model
     protected $table = 'equipment';
 
     protected $fillable = [
-        'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'location', 'room', 'detail', 'key',
+        'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'location', 'room', 'detail', 'slug',
         'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'induction_category', 'working',
         'permaloan', 'permaloan_user_id', 'access_fee', 'photos', 'archive', 'obtained_at', 'removed_at', 'asset_tag_id',
         'usage_cost', 'usage_cost_per', 'ppe'
@@ -183,9 +183,9 @@ class Equipment extends Model
         return $photos;
     }
 
-    public function setKeyAttribute($value)
+    public function setSlugAttribute($value)
     {
-        $this->attributes['key'] = strtolower($value);
+        $this->attributes['slug'] = strtolower($value);
     }
 
     public function getObtainedAtAttribute()
