@@ -286,7 +286,7 @@ class PaymentController extends Controller
         } elseif ($reason == 'induction') {
             if (\Input::get('source') == 'manual') {
                 $ref = \Input::get('induction_key');
-                ($item = $this->equipmentRepository->findByKey($ref)) || App::abort(404);
+                ($item = $this->equipmentRepository->findBySlug($ref)) || App::abort(404);
                 $payment = new Payment([
                     'reason'           => $reason,
                     'source'           => 'manual',
