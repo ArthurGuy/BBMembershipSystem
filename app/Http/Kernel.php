@@ -1,6 +1,7 @@
 <?php namespace BB\Http;
 
 use BB\Http\Middleware\BrandingHeaders;
+use BB\Http\Middleware\DoctrineMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -22,6 +23,7 @@ class Kernel extends HttpKernel
         'BB\Http\Middleware\SSLOnly',
         BrandingHeaders::class,
         \Clockwork\Support\Laravel\ClockworkMiddleware::class,
+        DoctrineMiddleware::class,
     ];
 
     /**
