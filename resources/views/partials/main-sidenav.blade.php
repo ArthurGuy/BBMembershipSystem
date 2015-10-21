@@ -16,7 +16,9 @@
                     <span class="badge">{{ count(Auth::user()->getAlerts()) }}</span>
                     @endif
                 </a>
-                <a class="toggleSettings" href=""><span class="glyphicon glyphicon-cog"></span></a>
+                <a class="toggleSettings" href="">
+                    <i class="material-icons md-18">settings</i>
+                </a>
             </li>
             <ul class="nav nested-nav accountSettings">
                 {!! HTML::sideNavLink('Edit Your Account', 'account.edit', [Auth::id()]) !!}
@@ -41,9 +43,9 @@
         {!! HTML::sideNavLink('Proposals', 'proposals.index') !!}
         {!! HTML::sideNavLink('Resources', 'resources.index') !!}
         {!! HTML::sideNavLink('Expenses', 'expenses.index') !!}
+        {!! HTML::sideNavLink('Groups', 'groups.index') !!}
         @if (!Auth::guest() && Auth::user()->isAdmin())
             {!! HTML::sideNavLink('Members (Admin)', 'account.index') !!}
-            {!! HTML::sideNavLink('Roles/Groups (Admin)', 'roles.index') !!}
             {!! HTML::sideNavLink('Payments (Admin)', 'payments.index') !!}
             {!! HTML::sideNavLink('Devices (Admin)', 'devices.index') !!}
         @endif

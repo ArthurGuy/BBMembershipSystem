@@ -10,7 +10,7 @@ Tools and Equipment
 
 @section('page-action-buttons')
     @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-        <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->key) }}">Edit</a>
+        <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->slug) }}">Edit</a>
     @endif
 @stop
 
@@ -40,7 +40,7 @@ Tools and Equipment
                             Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
                             @endif
                             @if ($equipment->isManagedByGroup())
-                                Managed By: <a href="{{ route('group-listing', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
+                                Managed By: <a href="{{ route('groups.show', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
                             @endif
 
                             @if (!$equipment->isWorking())<span class="label label-danger">Out of action</span>@endif

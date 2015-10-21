@@ -15,8 +15,8 @@
 
 
 @section('page-action-buttons')
-    <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-    <a class="btn btn-secondary" href="{{ route('members.show', [$user->id]) }}"><span class="glyphicon glyphicon-user"></span> View Profile</a>
+    <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}"><i class="material-icons">mode_edit</i> Edit</a>
+    <a class="btn btn-secondary" href="{{ route('members.show', [$user->id]) }}"><i class="material-icons">person</i> View Profile</a>
 @stop
 
 @section('content')

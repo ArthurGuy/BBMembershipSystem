@@ -49,6 +49,11 @@ class PaypalIPNController extends Controller
                 return;
             }
 
+            //It looks like the user might be joining again
+            if ($user->status == 'left') {
+                $user->rejoin();
+            }
+
             //If its a new user set them up by creating the first sub charge record and setting the payment day
             if ($user->status == 'setting-up') {
                 $this->setupNewMember($user, $ipnData['mc_gross']);
@@ -75,7 +80,7 @@ class PaypalIPNController extends Controller
      * @param $amount
      * @return void
      */
-    private function setupNewMember($user, $amount)
+    private function setupNewMember(User $user, $amount)
     {
         //At this point the day of the month hasn't been set for the user, set it now
         $user->updateSubscription('paypal', Carbon::now()->day);

@@ -109,6 +109,8 @@ class UserRepository extends DBRepository
 
         $memberData['hash'] = str_random(30);
 
+        $memberData['rules_agreed']? Carbon::now(): null;
+
         $user = $this->model->create($memberData);
         $this->profileDataRepository->createProfile($user->id);
 

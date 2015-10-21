@@ -120,7 +120,7 @@ class EquipmentController extends Controller
 
     public function show($equipmentId)
     {
-        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
 
         $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
 
@@ -177,8 +177,8 @@ class EquipmentController extends Controller
      */
     public function store(Request $request, DeviceRepository $deviceRepository, EntityManager $em)
     {
-        $data = $request->only([
-            'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'key',
+        $data = \Request::only([
+            'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
             'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
             'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id', 'ppe',
         ]);//24
@@ -248,7 +248,7 @@ class EquipmentController extends Controller
 
         */
 
-        return \Redirect::route('equipment.edit', $data['key']);
+        return \Redirect::route('equipment.edit', $data['slug']);
     }
 
 
@@ -260,7 +260,7 @@ class EquipmentController extends Controller
      */
     public function edit($equipmentId)
     {
-        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
         //$roleList->prepend(null);
@@ -278,7 +278,7 @@ class EquipmentController extends Controller
      */
     public function update($equipmentId)
     {
-        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
 
         $data = \Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail',
@@ -306,7 +306,7 @@ class EquipmentController extends Controller
 
     public function addPhoto($equipmentId)
     {
-        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
 
         $data = \Request::only(['photo']);
 
@@ -337,7 +337,7 @@ class EquipmentController extends Controller
 
     public function destroyPhoto($equipmentId, $photoId)
     {
-        $equipment = $this->equipmentRepository->findByKey($equipmentId);
+        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $photo = $equipment->photos[$photoId];
         $equipment->removePhoto($photoId);
 

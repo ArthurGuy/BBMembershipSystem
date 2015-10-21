@@ -23,6 +23,7 @@ class UserValidator extends FormValidator
         'monthly_subscription'  => 'required|integer|min:5',
         'emergency_contact'     => 'required',
         'profile_private'       => 'boolean',
+        'rules_agreed'          => 'accepted',
     ];
 
 
@@ -31,7 +32,8 @@ class UserValidator extends FormValidator
         'email'                => 'required|email|unique:users,email,{id}',
         'secondary_email'      => 'email|unique:users,secondary_email,{id}',
         'password'             => 'min:8',
-        'monthly_subscription' => ''
+        'monthly_subscription' => '',
+        'rules_agreed'         => '',
     ];
 
 

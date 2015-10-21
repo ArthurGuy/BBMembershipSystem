@@ -53,7 +53,8 @@ gulp.task('css', function() {
 
 //FONTS
 var fontSources = [
-    'node_modules/bootstrap/dist/fonts/*'
+    'node_modules/bootstrap/dist/fonts/*',
+    'node_modules/material-design-icons/iconfont/*'
     //'public/src/fonts/*'
 ];
 

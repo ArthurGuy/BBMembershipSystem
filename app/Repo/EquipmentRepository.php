@@ -38,13 +38,13 @@ class EquipmentRepository extends DBRepository
     }
 
     /**
-     * Return a device by its string key
-     * @param $key
+     * Return a device by its slug
+     * @param $slug
      * @return Equipment
      */
-    public function findByKey($key)
+    public function findBySLug($slug)
     {
-        $record = $this->model->where('key', $key)->first();
+        $record = $this->model->where('slug', $slug)->first();
         if ($record) {
             return $record;
         }

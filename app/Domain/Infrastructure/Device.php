@@ -34,9 +34,9 @@ class Device
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=50, columnName="`key`")
+     * @ORM\Column(type="string", length=50)
      */
-    protected $key;
+    protected $slug;
 
     /**
      * @ORM\Embedded(class="DeviceCost", columnPrefix=false)
@@ -63,9 +63,9 @@ class Device
     /**
      * @return mixed
      */
-    public function getKey()
+    public function getSlug()
     {
-        return $this->key;
+        return $this->slug;
     }
 
     /**

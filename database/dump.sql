@@ -330,6 +330,7 @@ CREATE TABLE `users` (
   `banned_date` date DEFAULT NULL,
   `banned_reason` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `rules_agreed` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
@@ -468,15 +469,15 @@ CREATE TABLE `acs_nodes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `device_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `queued_command` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `queued_command` varchar(100) COLLATE utf8_unicode_ci DEFAULT '',
   `monitor_heartbeat` tinyint(1) NOT NULL,
-  `key` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `last_boot` datetime NOT NULL,
-  `last_heartbeat` datetime NOT NULL,
+  `key` varchar(100) COLLATE utf8_unicode_ci DEFAULT '',
+  `last_boot` datetime DEFAULT NULL,
+  `last_heartbeat` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `acs_nodes` (`id`, `device_id`, `queued_command`, `last_boot`, `last_heartbeat`, `created_at`, `updated_at`)
 VALUES
@@ -532,7 +533,7 @@ CREATE TABLE `equipment` (
   `colour` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `room` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `detail` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `key` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `slug` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `device_key` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `help_text` longtext COLLATE utf8_unicode_ci,
@@ -545,7 +546,7 @@ CREATE TABLE `equipment` (
   `permaloan_user_id` int(11) DEFAULT NULL,
   `access_fee` int(11) NOT NULL DEFAULT '0',
   `usage_cost` int(11) NOT NULL DEFAULT '0',
-  `usage_cost_per` enum('hour','gram') COLLATE utf8_unicode_ci DEFAULT NULL,
+  `usage_cost_per` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `photos` text COLLATE utf8_unicode_ci NOT NULL,
   `archive` tinyint(1) NOT NULL DEFAULT '0',
   `asset_tag_id` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -556,7 +557,7 @@ CREATE TABLE `equipment` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `equipment` (`id`, `name`, `manufacturer`, `model_number`, `serial_number`, `colour`, `room`, `detail`, `key`, `device_key`, `description`, `help_text`, `managing_role_id`, `requires_induction`, `induction_category`, `working`, `permaloan`, `permaloan_user_id`, `access_fee`, `photos`, `archive`, `asset_tag_id`, `obtained_at`, `removed_at`, `created_at`, `updated_at`, `usage_cost`)
+INSERT INTO `equipment` (`id`, `name`, `manufacturer`, `model_number`, `serial_number`, `colour`, `room`, `detail`, `slug`, `device_key`, `description`, `help_text`, `managing_role_id`, `requires_induction`, `induction_category`, `working`, `permaloan`, `permaloan_user_id`, `access_fee`, `photos`, `archive`, `asset_tag_id`, `obtained_at`, `removed_at`, `created_at`, `updated_at`, `usage_cost`)
 VALUES
 	(2, 'Laser Cutter', '', '', '', 'blue/white', 'workshop', '', 'laser', 'laser', '', '', NULL, 1, 'laser', 1, 0, 0, 10, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-05-01 00:00:25', 3),
 	(3, 'Lathe', NULL, NULL, NULL, NULL, NULL, NULL, 'lathe', '', NULL, NULL, NULL, 1, 'lathe', 1, 0, NULL, 25, '', 0, NULL, '0000-00-00', '0000-00-00', '2015-04-29 08:25:29', '2015-04-29 08:25:29', 0),
@@ -602,6 +603,15 @@ CREATE TABLE `notifications` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `detected_devices` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `mac_address` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `display_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -177,7 +177,9 @@ Route::group(array('middleware' => 'role:admin'), function() {
     Route::resource('roles', 'RolesController', []);
     Route::resource('roles.users', 'RoleUsersController', ['only' => ['destroy', 'store']]);
 });
-Route::get('group/{roleName}', ['uses' => 'RolesController@memberList', 'middleware' => 'role:member', 'as' => 'group-listing']);
+Route::group(array('middleware' => 'role:member'), function() {
+    Route::resource('groups', 'GroupsController', ['only' => ['index', 'show']]);
+});
 
 # Resources
 Route::get('resources', ['uses'=>'ResourcesController@index', 'middleware'=>'role:member', 'as'=>'resources.index']);

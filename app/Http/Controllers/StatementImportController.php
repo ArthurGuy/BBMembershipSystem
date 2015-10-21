@@ -70,8 +70,20 @@ class StatementImportController extends Controller
                 continue;
             }
 
+            if (strpos(strtoupper($row[2]), 'GC C1 BUILDBRIGHTO') !== false) {
+                continue;
+            }
+
+            if (strpos(strtoupper($row[2]), 'STRIPE TRANSFER') !== false) {
+                continue;
+            }
+
+            if (strpos(strtoupper($row[2]), 'EVENTBRITE') !== false) {
+                continue;
+            }
+
             $date = new \Carbon\Carbon($row[0]);
-            echo "<td>" . $date . '</td>';
+            echo "<td>" . $date->format('d/m/y') . '</td>';
 
             //echo "<td>".$row[1].'</td>';
 
@@ -123,15 +135,15 @@ class StatementImportController extends Controller
                 if ($subPayment) {
                     $subCharge = $this->subscriptionChargeRepository->findCharge($matchedUser->id, $date);
                     if ($subCharge) {
-                        echo '<td>Sub Charge: ' . $subCharge->amount . '</td>';
+                        echo '<td>Subscription Payment</td>';
                     } else {
-                        echo '<td>No Sub Charge</td>';
+                        echo '<td style="background-color: #ff8c14;">Unknown: Recording as balance top up</td>';
                         $subPayment = false;
                         $reasonString = 'balance';
                     }
                 }
             } else {
-                echo '<td>Unknown</td><td></td>';
+                echo '<td style="background-color: #F00;">Unknown</td><td></td>';
             }
 
             echo '<td>' . $row[2] . '</td>';

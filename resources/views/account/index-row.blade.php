@@ -18,13 +18,13 @@
     </td>
     <td class="hidden-xs">
         @if($user->key_holder)
-            <span class="glyphicon glyphicon-ok" title="Key Holder"></span>
+            <i class="material-icons" title="Key Holder">vpn_key</i>
         @endif
 
     </td>
     <td class="hidden-xs">
         @if ($user->trusted)
-            <span class="glyphicon glyphicon-thumbs-up" title="Trusted"></span>
+            <i class="material-icons" title="Trusted">verified_user</i>
         @endif
     </td>
     <td class="hidden-xs">

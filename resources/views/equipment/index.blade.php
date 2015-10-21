@@ -48,7 +48,7 @@ Tools and Equipment
             @foreach($requiresInduction as $device)
                 <tr>
                     <td>
-                        <a href="{{ route('equipment.show', $device->getKey()) }}">{{ $device->getName() }}</a>
+                        <a href="{{ route('equipment.show', $device->getSlug()) }}">{{ $device->getName() }}</a>
                     </td>
                     <td>{!! $device->getCost()->getAccessFee() !!}</td>
                     <td>{!! $device->getCost()->getUsageCost() !!}</td>
@@ -58,7 +58,7 @@ Tools and Equipment
                     </td>
                     <td>
                         @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-                            <span class="pull-right"><a href="{{ route('equipment.edit', $device->getKey()) }}" class="btn-sm">Edit</a></span>
+                            <span class="pull-right"><a href="{{ route('equipment.edit', $device->getSlug()) }}" class="btn-sm">Edit</a></span>
                         @endif
                     </td>
                 </tr>
@@ -83,7 +83,7 @@ Tools and Equipment
         @foreach($doesntRequireInduction as $device)
             <tr>
                 <td>
-                    <a href="{{ route('equipment.show', $device->getKey()) }}">{{ $device->getName() }}</a>
+                    <a href="{{ route('equipment.show', $device->getSlug()) }}">{{ $device->getName() }}</a>
                 </td>
                 <td>{!! $device->getCost()->getUsageCost() !!}</td>
                 <td>
@@ -92,7 +92,7 @@ Tools and Equipment
                 </td>
                 <td>
                     @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-                        <span class="pull-right"><a href="{{ route('equipment.edit', $device->getKey()) }}" class="btn-sm">Edit</a></span>
+                        <span class="pull-right"><a href="{{ route('equipment.edit', $device->getSlug()) }}" class="btn-sm">Edit</a></span>
                     @endif
                 </td>
             </tr>
@@ -101,6 +101,6 @@ Tools and Equipment
     </div>
 
     For changes to the information on the equipment pages please contact someone on
-    the <a href="{{ route('group-listing', 'equipment') }}">equipment</a> team
+    the <a href="{{ route('groups.show', 'equipment') }}">equipment</a> team
 
 @stop

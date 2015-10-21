@@ -23,10 +23,10 @@ Members
                     </div>
                     <span class="memberFlags">
                     @if ($user->keyholderStatus())
-                        <span class="glyphicon glyphicon-key" data-toggle="tooltip" data-placement="top" title="Key Holder"></span>
+                        <i class="material-icons" data-toggle="tooltip" data-placement="top" title="Key Holder">vpn_key</i>
                     @endif
                     @if ($user->director)
-                        <span class="glyphicon glyphicon-asterisk" data-toggle="tooltip" data-placement="top" title="Trustee"></span>
+                        <i class="material-icons" data-toggle="tooltip" data-placement="top" title="Trustee">star</i>
                     @endif
                     </span>
                 </a>

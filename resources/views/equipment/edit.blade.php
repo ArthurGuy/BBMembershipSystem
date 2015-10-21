@@ -5,7 +5,7 @@
 @stop
 
 @section('page-title')
-    <a href="{{ route('equipment.index') }}">Tools &amp; Equipment</a> > <a href="{{ route('equipment.show', $equipment->key) }}">{{ $equipment->name }}</a> > Edit
+    <a href="{{ route('equipment.index') }}">Tools &amp; Equipment</a> > <a href="{{ route('equipment.show', $equipment->slug) }}">{{ $equipment->name }}</a> > Edit
 @stop
 
 @section('content')
@@ -13,7 +13,7 @@
 <div class="row" style="margin-bottom: 20px;">
     <div class="col-xs-12">
 
-        {!! Form::model($equipment, array('route' => ['equipment.update', $equipment->key], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'PUT')) !!}
+        {!! Form::model($equipment, array('route' => ['equipment.update', $equipment->slug], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'PUT')) !!}
 
         @include('equipment/form')
 
@@ -62,7 +62,7 @@
                 @for($i=0; $i < $equipment->getNumPhotos(); $i++)
                     <div class="col-xs-12 col-md-4 col-lg-2">
                     <img src="{{ $equipment->getPhotoUrl($i) }}" class="img-thumbnail" width="200" />
-                    {!! Form::open(array('route' => ['equipment.photo.destroy', $equipment->key, $i], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'DELETE')) !!}
+                    {!! Form::open(array('route' => ['equipment.photo.destroy', $equipment->slug, $i], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'DELETE')) !!}
                     {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
                     {!! Form::close() !!}
                     </div>
@@ -71,7 +71,7 @@
             @endif
 
 
-            {!! Form::open(array('route' => ['equipment.photo.store', $equipment->key], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'POST')) !!}
+            {!! Form::open(array('route' => ['equipment.photo.store', $equipment->slug], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'POST')) !!}
 
             <div class="form-group {{ Notification::hasErrorDetail('photo', 'has-error has-feedback') }}">
                 {!! Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) !!}

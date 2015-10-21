@@ -8,12 +8,12 @@
     </div>
 </div>
 
-<div class="form-group {{ Notification::hasErrorDetail('key', 'has-error has-feedback') }}">
-    {!! Form::label('key', 'Key', ['class'=>'col-sm-3 control-label']) !!}
+<div class="form-group {{ Notification::hasErrorDetail('slug', 'has-error has-feedback') }}">
+    {!! Form::label('slug', 'Slug', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('key', null, ['class'=>'form-control']) !!}
+        {!! Form::text('slug', null, ['class'=>'form-control']) !!}
         <p class="help-block">This is the unique reference for the item, no special characters. i.e. metal-bandsaw or cordless-drill-1</p>
-        {!! Notification::getErrorDetail('key') !!}
+        {!! Notification::getErrorDetail('slug') !!}
     </div>
 </div>
 

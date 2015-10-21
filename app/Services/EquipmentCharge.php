@@ -31,7 +31,7 @@ class EquipmentCharge
         $records = $this->equipmentLogRepository->getFinishedUnbilledRecords();
         foreach ($records as $record) {
 
-            $equipment = $this->equipmentRepository->findByKey($record->device);
+            $equipment = $this->equipmentRepository->findBySlug($record->device);
             if ($equipment->hasUsageCharge()) {
 
                 $feePerSecond = $this->costPerSecond($equipment->usageCost);

@@ -50,3 +50,11 @@ $factory->define('BB\Entities\ACSNode', function ($faker) {
         'key'               => $faker->word,
     ];
 });
+
+$factory->define('BB\Entities\Role', function ($faker) {
+    return [
+        'name'              => $faker->word,
+        'title'             => $faker->word,
+        'description'       => $faker->sentence,
+    ];
+});
