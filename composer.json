@@ -33,7 +33,8 @@
         "itsgoingd/clockwork": "~1.8",
         "doctrine/migrations": "^1.0",
         "jms/serializer": "^1.1@dev",
-        "laravel-doctrine/orm": "dev-master"
+        "laravel-doctrine/orm": "dev-master",
+        "beberlei/DoctrineExtensions": "^1.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
