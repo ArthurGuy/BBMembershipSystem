@@ -10,7 +10,7 @@
     <p>
         You can also setup a PayPal subscription although this costs us a lot more so we'd rather you didn't,
         please only do this if you don't have a UK bank account.<br />
-        <strong>Your PayPal email address must be known to us</strong>, if its not the one you used when registering
+        <strong>Your primary PayPal email address must be known to us</strong>, if its not the one you used when registering
         <a href="{{ route('account.edit', $user->id) }}">enter an alternate email address now</a>.
         {!! Form::open(['method'=>'post', 'url'=>'https://www.paypal.com/cgi-bin/webscr']) !!}
         {!! Form::submit('Setup a PayPal Subscription', ['class'=>'btn']) !!}
