@@ -1,7 +1,10 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Domain\Infrastructure\Device;
+use BB\Domain\Infrastructure\DeviceCost;
+use BB\Domain\Infrastructure\DeviceProperties;
 use BB\Domain\Infrastructure\DeviceRepository;
+use BB\Domain\Infrastructure\Ownership;
 use BB\Domain\Infrastructure\Room;
 use BB\Exceptions\ImageFailedException;
 use BB\Repo\EquipmentLogRepository;
@@ -46,6 +49,10 @@ class EquipmentController extends Controller
      * @var RoomRepository
      */
     private $roomRepository;
+    /**
+     * @var DeviceRepository
+     */
+    private $deviceRepository;
 
     /**
      * @param InductionRepository     $inductionRepository
@@ -55,6 +62,7 @@ class EquipmentController extends Controller
      * @param EquipmentValidator      $equipmentValidator
      * @param EquipmentPhotoValidator $equipmentPhotoValidator
      * @param RoomRepository          $roomRepository
+     * @param DeviceRepository        $deviceRepository
      */
     function __construct(
         InductionRepository $inductionRepository,
@@ -63,7 +71,8 @@ class EquipmentController extends Controller
         UserRepository $userRepository,
         EquipmentValidator $equipmentValidator,
         EquipmentPhotoValidator $equipmentPhotoValidator,
-        RoomRepository $roomRepository
+        RoomRepository $roomRepository,
+        DeviceRepository $deviceRepository
     ) {
         $this->inductionRepository    = $inductionRepository;
         $this->equipmentRepository    = $equipmentRepository;
@@ -72,6 +81,7 @@ class EquipmentController extends Controller
         $this->equipmentValidator = $equipmentValidator;
         $this->equipmentPhotoValidator = $equipmentPhotoValidator;
         $this->roomRepository          = $roomRepository;
+        $this->deviceRepository        = $deviceRepository;
 
         //Only members of the equipment group can create/update records
         $this->middleware('role:equipment', array('except' => ['index', 'show']));
@@ -91,25 +101,11 @@ class EquipmentController extends Controller
      *
      * @return Response
      */
-    public function index(DeviceRepository $deviceRepository)
+    public function index()
     {
-        $devices = $deviceRepository->findAll();
+        $requiresInduction = $this->deviceRepository->devicesRequiringInduction();
+        $doesntRequireInduction = $this->deviceRepository->devicesNotRequiringInduction();
 
-        //filter the devices into two lists
-        $requiresInduction = array_filter($devices, function($d) {
-            if ($d->getCost()->getRequiresInduction()) {
-                return true;
-            }
-            return false;
-        });
-        $doesntRequireInduction = array_filter($devices, function($d) {
-            if ( ! $d->getCost()->getRequiresInduction()) {
-                return true;
-            }
-            return false;
-        });
-
-        $rooms = [];
         $rooms = $this->roomRepository->findAll();
 
         return \View::make('equipment.index')
@@ -120,27 +116,27 @@ class EquipmentController extends Controller
 
     public function show($equipmentId)
     {
-        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
+        $device = $this->deviceRepository->findBySlug($equipmentId);
 
-        $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
+        $trainers  = $this->inductionRepository->getTrainersForEquipment($device->cost()->inductionCategory());
 
-        $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipment->device_key);
+        $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($device->slug());
 
         $usageTimes = [];
-        $usageTimes['billed'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, true, '');
-        $usageTimes['unbilled'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, false, '');
-        $usageTimes['training'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'training');
-        $usageTimes['testing'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'testing');
+        $usageTimes['billed'] = $this->equipmentLogRepository->getTotalTime($device->slug(), true, '');
+        $usageTimes['unbilled'] = $this->equipmentLogRepository->getTotalTime($device->slug(), false, '');
+        $usageTimes['training'] = $this->equipmentLogRepository->getTotalTime($device->slug(), null, 'training');
+        $usageTimes['testing'] = $this->equipmentLogRepository->getTotalTime($device->slug(), null, 'testing');
 
-        $userInduction = $this->inductionRepository->getUserForEquipment(\Auth::user()->id, $equipment->induction_category);
+        $userInduction = $this->inductionRepository->getUserForEquipment(\Auth::user()->id, $device->cost()->inductionCategory());
 
-        $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipment->induction_category);
+        $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($device->cost()->inductionCategory());
 
-        $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($equipment->induction_category);
+        $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($device->cost()->inductionCategory());
 
         return \View::make('equipment.show')
             ->with('equipmentId', $equipmentId)
-            ->with('equipment', $equipment)
+            ->with('device', $device)
             ->with('trainers', $trainers)
             ->with('equipmentLog', $equipmentLog)
             ->with('userInduction', $userInduction)
@@ -175,23 +171,44 @@ class EquipmentController extends Controller
      * @throws ImageFailedException
      * @throws \BB\Exceptions\FormValidationException
      */
-    public function store(Request $request, DeviceRepository $deviceRepository, EntityManager $em)
+    public function store(Request $request)
     {
         $data = \Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
             'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
             'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id', 'ppe',
-        ]);//24
-        //$this->equipmentValidator->validate($data);
-
-        //$this->equipmentRepository->create($data);
+        ]);
+        $this->equipmentValidator->validate($data);
 
 
         /** @var \Illuminate\Http\Request $request */
 
-        $device = new Device($request->get('name'), $request->get('key'));
-        $deviceRepository->add($device);
-        $em->flush();
+        $device = new Device($request->get('name'), $request->get('slug'));
+
+        $deviceCost = new DeviceCost(
+            $request->get('requires_induction'),
+            $request->get('induction_category'),
+            $request->get('access_fee'),
+            $request->get('usage_cost'),
+            $request->get('usage_cost_per')
+        );
+        $properties = new DeviceProperties(
+            $request->get('manufacturer'),
+            $request->get('model_number'),
+            $request->get('serial_number'),
+            $request->get('colour')
+        );
+        $ownership = new Ownership(
+            $request->get('managing_role_id'),
+            $request->get('permaloan'),
+            $request->get('permaloan_user_id')
+        );
+
+        $device->setCost($deviceCost);
+        $device->setProperties($properties);
+        $device->setOwnership($ownership);
+
+        $this->deviceRepository->add($device);
 
 /*
         $cost = new EquipmentCost($request->get('requires_induction'), $request->get('induction_category'), $request->get('access_fee'), $request->get('usage_cost'), $request->get('usage_cost_per'));
@@ -222,30 +239,6 @@ class EquipmentController extends Controller
         $device->setInductionCategory($request->get('induction_category'));
 
 
-
-
-        $cost = new EquipmentCost($request->get('requires_induction'), $request->get('induction_category'), $request->get('access_fee'), $request->get('usage_cost'), $request->get('usage_cost_per'));
-        $device = new Device($request->get('name'), $request->get('key'));
-        $device->setDeviceCost($cost);
-        $device->setProperties([
-            'description'        => $request->get('description'),
-            'help_text'          => $request->get('help_text'),
-            'manufacturer'       => $request->get('manufacturer'),
-            'model_number'       => $request->get('model_number'),
-            'serial_number'      => $request->get('serial_number'),
-            'asset_tag_id'       => $request->get('asset_tag_id'),
-            'colour'             => $request->get('colour'),
-            'room'               => $request->get('room'),
-            'detail'             => $request->get('detail'),
-            'working'            => $request->get('working'),
-            'managing_role_id'   => $request->get('managing_role_id'),
-            'ppe'                => $request->get('ppe'),
-            'permaloan'          => $request->get('permaloan'),
-            'permaloan_user_id'  => $request->get('permaloan_user_id'),
-            'obtained_at'        => $request->get('obtained_at'),
-            'induction_category' => $request->get('induction_category'),
-        ]);
-
         */
 
         return \Redirect::route('equipment.edit', $data['slug']);
@@ -260,13 +253,15 @@ class EquipmentController extends Controller
      */
     public function edit($equipmentId)
     {
+        $device = $this->deviceRepository->findBySlug($equipmentId);
+
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
         //$roleList->prepend(null);
         //dd($roleList);
 
-        return \View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList)->with('roleList', $roleList->toArray())->with('ppeList', $this->ppeList);
+        return \View::make('equipment.edit')->with('equipment', $device)->with('memberList', $memberList)->with('roleList', $roleList->toArray())->with('ppeList', $this->ppeList);
     }
 
 

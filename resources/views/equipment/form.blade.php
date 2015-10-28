@@ -172,8 +172,9 @@
     {!! Form::label('usage_cost', 'Usage Cost', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
-            <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01']) !!}
+
+            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1']) !!}
+            <div class="input-group-addon">p</div>
             <div class="input-group-addon">
             Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'']) !!}
             </div>

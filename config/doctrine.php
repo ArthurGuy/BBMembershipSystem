@@ -82,12 +82,13 @@ return [
     |--------------------------------------------------------------------------
     */
     'custom_types'              => [
-        'json' => LaravelDoctrine\ORM\Types\Json::class
+        'json' => LaravelDoctrine\ORM\Types\Json::class,
         //'enum' => Doctrine\DBAL\Types\StringType::class,
         //'CarbonDate'       => DoctrineExtensions\Types\CarbonDateType::class,
-        //'CarbonDateTime'   => DoctrineExtensions\Types\CarbonDateTimeType::class,
+        'CarbonDateTime'   => DoctrineExtensions\Types\CarbonDateTimeType::class,
         //'CarbonDateTimeTz' => DoctrineExtensions\Types\CarbonDateTimeTzType::class,
-        //'CarbonTime'       => DoctrineExtensions\Types\CarbonTimeType::class
+        //'CarbonTime'       => DoctrineExtensions\Types\CarbonTimeType::class,
+        'jsonPhotoCollection' => \BB\Domain\JsonPhotoCollectionDoctrineType::class,
     ],
     /*
     |--------------------------------------------------------------------------

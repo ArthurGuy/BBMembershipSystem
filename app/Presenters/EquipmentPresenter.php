@@ -1,7 +1,7 @@
 <?php namespace BB\Presenters;
 
 use Carbon\Carbon;
-use Laracasts\Presenter\Presenter;
+use BB\Helpers\Presenter;
 use Michelf\Markdown;
 
 class EquipmentPresenter extends Presenter
@@ -9,40 +9,44 @@ class EquipmentPresenter extends Presenter
 
     public function livesIn()
     {
-        $string = $this->entity->room;
+        $room = $this->entity->room();
+        if (!$room) {
+            return null;
+        }
+        $string = $room->name();
         $string = str_replace('-', ' ', $string);
         $string = ucfirst($string);
-        if ($this->entity->detail) {
-            $string .= ' (' . $this->entity->detail . ')';
+        if ($this->entity->roomDetail()) {
+            $string .= ' (' . $this->entity->roomDetail() . ')';
         }
         return $string;
     }
 
     public function manufacturerModel()
     {
-        $string = $this->entity->manufacturer;
-        if ($this->entity->model_number) {
-            $string .= ' (' . $this->entity->model_number . ')';
+        $string = $this->entity->properties()->manufacturer();
+        if ($this->entity->properties()->modelNumber()) {
+            $string .= ' (' . $this->entity->properties()->modelNumber() . ')';
         }
         return $string;
     }
 
     public function description()
     {
-        return Markdown::defaultTransform($this->entity->description);
+        return Markdown::defaultTransform($this->entity->description());
     }
 
     public function help_text()
     {
-        return Markdown::defaultTransform($this->entity->help_text);
+        return Markdown::defaultTransform($this->entity->helpText());
     }
 
     public function purchaseDate()
     {
-        if ( ! $this->entity->obtained_at) {
+        if ( ! $this->entity->obtainedAt()) {
             return null;
         }
-        return $this->entity->obtained_at->toFormattedDateString();
+        return $this->entity->obtainedAt()->toFormattedDateString();
     }
 
     public function accessFee()
@@ -52,15 +56,15 @@ class EquipmentPresenter extends Presenter
 
     public function usageCost()
     {
-        if ($this->entity->usage_cost) {
-            return '&pound' . number_format($this->entity->usage_cost, 2) . ' per ' . $this->entity->usage_cost_per;
+        if ($this->entity->cost()->usageCost()) {
+            return '&pound' . number_format($this->entity->cost()->usageCost(), 2) . ' per ' . $this->entity->cost()->usageCostPer();
         }
     }
 
     public function ppe()
     {
         $ppeHtml = '';
-        foreach ($this->entity->ppe as $ppe) {
+        foreach ($this->entity->ppe() as $ppe) {
             $ppeHtml .= '<img src="/img/ppe/' . $ppe . '.jpg" height="140" class="ppe-image">';
         }
         $ppeHtml .= '<br /><br />';

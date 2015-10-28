@@ -11,12 +11,12 @@ use Doctrine\ORM\EntityRepository;
 class RoomRepository extends EntityRepository
 {
     /**
-     * @param $key
+     * @param $id
      * @return Room
      */
-    public function findByKey($key)
+    public function findById($id)
     {
-        return $this->findOneBy(['key' => $key]);
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function add(Room $room)

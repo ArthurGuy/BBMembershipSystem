@@ -16,9 +16,9 @@ class Room
 
     /**
      * @ORM\Id()
-     * @ORM\Column(type="string", length=50, name="`key`")
+     * @ORM\Column(type="string", length=50)
      */
-    private $key;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -43,12 +43,12 @@ class Room
     /**
      * Room constructor.
      *
-     * @param $key
+     * @param $id
      * @param $name
      */
-    public function __construct($key, $name, $shortDescription, $ppe)
+    public function __construct($id, $name, $shortDescription, $ppe)
     {
-        $this->key  = $key;
+        $this->id  = $id;
         $this->name = $name;
         $this->shortDescription = $shortDescription;
         $this->ppe = $ppe;
@@ -58,7 +58,7 @@ class Room
     /**
      * @return mixed
      */
-    public function getName()
+    public function name()
     {
         return $this->name;
     }
@@ -66,7 +66,7 @@ class Room
     /**
      * @return Device[]
      */
-    public function getEquipment()
+    public function equipment()
     {
         return $this->devices->toArray();
     }

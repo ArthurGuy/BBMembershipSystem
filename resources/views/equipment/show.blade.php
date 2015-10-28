@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('page-title')
-<a href="{{ route('equipment.index') }}">Tools &amp; Equipment</a> > {{ $equipment->name }}
+<a href="{{ route('equipment.index') }}">Tools &amp; Equipment</a> > {{ $device->name() }}
 @stop
 
 @section('meta-title')
@@ -10,7 +10,7 @@ Tools and Equipment
 
 @section('page-action-buttons')
     @if (!Auth::guest() && Auth::user()->hasRole('equipment'))
-        <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->slug) }}">Edit</a>
+        <a class="btn btn-secondary" href="{{ route('equipment.edit', $device->slug()) }}">Edit</a>
     @endif
 @stop
 
@@ -31,20 +31,20 @@ Tools and Equipment
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
 
-                            @if ($equipment->present()->manufacturerModel) Make: {{ $equipment->present()->manufacturerModel }}<br />@endif
-                            <!-- @if ($equipment->colour) Colour: {{ $equipment->colour }}<br />@endif -->
-                            @if ($equipment->present()->livesIn) Lives in: {{ $equipment->present()->livesIn }}<br />@endif
-                            @if ($equipment->present()->purchaseDate) Purchased: {{ $equipment->present()->purchaseDate }}<br />@endif
-                            @if ($equipment->requiresInduction()) Induction required<br /> @endif
-                            @if ($equipment->hasUsageCharge())
-                            Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
+                            @if ($device->present()->manufacturerModel()) Make: {{ $device->present()->manufacturerModel }}<br />@endif
+                            <!-- @if ($device->properties()->colour()) Colour: {{ $device->properties()->colour() }}<br />@endif -->
+                            @if ($device->present()->livesIn()) Lives in: {{ $device->present()->livesIn() }}<br />@endif
+                            @if ($device->present()->purchaseDate) Purchased: {{ $device->present()->purchaseDate }}<br />@endif
+                            @if ($device->cost()->requiresInduction()) Induction required<br /> @endif
+                            @if ($device->cost()->hasUsageCharge())
+                            Usage Cost: {!! $device->present()->usageCost() !!}<br />
                             @endif
-                            @if ($equipment->isManagedByGroup())
-                                Managed By: <a href="{{ route('groups.show', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
+                            @if ($device->isManagedByGroup())
+                                Managed By: <a href="{{ route('groups.show', $device->role()->name()) }}">{{ $device->role()->title() }}</a>
                             @endif
 
-                            @if (!$equipment->isWorking())<span class="label label-danger">Out of action</span>@endif
-                            @if ($equipment->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
+                            @if (!$device->isWorking())<span class="label label-danger">Out of action</span>@endif
+                            @if ($device->owner()->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
 
                         </div>
                         <div class="col-md-12 col-lg-6">
@@ -54,27 +54,27 @@ Tools and Equipment
 
                     <br />
 
-                    {!! $equipment->present()->description !!}
+                    {!! $device->present()->description() !!}
                     <br />
 
-                    @if ($equipment->help_text)
+                    @if ($device->helpText())
                         <a data-toggle="modal" data-target="#helpModal" href="#" class="btn btn-info">Help</a>
                         <br /><br />
                     @endif
 
-                    {!! $equipment->present()->ppe !!}
+                    {!! $device->present()->ppe() !!}
 
 
-                    @if ($equipment->requiresInduction())
+                    @if ($device->cost()->requiresInduction())
 
                         @if (!$userInduction)
 
                             <p>
                             To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
-                            <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
+                            <strong>Equipment access fee: &pound{{ $device->cost()->accessFee() }}</strong><br />
                             </p>
 
-                            <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="Pay Now" data-methods="gocardless,stripe,balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                            <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="Pay Now" data-methods="gocardless,stripe,balance" data-amount="{{ $device->cost()->accessFee() }}" data-ref="{{ $device->cost()->inductionCategory() }}"></div>
 
                         @elseif ($userInduction->is_trained)
 
@@ -94,27 +94,27 @@ Tools and Equipment
 
             <div class="col-sm-12 col-lg-6">
 
-                @if ($equipment->hasPhoto())
-                    @for($i=0; $i < $equipment->getNumPhotos(); $i++)
-                        <img src="{{ $equipment->getPhotoUrl($i) }}" width="170" data-toggle="modal" data-target="#image{{ $i }}" style="margin:3px 1px; padding:0;" />
+                @if ($device->hasPhoto())
+                    @foreach($device->photos() as $photo)
+                        <img src="{{ $photo->photoUrl() }}" width="170" data-toggle="modal" data-target="#image{{ $photo->id() }}" style="margin:3px 1px; padding:0;" />
 
-                        <div class="modal fade" id="image{{ $i }}" tabindex="-1" role="dialog">
+                        <div class="modal fade" id="image{{ $photo->id() }}" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-body">
-                                        <img src="{{ $equipment->getPhotoUrl($i) }}" width="100%" />
+                                        <img src="{{ $photo->photoUrl() }}" width="100%" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @endfor
+                    @endforeach
                 @endif
 
             </div>
 
             <div class="col-sm-12 col-lg-6">
 
-                @if ($equipment->requiresInduction())
+                @if ($device->cost()->requiresInduction())
                     <div class="row">
                     <h4>Trainers</h4>
                     <div class="list-group">
@@ -132,7 +132,7 @@ Tools and Equipment
     </div>
 
 
-    @if ($equipment->hasActivity())
+    @if ($device->hasActivity())
     <h3>Activity Log</h3>
     <table class="table">
         <thead>
@@ -184,7 +184,7 @@ Tools and Equipment
     @endif
 
 
-    @if ($equipment->requiresInduction())
+    @if ($device->cost()->requiresInduction())
         <div class="row">
             <div class="col-sm-12 col-md-6">
                 <h4>Trained Users</h4>
@@ -222,7 +222,7 @@ Tools and Equipment
                     <h4 class="modal-title">Help</h4>
                 </div>
                 <div class="modal-body">
-                    {!! $equipment->present()->help_text !!}
+                    {!! $device->helpText() !!}
                 </div>
             </div>
         </div>
