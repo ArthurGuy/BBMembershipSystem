@@ -1,6 +1,7 @@
 <?php namespace BB\Providers;
 
 use BB\Listeners\AddApprovedExpenseToBalance;
+use BB\Listeners\EmailDonorAboutUnknownPayPalPayment;
 use BB\Listeners\EmailMemberAboutApprovedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
@@ -64,7 +65,10 @@ class EventServiceProvider extends ServiceProvider {
         ],
         'BB\Events\NewMemberNotification' => [
             SlackMemberNotification::class
-        ]
+        ],
+        '\BB\Events\UnknownPayPalPaymentReceived' => [
+            EmailDonorAboutUnknownPayPalPayment::class
+        ],
 	];
 
 	/**

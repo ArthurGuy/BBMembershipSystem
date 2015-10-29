@@ -45,7 +45,9 @@ class PaypalIPNController extends Controller
                 $user = User::where('secondary_email', $ipnData['payer_email'])->first();
             }
             if ( ! $user) {
-                \Log::error("PayPal IPN Received for unknown email " . $ipnData['payer_email']);
+                //\Log::error("PayPal IPN Received for unknown email " . $ipnData['payer_email']);
+                $paymentId = $this->paymentRepository->recordPayment('donation', 0, 'paypal', $ipnData['txn_id'], $ipnData['mc_gross'], 'paid', $ipnData['mc_fee'], $ipnData['payer_email']);
+                event(new \BB\Events\UnknownPayPalPaymentReceived($paymentId, $ipnData['payer_email']));
                 return;
             }
 
