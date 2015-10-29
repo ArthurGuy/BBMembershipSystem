@@ -72,6 +72,7 @@ class ACSController extends Controller
 
                 break;
             case 'status':
+                return $this->returnMemberStatus($data);
 
                 break;
             case 'device-scanner':
@@ -206,6 +207,20 @@ class ACSController extends Controller
         }
 
 
+    }
+
+    private function returnMemberStatus($data)
+    {
+        try {
+            $user = $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
+        } catch (\Exception $e) {
+            $responseData = ['valid' => '0', 'cmd' => ''];
+            return $this->sendResponse($responseData);
+        }
+
+        $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => ''];
+
+        return $this->sendResponse($responseData);
     }
 
 } 
