@@ -25,11 +25,20 @@
                     {!! Form::close() !!}
                     </li>
                 @endif
-                @if ($payment->reason != 'balance')
+                @if ($payment->user && $payment->reason != 'balance')
                     <li>
                         {!! Form::open(array('method'=>'PUT', 'route' => ['payments.update', $payment->id], 'class'=>'navbar-form navbar-left')) !!}
-                        {!! Form::hidden('reason', 'balance') !!}
+                        {!! Form::hidden('change', 'refund-to-balance') !!}
                         {!! Form::submit('Refund to Balance', array('class'=>'btn btn-link')) !!}
+                        {!! Form::close() !!}
+                    </li>
+                @endif
+                @if (!$payment->user)
+                    <li>
+                        {!! Form::open(array('method'=>'PUT', 'route' => ['payments.update', $payment->id], 'class'=>'navbar-form navbar-left')) !!}
+                        {!! Form::hidden('change', 'assign-unknown-to-user') !!}
+                        {!! Form::input('number', 'user_id', null, ['placeholder' => 'User ID', 'class' => 'form-control']) !!}
+                        {!! Form::submit('Assign to user', array('class'=>'btn')) !!}
                         {!! Form::close() !!}
                     </li>
                 @endif

@@ -1,7 +1,9 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\Payment;
+use BB\Events\MemberBalanceChanged;
 use BB\Exceptions\NotImplementedException;
+use BB\Exceptions\PaymentException;
 use Carbon\Carbon;
 
 class PaymentRepository extends DBRepository
@@ -172,6 +174,38 @@ class PaymentRepository extends DBRepository
         $payment = $this->getById($paymentId);
 
         \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->reference, $status));
+    }
+
+    /**
+     * Assign an unassigned payment to a user
+     *
+     * @param int $paymentId
+     * @param int $userId
+     *
+     * @throws PaymentException
+     */
+    public function assignPaymentToUser($paymentId, $userId)
+    {
+        $payment = $this->getById($paymentId);
+
+        if (!empty($payment->user_id)) {
+            throw new PaymentException('Payment already assigned to user');
+        }
+
+        $this->update($paymentId, ['user_id' => $userId]);
+    }
+
+    public function refundPaymentToBalance($paymentId)
+    {
+        $payment = $this->getById($paymentId);
+
+        if ($payment->reason !== 'donation') {
+            throw new NotImplementedException('This hasn\'t been built yet');
+        }
+
+        $this->update($paymentId, ['reason' => 'balance']);
+
+        event(new MemberBalanceChanged($payment->user_id));
     }
 
 

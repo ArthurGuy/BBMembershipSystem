@@ -3,6 +3,9 @@
 use BB\Entities\Induction;
 use BB\Entities\Payment;
 use BB\Entities\User;
+use BB\Exceptions\NotImplementedException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
@@ -393,14 +396,44 @@ class PaymentController extends Controller
      * Update a payment
      * Change where the money goes by altering the original record or creating a secondary payment
      *
-     * @param  int $id
+     * @param Request $request
+     * @param  int    $paymentId
+     *
      * @return Illuminate\Http\RedirectResponse
+     * @throws NotImplementedException
+     * @throws \BB\Exceptions\PaymentException
      */
-    public function update($id)
+    public function update(Request $request, $paymentId)
     {
-        $this->paymentRepository->getById($id);
+        $payment = $this->paymentRepository->getById($paymentId);
 
-        \Notification::success('Not yet implemented');
+        switch($request->get('change')) {
+            case 'assign-unknown-to-user':
+                $newUserId = $request->get('user_id');
+                try {
+                    $newUser = $this->userRepository->getById($newUserId);
+                } catch (ModelNotFoundException $e) {
+                    \Notification::error('User not found');
+                    break;
+                }
+
+                $this->paymentRepository->assignPaymentToUser($paymentId, $newUser->id);
+
+                \Notification::success('Payment updated');
+
+                break;
+
+            case 'refund-to-balance':
+
+                $this->paymentRepository->refundPaymentToBalance($paymentId);
+
+                \Notification::success('Payment updated');
+
+                break;
+
+            default:
+                throw new NotImplementedException('This hasn\'t been built yet');
+        }
 
         return \Redirect::back();
     }

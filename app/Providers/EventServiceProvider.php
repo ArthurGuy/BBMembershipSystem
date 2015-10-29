@@ -1,5 +1,6 @@
 <?php namespace BB\Providers;
 
+use BB\Events\MemberBalanceChanged;
 use BB\Listeners\AddApprovedExpenseToBalance;
 use BB\Listeners\EmailDonorAboutUnknownPayPalPayment;
 use BB\Listeners\EmailMemberAboutApprovedExpense;
@@ -8,6 +9,7 @@ use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\EmailTrusteesAboutExpense;
 use BB\Listeners\ExtendMembership;
+use BB\Listeners\RecalculateMemberBalance;
 use BB\Listeners\RecordMemberActivity;
 use BB\Listeners\SlackActivityNotification;
 use BB\Listeners\SlackMemberNotification;
@@ -68,6 +70,9 @@ class EventServiceProvider extends ServiceProvider {
         ],
         '\BB\Events\UnknownPayPalPaymentReceived' => [
             EmailDonorAboutUnknownPayPalPayment::class
+        ],
+        MemberBalanceChanged::class => [
+            RecalculateMemberBalance::class
         ],
 	];
 
