@@ -265,7 +265,7 @@ class PaymentController extends Controller
     {
         $user = User::findWithPermission($userId);
 
-        if ( ! \Auth::user()->hasRole('admin')) {
+        if ( ! \Auth::user()->hasRole('admin') &&  ! \Auth::user()->hasRole('finance')) {
             throw new \BB\Exceptions\AuthenticationException;
         }
 

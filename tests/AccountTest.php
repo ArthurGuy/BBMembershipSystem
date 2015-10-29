@@ -16,7 +16,8 @@ class AccountTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->visit('/account/'.$user->id)
+        $this->get('/account/'.$user->id)
+            ->seeStatusCode(200)
             ->see($user->name)
             ->see($user->email);
     }
@@ -45,7 +46,8 @@ class AccountTest extends TestCase
         $user2 = factory('BB\Entities\User')->create();
         factory('BB\Entities\ProfileData')->create(['user_id' => $user2->id]);
 
-        $this->visit('members')
+        $this->get('members')
+            ->seeStatusCode(200)
             ->see($user->name)
             ->see($user2->name);
     }
@@ -59,7 +61,8 @@ class AccountTest extends TestCase
         $user2 = factory('BB\Entities\User')->create(['profile_private' => true]);
         factory('BB\Entities\ProfileData')->create(['user_id' => $user2->id]);
 
-        $this->visit('members')
+        $this->get('members')
+            ->seeStatusCode(200)
             ->see($user->name)
             ->see($user2->name, true);  //don't see
     }
@@ -75,7 +78,8 @@ class AccountTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->visit('members')
+        $this->get('members')
+            ->seeStatusCode(200)
             ->see($user->name)
             ->see($user2->name);
     }

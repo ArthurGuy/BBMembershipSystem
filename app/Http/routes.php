@@ -51,11 +51,13 @@ Route::resource('account.subscription', 'SubscriptionController', ['except' => [
 Route::post('gocardless/webhook', ['uses' => 'GoCardlessWebhookController@receive']);
 
 Route::post('account/{account}/payment', ['uses' => 'PaymentController@store', 'as' => 'account.payment.store', 'middleware' => 'role:admin']);
-Route::group(array('middleware' => 'role:admin'), function() {
+
+Route::group(array('middleware' => 'role:finance'), function() {
     Route::resource('payments', 'PaymentController', ['only' => ['index', 'destroy', 'update']]);
     Route::get('payments/overview', ['uses'=>'PaymentOverviewController@index', 'as'=>'payments.overview']);
     Route::get('payments/sub-charges', ['as' => 'payments.sub-charges', 'uses' => 'SubscriptionController@listCharges']);
 });
+
 Route::post('account/{account}/payment/create', ['as'=>'account.payment.create', 'uses' => 'PaymentController@create']);
 Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
 Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-payment', 'uses'=>'AccountController@updateSubscriptionAmount']);
@@ -69,8 +71,10 @@ Route::get('account/{account}/payment/gocardless/manual-return', ['as'=>'account
 
 
 //Cash
-Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
-Route::delete('account/{account}/payment/cash', ['as'=>'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
+Route::group(array('middleware' => 'role:finance'), function() {
+    Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
+    Route::delete('account/{account}/payment/cash', ['as'=>'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
+});
 
 //DD Migration to variable payments
 Route::post('account/payment/migrate-direct-debit', ['as'=>'account.payment.gocardless-migrate', 'uses' => 'PaymentController@migrateDD', 'middleware'=>'role:member']);

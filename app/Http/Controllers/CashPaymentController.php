@@ -19,8 +19,6 @@ class CashPaymentController extends Controller
     {
         $this->paymentRepository = $paymentRepository;
         $this->bbCredit = $bbCredit;
-
-        $this->middleware('role:admin', array('only' => ['store', 'destroy']));
     }
 
 
