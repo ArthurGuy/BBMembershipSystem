@@ -8,4 +8,4 @@ $I->loginAdminMember();
 
 $I->amOnPage('/');
 
-$I->canSee('Admin');
+$I->canSee('Manage Members');
