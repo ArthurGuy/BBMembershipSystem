@@ -44,8 +44,10 @@
         {!! HTML::sideNavLink('Resources', 'resources.index') !!}
         {!! HTML::sideNavLink('Expenses', 'expenses.index') !!}
         {!! HTML::sideNavLink('Groups', 'groups.index') !!}
-        @if (!Auth::guest() && Auth::user()->isAdmin())
+        @if (!Auth::guest() && Auth::user()->hasRole('admin'))
             {!! HTML::sideNavLink('Manage Members', 'account.index') !!}
+        @endif
+        @if (!Auth::guest() && Auth::user()->hasRole('acs'))
             {!! HTML::sideNavLink('Devices', 'devices.index') !!}
         @endif
         @if (!Auth::guest() && Auth::user()->hasRole('finance'))
