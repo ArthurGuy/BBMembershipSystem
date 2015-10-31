@@ -41,7 +41,15 @@ class StatusController extends Controller
             }
         }
 
-        return $keyFob;
+        return ['user' => [
+            'id' => $keyFob->user->id,
+            'name' => $keyFob->user->name,
+            'status' => $keyFob->user->status,
+            'active' => $keyFob->user->active,
+            'key_holder' => $keyFob->user->key_holder,
+            'cash_balance' => $keyFob->user->cash_balance,
+            'profile_private' => $keyFob->user->profile_private,
+        ]];
     }
 
 }
