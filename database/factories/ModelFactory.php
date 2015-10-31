@@ -53,8 +53,17 @@ $factory->define('BB\Entities\ACSNode', function ($faker) {
 
 $factory->define('BB\Entities\Role', function ($faker) {
     return [
-        'name'              => $faker->word,
-        'title'             => $faker->word,
-        'description'       => $faker->sentence,
+        'name'        => $faker->word,
+        'title'       => $faker->word,
+        'description' => $faker->sentence,
+    ];
+});
+
+$factory->define('BB\Entities\KeyFob', function ($faker) {
+    return [
+        'user_id' => 0,
+        'key_id'  => str_random(12),
+        'active'  => 1,
+        'lost'    => 0,
     ];
 });
