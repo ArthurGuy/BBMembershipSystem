@@ -47,7 +47,7 @@ $factory->define('BB\Entities\ACSNode', function ($faker) {
         'device_id'         => $faker->word,
         'queued_command'    => null,
         'monitor_heartbeat' => false,
-        'key'               => $faker->word,
+        'api_key'           => $faker->word,
     ];
 });
 
