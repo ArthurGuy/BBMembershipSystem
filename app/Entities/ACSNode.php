@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Class ACSNode
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $device_id
  * @property string $queued_command
  * @property bool   $monitor_heartbeat
- * @property string $key
+ * @property string $api_key
  * @property Carbon $last_boot
  * @property Carbon $last_heartbeat
  * @property Carbon $created_at
@@ -50,6 +51,15 @@ class ACSNode extends Model
         }
 
         return false;
+    }
+
+    public function findByAPIKey($apiKey)
+    {
+        $node = self::where('api_key', $apiKey)->first();
+        if (!$node) {
+            throw new ModelNotFoundException();
+        }
+        return $node;
     }
 
 } 
