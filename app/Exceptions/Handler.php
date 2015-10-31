@@ -82,11 +82,16 @@ class Handler extends ExceptionHandler {
             throw new HttpException(404, $e->getMessage());
         }
 
-        if (config('app.debug') && $this->shouldReport($e))
+        if (config('app.debug') && $this->shouldReport($e) && !$request->wantsJson())
         {
             return $this->renderExceptionWithWhoops($e);
         }
 
+        if ($request->wantsJson()) {
+            if ($this->isHttpException($e)) {
+                return \Response::json(['error' => $e->getMessage()], $e->getStatusCode());
+            }
+        }
 		return parent::render($request, $e);
 	}
 
