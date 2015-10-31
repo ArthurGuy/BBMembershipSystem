@@ -79,7 +79,7 @@ class Handler extends ExceptionHandler {
         }
 
         if ($e instanceof ModelNotFoundException) {
-            throw new HttpException(404, $e->getMessage());
+            $e = new HttpException(404, $e->getMessage());
         }
 
         if (config('app.debug') && $this->shouldReport($e) && !$request->wantsJson())
