@@ -37,7 +37,7 @@ class ACSAuthentication
         try {
             $node = $this->ACSNodeRepository->findByAPIKey($request->header('ApiKey'));
         } catch (\Exception $e) {
-            throw new AuthenticationException("Key not recognised");
+            throw new AuthenticationException("API Key Invalid");
         }
 
         //Possibly do some checking here on the access rights for the acs node

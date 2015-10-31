@@ -4,6 +4,7 @@ namespace BB\Http\Controllers\ACS;
 
 use BB\Entities\KeyFob;
 use BB\Exceptions\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use BB\Http\Requests;
 use BB\Http\Controllers\Controller;
@@ -29,14 +30,15 @@ class StatusController extends Controller
                 $keyFob = KeyFob::lookup($oldTagId);
             } catch (\Exception $e) {
 
+                //The ids coming in will have no checksum (last 2 digits) and the first digit will be incorrect
+
                 //Remove the first character
                 $tagId = substr($tagId, 1);
 
-                $fobs = KeyFob::where('key_id', 'LIKE', '%' . $tagId . '%')->get();
-                if ($fobs->count() == 1) {
-                    $keyFob = $fobs->first();
-                } else {
-                    throw new ValidationException('Key fob ID not valid');
+                try {
+                    $keyFob = KeyFob::lookupPartialTag($tagId);
+                } catch (\Exception $e) {
+                    throw new ModelNotFoundException('Key fob ID not found');
                 }
             }
         }
