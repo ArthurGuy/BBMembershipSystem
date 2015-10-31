@@ -1,5 +1,6 @@
 <?php namespace BB\Http;
 
+use BB\Http\Middleware\ACSAuthentication;
 use BB\Http\Middleware\BrandingHeaders;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -34,6 +35,7 @@ class Kernel extends HttpKernel
         'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
         'guest'      => 'BB\Http\Middleware\RedirectIfAuthenticated',
         'role'       => 'BB\Http\Middleware\HasRole',
+        'acs'        => ACSAuthentication::class,
     ];
 
 }
