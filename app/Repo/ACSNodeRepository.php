@@ -33,6 +33,20 @@ class ACSNodeRepository extends DBRepository
     }
 
     /**
+     * @param $apiKey
+     *
+     * @return ACSNode
+     */
+    public function findByAPIKey($apiKey)
+    {
+        $node = $this->model->where('api_key', $apiKey)->first();
+        if (!$node) {
+            throw new ModelNotFoundException();
+        }
+        return $node;
+    }
+
+    /**
      * @param $device string
      */
     public function logBoot($device)

@@ -53,13 +53,4 @@ class ACSNode extends Model
         return false;
     }
 
-    public function findByAPIKey($apiKey)
-    {
-        $node = self::where('api_key', $apiKey)->first();
-        if (!$node) {
-            throw new ModelNotFoundException();
-        }
-        return $node;
-    }
-
 } 

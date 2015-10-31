@@ -175,6 +175,8 @@ Route::group(array('middleware' => 'role:acs'), function() {
 
 //New ACES Endpoint
 Route::get('acs/status/{tagId}', ['uses' => 'ACS\StatusController@show', 'middleware' => 'acs']);
+Route::post('acs/node/boot', ['uses' => 'ACS\NodeController@boot', 'middleware' => 'acs']);
+Route::post('acs/node/heartbeat', ['uses' => 'ACS\NodeController@heartbeat', 'middleware' => 'acs']);
 
 
 ##########################

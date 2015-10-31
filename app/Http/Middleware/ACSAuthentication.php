@@ -2,25 +2,25 @@
 
 namespace BB\Http\Middleware;
 
-use BB\Entities\ACSNode;
 use BB\Exceptions\AuthenticationException;
+use BB\Repo\ACSNodeRepository;
 use Closure;
 
 class ACSAuthentication
 {
     /**
-     * @var ACSNode
+     * @var ACSNodeRepository
      */
-    private $ACSNode;
+    private $ACSNodeRepository;
 
     /**
      * ACSAuthentication constructor.
      *
-     * @param ACSNode $ACSNode
+     * @param ACSNodeRepository $ACSNodeRepository
      */
-    public function __construct(ACSNode $ACSNode)
+    public function __construct(ACSNodeRepository $ACSNodeRepository)
     {
-        $this->ACSNode = $ACSNode;
+        $this->ACSNodeRepository = $ACSNodeRepository;
     }
 
     /**
@@ -34,10 +34,8 @@ class ACSAuthentication
      */
     public function handle($request, Closure $next)
     {
-        $apiKey = $request->header('ApiKey');
-
         try {
-            $node = $this->ACSNode->findByAPIKey($apiKey);
+            $node = $this->ACSNodeRepository->findByAPIKey($request->header('ApiKey'));
         } catch (\Exception $e) {
             throw new AuthenticationException("Key not recognised");
         }
