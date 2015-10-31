@@ -49,19 +49,17 @@ class Handler extends ExceptionHandler {
         if ($e instanceof FormValidationException) {
             if ($request->wantsJson()) {
                 return \Response::json($e->getErrors(), 422);
-            } else {
-                \Notification::error("Something wasn't right, please check the form for errors", $e->getErrors());
-                return redirect()->back()->withInput();
             }
+            \Notification::error("Something wasn't right, please check the form for errors", $e->getErrors());
+            return redirect()->back()->withInput();
         }
 
         if ($e instanceof ValidationException) {
             if ($request->wantsJson()) {
                 return \Response::json($e->getMessage(), 422);
-            } else {
-                \Notification::error($e->getMessage());
-                return redirect()->back()->withInput();
             }
+            \Notification::error($e->getMessage());
+            return redirect()->back()->withInput();
         }
 
         if ($e instanceof NotImplementedException) {
@@ -71,11 +69,10 @@ class Handler extends ExceptionHandler {
         }
 
         if ($e instanceof AuthenticationException) {
-            if (\Auth::guest()) {
-                $userString = "A guest";
-            } else {
-                $userString = \Auth::user()->name;
+            if ($request->wantsJson()) {
+                return \Response::json(['error' => $e->getMessage()], 403);
             }
+            $userString = \Auth::guest() ? "A guest": \Auth::user()->name;
             \Log::warning($userString." tried to access something they weren't supposed to.");
 
             return \Response::view('errors.403', [], 403);
