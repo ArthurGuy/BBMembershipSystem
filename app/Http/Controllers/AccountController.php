@@ -173,7 +173,7 @@ class AccountController extends Controller
         foreach ($inductions as $i=>$induction) {
             $inductions[$i]->userInduction = false;
             foreach ($userInductions as $userInduction) {
-                if ($userInduction->key == $induction->key) {
+                if ($userInduction->key == $induction->device_key) {
                     $inductions[$i]->userInduction = $userInduction;
                 }
             }
