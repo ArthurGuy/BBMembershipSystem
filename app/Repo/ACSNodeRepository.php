@@ -39,6 +39,9 @@ class ACSNodeRepository extends DBRepository
      */
     public function findByAPIKey($apiKey)
     {
+        if (empty($apiKey)) {
+            throw new ModelNotFoundException();
+        }
         $node = $this->model->where('api_key', $apiKey)->first();
         if (!$node) {
             throw new ModelNotFoundException();
