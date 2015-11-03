@@ -15,7 +15,7 @@ Resources > Policy
     <div class="swagger-section">
         <nav id='header' class="navbar navbar-fixed-top">
             <div class="swagger-ui-wrap">
-                <a id="logo" href="http://swagger.io">swagger</a>
+                <a id="logo" href="https://bbms.buildbrighton.com">ACS Docs</a>
                 <form id='api_selector'>
                     <div class='input'><input placeholder="ApiKey" id="input_apiKey" name="apiKey" type="text"/></div>
                 </form>
@@ -42,15 +42,10 @@ Resources > Policy
     <script type="text/javascript">
 
         $(function () {
-            var url = window.location.search.match(/url=([^&]+)/);
-            if (url && url.length > 1) {
-                url = decodeURIComponent(url[1]);
-            } else {
-                url = "{!! $urlToDocs !!}";
-            }
+            var swaggerDocUrl = "{!! $urlToDocs !!}";
 
             window.swaggerUi = new SwaggerUi({
-                url: url,
+                url: swaggerDocUrl,
                 dom_id: "swagger-ui-container",
                 supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
                 onComplete: function (swaggerApi, swaggerUi) {
@@ -100,18 +95,6 @@ Resources > Policy
             }
 
             $('#input_apiKey').change(addApiKeyAuthorization);
-
-            $('#init-oauth').click(function(){
-                if (typeof initOAuth == "function") {
-                    initOAuth({
-                        clientId: $('#input_clientId').val()||"my-client-id",
-                        clientSecret: $('#input_clientSecret').val()||"_",
-                        realm: $('#input_realm').val()||"_",
-                        appName: $('#input_appName').val()||"_",
-                        scopeSeparator: ","
-                    });
-                }
-            });
 
             window.swaggerUi.load();
 
