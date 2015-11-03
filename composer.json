@@ -30,7 +30,8 @@
         "pusher/pusher-php-server": "^2.2",
         "arthurguy/notifications": "~1.0",
         "doctrine/dbal": "^2.6@dev",
-        "itsgoingd/clockwork": "~1.8"
+        "itsgoingd/clockwork": "~1.8",
+        "zircote/swagger-php": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
