@@ -28,6 +28,12 @@ class NodeController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     *
+     * @SWG\Post(
+     *     path="/acs/node/boot",
+     *     @SWG\Response(response="200", description="Boot recorded"),
+     *     security={{"api_key": {}}}
+     * )
      */
     public function boot(Request $request)
     {
@@ -39,6 +45,12 @@ class NodeController extends Controller
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
+     *
+     * @SWG\Post(
+     *     path="/acs/node/heartbeat",
+     *     @SWG\Response(response="200", description="Heartbeat recorded"),
+     *     security={{"api_key": {}}}
+     * )
      */
     public function heartbeat(Request $request)
     {

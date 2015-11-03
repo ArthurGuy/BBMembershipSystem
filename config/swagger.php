@@ -12,26 +12,26 @@ return array(
       | Absolute path to location where parsed swagger annotations will be stored
       |--------------------------------------------------------------------------
     */
-    'doc-dir' => storage_path() . '/docs',
+    'doc-dir'        => storage_path() . '/docs',
 
     /*
       |--------------------------------------------------------------------------
       | Absolute path to directory containing the swagger annotations are stored.
       |--------------------------------------------------------------------------
     */
-    "app-dir" => "/app/Http/Controllers/ACS",
+    "app-dir"        => "/app/Http/Controllers/ACS",
 
     /*
       |--------------------------------------------------------------------------
       | Absolute path to directories that you would like to exclude from swagger generation
       |--------------------------------------------------------------------------
     */
-    "excludes" => array(
+    "excludes"       => array(
         storage_path(),
-        base_path()."/tests",
-        base_path()."/resources/views",
-        base_path()."/config",
-        base_path()."/vendor"
+        base_path() . "/tests",
+        base_path() . "/resources/views",
+        base_path() . "/config",
+        base_path() . "/vendor"
     ),
 
     /*
@@ -41,8 +41,6 @@ return array(
     */
     "generateAlways" => true,
 
-    "api-key" => "auth_token",
-
     /*
       |--------------------------------------------------------------------------
       | Edit to trust the proxy's ip address - needed for AWS Load Balancer
@@ -50,12 +48,4 @@ return array(
     */
     "behind-reverse-proxy" => false,
 
-    /*
-      |--------------------------------------------------------------------------
-      | Uncomment to add request headers when swagger performs requests
-      |--------------------------------------------------------------------------
-    */
-    /*"requestHeaders" => array(
-        'TestMe' => 'testValue'
-    ),*/
 );
