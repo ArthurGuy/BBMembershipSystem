@@ -55,7 +55,7 @@ class ACSNodeRepository extends DBRepository
     public function logBoot($device)
     {
         $record = $this->model->where('device_id', $device)->first();
-        if ( ! $record) {
+        if (!$record) {
             $record = $this->createRecord($device);
         }
         $record->last_boot = Carbon::now();

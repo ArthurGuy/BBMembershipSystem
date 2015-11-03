@@ -13,14 +13,14 @@ Resources > Policy
     <link href='vendor/swaggervel/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
 
     <div class="swagger-section">
-        <div id='header'>
+        <nav id='header' class="navbar navbar-fixed-top">
             <div class="swagger-ui-wrap">
                 <a id="logo" href="http://swagger.io">swagger</a>
                 <form id='api_selector'>
                     <div class='input'><input placeholder="ApiKey" id="input_apiKey" name="apiKey" type="text"/></div>
                 </form>
             </div>
-        </div>
+        </nav>
         <div id="message-bar" class="swagger-ui-wrap">&nbsp;</div>
         <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
     </div>

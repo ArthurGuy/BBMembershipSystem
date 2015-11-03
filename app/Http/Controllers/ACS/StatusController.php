@@ -9,6 +9,15 @@ use Illuminate\Http\Request;
 use BB\Http\Requests;
 use BB\Http\Controllers\Controller;
 
+/**
+ * @SWG\SecurityScheme(
+ *   securityDefinition="api_key",
+ *   type="apiKey",
+ *   in="header",
+ *   name="api_key"
+ * )
+ */
+
 class StatusController extends Controller
 {
 
@@ -19,6 +28,16 @@ class StatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      * @throws ValidationException
+     *
+     * @SWG\Get(
+     *     path="/acs/status/{tagId}",
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(name="tagId", in="path", type="string"),
+     *     @SWG\Response(response="200", description="Tag found"),
+     *     @SWG\Response(response="404", description="Tag not found"),
+     *     security={{"api_key": {}}}
+     * )
+     *
      */
     public function show($tagId)
     {
