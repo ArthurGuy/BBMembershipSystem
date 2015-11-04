@@ -9,15 +9,6 @@ use Illuminate\Http\Request;
 use BB\Http\Requests;
 use BB\Http\Controllers\Controller;
 
-/**
- * @SWG\SecurityScheme(
- *   securityDefinition="api_key",
- *   type="apiKey",
- *   in="header",
- *   name="api_key"
- * )
- */
-
 class StatusController extends Controller
 {
 
@@ -31,6 +22,8 @@ class StatusController extends Controller
      *
      * @SWG\Get(
      *     path="/acs/status/{tagId}",
+     *     tags={"acs"},
+     *     description="Get information about a specific tag and its user",
      *     consumes={"application/json"},
      *     @SWG\Parameter(name="tagId", in="path", type="string"),
      *     @SWG\Response(response="200", description="Tag found"),

@@ -31,6 +31,8 @@ class NodeController extends Controller
      *
      * @SWG\Post(
      *     path="/acs/node/boot",
+     *     tags={"acs"},
+     *     description="Record a bootup/startup of an acs node",
      *     @SWG\Response(response="200", description="Boot recorded"),
      *     security={{"api_key": {}}}
      * )
@@ -48,6 +50,8 @@ class NodeController extends Controller
      *
      * @SWG\Post(
      *     path="/acs/node/heartbeat",
+     *     tags={"acs"},
+     *     description="Record a heartbeat message, used to determin if the device is online",
      *     @SWG\Response(response="200", description="Heartbeat recorded"),
      *     security={{"api_key": {}}}
      * )

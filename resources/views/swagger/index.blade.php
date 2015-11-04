@@ -1,11 +1,11 @@
 @extends('layouts.bare')
 
 @section('meta-title')
-Resources > Policy
+    Build Brighton API Docs
 @stop
 
 @section('page-title')
-Resources > Policy
+    Build Brighton API Docs
 @stop
 
 @section('content')
@@ -15,7 +15,7 @@ Resources > Policy
     <div class="swagger-section">
         <nav id='header' class="navbar navbar-fixed-top">
             <div class="swagger-ui-wrap">
-                <a id="logo" href="https://bbms.buildbrighton.com">ACS Docs</a>
+                <a id="logo" href="https://bbms.buildbrighton.com">Build Brighton API Docs</a>
                 <form id='api_selector'>
                     <div class='input'><input placeholder="ApiKey" id="input_apiKey" name="apiKey" type="text"/></div>
                 </form>
