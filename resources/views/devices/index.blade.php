@@ -12,12 +12,12 @@
 @section('content')
 
 
-<table class="table memberList">
+<table class="table">
     <thead>
         <tr>
             <th>Name</th>
             <th>Device ID</th>
-            <th>Queued Commands</th>
+            <th>API Key</th>
             <th>Last Heartbeat</th>
             <th>Last Boot</th>
         </tr>
