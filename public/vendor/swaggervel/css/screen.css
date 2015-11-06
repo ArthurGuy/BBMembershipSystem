@@ -1,4 +1,7 @@
 /* Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Org> */
+.swagger-section {
+  margin-top: 30px;
+}
 .swagger-section pre code {
   display: block;
   padding: 0.5em;
@@ -1216,7 +1219,7 @@
   cursor: pointer;
 }
 .swagger-section #header {
-  background-color: #89bf04;
+  background-color: #1e8c99;
   padding: 14px;
 }
 .swagger-section #header a#logo {
