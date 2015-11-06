@@ -9,24 +9,31 @@ use Swagger\Annotations as SWG;
 class Activity
 {
     /**
-     * @SWG\Property()
+     * @SWG\Property(description="The RFID Tag ID")
      * @var string
      */
     private $tagId;
 
     /**
-     * @SWG\Property()
+     * @SWG\Property(description="The String of the device being controlled")
      * @var string
      */
     private $device;
+
+    /**
+     * @SWG\Property(description="Date Time of the event, YYYY-MM-DD HH:mm:ss")
+     * @var string
+     */
+    private $occurredAt;
 
     /**
      * Activity constructor.
      */
     public function __construct(Request $request)
     {
-        $this->tagId = $request->get('tagId');
-        $this->device = $request->get('device');
+        $this->tagId      = $request->get('tagId');
+        $this->device     = $request->get('device');
+        $this->occurredAt = $request->get('occurredAt');
     }
 
     /**
@@ -43,5 +50,13 @@ class Activity
     public function getDevice()
     {
         return $this->device;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOccurredAt()
+    {
+        return $this->occurredAt;
     }
 }

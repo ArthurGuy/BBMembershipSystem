@@ -48,7 +48,7 @@ class ActivityController extends Controller
      *     tags={"activity"},
      *     description="Record the start of a period of activity, e.g. someone signing into the laser cutter",
      *     @SWG\Parameter(name="activity", in="body", required=true, @SWG\Schema(ref="#/definitions/Activity")),
-     *     @SWG\Response(response="201", description="Activity started"),
+     *     @SWG\Response(response="201", description="Activity started, the body will contain the new activityId"),
      *     @SWG\Response(response="404", description="Key fob not found"),
      *     security={{"api_key": {}}}
      * )
@@ -63,7 +63,7 @@ class ActivityController extends Controller
 
         event(new MemberActivity($keyFob, $activityRequest->getDevice()));
 
-        return ['activityId' => $activityId];
+        return response()->json(['activityId' => $activityId], 201);
     }
 
     /**
@@ -86,7 +86,7 @@ class ActivityController extends Controller
 
         $this->equipmentLogRepository->recordActivity($activityId);
 
-        return ['activityId' => $activityId];
+        return response()->json([], 200);
     }
 
     /**
@@ -110,7 +110,7 @@ class ActivityController extends Controller
 
         $this->equipmentLogRepository->endSession($activityId);
 
-        return ['activityId' => $activityId];
+        return response()->json([], 204);
     }
 
 }
