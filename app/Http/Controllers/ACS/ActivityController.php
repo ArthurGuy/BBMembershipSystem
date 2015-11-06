@@ -63,7 +63,18 @@ class ActivityController extends Controller
 
         event(new MemberActivity($keyFob, $activityRequest->getDevice()));
 
-        return response()->json(['activityId' => $activityId], 201);
+        return response()->json([
+            'activityId' => $activityId,
+            'user'       => [
+                'id'              => $keyFob->user->id,
+                'name'            => $keyFob->user->name,
+                'status'          => $keyFob->user->status,
+                'active'          => $keyFob->user->active,
+                'key_holder'      => $keyFob->user->key_holder,
+                'cash_balance'    => $keyFob->user->cash_balance,
+                'profile_private' => $keyFob->user->profile_private,
+            ]
+        ], 201);
     }
 
     /**
