@@ -86,7 +86,7 @@ class ActivityController extends Controller
 
         $this->equipmentLogRepository->recordActivity($activityId);
 
-        return $activityId;
+        return ['activityId' => $activityId];
     }
 
     /**
@@ -110,7 +110,7 @@ class ActivityController extends Controller
 
         $this->equipmentLogRepository->endSession($activityId);
 
-        return $activityId;
+        return ['activityId' => $activityId];
     }
 
 }
