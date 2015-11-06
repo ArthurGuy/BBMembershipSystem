@@ -48,28 +48,13 @@
                 url: swaggerDocUrl,
                 dom_id: "swagger-ui-container",
                 supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+                validatorUrl: null,
+                docExpansion: "list",
+                apisSorter: "alpha",
+                showRequestHeaders: false,
                 onComplete: function (swaggerApi, swaggerUi) {
 
                     console.log("Loaded SwaggerUI");
-                    @if (isset($requestHeaders))
-                    @foreach($requestHeaders as $requestKey => $requestValue)
-                    window.authorizations.add("{!!$requestKey!!}", new ApiKeyAuthorization("{!!$requestKey!!}", "{!!$requestValue!!}", "header"));
-                    @endforeach
-                    @endif
-
-                    if (typeof initOAuth == "function") {
-                        initOAuth({
-                            clientId: "{!! $clientId !!}"||"my-client-id",
-                            clientSecret: "{!! $clientSecret !!}"||"_",
-                            realm: "{!! $realm !!}"||"_",
-                            appName: "{!! $appName !!}"||"_",
-                            scopeSeparator: ","
-                        });
-
-                        window.oAuthRedirectUrl = "{{ url('vendor/swaggervel/o2c.html') }}";
-                        $('#clientId').html("{!! $clientId !!}"||"my-client-id");
-                        $('#redirectUrl').html(window.oAuthRedirectUrl);
-                    }
 
                     $('pre code').each(function (i, e) {
                         hljs.highlightBlock(e)
@@ -79,10 +64,7 @@
                 },
                 onFailure: function (data) {
                     console.log("Unable to Load SwaggerUI");
-                },
-                docExpansion: "none",
-                apisSorter: "alpha",
-                showRequestHeaders: false
+                }
             });
 
             function addApiKeyAuthorization() {

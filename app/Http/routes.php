@@ -179,6 +179,9 @@ Route::get('acs/status/{tagId}', ['uses' => 'ACS\StatusController@show', 'middle
 Route::post('acs/node/boot', ['uses' => 'ACS\NodeController@boot', 'middleware' => 'acs']);
 Route::post('acs/node/heartbeat', ['uses' => 'ACS\NodeController@heartbeat', 'middleware' => 'acs']);
 
+Route::post('acs/activity', ['uses' => 'ACS\ActivityController@store', 'middleware' => 'acs']);
+Route::put('acs/activity/{sessionId}', ['uses' => 'ACS\ActivityController@update', 'middleware' => 'acs']);
+Route::delete('acs/activity/{sessionId}', ['uses' => 'ACS\ActivityController@destroy', 'middleware' => 'acs']);
 
 ##########################
 # Activity Page

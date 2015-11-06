@@ -6,6 +6,7 @@ use BB\Events\MemberActivity;
 use BB\Exceptions\ValidationException;
 use BB\Repo\ActivityRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class KeyFobAccess
 {
@@ -192,6 +193,36 @@ class KeyFobAccess
             }
             return $keyFob;
         }
+    }
+
+    /**
+     * @param $keyId
+     *
+     * @return KeyFob
+     */
+    public function extendedKeyFobLookup($keyId)
+    {
+        try {
+            $keyFob = KeyFob::lookup($keyId);
+        } catch (\Exception $e) {
+            $oldTagId = substr('BB' . $keyId, 0, 12);
+            try {
+                $keyFob = KeyFob::lookup($oldTagId);
+            } catch (\Exception $e) {
+
+                //The ids coming in will have no checksum (last 2 digits) and the first digit will be incorrect
+
+                //Remove the first character
+                $keyId = substr($keyId, 1);
+
+                try {
+                    $keyFob = KeyFob::lookupPartialTag($keyId);
+                } catch (\Exception $e) {
+                    throw new ModelNotFoundException('Key fob ID not found');
+                }
+            }
+        }
+        return $keyFob;
     }
 
 

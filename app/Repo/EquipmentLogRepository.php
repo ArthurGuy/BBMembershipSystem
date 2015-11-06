@@ -1,6 +1,8 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\EquipmentLog;
+use BB\Exceptions\DeviceException;
+use BB\Exceptions\ValidationException;
 use Carbon\Carbon;
 
 class EquipmentLogRepository extends DBRepository
@@ -93,6 +95,9 @@ class EquipmentLogRepository extends DBRepository
     public function recordActivity($sessionId)
     {
         $existingSession = $this->model->findOrFail($sessionId);
+        if ($existingSession->finished) {
+            throw new DeviceException(400, "Session already finished");
+        }
         $existingSession->last_update = Carbon::now();
         $existingSession->save();
     }
@@ -107,6 +112,9 @@ class EquipmentLogRepository extends DBRepository
         $existingSession = $this->model->findOrFail($sessionId);
         if ($finishedDate === null) {
             $finishedDate = Carbon::now();
+        }
+        if ($existingSession->finished) {
+            throw new DeviceException(400, "Session already finished");
         }
         $existingSession->finished = $finishedDate;
         $existingSession->active = 0;

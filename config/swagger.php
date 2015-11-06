@@ -19,7 +19,7 @@ return array(
       | Absolute path to directory containing the swagger annotations are stored.
       |--------------------------------------------------------------------------
     */
-    "app-dir"        => "/app/Http/Controllers/ACS",
+    "app-dir"        => "/app/Http/",
 
     /*
       |--------------------------------------------------------------------------
