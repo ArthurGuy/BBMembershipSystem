@@ -56,14 +56,14 @@ class ActivityController extends Controller
     public function store(Request $request)
     {
         $activityRequest = new Requests\ACS\Activity($request);
-        
+
         $keyFob = $this->fobAccess->extendedKeyFobLookup($activityRequest->getTagId());
 
         $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $activityRequest->getDevice());
 
         event(new MemberActivity($keyFob, $activityRequest->getDevice()));
 
-        return $activityId;
+        return ['activityId' => $activityId];
     }
 
     /**
