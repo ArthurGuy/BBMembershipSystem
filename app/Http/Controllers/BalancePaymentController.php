@@ -51,7 +51,7 @@ class BalancePaymentController extends Controller
         $userBalance = $this->bbCredit->getBalance();
 
         //With this payment will the users balance go to low?
-        if (($userBalance - $amount) < $minimumBalance) {
+        if (($userBalance - $amount) < -$minimumBalance) {
 
             if (\Request::wantsJson()) {
                 return \Response::json(['error' => 'You don\'t have the money for this'], 400);
