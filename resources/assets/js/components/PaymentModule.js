@@ -34,6 +34,13 @@ class PaymentModule extends React.Component {
             {key:'balance', value:'Balance'},
             {key:'stripe', value:'Credit/Debit Card'}
         ];
+
+        this.availablePaymentMethods = this.getPaymentMethodArray();
+    }
+
+    componentDidMount() {
+        //Set the default payment method to be the first item in the array, the one the user sees
+        this.setState({method:this.availablePaymentMethods[0].key});
     }
 
     handleAmountChange(event) {
@@ -183,7 +190,7 @@ class PaymentModule extends React.Component {
 
                 { amountField }
 
-                <Select value={this.state.method} onChange={this.handleMethodChange} options={this.getPaymentMethodArray()} style={{width:150}} />
+                <Select value={this.state.method} onChange={this.handleMethodChange} options={this.availablePaymentMethods} style={{width:150}} />
 
                 <button className="btn btn-primary" disabled={this.state.requestInProgress} onClick={x => this.handleSubmit(x)}>{this.props.buttonLabel}</button>
 

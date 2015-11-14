@@ -44,7 +44,7 @@ if (privateMemberChannel) {
     notifications.fetch(); //fetch the current data once so it can be used in various places
 
     //If a new notification is received by pusher add it to the collection
-    privateMemberChannel.bind('BB\\Events\\NewMemberNotification', function (data) {
+    privateMemberChannel.bind("BB\\Events\\NewMemberNotification", function (data) {
         notifications.add(data.notification);
     });
 }
@@ -97,7 +97,7 @@ if (memberExpensesPanel.length) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AdminForms":478,"./FeedbackWidget":479,"./SiteInteraction":480,"./Snackbar":481,"./collections/Expenses":482,"./collections/Notifications":483,"./components/FilterablePaymentTable":484,"./components/PaymentModule":485,"./components/expenses/MemberExpenses":490,"./components/notifications/NotificationCount":493,"./components/notifications/NotificationsTable":495,"bootstrap":5,"jquery":49,"react":475}],2:[function(require,module,exports){
+},{"./AdminForms":478,"./FeedbackWidget":479,"./SiteInteraction":480,"./Snackbar":481,"./collections/Expenses":482,"./collections/Notifications":483,"./components/FilterablePaymentTable":484,"./components/PaymentModule":485,"./components/expenses/MemberExpenses":490,"./components/notifications/NotificationCount":493,"./components/notifications/NotificationsTable":495,"bootstrap":5,"jquery":46,"react":475}],2:[function(require,module,exports){
 //     Backbone.Model File Upload v1.0.0
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
@@ -272,9 +272,9 @@ if (memberExpensesPanel.length) {
 
 }));
 
-},{"backbone":3,"jquery":49,"underscore":477}],3:[function(require,module,exports){
+},{"backbone":3,"jquery":46,"underscore":477}],3:[function(require,module,exports){
 (function (global){
-//     Backbone.js 1.2.1
+//     Backbone.js 1.2.3
 
 //     (c) 2010-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Backbone may be freely distributed under the MIT license.
@@ -317,10 +317,10 @@ if (memberExpensesPanel.length) {
   var previousBackbone = root.Backbone;
 
   // Create a local reference to a common array method we'll want to use later.
-  var slice = [].slice;
+  var slice = Array.prototype.slice;
 
   // Current version of the library. Keep in sync with `package.json`.
-  Backbone.VERSION = '1.2.1';
+  Backbone.VERSION = '1.2.3';
 
   // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
   // the `$` variable.
@@ -344,8 +344,13 @@ if (memberExpensesPanel.length) {
   // form param named `model`.
   Backbone.emulateJSON = false;
 
-  // Proxy Underscore methods to a Backbone class' prototype using a
-  // particular attribute as the data argument
+  // Proxy Backbone class methods to Underscore functions, wrapping the model's
+  // `attributes` object or collection's `models` array behind the scenes.
+  //
+  // collection.filter(function(model) { return model.get('age') > 10 });
+  // collection.each(this.addView);
+  //
+  // `Function#apply` can be slow so we use the method's arg count, if we know it.
   var addMethod = function(length, method, attribute) {
     switch (length) {
       case 1: return function() {
@@ -355,10 +360,10 @@ if (memberExpensesPanel.length) {
         return _[method](this[attribute], value);
       };
       case 3: return function(iteratee, context) {
-        return _[method](this[attribute], iteratee, context);
+        return _[method](this[attribute], cb(iteratee, this), context);
       };
       case 4: return function(iteratee, defaultVal, context) {
-        return _[method](this[attribute], iteratee, defaultVal, context);
+        return _[method](this[attribute], cb(iteratee, this), defaultVal, context);
       };
       default: return function() {
         var args = slice.call(arguments);
@@ -373,12 +378,26 @@ if (memberExpensesPanel.length) {
     });
   };
 
+  // Support `collection.sortBy('attr')` and `collection.findWhere({id: 1})`.
+  var cb = function(iteratee, instance) {
+    if (_.isFunction(iteratee)) return iteratee;
+    if (_.isObject(iteratee) && !instance._isModel(iteratee)) return modelMatcher(iteratee);
+    if (_.isString(iteratee)) return function(model) { return model.get(iteratee); };
+    return iteratee;
+  };
+  var modelMatcher = function(attrs) {
+    var matcher = _.matches(attrs);
+    return function(model) {
+      return matcher(model.attributes);
+    };
+  };
+
   // Backbone.Events
   // ---------------
 
   // A module that can be mixed in to *any object* in order to provide it with
-  // custom events. You may bind with `on` or remove with `off` callback
-  // functions to an event; `trigger`-ing an event fires all callbacks in
+  // a custom event channel. You may bind a callback to an event with `on` or
+  // remove with `off`; `trigger`-ing an event fires all callbacks in
   // succession.
   //
   //     var object = {};
@@ -393,26 +412,25 @@ if (memberExpensesPanel.length) {
 
   // Iterates over the standard `event, callback` (as well as the fancy multiple
   // space-separated events `"change blur", callback` and jQuery-style event
-  // maps `{event: callback}`), reducing them by manipulating `memo`.
-  // Passes a normalized single event name and callback, as well as any
-  // optional `opts`.
-  var eventsApi = function(iteratee, memo, name, callback, opts) {
+  // maps `{event: callback}`).
+  var eventsApi = function(iteratee, events, name, callback, opts) {
     var i = 0, names;
     if (name && typeof name === 'object') {
       // Handle event maps.
       if (callback !== void 0 && 'context' in opts && opts.context === void 0) opts.context = callback;
       for (names = _.keys(name); i < names.length ; i++) {
-        memo = iteratee(memo, names[i], name[names[i]], opts);
+        events = eventsApi(iteratee, events, names[i], name[names[i]], opts);
       }
     } else if (name && eventSplitter.test(name)) {
-      // Handle space separated event names.
+      // Handle space separated event names by delegating them individually.
       for (names = name.split(eventSplitter); i < names.length; i++) {
-        memo = iteratee(memo, names[i], callback, opts);
+        events = iteratee(events, names[i], callback, opts);
       }
     } else {
-      memo = iteratee(memo, name, callback, opts);
+      // Finally, standard events.
+      events = iteratee(events, name, callback, opts);
     }
-    return memo;
+    return events;
   };
 
   // Bind an event to a `callback` function. Passing `"all"` will bind
@@ -421,8 +439,7 @@ if (memberExpensesPanel.length) {
     return internalOn(this, name, callback, context);
   };
 
-  // An internal use `on` function, used to guard the `listening` argument from
-  // the public API.
+  // Guard the `listening` argument from the public API.
   var internalOn = function(obj, name, callback, context, listening) {
     obj._events = eventsApi(onApi, obj._events || {}, name, callback, {
         context: context,
@@ -439,7 +456,8 @@ if (memberExpensesPanel.length) {
   };
 
   // Inversion-of-control versions of `on`. Tell *this* object to listen to
-  // an event in another object... keeping track of what it's listening to.
+  // an event in another object... keeping track of what it's listening to
+  // for easier unbinding later.
   Events.listenTo =  function(obj, name, callback) {
     if (!obj) return this;
     var id = obj._listenId || (obj._listenId = _.uniqueId('l'));
@@ -507,7 +525,6 @@ if (memberExpensesPanel.length) {
 
   // The reducing API that removes a callback from the `events` object.
   var offApi = function(events, name, callback, options) {
-    // No events to consider.
     if (!events) return;
 
     var i = 0, listening;
@@ -562,9 +579,9 @@ if (memberExpensesPanel.length) {
   };
 
   // Bind an event to only be triggered a single time. After the first time
-  // the callback is invoked, it will be removed. When multiple events are
-  // passed in using the space-separated syntax, the event will fire once for every
-  // event you passed in, not once for a combination of all events
+  // the callback is invoked, its listener will be removed. If multiple events
+  // are passed in using the space-separated syntax, the handler will fire
+  // once for each event, not once for a combination of all events.
   Events.once =  function(name, callback, context) {
     // Map the event into a `{event: once}` object.
     var events = eventsApi(onceMap, {}, name, callback, _.bind(this.off, this));
@@ -752,9 +769,6 @@ if (memberExpensesPanel.length) {
       var changed = this.changed;
       var prev    = this._previousAttributes;
 
-      // Check for changes of `id`.
-      if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
-
       // For each `set` attribute, update or delete the current value.
       for (var attr in attrs) {
         val = attrs[attr];
@@ -766,6 +780,9 @@ if (memberExpensesPanel.length) {
         }
         unset ? delete current[attr] : current[attr] = val;
       }
+
+      // Update the `id`.
+      this.id = this.get(this.idAttribute);
 
       // Trigger all relevant attribute changes.
       if (!silent) {
@@ -989,7 +1006,8 @@ if (memberExpensesPanel.length) {
 
   });
 
-  // Underscore methods that we want to implement on the Model.
+  // Underscore methods that we want to implement on the Model, mapped to the
+  // number of arguments they take.
   var modelMethods = { keys: 1, values: 1, pairs: 1, invert: 1, pick: 0,
       omit: 0, chain: 1, isEmpty: 1 };
 
@@ -1022,6 +1040,16 @@ if (memberExpensesPanel.length) {
   var setOptions = {add: true, remove: true, merge: true};
   var addOptions = {add: true, remove: false};
 
+  // Splices `insert` into `array` at index `at`.
+  var splice = function(array, insert, at) {
+    at = Math.min(Math.max(at, 0), array.length);
+    var tail = Array(array.length - at);
+    var length = insert.length;
+    for (var i = 0; i < tail.length; i++) tail[i] = array[i + at];
+    for (i = 0; i < length; i++) array[i + at] = insert[i];
+    for (i = 0; i < tail.length; i++) array[i + length + at] = tail[i];
+  };
+
   // Define the Collection's inheritable methods.
   _.extend(Collection.prototype, Events, {
 
@@ -1044,7 +1072,9 @@ if (memberExpensesPanel.length) {
       return Backbone.sync.apply(this, arguments);
     },
 
-    // Add a model, or list of models to the set.
+    // Add a model, or list of models to the set. `models` may be Backbone
+    // Models or raw JavaScript objects to be converted to Models, or any
+    // combination of the two.
     add: function(models, options) {
       return this.set(models, _.extend({merge: false}, options, addOptions));
     },
@@ -1064,83 +1094,88 @@ if (memberExpensesPanel.length) {
     // already exist in the collection, as necessary. Similar to **Model#set**,
     // the core operation for updating the data contained by the collection.
     set: function(models, options) {
+      if (models == null) return;
+
       options = _.defaults({}, options, setOptions);
       if (options.parse && !this._isModel(models)) models = this.parse(models, options);
+
       var singular = !_.isArray(models);
-      models = singular ? (models ? [models] : []) : models.slice();
-      var id, model, attrs, existing, sort;
+      models = singular ? [models] : models.slice();
+
       var at = options.at;
       if (at != null) at = +at;
       if (at < 0) at += this.length + 1;
+
+      var set = [];
+      var toAdd = [];
+      var toRemove = [];
+      var modelMap = {};
+
+      var add = options.add;
+      var merge = options.merge;
+      var remove = options.remove;
+
+      var sort = false;
       var sortable = this.comparator && (at == null) && options.sort !== false;
       var sortAttr = _.isString(this.comparator) ? this.comparator : null;
-      var toAdd = [], toRemove = [], modelMap = {};
-      var add = options.add, merge = options.merge, remove = options.remove;
-      var order = !sortable && add && remove ? [] : false;
-      var orderChanged = false;
 
       // Turn bare objects into model references, and prevent invalid models
       // from being added.
+      var model;
       for (var i = 0; i < models.length; i++) {
-        attrs = models[i];
+        model = models[i];
 
         // If a duplicate is found, prevent it from being added and
         // optionally merge it into the existing model.
-        if (existing = this.get(attrs)) {
-          if (remove) modelMap[existing.cid] = true;
-          if (merge && attrs !== existing) {
-            attrs = this._isModel(attrs) ? attrs.attributes : attrs;
+        var existing = this.get(model);
+        if (existing) {
+          if (merge && model !== existing) {
+            var attrs = this._isModel(model) ? model.attributes : model;
             if (options.parse) attrs = existing.parse(attrs, options);
             existing.set(attrs, options);
-            if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
+            if (sortable && !sort) sort = existing.hasChanged(sortAttr);
+          }
+          if (!modelMap[existing.cid]) {
+            modelMap[existing.cid] = true;
+            set.push(existing);
           }
           models[i] = existing;
 
         // If this is a new, valid model, push it to the `toAdd` list.
         } else if (add) {
-          model = models[i] = this._prepareModel(attrs, options);
-          if (!model) continue;
-          toAdd.push(model);
-          this._addReference(model, options);
+          model = models[i] = this._prepareModel(model, options);
+          if (model) {
+            toAdd.push(model);
+            this._addReference(model, options);
+            modelMap[model.cid] = true;
+            set.push(model);
+          }
         }
-
-        // Do not add multiple models with the same `id`.
-        model = existing || model;
-        if (!model) continue;
-        id = this.modelId(model.attributes);
-        if (order && (model.isNew() || !modelMap[id])) {
-          order.push(model);
-
-          // Check to see if this is actually a new model at this index.
-          orderChanged = orderChanged || !this.models[i] || model.cid !== this.models[i].cid;
-        }
-
-        modelMap[id] = true;
       }
 
-      // Remove nonexistent models if appropriate.
+      // Remove stale models.
       if (remove) {
-        for (var i = 0; i < this.length; i++) {
-          if (!modelMap[(model = this.models[i]).cid]) toRemove.push(model);
+        for (i = 0; i < this.length; i++) {
+          model = this.models[i];
+          if (!modelMap[model.cid]) toRemove.push(model);
         }
         if (toRemove.length) this._removeModels(toRemove, options);
       }
 
       // See if sorting is needed, update `length` and splice in new models.
-      if (toAdd.length || orderChanged) {
+      var orderChanged = false;
+      var replace = !sortable && add && remove;
+      if (set.length && replace) {
+        orderChanged = this.length != set.length || _.some(this.models, function(model, index) {
+          return model !== set[index];
+        });
+        this.models.length = 0;
+        splice(this.models, set, 0);
+        this.length = this.models.length;
+      } else if (toAdd.length) {
         if (sortable) sort = true;
-        this.length += toAdd.length;
-        if (at != null) {
-          for (var i = 0; i < toAdd.length; i++) {
-            this.models.splice(at + i, 0, toAdd[i]);
-          }
-        } else {
-          if (order) this.models.length = 0;
-          var orderedModels = order || toAdd;
-          for (var i = 0; i < orderedModels.length; i++) {
-            this.models.push(orderedModels[i]);
-          }
-        }
+        splice(this.models, toAdd, at == null ? this.length : at);
+        this.length = this.models.length;
       }
 
       // Silently sort the collection if appropriate.
@@ -1148,10 +1183,10 @@ if (memberExpensesPanel.length) {
 
       // Unless silenced, it's time to fire all appropriate add/sort events.
       if (!options.silent) {
-        var addOpts = at != null ? _.clone(options) : options;
-        for (var i = 0; i < toAdd.length; i++) {
-          if (at != null) addOpts.index = at + i;
-          (model = toAdd[i]).trigger('add', model, this, addOpts);
+        for (i = 0; i < toAdd.length; i++) {
+          if (at != null) options.index = at + i;
+          model = toAdd[i];
+          model.trigger('add', model, this, options);
         }
         if (sort || orderChanged) this.trigger('sort', this, options);
         if (toAdd.length || toRemove.length) this.trigger('update', this, options);
@@ -1220,10 +1255,7 @@ if (memberExpensesPanel.length) {
     // Return models with matching attributes. Useful for simple cases of
     // `filter`.
     where: function(attrs, first) {
-      var matches = _.matches(attrs);
-      return this[first ? 'find' : 'filter'](function(model) {
-        return matches(model.attributes);
-      });
+      return this[first ? 'find' : 'filter'](attrs);
     },
 
     // Return the first model with matching attributes. Useful for simple cases
@@ -1236,16 +1268,19 @@ if (memberExpensesPanel.length) {
     // normal circumstances, as the set will maintain sort order as each item
     // is added.
     sort: function(options) {
-      if (!this.comparator) throw new Error('Cannot sort a set without a comparator');
+      var comparator = this.comparator;
+      if (!comparator) throw new Error('Cannot sort a set without a comparator');
       options || (options = {});
 
-      // Run sort based on type of `comparator`.
-      if (_.isString(this.comparator) || this.comparator.length === 1) {
-        this.models = this.sortBy(this.comparator, this);
-      } else {
-        this.models.sort(_.bind(this.comparator, this));
-      }
+      var length = comparator.length;
+      if (_.isFunction(comparator)) comparator = _.bind(comparator, this);
 
+      // Run sort based on type of `comparator`.
+      if (length === 1 || _.isString(comparator)) {
+        this.models = this.sortBy(comparator);
+      } else {
+        this.models.sort(comparator);
+      }
       if (!options.silent) this.trigger('sort', this, options);
       return this;
     },
@@ -1334,7 +1369,6 @@ if (memberExpensesPanel.length) {
     },
 
     // Internal method called by both remove and set.
-    // Returns removed models, or false if nothing is removed.
     _removeModels: function(models, options) {
       var removed = [];
       for (var i = 0; i < models.length; i++) {
@@ -1404,28 +1438,15 @@ if (memberExpensesPanel.length) {
   // right here:
   var collectionMethods = { forEach: 3, each: 3, map: 3, collect: 3, reduce: 4,
       foldl: 4, inject: 4, reduceRight: 4, foldr: 4, find: 3, detect: 3, filter: 3,
-      select: 3, reject: 3, every: 3, all: 3, some: 3, any: 3, include: 2,
-      contains: 2, invoke: 0, max: 3, min: 3, toArray: 1, size: 1, first: 3,
+      select: 3, reject: 3, every: 3, all: 3, some: 3, any: 3, include: 3, includes: 3,
+      contains: 3, invoke: 0, max: 3, min: 3, toArray: 1, size: 1, first: 3,
       head: 3, take: 3, initial: 3, rest: 3, tail: 3, drop: 3, last: 3,
       without: 0, difference: 0, indexOf: 3, shuffle: 1, lastIndexOf: 3,
-      isEmpty: 1, chain: 1, sample: 3, partition: 3 };
+      isEmpty: 1, chain: 1, sample: 3, partition: 3, groupBy: 3, countBy: 3,
+      sortBy: 3, indexBy: 3};
 
   // Mix in each Underscore method as a proxy to `Collection#models`.
   addUnderscoreMethods(Collection, collectionMethods, 'models');
-
-  // Underscore methods that take a property name as an argument.
-  var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
-
-  // Use attributes instead of properties.
-  _.each(attributeMethods, function(method) {
-    if (!_[method]) return;
-    Collection.prototype[method] = function(value, context) {
-      var iterator = _.isFunction(value) ? value : function(model) {
-        return model.get(value);
-      };
-      return _[method](this.models, iterator, context);
-    };
-  });
 
   // Backbone.View
   // -------------
@@ -1450,7 +1471,7 @@ if (memberExpensesPanel.length) {
   // Cached regex to split keys for `delegate`.
   var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 
-  // List of view options to be merged as properties.
+  // List of view options to be set as properties.
   var viewOptions = ['model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName', 'events'];
 
   // Set up all inheritable **Backbone.View** properties and methods.
@@ -1794,7 +1815,7 @@ if (memberExpensesPanel.length) {
   // falls back to polling.
   var History = Backbone.History = function() {
     this.handlers = [];
-    _.bindAll(this, 'checkUrl');
+    this.checkUrl = _.bind(this.checkUrl, this);
 
     // Ensure that `History` can be used outside of the browser.
     if (typeof window !== 'undefined') {
@@ -1887,7 +1908,7 @@ if (memberExpensesPanel.length) {
       this.options          = _.extend({root: '/'}, this.options, options);
       this.root             = this.options.root;
       this._wantsHashChange = this.options.hashChange !== false;
-      this._hasHashChange   = 'onhashchange' in window;
+      this._hasHashChange   = 'onhashchange' in window && (document.documentMode === void 0 || document.documentMode > 7);
       this._useHashChange   = this._wantsHashChange && this._hasHashChange;
       this._wantsPushState  = !!this.options.pushState;
       this._hasPushState    = !!(this.history && this.history.pushState);
@@ -2006,7 +2027,7 @@ if (memberExpensesPanel.length) {
       // If the root doesn't match, no routes can match either.
       if (!this.matchRoot()) return false;
       fragment = this.fragment = this.getFragment(fragment);
-      return _.any(this.handlers, function(handler) {
+      return _.some(this.handlers, function(handler) {
         if (handler.route.test(fragment)) {
           handler.callback(fragment);
           return true;
@@ -2149,14 +2170,22 @@ if (memberExpensesPanel.length) {
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":49,"underscore":477}],4:[function(require,module,exports){
+},{"jquery":46,"underscore":477}],4:[function(require,module,exports){
 /*!
- * Datepicker for Bootstrap v1.4.0 (https://github.com/eternicode/bootstrap-datepicker)
+ * Datepicker for Bootstrap v1.5.0 (https://github.com/eternicode/bootstrap-datepicker)
  *
  * Copyright 2012 Stefan Petre
  * Improvements by Andrew Rowls
  * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
- */(function($, undefined){
+ */(function(factory){
+    if (typeof define === "function" && define.amd) {
+        define(["jquery"], factory);
+    } else if (typeof exports === 'object') {
+        factory(require('jquery'));
+    } else {
+        factory(jQuery);
+    }
+}(function($, undefined){
 
 	function UTCDate(){
 		return new Date(Date.UTC.apply(Date, arguments));
@@ -2176,6 +2205,9 @@ if (memberExpensesPanel.length) {
 		return function(){
 			return this[method].apply(this, arguments);
 		};
+	}
+	function isValidDate(d) {
+		return d && !isNaN(d.getTime());
 	}
 
 	var DateArray = (function(){
@@ -2267,6 +2299,7 @@ if (memberExpensesPanel.length) {
 		this.setStartDate(this._o.startDate);
 		this.setEndDate(this._o.endDate);
 		this.setDaysOfWeekDisabled(this.o.daysOfWeekDisabled);
+		this.setDaysOfWeekHighlighted(this.o.daysOfWeekHighlighted);
 		this.setDatesDisabled(this.o.datesDisabled);
 
 		this.fillDow();
@@ -2327,6 +2360,20 @@ if (memberExpensesPanel.length) {
 					o.minViewMode = 0;
 			}
 
+			switch (o.maxViewMode) {
+				case 0:
+				case 'days':
+					o.maxViewMode = 0;
+					break;
+				case 1:
+				case 'months':
+					o.maxViewMode = 1;
+					break;
+				default:
+					o.maxViewMode = 2;
+			}
+
+			o.startView = Math.min(o.startView, o.maxViewMode);
 			o.startView = Math.max(o.startView, o.minViewMode);
 
 			// true, false, or Number > 0
@@ -2368,6 +2415,13 @@ if (memberExpensesPanel.length) {
 			if (!$.isArray(o.daysOfWeekDisabled))
 				o.daysOfWeekDisabled = o.daysOfWeekDisabled.split(/[,\s]*/);
 			o.daysOfWeekDisabled = $.map(o.daysOfWeekDisabled, function(d){
+				return parseInt(d, 10);
+			});
+
+			o.daysOfWeekHighlighted = o.daysOfWeekHighlighted||[];
+			if (!$.isArray(o.daysOfWeekHighlighted))
+				o.daysOfWeekHighlighted = o.daysOfWeekHighlighted.split(/[,\s]*/);
+			o.daysOfWeekHighlighted = $.map(o.daysOfWeekHighlighted, function(d){
 				return parseInt(d, 10);
 			});
 
@@ -2421,6 +2475,7 @@ if (memberExpensesPanel.length) {
 				o.defaultViewDate = UTCToday();
 			}
 			o.showOnFocus = o.showOnFocus !== undefined ? o.showOnFocus : true;
+			o.zIndexOffset = o.zIndexOffset !== undefined ? o.zIndexOffset : 10;
 		},
 		_events: [],
 		_secondaryEvents: [],
@@ -2458,7 +2513,8 @@ if (memberExpensesPanel.length) {
                     if ($.inArray(e.keyCode, [27, 37, 39, 38, 40, 32, 13, 9]) === -1)
                         this.update();
                 }, this),
-                keydown: $.proxy(this.keydown, this)
+                keydown: $.proxy(this.keydown, this),
+                paste: $.proxy(this.paste, this)
             };
 
             if (this.o.showOnFocus === true) {
@@ -2504,6 +2560,15 @@ if (memberExpensesPanel.length) {
 				}]
 			);
 
+			if (this.o.immediateUpdates) {
+				// Trigger input updates immediately on changed year/month
+				this._events.push([this.element, {
+					'changeYear changeMonth': $.proxy(function(e){
+						this.update(e.date);
+					}, this)
+				}]);
+			}
+
 			this._secondaryEvents = [
 				[this.picker, {
 					click: $.proxy(this.click, this)
@@ -2512,13 +2577,14 @@ if (memberExpensesPanel.length) {
 					resize: $.proxy(this.place, this)
 				}],
 				[$(document), {
-					'mousedown touchstart': $.proxy(function(e){
+					mousedown: $.proxy(function(e){
 						// Clicked outside the datepicker, hide it
 						if (!(
 							this.element.is(e.target) ||
 							this.element.find(e.target).length ||
 							this.picker.is(e.target) ||
-							this.picker.find(e.target).length
+							this.picker.find(e.target).length ||
+							this.picker.hasClass('datepicker-inline')
 						)){
 							this.hide();
 						}
@@ -2614,6 +2680,23 @@ if (memberExpensesPanel.length) {
 			return this;
 		},
 
+		paste: function(evt){
+			var dateString;
+			if (evt.originalEvent.clipboardData && evt.originalEvent.clipboardData.types
+				&& $.inArray('text/plain', evt.originalEvent.clipboardData.types) !== -1) {
+				dateString = evt.originalEvent.clipboardData.getData('text/plain');
+			}
+			else if (window.clipboardData) {
+				dateString = window.clipboardData.getData('Text');
+			}
+			else {
+				return;
+			}
+			this.setDate(dateString);
+			this.update();
+			evt.preventDefault();
+		},
+
 		_utc_to_local: function(utc){
 			return utc && new Date(utc.getTime() + (utc.getTimezoneOffset()*60000));
 		},
@@ -2659,7 +2742,7 @@ if (memberExpensesPanel.length) {
 			}
 
 			if (element) {
-				element.val('').change();
+				element.val('');
 			}
 
 			this.update();
@@ -2692,11 +2775,11 @@ if (memberExpensesPanel.length) {
 			var formatted = this.getFormattedDate();
 			if (!this.isInput){
 				if (this.component){
-					this.element.find('input').val(formatted).change();
+					this.element.find('input').val(formatted);
 				}
 			}
 			else {
-				this.element.val(formatted).change();
+				this.element.val(formatted);
 			}
 			return this;
 		},
@@ -2732,6 +2815,12 @@ if (memberExpensesPanel.length) {
 			return this;
 		},
 
+		setDaysOfWeekHighlighted: function(daysOfWeekHighlighted){
+			this._process_options({daysOfWeekHighlighted: daysOfWeekHighlighted});
+			this.update();
+			return this;
+		},
+
 		setDatesDisabled: function(datesDisabled){
 			this._process_options({datesDisabled: datesDisabled});
 			this.update();
@@ -2744,17 +2833,17 @@ if (memberExpensesPanel.length) {
 			var calendarWidth = this.picker.outerWidth(),
 				calendarHeight = this.picker.outerHeight(),
 				visualPadding = 10,
-				windowWidth = $(this.o.container).width(),
-				windowHeight = $(this.o.container).height(),
-				scrollTop = $(this.o.container).scrollTop(),
-				appendOffset = $(this.o.container).offset();
+				container = $(this.o.container),
+				windowWidth = container.width(),
+				scrollTop = container.scrollTop(),
+				appendOffset = container.offset();
 
 			var parentsZindex = [];
 			this.element.parents().each(function(){
 				var itemZIndex = $(this).css('z-index');
 				if (itemZIndex !== 'auto' && itemZIndex !== 0) parentsZindex.push(parseInt(itemZIndex));
 			});
-			var zIndex = Math.max.apply(Math, parentsZindex) + 10;
+			var zIndex = Math.max.apply(Math, parentsZindex) + this.o.zIndexOffset;
 			var offset = this.component ? this.component.parent().offset() : this.element.offset();
 			var height = this.component ? this.component.outerHeight(true) : this.element.outerHeight(false);
 			var width = this.component ? this.component.outerWidth(true) : this.element.outerWidth(false);
@@ -2791,20 +2880,17 @@ if (memberExpensesPanel.length) {
 			// auto y orientation is best-situation: top or bottom, no fudging,
 			// decision based on which shows more of the calendar
 			var yorient = this.o.orientation.y,
-				top_overflow, bottom_overflow;
+				top_overflow;
 			if (yorient === 'auto'){
 				top_overflow = -scrollTop + top - calendarHeight;
-				bottom_overflow = scrollTop + windowHeight - (top + height + calendarHeight);
-				if (Math.max(top_overflow, bottom_overflow) === bottom_overflow)
-					yorient = 'top';
-				else
-					yorient = 'bottom';
+				yorient = top_overflow < 0 ? 'bottom' : 'top';
 			}
+
 			this.picker.addClass('datepicker-orient-' + yorient);
 			if (yorient === 'top')
-				top += height;
-			else
 				top -= calendarHeight + parseInt(this.picker.css('padding-top'));
+			else
+				top += height;
 
 			if (this.o.rtl) {
 				var right = windowWidth - (left + width);
@@ -2868,6 +2954,8 @@ if (memberExpensesPanel.length) {
 				this.viewDate = new Date(this.o.startDate);
 			else if (this.viewDate > this.o.endDate)
 				this.viewDate = new Date(this.o.endDate);
+			else
+				this.viewDate = this.o.defaultViewDate;
 
 			if (fromArgs){
 				// setting date by clicking
@@ -2882,6 +2970,7 @@ if (memberExpensesPanel.length) {
 				this._trigger('clearDate');
 
 			this.fill();
+			this.element.change();
 			return this;
 		},
 
@@ -2889,12 +2978,11 @@ if (memberExpensesPanel.length) {
 			var dowCnt = this.o.weekStart,
 				html = '<tr>';
 			if (this.o.calendarWeeks){
-				this.picker.find('.datepicker-days thead tr:first-child .datepicker-switch')
+				this.picker.find('.datepicker-days .datepicker-switch')
 					.attr('colspan', function(i, val){
 						return parseInt(val) + 1;
 					});
-				var cell = '<th class="cw">&#160;</th>';
-				html += cell;
+				html += '<th class="cw">&#160;</th>';
 			}
 			while (dowCnt < this.o.weekStart + 7){
 				html += '<th class="dow">'+dates[this.o.language].daysMin[(dowCnt++)%7]+'</th>';
@@ -2948,6 +3036,9 @@ if (memberExpensesPanel.length) {
 				$.inArray(date.getUTCDay(), this.o.daysOfWeekDisabled) !== -1){
 				cls.push('disabled');
 			}
+			if ($.inArray(date.getUTCDay(), this.o.daysOfWeekHighlighted) !== -1){
+				cls.push('highlighted');
+			}
 			if (this.o.datesDisabled.length > 0 &&
 				$.grep(this.o.datesDisabled, function(d){
 					return isUTCEquals(date, d); }).length > 0) {
@@ -2961,6 +3052,12 @@ if (memberExpensesPanel.length) {
 				if ($.inArray(date.valueOf(), this.range) !== -1){
 					cls.push('selected');
 				}
+				if (date.valueOf() === this.range[0]){
+          cls.push('range-start');
+        }
+        if (date.valueOf() === this.range[this.range.length-1]){
+          cls.push('range-end');
+        }
 			}
 			return cls;
 		},
@@ -2975,17 +3072,21 @@ if (memberExpensesPanel.length) {
 				endMonth = this.o.endDate !== Infinity ? this.o.endDate.getUTCMonth() : Infinity,
 				todaytxt = dates[this.o.language].today || dates['en'].today || '',
 				cleartxt = dates[this.o.language].clear || dates['en'].clear || '',
+				titleFormat = dates[this.o.language].titleFormat || dates['en'].titleFormat,
 				tooltip;
 			if (isNaN(year) || isNaN(month))
 				return;
 			this.picker.find('.datepicker-days thead .datepicker-switch')
-						.text(dates[this.o.language].months[month]+' '+year);
+						.text(DPGlobal.formatDate(new UTCDate(year, month), titleFormat, this.o.language));
 			this.picker.find('tfoot .today')
 						.text(todaytxt)
 						.toggle(this.o.todayBtn !== false);
 			this.picker.find('tfoot .clear')
 						.text(cleartxt)
 						.toggle(this.o.clearBtn !== false);
+			this.picker.find('thead .datepicker-title')
+						.text(this.o.title)
+						.toggle(this.o.title !== '');
 			this.updateNavArrows();
 			this.fillMonths();
 			var prevMonth = UTCDate(year, month-1, 28),
@@ -2993,6 +3094,9 @@ if (memberExpensesPanel.length) {
 			prevMonth.setUTCDate(day);
 			prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - this.o.weekStart + 7)%7);
 			var nextMonth = new Date(prevMonth);
+			if (prevMonth.getUTCFullYear() < 100){
+        nextMonth.setUTCFullYear(prevMonth.getUTCFullYear());
+      }
 			nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
 			nextMonth = nextMonth.valueOf();
 			var html = [];
@@ -3046,8 +3150,8 @@ if (memberExpensesPanel.length) {
 			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
 
 			var months = this.picker.find('.datepicker-months')
-						.find('th:eq(1)')
-							.text(year)
+						.find('.datepicker-switch')
+							.text(this.o.maxViewMode < 2 ? 'Months' : year)
 							.end()
 						.find('span').removeClass('active');
 
@@ -3081,7 +3185,7 @@ if (memberExpensesPanel.length) {
 			html = '';
 			year = parseInt(year/10, 10) * 10;
 			var yearCont = this.picker.find('.datepicker-years')
-								.find('th:eq(1)')
+								.find('.datepicker-switch')
 									.text(year + '-' + (year + 9))
 									.end()
 								.find('td');
@@ -3092,6 +3196,8 @@ if (memberExpensesPanel.length) {
 				classes;
 			for (var i = -1; i < 11; i++){
 				classes = ['year'];
+				tooltip = null;
+
 				if (i === -1)
 					classes.push('old');
 				else if (i === 10)
@@ -3100,7 +3206,24 @@ if (memberExpensesPanel.length) {
 					classes.push('active');
 				if (year < startYear || year > endYear)
 					classes.push('disabled');
-				html += '<span class="' + classes.join(' ') + '">' + year + '</span>';
+
+				if (this.o.beforeShowYear !== $.noop) {
+					var yrBefore = this.o.beforeShowYear(new Date(year, 0, 1));
+					if (yrBefore === undefined)
+						yrBefore = {};
+					else if (typeof(yrBefore) === 'boolean')
+						yrBefore = {enabled: yrBefore};
+					else if (typeof(yrBefore) === 'string')
+						yrBefore = {classes: yrBefore};
+					if (yrBefore.enabled === false)
+						classes.push('disabled');
+					if (yrBefore.classes)
+						classes = classes.concat(yrBefore.classes.split(/\s+/));
+					if (yrBefore.tooltip)
+						tooltip = yrBefore.tooltip;
+				}
+
+				html += '<span class="' + classes.join(' ') + '"' + (tooltip ? ' title="'+tooltip+'"' : '') + '>' + year + '</span>';
 				year += 1;
 			}
 			yearCont.html(html);
@@ -3130,13 +3253,13 @@ if (memberExpensesPanel.length) {
 					break;
 				case 1:
 				case 2:
-					if (this.o.startDate !== -Infinity && year <= this.o.startDate.getUTCFullYear()){
+					if (this.o.startDate !== -Infinity && year <= this.o.startDate.getUTCFullYear() || this.o.maxViewMode < 2){
 						this.picker.find('.prev').css({visibility: 'hidden'});
 					}
 					else {
 						this.picker.find('.prev').css({visibility: 'visible'});
 					}
-					if (this.o.endDate !== Infinity && year >= this.o.endDate.getUTCFullYear()){
+					if (this.o.endDate !== Infinity && year >= this.o.endDate.getUTCFullYear() || this.o.maxViewMode < 2){
 						this.picker.find('.next').css({visibility: 'hidden'});
 					}
 					else {
@@ -3148,6 +3271,7 @@ if (memberExpensesPanel.length) {
 
 		click: function(e){
 			e.preventDefault();
+			e.stopPropagation();
 			var target = $(e.target).closest('span, td, th'),
 				year, month, day;
 			if (target.length === 1){
@@ -3198,6 +3322,9 @@ if (memberExpensesPanel.length) {
 								this._trigger('changeMonth', this.viewDate);
 								if (this.o.minViewMode === 1){
 									this._setDate(UTCDate(year, month, day));
+									this.showMode();
+								} else {
+									this.showMode(-1);
 								}
 							}
 							else {
@@ -3209,8 +3336,8 @@ if (memberExpensesPanel.length) {
 								if (this.o.minViewMode === 2){
 									this._setDate(UTCDate(year, month, day));
 								}
+								this.showMode(-1);
 							}
-							this.showMode(-1);
 							this.fill();
 						}
 						break;
@@ -3298,8 +3425,8 @@ if (memberExpensesPanel.length) {
 		},
 
 		moveMonth: function(date, dir){
-			if (!date)
-				return undefined;
+			if (!isValidDate(date))
+				return this.o.defaultViewDate;
 			if (!dir)
 				return date;
 			var new_date = new Date(date.valueOf()),
@@ -3357,8 +3484,10 @@ if (memberExpensesPanel.length) {
 
 		keydown: function(e){
 			if (!this.picker.is(':visible')){
-				if (e.keyCode === 27) // allow escape to hide and re-show picker
+				if (e.keyCode === 40 || e.keyCode === 27) { // allow down to re-show picker
 					this.show();
+					e.stopPropagation();
+        }
 				return;
 			}
 			var dateChanged = false,
@@ -3374,6 +3503,7 @@ if (memberExpensesPanel.length) {
 					else
 						this.hide();
 					e.preventDefault();
+					e.stopPropagation();
 					break;
 				case 37: // left
 				case 39: // right
@@ -3436,6 +3566,9 @@ if (memberExpensesPanel.length) {
 					// As such, its behavior should not be hijacked.
 					break;
 				case 13: // enter
+					if (!this.o.forceParse) {
+							break;
+					}
 					focusDate = this.focusDate || this.dates.get(-1) || this.viewDate;
 					if (this.o.keyboardNavigation) {
 						this._toggle_multidate(focusDate);
@@ -3483,13 +3616,13 @@ if (memberExpensesPanel.length) {
 
 		showMode: function(dir){
 			if (dir){
-				this.viewMode = Math.max(this.o.minViewMode, Math.min(2, this.viewMode + dir));
+				this.viewMode = Math.max(this.o.minViewMode, Math.min(this.o.maxViewMode, this.viewMode + dir));
 			}
 			this.picker
 				.children('div')
 				.hide()
 				.filter('.datepicker-' + DPGlobal.modes[this.viewMode].clsName)
-					.css('display', 'block');
+					.show();
 			this.updateNavArrows();
 		}
 	};
@@ -3502,7 +3635,7 @@ if (memberExpensesPanel.length) {
 		delete options.inputs;
 
 		datepickerPlugin.call($(this.inputs), options)
-			.bind('changeDate', $.proxy(this.dateUpdated, this));
+			.on('changeDate', $.proxy(this.dateUpdated, this));
 
 		this.pickers = $.map(this.inputs, function(i){
 			return $(i).data('datepicker');
@@ -3532,8 +3665,13 @@ if (memberExpensesPanel.length) {
 				return;
 			this.updating = true;
 
-			var dp = $(e.target).data('datepicker'),
-				new_date = dp.getUTCDate(),
+			var dp = $(e.target).data('datepicker');
+
+			if (typeof(dp) === "undefined") {
+				return;
+			}
+
+			var new_date = dp.getUTCDate(),
 				i = $.inArray(e.target, this.inputs),
 				j = i - 1,
 				k = i + 1,
@@ -3631,14 +3769,20 @@ if (memberExpensesPanel.length) {
 			}
 			if (typeof option === 'string' && typeof data[option] === 'function'){
 				internal_return = data[option].apply(data, args);
-				if (internal_return !== undefined)
-					return false;
 			}
 		});
-		if (internal_return !== undefined)
-			return internal_return;
-		else
+
+		if (
+			internal_return === undefined ||
+			internal_return instanceof Datepicker ||
+			internal_return instanceof DateRangePicker
+		)
 			return this;
+
+		if (this.length > 1)
+			throw new Error('Using only allowed for the collection of a single element (' + option + ' function)');
+		else
+			return internal_return;
 	};
 	$.fn.datepicker = datepickerPlugin;
 
@@ -3646,10 +3790,12 @@ if (memberExpensesPanel.length) {
 		autoclose: false,
 		beforeShowDay: $.noop,
 		beforeShowMonth: $.noop,
+		beforeShowYear: $.noop,
 		calendarWeeks: false,
 		clearBtn: false,
 		toggleActive: false,
 		daysOfWeekDisabled: [],
+		daysOfWeekHighlighted: [],
 		datesDisabled: [],
 		endDate: Infinity,
 		forceParse: true,
@@ -3657,6 +3803,7 @@ if (memberExpensesPanel.length) {
 		keyboardNavigation: true,
 		language: 'en',
 		minViewMode: 0,
+		maxViewMode: 2,
 		multidate: false,
 		multidateSeparator: ',',
 		orientation: "auto",
@@ -3667,8 +3814,10 @@ if (memberExpensesPanel.length) {
 		todayHighlight: false,
 		weekStart: 0,
 		disableTouchKeyboard: false,
-        enableOnReadonly: true,
-		container: 'body'
+		enableOnReadonly: true,
+		container: 'body',
+		immediateUpdates: false,
+		title: ''
 	};
 	var locale_opts = $.fn.datepicker.locale_opts = [
 		'format',
@@ -3678,13 +3827,14 @@ if (memberExpensesPanel.length) {
 	$.fn.datepicker.Constructor = Datepicker;
 	var dates = $.fn.datepicker.dates = {
 		en: {
-			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-			daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+			daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
 			months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 			monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 			today: "Today",
-			clear: "Clear"
+			clear: "Clear",
+			titleFormat: "MM yyyy"
 		}
 	};
 
@@ -3714,7 +3864,9 @@ if (memberExpensesPanel.length) {
 		validParts: /dd?|DD?|mm?|MM?|yy(?:yy)?/g,
 		nonpunctuation: /[^ -\/:-@\[\u3400-\u9fff-`{-~\t\n\r]+/g,
 		parseFormat: function(format){
-			// IE treats \0 as a string end in inputs (truncating the value),
+			if (typeof format.toValue === 'function' && typeof format.toDisplay === 'function')
+                return format;
+            // IE treats \0 as a string end in inputs (truncating the value),
 			// so it's a bad format delimiter, anyway
 			var separators = format.replace(this.validParts, '\0').split('\0'),
 				parts = format.match(this.validParts);
@@ -3730,7 +3882,9 @@ if (memberExpensesPanel.length) {
 				return date;
 			if (typeof format === 'string')
 				format = DPGlobal.parseFormat(format);
-			var part_re = /([\-+]\d+)([dmwy])/,
+			if (format.toValue)
+                return format.toValue(date, format, language);
+            var part_re = /([\-+]\d+)([dmwy])/,
 				parts = date.match(/([\-+]\d+)([dmwy])/g),
 				part, dir, i;
 			if (/^[\-+]\d+[dmwy]([\s,]+[\-+]\d+[dmwy])*$/.test(date)){
@@ -3835,7 +3989,9 @@ if (memberExpensesPanel.length) {
 				return '';
 			if (typeof format === 'string')
 				format = DPGlobal.parseFormat(format);
-			var val = {
+			if (format.toDisplay)
+                return format.toDisplay(date, format, language);
+            var val = {
 				d: date.getUTCDate(),
 				D: dates[language].daysShort[date.getUTCDay()],
 				DD: dates[language].days[date.getUTCDay()],
@@ -3857,6 +4013,9 @@ if (memberExpensesPanel.length) {
 			return date.join('');
 		},
 		headTemplate: '<thead>'+
+			              '<tr>'+
+			                '<th colspan="7" class="datepicker-title"></th>'+
+			              '</tr>'+
 							'<tr>'+
 								'<th class="prev">&#171;</th>'+
 								'<th colspan="5" class="datepicker-switch"></th>'+
@@ -3910,7 +4069,7 @@ if (memberExpensesPanel.length) {
 
 	/* DATEPICKER VERSION
 	 * =================== */
-	$.fn.datepicker.version =  "1.4.0";
+	$.fn.datepicker.version = '1.5.0';
 
 	/* DATEPICKER DATA-API
 	* ================== */
@@ -3931,9 +4090,9 @@ if (memberExpensesPanel.length) {
 		datepickerPlugin.call($('[data-provide="datepicker-inline"]'));
 	});
 
-}(window.jQuery));
+}));
 
-},{}],5:[function(require,module,exports){
+},{"jquery":46}],5:[function(require,module,exports){
 // This file is autogenerated via the `commonjs` Grunt task. You can require() this file in a CommonJS environment.
 require('../../js/transition.js')
 require('../../js/alert.js')
@@ -6635,6 +6794,7 @@ internals.Alternatives.prototype.when = function (ref, options) {
     var is = Cast.schema(options.is);
 
     if (options.is === null || !options.is.isJoi) {
+
         // Only apply required if this wasn't already a schema, we'll suppose people know what they're doing
         is = is.required();
     }
@@ -6703,7 +6863,7 @@ internals.Alternatives.prototype.describe = function () {
 
 module.exports = new internals.Alternatives();
 
-},{"./any":25,"./cast":29,"./errors":31,"./ref":37,"hoek":42}],25:[function(require,module,exports){
+},{"./any":25,"./cast":29,"./errors":31,"./ref":36,"hoek":42}],25:[function(require,module,exports){
 (function (Buffer){
 // Load modules
 
@@ -6728,7 +6888,9 @@ internals.defaults = {
     language: {},
     presence: 'optional',
     raw: false,
-    strip: false
+    strip: false,
+    noDefaults: false
+
     // context: null
 };
 
@@ -6745,7 +6907,8 @@ internals.checkOptions = function (options) {
         presence: ['string', 'required', 'optional', 'forbidden', 'ignore'],
         raw: 'boolean',
         context: 'object',
-        strip: 'boolean'
+        strip: 'boolean',
+        noDefaults: 'boolean'
     };
 
     var keys = Object.keys(options);
@@ -6790,7 +6953,8 @@ module.exports = internals.Any = function () {
         insensitive: false,
         trim: false,
         case: undefined,                        // upper, lower
-        empty: undefined
+        empty: undefined,
+        func: false
     */ };
 
     this._description = null;
@@ -6846,6 +7010,7 @@ internals.Any.prototype.concat = function (schema) {
     var obj = this.clone();
 
     if (this._type === 'any' && schema._type !== 'any') {
+
         // Reset values as if we were "this"
         var tmpObj = schema.clone();
         var keysToRestore = ['_settings', '_valids', '_invalids', '_tests', '_refs', '_flags', '_description', '_unit',
@@ -6958,6 +7123,8 @@ internals.Any.prototype._allow = function () {
     var values = Hoek.flatten(Array.prototype.slice.call(arguments));
     for (var i = 0, il = values.length; i < il; ++i) {
         var value = values[i];
+
+        Hoek.assert(value !== undefined, 'Cannot call allow/valid/invalid with undefined');
         this._invalids.remove(value);
         this._valids.add(value, this._refs);
     }
@@ -6988,6 +7155,8 @@ internals.Any.prototype.invalid = internals.Any.prototype.disallow = internals.A
     var values = Hoek.flatten(Array.prototype.slice.call(arguments));
     for (var i = 0, il = values.length; i < il; ++i) {
         value = values[i];
+
+        Hoek.assert(value !== undefined, 'Cannot call allow/valid/invalid with undefined');
         obj._valids.remove(value);
         obj._invalids.add(value, this._refs);
     }
@@ -7058,7 +7227,7 @@ internals.Any.prototype.default = function (value, description) {
             value.description = description;
         }
 
-        if (this._type !== 'func') {
+        if (!this._flags.func) {
             Hoek.assert(typeof value.description === 'string' && value.description.length > 0, 'description must be provided when default value is a function');
         }
     }
@@ -7204,11 +7373,14 @@ internals.Any.prototype._validate = function (value, state, options, reference) 
             if (value !== undefined) {
                 finalValue = options.raw ? originalValue : value;
             }
+            else if (options.noDefaults) {
+                finalValue = originalValue;
+            }
             else if (Ref.isRef(self._flags.default)) {
                 finalValue = self._flags.default(state.parent, options);
             }
             else if (typeof self._flags.default === 'function' &&
-                    !(self._type === 'func' && !self._flags.default.description)) {
+                    !(self._flags.func && !self._flags.default.description)) {
 
                 var arg;
 
@@ -7594,7 +7766,7 @@ internals.concatSettings = function (target, source) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./alternatives":24,"./cast":29,"./errors":31,"./ref":37,"buffer":52,"hoek":42}],26:[function(require,module,exports){
+},{"./alternatives":24,"./cast":29,"./errors":31,"./ref":36,"buffer":49,"hoek":42}],26:[function(require,module,exports){
 // Load modules
 
 var Any = require('./any');
@@ -7626,6 +7798,7 @@ internals.Array = function () {
     Any.call(this);
     this._type = 'array';
     this._inner.items = [];
+    this._inner.ordereds = [];
     this._inner.inclusions = [];
     this._inner.exclusions = [];
     this._inner.requireds = [];
@@ -7677,6 +7850,7 @@ internals.Array.prototype._base = function (value, state, options) {
         result.errors = internals.checkItems.call(this, result.value, wasArray, state, options);
 
         if (result.errors && wasArray && options.convert && this._flags.single) {
+
             // Attempt a 2nd pass by putting the array inside one.
             var previousErrors = result.errors;
 
@@ -7684,6 +7858,7 @@ internals.Array.prototype._base = function (value, state, options) {
             result.errors = internals.checkItems.call(this, result.value, wasArray, state, options);
 
             if (result.errors) {
+
                 // Restore previous errors and value since this didn't validate either.
                 result.errors = previousErrors;
                 result.value = result.value[0];
@@ -7701,6 +7876,7 @@ internals.checkItems = function (items, wasArray, state, options) {
     var errored;
 
     var requireds = this._inner.requireds.slice();
+    var ordereds = this._inner.ordereds.slice();
     var inclusions = this._inner.inclusions.concat(requireds);
 
     for (var v = 0, vl = items.length; v < vl; ++v) {
@@ -7726,6 +7902,7 @@ internals.checkItems = function (items, wasArray, state, options) {
 
         for (var i = 0, il = this._inner.exclusions.length; i < il; ++i) {
             res = this._inner.exclusions[i]._validate(item, localState, {});                // Not passing options to use defaults
+
             if (!res.errors) {
                 errors.push(Errors.create(wasArray ? 'array.excludes' : 'array.excludesSingle', { pos: v, value: item }, { key: state.key, path: localState.path }, options));
                 errored = true;
@@ -7740,6 +7917,38 @@ internals.checkItems = function (items, wasArray, state, options) {
 
         if (errored) {
             continue;
+        }
+
+        // Ordered
+        if (this._inner.ordereds.length) {
+            if (ordereds.length > 0) {
+                var ordered = ordereds.shift();
+                res = ordered._validate(item, localState, options);
+                if (!res.errors) {
+                    if (ordered._flags.strip) {
+                        internals.fastSplice(items, v);
+                        --v;
+                        --vl;
+                    }
+                    else {
+                        items[v] = res.value;
+                    }
+                }
+                else {
+                    errors.push(Errors.create('array.ordered', { pos: v, reason: res.errors, value: item }, { key: state.key, path: localState.path }, options));
+                    if (options.abortEarly) {
+                        return errors;
+                    }
+                }
+                continue;
+            }
+            else if (!this._inner.items.length) {
+                errors.push(Errors.create('array.orderedLength', { pos: v, limit: this._inner.ordereds.length }, { key: state.key, path: localState.path }, options));
+                if (options.abortEarly) {
+                    return errors;
+                }
+                continue;
+            }
         }
 
         // Requireds
@@ -7833,9 +8042,12 @@ internals.checkItems = function (items, wasArray, state, options) {
         internals.fillMissedErrors(errors, requireds, state, options);
     }
 
+    if (ordereds.length) {
+        internals.fillOrderedErrors(errors, ordereds, state, options);
+    }
+
     return errors.length ? errors : null;
 };
-
 
 internals.fillMissedErrors = function (errors, requireds, state, options) {
 
@@ -7864,10 +8076,33 @@ internals.fillMissedErrors = function (errors, requireds, state, options) {
     }
 };
 
+internals.fillOrderedErrors = function (errors, ordereds, state, options) {
+
+    var requiredOrdereds = [];
+
+    for (var i = 0, il = ordereds.length; i < il; ++i) {
+        var presence = Hoek.reach(ordereds[i], '_flags.presence');
+        if (presence === 'required') {
+            requiredOrdereds.push(ordereds[i]);
+        }
+    }
+
+    if (requiredOrdereds.length) {
+        internals.fillMissedErrors(errors, requiredOrdereds, state, options);
+    }
+};
 
 internals.Array.prototype.describe = function () {
 
     var description = Any.prototype.describe.call(this);
+
+    if (this._inner.ordereds.length) {
+        description.orderedItems = [];
+
+        for (var o = 0, ol = this._inner.ordereds.length; o < ol; ++o) {
+            description.orderedItems.push(this._inner.ordereds[o].describe());
+        }
+    }
 
     if (this._inner.items.length) {
         description.items = [];
@@ -7885,9 +8120,22 @@ internals.Array.prototype.items = function () {
 
     var obj = this.clone();
 
-    Hoek.flatten(Array.prototype.slice.call(arguments)).forEach(function (type) {
+    Hoek.flatten(Array.prototype.slice.call(arguments)).forEach(function (type, index) {
 
-        type = Cast.schema(type);
+        try {
+            type = Cast.schema(type);
+        }
+        catch (castErr) {
+            if (castErr.hasOwnProperty('path')) {
+                castErr.path = index + '.' + castErr.path;
+            }
+            else {
+                castErr.path = index;
+            }
+            castErr.message += '(' + castErr.path + ')';
+            throw castErr;
+        }
+
         obj._inner.items.push(type);
 
         if (type._flags.presence === 'required') {
@@ -7899,6 +8147,32 @@ internals.Array.prototype.items = function () {
         else {
             obj._inner.inclusions.push(type);
         }
+    });
+
+    return obj;
+};
+
+
+internals.Array.prototype.ordered = function () {
+
+    var obj = this.clone();
+
+    Hoek.flatten(Array.prototype.slice.call(arguments)).forEach(function (type, index) {
+
+        try {
+            type = Cast.schema(type);
+        }
+        catch (castErr) {
+            if (castErr.hasOwnProperty('path')) {
+                castErr.path = index + '.' + castErr.path;
+            }
+            else {
+                castErr.path = index;
+            }
+            castErr.message += '(' + castErr.path + ')';
+            throw castErr;
+        }
+        obj._inner.ordereds.push(type);
     });
 
     return obj;
@@ -8113,7 +8387,7 @@ internals.Binary.prototype.length = function (limit) {
 module.exports = new internals.Binary();
 
 }).call(this,require("buffer").Buffer)
-},{"./any":25,"./errors":31,"buffer":52,"hoek":42}],28:[function(require,module,exports){
+},{"./any":25,"./errors":31,"buffer":49,"hoek":42}],28:[function(require,module,exports){
 // Load modules
 
 var Any = require('./any');
@@ -8161,6 +8435,7 @@ module.exports = new internals.Boolean();
 
 var Hoek = require('hoek');
 var Ref = require('./ref');
+
 // Type modules are delay-loaded to prevent circular dependencies
 
 
@@ -8232,7 +8507,7 @@ exports.ref = function (id) {
     return Ref.isRef(id) ? id : Ref.create(id);
 };
 
-},{"./alternatives":24,"./any":25,"./boolean":28,"./date":30,"./number":35,"./object":36,"./ref":37,"./string":38,"hoek":42}],30:[function(require,module,exports){
+},{"./alternatives":24,"./any":25,"./boolean":28,"./date":30,"./number":34,"./object":35,"./ref":36,"./string":37,"hoek":42}],30:[function(require,module,exports){
 // Load modules
 
 var Any = require('./any');
@@ -8246,7 +8521,7 @@ var Moment = require('moment');
 
 var internals = {};
 
-internals.isoDate = /^((\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\d))$/;
+internals.isoDate = /^(?:\d{4}(?!\d{2}\b))(?:(-?)(?:(?:0[1-9]|1[0-2])(?:\1(?:[12]\d|0[1-9]|3[01]))?|W(?:[0-4]\d|5[0-2])(?:-?[1-7])?|(?:00[1-9]|0[1-9]\d|[12]\d{2}|3(?:[0-5]\d|6[1-6])))(?![T]$|[T][\d]+Z$)(?:[T\s](?:(?:(?:[01]\d|2[0-3])(?:(:?)[0-5]\d)?|24\:?00)(?:[.,]\d+(?!:))?)(?:\2[0-5]\d(?:[.,]\d+)?)?(?:[Z]|(?:[+-])(?:[01]\d|2[0-3])(?::?[0-5]\d)?)?)?)?$/;
 internals.invalidDate = new Date('');
 internals.isIsoDate = (function () {
 
@@ -8402,7 +8677,7 @@ internals.Date.prototype._isIsoDate = function (value) {
 
 module.exports = new internals.Date();
 
-},{"./any":25,"./errors":31,"./ref":37,"hoek":42,"moment":215}],31:[function(require,module,exports){
+},{"./any":25,"./errors":31,"./ref":36,"hoek":42,"moment":212}],31:[function(require,module,exports){
 // Load modules
 
 var Hoek = require('hoek');
@@ -8514,10 +8789,10 @@ exports.process = function (errors, object) {
     var message = '';
     var details = [];
 
-    var processErrors = function (errors, parent) {
+    var processErrors = function (localErrors, parent) {
 
-        for (var i = 0, il = errors.length; i < il; ++i) {
-            var item = errors[i];
+        for (var i = 0, il = localErrors.length; i < il; ++i) {
+            var item = localErrors[i];
 
             var detail = {
                 message: item.toString(),
@@ -8608,6 +8883,19 @@ internals.serializer = function () {
             stack.push(value);
         }
 
+        if (Array.isArray(value) && value.placeholders) {
+            var placeholders = value.placeholders;
+            var arrWithPlaceholders = [];
+            for (var i = 0, il = value.length; i < il; ++i) {
+                if (placeholders[i]) {
+                    arrWithPlaceholders.push(placeholders[i]);
+                }
+                arrWithPlaceholders.push(value[i]);
+            }
+
+            value = arrWithPlaceholders;
+        }
+
         return value;
     };
 };
@@ -8631,36 +8919,50 @@ internals.annotate = function () {
             }
             else {
                 var value = ref[seg];
-                if (value !== undefined) {
-                    delete ref[seg];
-                    var label = seg + '_$key$_' + pos + '_$end$_';
-                    ref[label] = value;
-                    lookup[error.path] = label;
-                }
-                else if (lookup[error.path]) {
-                    var replacement = lookup[error.path];
-                    var appended = replacement.replace('_$end$_', ', ' + pos + '_$end$_');
-                    ref[appended] = ref[replacement];
-                    lookup[error.path] = appended;
-                    delete ref[replacement];
-                }
-                else {
-                    ref['_$miss$_' + seg + '|' + pos + '_$end$_'] = '__missing__';
+                if (Array.isArray(ref)) {
+                    var arrayLabel = '_$idx$_' + (e + 1) + '_$end$_';
+                    if (!ref.placeholders) {
+                        ref.placeholders = {};
+                    }
+
+                    if (ref.placeholders[seg]) {
+                        ref.placeholders[seg] = ref.placeholders[seg].replace('_$end$_', ', ' + (e + 1) + '_$end$_');
+                    }
+                    else {
+                        ref.placeholders[seg] = arrayLabel;
+                    }
+                } else {
+                    if (value !== undefined) {
+                        delete ref[seg];
+                        var objectLabel = seg + '_$key$_' + pos + '_$end$_';
+                        ref[objectLabel] = value;
+                        lookup[error.path] = objectLabel;
+                    }
+                    else if (lookup[error.path]) {
+                        var replacement = lookup[error.path];
+                        var appended = replacement.replace('_$end$_', ', ' + pos + '_$end$_');
+                        ref[appended] = ref[replacement];
+                        lookup[error.path] = appended;
+                        delete ref[replacement];
+                    }
+                    else {
+                        ref['_$miss$_' + seg + '|' + pos + '_$end$_'] = '__missing__';
+                    }
                 }
             }
         }
     }
 
     var message = internals.safeStringify(obj, 2)
-        .replace(/\[Circular (.*?)_\$key\$_([, \d]+)_\$end\$_\]/g, function ($0, $1) {
-
-            return '[Circular ' + $1 + ']';
-        }).replace(/_\$key\$_([, \d]+)_\$end\$_\"/g, function ($0, $1) {
+        .replace(/_\$key\$_([, \d]+)_\$end\$_\"/g, function ($0, $1) {
 
             return '" \u001b[31m[' + $1 + ']\u001b[0m';
         }).replace(/\"_\$miss\$_([^\|]+)\|(\d+)_\$end\$_\"\: \"__missing__\"/g, function ($0, $1, $2) {
 
             return '\u001b[41m"' + $1 + '"\u001b[0m\u001b[31m [' + $2 + ']: -- missing --\u001b[0m';
+        }).replace(/\s*\"_\$idx\$_([, \d]+)_\$end\$_\",?\n(.*)/g, function ($0, $1, $2) {
+
+            return '\n' + $2 + ' \u001b[31m[' + $1 + ']\u001b[0m';
         });
 
     message += '\n\u001b[31m';
@@ -8674,43 +8976,9 @@ internals.annotate = function () {
     return message;
 };
 
-},{"./language":34,"hoek":42}],32:[function(require,module,exports){
+},{"./language":33,"hoek":42}],32:[function(require,module,exports){
 // Load modules
 
-var Any = require('./any');
-var Errors = require('./errors');
-var Hoek = require('hoek');
-
-
-// Declare internals
-
-var internals = {};
-
-
-internals.Function = function () {
-
-    Any.call(this);
-    this._type = 'func';
-};
-
-Hoek.inherits(internals.Function, Any);
-
-
-internals.Function.prototype._base = function (value, state, options) {
-
-    return {
-        value: value,
-        errors: (typeof value === 'function') ? null : Errors.create('function.base', null, state, options)
-    };
-};
-
-
-module.exports = new internals.Function();
-
-},{"./any":25,"./errors":31,"hoek":42}],33:[function(require,module,exports){
-// Load modules
-
-var Hoek = require('hoek');
 var Any = require('./any');
 var Cast = require('./cast');
 var Ref = require('./ref');
@@ -8724,7 +8992,6 @@ var internals = {
     boolean: require('./boolean'),
     binary: require('./binary'),
     date: require('./date'),
-    func: require('./function'),
     number: require('./number'),
     object: require('./object'),
     string: require('./string')
@@ -8768,7 +9035,7 @@ internals.root = function () {
 
     root.func = function () {
 
-        return internals.func;
+        return internals.object._func();
     };
 
     root.number = function () {
@@ -8807,29 +9074,54 @@ internals.root = function () {
         }
 
         var options = count === 3 ? arguments[2] : {};
-        var schema = Cast.schema(arguments[1]);
+        var schema = root.compile(arguments[1]);
 
         return schema._validateWithOptions(value, options, callback);
     };
 
     root.describe = function () {
 
-        var schema = arguments.length ? Cast.schema(arguments[0]) : any;
+        var schema = arguments.length ? root.compile(arguments[0]) : any;
         return schema.describe();
     };
 
     root.compile = function (schema) {
 
-        return Cast.schema(schema);
+        try {
+            return Cast.schema(schema);
+        }
+        catch (err) {
+            if (err.hasOwnProperty('path')) {
+                err.message += '(' + err.path + ')';
+            }
+            throw err;
+        }
     };
 
     root.assert = function (value, schema, message) {
 
-        message = (message ? message + ' ' : '');
-        var error = root.validate(value, schema).error;
+        root.attempt(value, schema, message);
+    };
+
+    root.attempt = function (value, schema, message) {
+
+        var result = root.validate(value, schema);
+        var error = result.error;
         if (error) {
-            throw new Error(message + error.annotate());
+            if (!message) {
+                error.message = error.annotate();
+                throw error;
+            }
+
+            if (!(message instanceof Error)) {
+                error.message = message + ' ' + error.annotate();
+                throw error;
+            }
+
+            throw message;
         }
+
+        return result.value;
     };
 
     return root;
@@ -8838,7 +9130,7 @@ internals.root = function () {
 
 module.exports = internals.root();
 
-},{"./alternatives":24,"./any":25,"./array":26,"./binary":27,"./boolean":28,"./cast":29,"./date":30,"./function":32,"./number":35,"./object":36,"./ref":37,"./string":38,"hoek":42}],34:[function(require,module,exports){
+},{"./alternatives":24,"./any":25,"./array":26,"./binary":27,"./boolean":28,"./cast":29,"./date":30,"./number":34,"./object":35,"./ref":36,"./string":37}],33:[function(require,module,exports){
 // Load modules
 
 
@@ -8878,6 +9170,8 @@ exports.errors = {
         min: 'must contain at least {{limit}} items',
         max: 'must contain less than or equal to {{limit}} items',
         length: 'must contain {{limit}} items',
+        ordered: 'at position {{pos}} fails because {{reason}}',
+        orderedLength: 'at position {{pos}} fails because array must contain at most {{limit}} items',
         sparse: 'must not be a sparse array',
         unique: 'position {{pos}} contains a duplicate value'
     },
@@ -8963,7 +9257,7 @@ exports.errors = {
     }
 };
 
-},{}],35:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 // Load modules
 
 var Any = require('./any');
@@ -9037,6 +9331,7 @@ internals.Number.prototype._base = function (value, state, options) {
     var isNumber = typeof result.value === 'number' && !isNaN(result.value);
 
     if (options.convert && 'precision' in this._flags && isNumber) {
+
         // This is conceptually equivalent to using toFixed but it should be much faster
         var precision = Math.pow(10, this._flags.precision);
         result.value = Math.round(result.value * precision) / precision;
@@ -9148,7 +9443,7 @@ internals.Number.prototype.precision = function (limit) {
 
 module.exports = new internals.Number();
 
-},{"./any":25,"./errors":31,"./ref":37,"hoek":42}],36:[function(require,module,exports){
+},{"./any":25,"./errors":31,"./ref":36,"hoek":42}],35:[function(require,module,exports){
 // Load modules
 
 var Hoek = require('hoek');
@@ -9198,11 +9493,12 @@ internals.Object.prototype._base = function (value, state, options) {
         catch (parseErr) { }
     }
 
+    var type = this._flags.func ? 'function' : 'object';
     if (!value ||
-        typeof value !== 'object' ||
+        typeof value !== type ||
         Array.isArray(value)) {
 
-        errors.push(Errors.create('object.base', null, state, options));
+        errors.push(Errors.create(type + '.base', null, state, options));
         return finish();
     }
 
@@ -9220,7 +9516,18 @@ internals.Object.prototype._base = function (value, state, options) {
     // Ensure target is a local copy (parsed) or shallow copy
 
     if (target === value) {
-        target = Object.create(Object.getPrototypeOf(value));
+        if (type === 'object') {
+            target = Object.create(Object.getPrototypeOf(value));
+        }
+        else {
+            target = function () {
+
+                return value.apply(this, arguments);
+            };
+
+            target.prototype = Hoek.clone(value.prototype);
+        }
+
         var valueKeys = Object.keys(value);
         for (var t = 0, tl = valueKeys.length; t < tl; ++t) {
             target[valueKeys[t]] = value[valueKeys[t]];
@@ -9249,7 +9556,7 @@ internals.Object.prototype._base = function (value, state, options) {
             }
         }
 
-        if (target.hasOwnProperty(item.to) &&
+        if (Object.prototype.hasOwnProperty.call(target, item.to) &&
             !item.options.override &&
             !renamed[item.to]) {
 
@@ -9292,7 +9599,7 @@ internals.Object.prototype._base = function (value, state, options) {
 
             delete unprocessed[key];
 
-            localState = { key: key, path: (state.path ? state.path + '.' : '') + key, parent: target, reference: state.reference };
+            localState = { key: key, path: (state.path || '') + (state.path && key ? '.' : '') + key, parent: target, reference: state.reference };
             result = child.schema._validate(item, localState, options);
             if (result.errors) {
                 errors.push(Errors.create('object.child', { key: key, reason: result.errors }, localState, options));
@@ -9351,33 +9658,26 @@ internals.Object.prototype._base = function (value, state, options) {
         if (options.stripUnknown ||
             options.skipFunctions) {
 
-            var hasFunctions = false;
             for (var k = 0, kl = unprocessedKeys.length; k < kl; ++k) {
                 key = unprocessedKeys[k];
 
                 if (options.stripUnknown) {
                     delete target[key];
+                    delete unprocessed[key];
                 }
                 else if (typeof target[key] === 'function') {
                     delete unprocessed[key];
-                    hasFunctions = true;
                 }
             }
 
-            if (options.stripUnknown) {
-                return finish();
-            }
-
-            if (hasFunctions) {
-                unprocessedKeys = Object.keys(unprocessed);
-            }
+            unprocessedKeys = Object.keys(unprocessed);
         }
 
         if (unprocessedKeys.length &&
             (this._flags.allowUnknown !== undefined ? !this._flags.allowUnknown : !options.allowUnknown)) {
 
             for (var e = 0, el = unprocessedKeys.length; e < el; ++e) {
-                errors.push(Errors.create('object.allowUnknown', null, { key: unprocessedKeys[e], path: state.path }, options));
+                errors.push(Errors.create('object.allowUnknown', null, { key: unprocessedKeys[e], path: state.path + (state.path ? '.' : '') + unprocessedKeys[e] }, options));
             }
         }
     }
@@ -9386,7 +9686,7 @@ internals.Object.prototype._base = function (value, state, options) {
 
     for (var d = 0, dl = this._inner.dependencies.length; d < dl; ++d) {
         var dep = this._inner.dependencies[d];
-        var err = internals[dep.type](dep.key !== null && value[dep.key], dep.peers, target, { key: dep.key, path: (state.path ? state.path + '.' : '') + (dep.key || '') }, options);
+        var err = internals[dep.type](dep.key !== null && value[dep.key], dep.peers, target, { key: dep.key, path: (state.path || '') + (dep.key ? '.' + dep.key : '') }, options);
         if (err) {
             errors.push(err);
             if (options.abortEarly) {
@@ -9396,6 +9696,14 @@ internals.Object.prototype._base = function (value, state, options) {
     }
 
     return finish();
+};
+
+
+internals.Object.prototype._func = function () {
+
+    var obj = this.clone();
+    obj._flags.func = true;
+    return obj;
 };
 
 
@@ -9423,15 +9731,30 @@ internals.Object.prototype.keys = function (schema) {
     if (obj._inner.children) {
         for (var i = 0, il = obj._inner.children.length; i < il; ++i) {
             child = obj._inner.children[i];
-            topo.add(child, { after: child._refs, group: child.key });
+
+            // Only add the key if we are not going to replace it later
+            if (children.indexOf(child.key) === -1) {
+                topo.add(child, { after: child._refs, group: child.key });
+            }
         }
     }
 
     for (var c = 0, cl = children.length; c < cl; ++c) {
         var key = children[c];
         child = schema[key];
-        var cast = Cast.schema(child);
-        topo.add({ key: key, schema: cast }, { after: cast._refs, group: key });
+        try {
+            var cast = Cast.schema(child);
+            topo.add({ key: key, schema: cast }, { after: cast._refs, group: key });
+        }
+        catch (castErr) {
+            if (castErr.hasOwnProperty('path')) {
+                castErr.path = key + '.' + castErr.path;
+            }
+            else {
+                castErr.path = key;
+            }
+            throw castErr;
+        }
     }
 
     obj._inner.children = topo.nodes;
@@ -9500,8 +9823,20 @@ internals.Object.prototype.pattern = function (pattern, schema) {
 
     pattern = new RegExp(pattern.source, pattern.ignoreCase ? 'i' : undefined);         // Future version should break this and forbid unsupported regex flags
 
+    try {
+        schema = Cast.schema(schema);
+    }
+    catch (castErr) {
+        if (castErr.hasOwnProperty('path')) {
+            castErr.message += '(' + castErr.path + ')';
+        }
+
+        throw castErr;
+    }
+
+
     var obj = this.clone();
-    obj._inner.patterns.push({ regex: pattern, rule: Cast.schema(schema) });
+    obj._inner.patterns.push({ regex: pattern, rule: schema });
     return obj;
 };
 
@@ -9670,7 +10005,7 @@ internals.with = function (value, peers, parent, state, options) {
 
     for (var i = 0, il = peers.length; i < il; ++i) {
         var peer = peers[i];
-        if (!parent.hasOwnProperty(peer) ||
+        if (!Object.prototype.hasOwnProperty.call(parent, peer) ||
             parent[peer] === undefined) {
 
             return Errors.create('object.with', { peer: peer }, state, options);
@@ -9689,7 +10024,7 @@ internals.without = function (value, peers, parent, state, options) {
 
     for (var i = 0, il = peers.length; i < il; ++i) {
         var peer = peers[i];
-        if (parent.hasOwnProperty(peer) &&
+        if (Object.prototype.hasOwnProperty.call(parent, peer) &&
             parent[peer] !== undefined) {
 
             return Errors.create('object.without', { peer: peer }, state, options);
@@ -9705,7 +10040,7 @@ internals.xor = function (value, peers, parent, state, options) {
     var present = [];
     for (var i = 0, il = peers.length; i < il; ++i) {
         var peer = peers[i];
-        if (parent.hasOwnProperty(peer) &&
+        if (Object.prototype.hasOwnProperty.call(parent, peer) &&
             parent[peer] !== undefined) {
 
             present.push(peer);
@@ -9728,7 +10063,7 @@ internals.or = function (value, peers, parent, state, options) {
 
     for (var i = 0, il = peers.length; i < il; ++i) {
         var peer = peers[i];
-        if (parent.hasOwnProperty(peer) &&
+        if (Object.prototype.hasOwnProperty.call(parent, peer) &&
             parent[peer] !== undefined) {
             return null;
         }
@@ -9745,7 +10080,7 @@ internals.and = function (value, peers, parent, state, options) {
     var count = peers.length;
     for (var i = 0; i < count; ++i) {
         var peer = peers[i];
-        if (!parent.hasOwnProperty(peer) ||
+        if (!Object.prototype.hasOwnProperty.call(parent, peer) ||
             parent[peer] === undefined) {
 
             missing.push(peer);
@@ -9765,7 +10100,7 @@ internals.nand = function (value, peers, parent, state, options) {
     var present = [];
     for (var i = 0, il = peers.length; i < il; ++i) {
         var peer = peers[i];
-        if (parent.hasOwnProperty(peer) &&
+        if (Object.prototype.hasOwnProperty.call(parent, peer) &&
             parent[peer] !== undefined) {
 
             present.push(peer);
@@ -9816,7 +10151,18 @@ internals.Object.prototype.assert = function (ref, schema, message) {
     Hoek.assert(ref.isContext || ref.depth > 1, 'Cannot use assertions for root level references - use direct key rules instead');
     message = message || 'pass the assertion test';
 
-    var cast = Cast.schema(schema);
+    var cast;
+    try {
+        cast = Cast.schema(schema);
+    }
+    catch (castErr) {
+        if (castErr.hasOwnProperty('path')) {
+            castErr.message += '(' + castErr.path + ')';
+        }
+
+        throw castErr;
+    }
+
     var key = ref.path[ref.path.length - 1];
     var path = ref.path.join('.');
 
@@ -9853,7 +10199,7 @@ internals.Object.prototype.type = function (constructor, name) {
 
 module.exports = new internals.Object();
 
-},{"./any":25,"./cast":29,"./errors":31,"hoek":42,"topo":47}],37:[function(require,module,exports){
+},{"./any":25,"./cast":29,"./errors":31,"hoek":42,"topo":45}],36:[function(require,module,exports){
 // Load modules
 
 var Hoek = require('hoek');
@@ -9906,7 +10252,7 @@ exports.push = function (array, ref) {
     }
 };
 
-},{"hoek":42}],38:[function(require,module,exports){
+},{"hoek":42}],37:[function(require,module,exports){
 (function (Buffer){
 // Load modules
 
@@ -9979,6 +10325,14 @@ internals.String.prototype._base = function (value, state, options) {
 
         if (this._flags.trim) {
             value = value.trim();
+        }
+
+        if (this._inner.replacements) {
+
+            for (var r = 0, rl = this._inner.replacements.length; r < rl; ++r) {
+                var replacement = this._inner.replacements[r];
+                value = value.replace(replacement.pattern, replacement.replacement);
+            }
         }
     }
 
@@ -10129,6 +10483,7 @@ internals.String.prototype.ip = function (ipOptions) {
         }
     }
     else {
+
         // Set our default cidr strategy
         ipOptions.cidr = 'optional';
     }
@@ -10162,10 +10517,10 @@ internals.String.prototype.ip = function (ipOptions) {
         }
 
         if (versions) {
-            return Errors.create('string.ipVersion', {value: value, cidr: ipOptions.cidr, version: versions}, state, options);
+            return Errors.create('string.ipVersion', { value: value, cidr: ipOptions.cidr, version: versions }, state, options);
         }
 
-        return Errors.create('string.ip', {value: value, cidr: ipOptions.cidr}, state, options);
+        return Errors.create('string.ip', { value: value, cidr: ipOptions.cidr }, state, options);
     });
 };
 
@@ -10218,10 +10573,10 @@ internals.String.prototype.uri = function (uriOptions) {
         }
 
         if (customScheme) {
-            return Errors.create('string.uriCustomScheme', {scheme: customScheme, value: value}, state, options);
+            return Errors.create('string.uriCustomScheme', { scheme: customScheme, value: value }, state, options);
         }
 
-        return Errors.create('string.uri', {value: value}, state, options);
+        return Errors.create('string.uri', { value: value }, state, options);
     });
 };
 
@@ -10305,7 +10660,7 @@ internals.String.prototype.lowercase = function () {
 };
 
 
-internals.String.prototype.uppercase = function (options) {
+internals.String.prototype.uppercase = function () {
 
     var obj = this._test('uppercase', undefined, function (value, state, options) {
 
@@ -10340,10 +10695,36 @@ internals.String.prototype.trim = function () {
     return obj;
 };
 
+
+internals.String.prototype.replace = function (pattern, replacement) {
+
+    if (typeof pattern === 'string') {
+        pattern = new RegExp(Hoek.escapeRegex(pattern), 'g');
+    }
+
+    Hoek.assert(pattern instanceof RegExp, 'pattern must be a RegExp');
+    Hoek.assert(typeof replacement === 'string', 'replacement must be a String');
+
+    // This can not be considere a test like trim, we can't "reject"
+    // anything from this rule, so just clone the current object
+    var obj = this.clone();
+
+    if (!obj._inner.replacements) {
+        obj._inner.replacements = [];
+    }
+
+    obj._inner.replacements.push({
+        pattern: pattern,
+        replacement: replacement
+    });
+
+    return obj;
+};
+
 module.exports = new internals.String();
 
 }).call(this,require("buffer").Buffer)
-},{"./any":25,"./date":30,"./errors":31,"./ref":37,"./string/ip":39,"./string/uri":41,"buffer":52,"hoek":42,"isemail":45,"net":50}],39:[function(require,module,exports){
+},{"./any":25,"./date":30,"./errors":31,"./ref":36,"./string/ip":38,"./string/uri":40,"buffer":49,"hoek":42,"isemail":43,"net":47}],38:[function(require,module,exports){
 var RFC3986 = require('./rfc3986');
 
 var internals = {
@@ -10377,7 +10758,7 @@ internals.Ip.createIpRegex = function (versions, cidr) {
 
 module.exports = internals.Ip;
 
-},{"./rfc3986":40}],40:[function(require,module,exports){
+},{"./rfc3986":39}],39:[function(require,module,exports){
 var internals = {
     rfc3986: {}
 };
@@ -10553,7 +10934,7 @@ internals.rfc3986.fragment = '[' + pchar + '\\/\\?]*';
 
 module.exports = internals.rfc3986;
 
-},{}],41:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 var RFC3986 = require('./rfc3986');
 
 var internals = {
@@ -10561,8 +10942,10 @@ var internals = {
         createUriRegex: function (optionalScheme) {
 
             var scheme = RFC3986.scheme;
+
             // If we were passed a scheme, use it instead of the generic one
             if (optionalScheme) {
+
                 // Have to put this in a non-capturing group to handle the OR statements
                 scheme = '(?:' + optionalScheme + ')';
             }
@@ -10577,10 +10960,7 @@ var internals = {
 
 module.exports = internals.Uri;
 
-},{"./rfc3986":40}],42:[function(require,module,exports){
-module.exports = require('./lib');
-
-},{"./lib":44}],43:[function(require,module,exports){
+},{"./rfc3986":39}],41:[function(require,module,exports){
 (function (Buffer){
 // Declare internals
 
@@ -10716,7 +11096,7 @@ internals.safeCharCodes = (function () {
 }());
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],44:[function(require,module,exports){
+},{"buffer":49}],42:[function(require,module,exports){
 (function (process,Buffer){
 // Load modules
 
@@ -10787,8 +11167,9 @@ exports.clone = function (obj, seen) {
         for (var i = 0, il = keys.length; i < il; ++i) {
             var key = keys[i];
             var descriptor = Object.getOwnPropertyDescriptor(obj, key);
-            if (descriptor.get ||
-                descriptor.set) {
+            if (descriptor &&
+                (descriptor.get ||
+                 descriptor.set)) {
 
                 Object.defineProperty(newObj, key, descriptor);
             }
@@ -11301,6 +11682,13 @@ exports.flatten = function (array, target) {
 
 exports.reach = function (obj, chain, options) {
 
+    if (chain === false ||
+        chain === null ||
+        typeof chain === 'undefined') {
+
+        return obj;
+    }
+
     options = options || {};
     if (typeof options === 'string') {
         options = { separator: options };
@@ -11628,7 +12016,15 @@ exports.format = Util.format;
 
 exports.transform = function (source, transform, options) {
 
-    exports.assert(source === null || source === undefined || typeof source === 'object', 'Invalid source object: must be null, undefined, or an object');
+    exports.assert(source === null || source === undefined || typeof source === 'object' || Array.isArray(source), 'Invalid source object: must be null, undefined, an object, or an array');
+
+    if (Array.isArray(source)) {
+        var results = [];
+        for (var i = 0, il = source.length; i < il; ++i) {
+            results.push(exports.transform(source[i], transform, options));
+        }
+        return results;
+    }
 
     var result = {};
     var keys = Object.keys(transform);
@@ -11697,17 +12093,18 @@ exports.shallow = function (source) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./escape":43,"_process":197,"buffer":52,"crypto":56,"path":196,"util":212}],45:[function(require,module,exports){
+},{"./escape":41,"_process":194,"buffer":49,"crypto":53,"path":193,"util":209}],43:[function(require,module,exports){
 module.exports = require('./lib/isemail');
 
-},{"./lib/isemail":46}],46:[function(require,module,exports){
+},{"./lib/isemail":44}],44:[function(require,module,exports){
 (function (process){
 /**
  * To validate an email address according to RFCs 5321, 5322 and others
  *
  * Copyright © 2008-2011, Dominic Sayers
  * Test schema documentation Copyright © 2011, Daniel Marschall
- * Port for Node.js Copyright © 2013, GlobeSherpa
+ * Port for Node.js Copyright © 2013-2014, GlobeSherpa
+ *              and Copyright © 2014-2015, Eli Skeggs
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11735,1257 +12132,1369 @@ module.exports = require('./lib/isemail');
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author      Dominic Sayers <dominic@sayers.cc>
- * @author      Eli Skeggs <eskeggs@globesherpa.com>
+ * @author      Eli Skeggs <skeggse@gmail.com>
  * @copyright   2008-2011 Dominic Sayers
  * @copyright   2013-2014 GlobeSherpa
+ * @copyright   2014-2015 Eli Skeggs
  * @license     http://www.opensource.org/licenses/bsd-license.php BSD License
  * @link        http://www.dominicsayers.com/isemail
- * @link        https://github.com/globesherpa/isemail
- * @version     1.1.1 - Optimization pass, simplify constants, style, dead code.
+ * @link        https://github.com/hapijs/isemail
+ * @version     1.2.0 Drop Node 0.8, fix style, switch to lab/code
  */
 
-// lazy-loaded
-var dns, HAS_REQUIRE = typeof require !== 'undefined';
+var Dns = require('dns');
 
-// categories
-var ISEMAIL_VALID_CATEGORY = 1;
-var ISEMAIL_DNSWARN = 7;
-var ISEMAIL_RFC5321 = 15;
-var ISEMAIL_CFWS = 31;
-var ISEMAIL_DEPREC = 63;
-var ISEMAIL_RFC5322 = 127;
-var ISEMAIL_ERR = 255;
+var internals = {
+    defaultThreshold: 16,
+    maxIPv6Groups: 8,
+    categories: {
+        valid: 1,
+        dnsWarn: 7,
+        rfc5321: 15,
+        cfws: 31,
+        deprecated: 63,
+        rfc5322: 127,
+        error: 255
+    },
 
-// diagnoses
-// address is valid
-var ISEMAIL_VALID = 0;
-// address is valid but a DNS check was not successful
-var ISEMAIL_DNSWARN_NO_MX_RECORD = 5;
-var ISEMAIL_DNSWARN_NO_RECORD = 6;
-// address is valid for SMTP but has unusual elements
-var ISEMAIL_RFC5321_TLD = 9;
-var ISEMAIL_RFC5321_TLDNUMERIC = 10;
-var ISEMAIL_RFC5321_QUOTEDSTRING = 11;
-var ISEMAIL_RFC5321_ADDRESSLITERAL = 12;
-var ISEMAIL_RFC5321_IPV6DEPRECATED = 13;
-// address is valid within the message but cannot be used unmodified for the
-// envelope
-var ISEMAIL_CFWS_COMMENT = 17;
-var ISEMAIL_CFWS_FWS = 18;
-// address contains deprecated elements but may still be valid in restricted
-// contexts
-var ISEMAIL_DEPREC_LOCALPART = 33;
-var ISEMAIL_DEPREC_FWS = 34;
-var ISEMAIL_DEPREC_QTEXT = 35;
-var ISEMAIL_DEPREC_QP = 36;
-var ISEMAIL_DEPREC_COMMENT = 37;
-var ISEMAIL_DEPREC_CTEXT = 38;
-var ISEMAIL_DEPREC_CFWS_NEAR_AT = 49;
-// the address is only valid according to the broad definition of RFC 5322, but
-// otherwise invalid
-var ISEMAIL_RFC5322_DOMAIN = 65;
-var ISEMAIL_RFC5322_TOOLONG = 66;
-var ISEMAIL_RFC5322_LOCAL_TOOLONG = 67;
-var ISEMAIL_RFC5322_DOMAIN_TOOLONG = 68;
-var ISEMAIL_RFC5322_LABEL_TOOLONG = 69;
-var ISEMAIL_RFC5322_DOMAINLITERAL = 70;
-var ISEMAIL_RFC5322_DOMLIT_OBSDTEXT = 71;
-var ISEMAIL_RFC5322_IPV6_GRPCOUNT = 72;
-var ISEMAIL_RFC5322_IPV6_2X2XCOLON = 73;
-var ISEMAIL_RFC5322_IPV6_BADCHAR = 74;
-var ISEMAIL_RFC5322_IPV6_MAXGRPS = 75;
-var ISEMAIL_RFC5322_IPV6_COLONSTRT = 76;
-var ISEMAIL_RFC5322_IPV6_COLONEND = 77;
-// address is invalid for any purpose
-var ISEMAIL_ERR_EXPECTING_DTEXT = 129;
-var ISEMAIL_ERR_NOLOCALPART = 130;
-var ISEMAIL_ERR_NODOMAIN = 131;
-var ISEMAIL_ERR_CONSECUTIVEDOTS = 132;
-var ISEMAIL_ERR_ATEXT_AFTER_CFWS = 133;
-var ISEMAIL_ERR_ATEXT_AFTER_QS = 134;
-var ISEMAIL_ERR_ATEXT_AFTER_DOMLIT = 135;
-var ISEMAIL_ERR_EXPECTING_QPAIR = 136;
-var ISEMAIL_ERR_EXPECTING_ATEXT = 137;
-var ISEMAIL_ERR_EXPECTING_QTEXT = 138;
-var ISEMAIL_ERR_EXPECTING_CTEXT = 139;
-var ISEMAIL_ERR_BACKSLASHEND = 140;
-var ISEMAIL_ERR_DOT_START = 141;
-var ISEMAIL_ERR_DOT_END = 142;
-var ISEMAIL_ERR_DOMAINHYPHENSTART = 143;
-var ISEMAIL_ERR_DOMAINHYPHENEND = 144;
-var ISEMAIL_ERR_UNCLOSEDQUOTEDSTR = 145;
-var ISEMAIL_ERR_UNCLOSEDCOMMENT = 146;
-var ISEMAIL_ERR_UNCLOSEDDOMLIT = 147;
-var ISEMAIL_ERR_FWS_CRLF_X2 = 148;
-var ISEMAIL_ERR_FWS_CRLF_END = 149;
-var ISEMAIL_ERR_CR_NO_LF = 150;
-var ISEMAIL_ERR_UNKNOWN_TLD = 160;
-var ISEMAIL_ERR_TOOSHORT_DOMAIN = 161;
+    diagnoses: {
+        // Address is valid
+        valid: 0,
 
-// function control
-var THRESHOLD = 16;
-// email parts
-var COMPONENT_LOCALPART = 0;
-var COMPONENT_DOMAIN = 1;
-var COMPONENT_LITERAL = 2;
-var CONTEXT_COMMENT = 3;
-var CONTEXT_FWS = 4;
-var CONTEXT_QUOTEDSTRING = 5;
-var CONTEXT_QUOTEDPAIR = 6;
+        // Address is valid, but the DNS check failed
+        dnsWarnNoMXRecord: 5,
+        dnsWarnNoRecord: 6,
+
+        // Address is valid for SMTP but has unusual elements
+        rfc5321TLD: 9,
+        rfc5321TLDNumeric: 10,
+        rfc5321QuotedString: 11,
+        rfc5321AddressLiteral: 12,
+
+        // Address is valid for message, but must be modified for envelope
+        cfwsComment: 17,
+        cfwsFWS: 18,
+
+        // Address contains deprecated elements, but may still be valid in some contexts
+        deprecatedLocalPart: 33,
+        deprecatedFWS: 34,
+        deprecatedQTEXT: 35,
+        deprecatedQP: 36,
+        deprecatedComment: 37,
+        deprecatedCTEXT: 38,
+        deprecatedIPv6: 39,
+        deprecatedCFWSNearAt: 49,
+
+        // Address is only valid according to broad definition in RFC 5322, but is otherwise invalid
+        rfc5322Domain: 65,
+        rfc5322TooLong: 66,
+        rfc5322LocalTooLong: 67,
+        rfc5322DomainTooLong: 68,
+        rfc5322LabelTooLong: 69,
+        rfc5322DomainLiteral: 70,
+        rfc5322DomainLiteralOBSDText: 71,
+        rfc5322IPv6GroupCount: 72,
+        rfc5322IPv62x2xColon: 73,
+        rfc5322IPv6BadCharacter: 74,
+        rfc5322IPv6MaxGroups: 75,
+        rfc5322IPv6ColonStart: 76,
+        rfc5322IPv6ColonEnd: 77,
+
+        // Address is invalid for any purpose
+        errExpectingDTEXT: 129,
+        errNoLocalPart: 130,
+        errNoDomain: 131,
+        errConsecutiveDots: 132,
+        errATEXTAfterCFWS: 133,
+        errATEXTAfterQS: 134,
+        errATEXTAfterDomainLiteral: 135,
+        errExpectingQPair: 136,
+        errExpectingATEXT: 137,
+        errExpectingQTEXT: 138,
+        errExpectingCTEXT: 139,
+        errBackslashEnd: 140,
+        errDotStart: 141,
+        errDotEnd: 142,
+        errDomainHyphenStart: 143,
+        errDomainHyphenEnd: 144,
+        errUnclosedQuotedString: 145,
+        errUnclosedComment: 146,
+        errUnclosedDomainLiteral: 147,
+        errFWSCRLFx2: 148,
+        errFWSCRLFEnd: 149,
+        errCRNoLF: 150,
+        errUnknownTLD: 160,
+        errDomainTooShort: 161
+    },
+
+    components: {
+        localpart: 0,
+        domain: 1,
+        literal: 2,
+        contextComment: 3,
+        contextFWS: 4,
+        contextQuotedString: 5,
+        contextQuotedPair: 6
+    }
+};
+
+// $lab:coverage:off$
+internals.defer = typeof process !== 'undefined' && process && typeof process.nextTick === 'function' ?
+    process.nextTick.bind(process) :
+    function (callback) {
+
+        return setTimeout(callback, 0);
+    };
+// $lab:coverage:on$
+
 
 // US-ASCII visible characters not valid for atext
 // (http://tools.ietf.org/html/rfc5322#section-3.2.3)
 var SPECIALS = '()<>[]:;@\\,."';
 
-function optimizeLookup(string) {
-  var body = '', min = 0x100, max = 0, lookup = new Array(min);
-  for (var i = min - 1; i >= 0; i--) {
-    lookup[i] = false;
-  }
-  for (var i = 0; i < string.length; i++) {
-    var chr = string.charCodeAt(i);
-    if (chr < min) {
-      min = chr;
+// A silly little optimized function generator
+var optimizeLookup = function optimizeLookup (string) {
+
+    var lookup = new Array(0x100);
+
+    for (var i = 0xff; i >= 0; --i) {
+        lookup[i] = false;
     }
-    if (chr > max) {
-      max = chr;
+
+    for (var il = string.length; i < il; ++i) {
+        lookup[string.charCodeAt(i)] = true;
     }
-    lookup[chr] = true;
-  }
-  lookup.length = max;
-  var body = 'var lookup = ' + JSON.stringify(lookup) + ';\n';
-  body += 'return function(code) {\n';
-  body += '  if (code < ' + min + ' || code > ' + max + ') {\n';
-  body += '    return false;\n';
-  body += '  }\n';
-  body += '  return lookup[code];\n';
-  body += '}';
-  return (new Function(body))();
-}
+
+    var body = 'return function (code) {\n';
+    body += '  return lookup[code];\n';
+    body += '}';
+    return (new Function('lookup', body))(lookup);
+};
+
 
 var specialsLookup = optimizeLookup(SPECIALS);
 
-// matches valid IPv4 addresses from the end of a string
+// This matches valid IPv4 addresses from the end of a string
 var IPv4_REGEX =
-  /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/;
+    /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/;
 var IPv6_REGEX = /^[a-fA-F\d]{0,4}$/;
 var IPv6_REGEX_TEST = IPv6_REGEX.test.bind(IPv6_REGEX);
 
 var hasOwn = Object.prototype.hasOwnProperty;
 
 /**
- * Get the largest number in the array.
- *
- * Returns -Infinity if the array is empty.
- *
- * @param {Array.<number>} array The array to scan.
- * @return {number} The largest number contained.
- */
-function maxValue(array) {
-  var v = -Infinity, i = 0, n = array.length;
-
-  for (; i < n; i++) {
-    if (array[i] > v) {
-      v = array[i];
-    }
-  }
-
-  return v;
-}
-
-/**
  * Check that an email address conforms to RFCs 5321, 5322 and others
  *
- * As of Version 3.0, we are now distinguishing clearly between a Mailbox
- * as defined by RFC 5321 and an addr-spec as defined by RFC 5322. Depending
- * on the context, either can be regarded as a valid email address. The
- * RFC 5321 Mailbox specification is more restrictive (comments, white space
- * and obsolete forms are not allowed).
+ * We distinguish clearly between a Mailbox as defined by RFC 5321 and an
+ * addr-spec as defined by RFC 5322. Depending on the context, either can be
+ * regarded as a valid email address. The RFC 5321 Mailbox specification is
+ * more restrictive (comments, white space and obsolete forms are not allowed).
  *
  * @param {string} email The email address to check.
- * @param {boolean} checkDNS If true then will check DNS for MX records. If true
- *   this isEmail _will_ be asynchronous.
- * @param {*} errorLevel Determines the boundary between valid and invalid
- *   addresses. Status codes above this number will be returned as-is, status
- *   codes below will be returned as ISEMAIL_VALID. Thus the calling program can
- *   simply look for ISEMAIL_VALID if it is only interested in whether an
- *   address is valid or not. The errorLevel will determine how "picky"
- *   isEmail() is about the address. If omitted or passed as false then
- *   isEmail() will return true or false rather than an integer error or
- *   warning. NB Note the difference between errorLevel = false and
- *   errorLevel = 0.
+ * @param {Object} options The (optional) options:
+ *   {boolean} checkDNS If true then will check DNS for MX records. If
+ *     true this call to isEmail _will_ be asynchronous.
+ *   {*} errorLevel Determines the boundary between valid and invalid
+ *     addresses. Status codes above this number will be returned as-is, status
+ *     codes below will be returned as valid. Thus the calling program can
+ *     simply look for diagnoses.valid if it is only interested in whether an
+ *     address is valid or not. The errorLevel will determine how "picky"
+ *     isEmail() is about the address. If omitted or passed as false then
+ *     isEmail() will return true or false rather than an integer error or
+ *     warning. NB Note the difference between errorLevel = false and
+ *     errorLevel = 0.
+ * @param {function(number|boolean)} callback The (optional) callback handler.
  * @return {*}
  */
-function isEmail(email, options, callback) {
-  if (typeof options === 'function') {
-    callback = options;
-    options = {};
-  }
-  options || (options = {});
+var isEmail = function isEmail (email, options, callback) {
 
-  var threshold, diagnose;
-  if (typeof options.errorLevel === 'number') {
-    diagnose = true;
-    threshold = options.errorLevel;
-  } else {
-    diagnose = !!options.errorLevel;
-    threshold = ISEMAIL_VALID;
-  }
-
-  if (options.tldWhitelist && typeof options.tldWhitelist !== 'object') {
-    throw new TypeError('expected array or object tldWhitelist');
-  }
-
-  if (options.minDomainAtoms && (options.minDomainAtoms !==
-      ((+options.minDomainAtoms) | 0) || options.minDomainAtoms < 0)) {
-    throw new TypeError('expected positive integer minDomainAtoms');
-  }
-
-  var maxResult = ISEMAIL_VALID;
-
-  function updateResult(value) {
-    if (value > maxResult) {
-      maxResult = value;
+    if (typeof options === 'function') {
+        callback = options;
+        options = {};
     }
-  }
 
-  var context = {
-    now: COMPONENT_LOCALPART,
-    prev: COMPONENT_LOCALPART,
-    stack: [COMPONENT_LOCALPART]
-  };
+    if (!options) {
+        options = {};
+    }
 
-  var token = '', prevToken = '', charCode = 0;
-  var parseData = {local: '', domain: ''};
-  var atomList = {local: [''], domain: ['']};
-
-  var elementCount = 0, elementLength = 0, crlfCount = 0;
-  var hyphenFlag = false, assertEnd = false;
-
-  for (var i = 0; i < email.length; i++) {
-    token = email[i];
-
-    switch (context.now) {
-    // local-part
-    case COMPONENT_LOCALPART:
-      // http://tools.ietf.org/html/rfc5322#section-3.4.1
-      //   local-part      =   dot-atom / quoted-string / obs-local-part
-      //
-      //   dot-atom        =   [CFWS] dot-atom-text [CFWS]
-      //
-      //   dot-atom-text   =   1*atext *("." 1*atext)
-      //
-      //   quoted-string   =   [CFWS]
-      //                       DQUOTE *([FWS] qcontent) [FWS] DQUOTE
-      //                       [CFWS]
-      //
-      //   obs-local-part  =   word *("." word)
-      //
-      //   word            =   atom / quoted-string
-      //
-      //   atom            =   [CFWS] 1*atext [CFWS]
-      switch (token) {
-      // comment
-      case '(':
-        if (elementLength === 0) {
-          // comments are OK at the beginning of an element
-          updateResult(elementCount === 0 ? ISEMAIL_CFWS_COMMENT :
-            ISEMAIL_DEPREC_COMMENT);
-        } else {
-          updateResult(ISEMAIL_CFWS_COMMENT);
-           // can't start a comment in an element, should be end
-          assertEnd = true;
-        }
-        context.stack.push(context.now);
-        context.now = CONTEXT_COMMENT;
-        break;
-      // next dot-atom element
-      case '.':
-        if (elementLength === 0) {
-          // another dot, already?
-          updateResult(elementCount === 0 ? ISEMAIL_ERR_DOT_START :
-            ISEMAIL_ERR_CONSECUTIVEDOTS);
-        } else {
-          // the entire local-part can be a quoted string for RFC 5321
-          // if it's just one atom that is quoted then it's an RFC 5322 obsolete
-          // form
-          if (assertEnd) {
-            updateResult(ISEMAIL_DEPREC_LOCALPART);
-          }
-
-          // CFWS & quoted strings are OK again now we're at the beginning of an
-          // element (although they are obsolete forms)
-          assertEnd = false;
-          elementLength = 0;
-          elementCount++;
-          parseData.local += token;
-          atomList.local[elementCount] = ''; // TODO: push?
-        }
-        break;
-      // quoted string
-      case '"':
-        if (elementLength === 0) {
-          // the entire local-part can be a quoted string for RFC 5321
-          // if it's just one atom that is quoted then it's an RFC 5322 obsolete
-          // form
-          updateResult(elementCount === 0 ? ISEMAIL_RFC5321_QUOTEDSTRING :
-            ISEMAIL_DEPREC_LOCALPART);
-
-          parseData.local += token;
-          atomList.local[elementCount] += token;
-          elementLength++;
-          assertEnd = true; // quoted string must be the entire element
-          context.stack.push(context.now);
-          context.now = CONTEXT_QUOTEDSTRING;
-        } else {
-          updateResult(ISEMAIL_ERR_EXPECTING_ATEXT);
-        }
-        break;
-      // folding white space
-      case '\r':
-        if ((++i === email.length) || email[i] !== '\n') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_CR_NO_LF);
-          break;
-        }
-      case ' ':
-      case '\t':
-        if (elementLength === 0) {
-          updateResult(elementCount === 0 ? ISEMAIL_CFWS_FWS :
-            ISEMAIL_DEPREC_FWS);
-        } else {
-          // we can't start FWS in the middle of an element, better be end
-          assertEnd = true;
+    if (typeof callback !== 'function') {
+        if (options.checkDNS) {
+            throw new TypeError('expected callback function for checkDNS option');
         }
 
-        context.stack.push(context.now);
-        context.now = CONTEXT_FWS;
-        prevToken = token;
-        break;
-      // @
-      case '@':
-        // at this point we should have a valid local-part
-        /* istanbul ignore next: logically unreachable */
-        if (context.stack.length !== 1) {
-          throw new Error('unexpected item on context stack');
-        }
+        callback = null;
+    }
 
-        if (parseData.local.length === 0) {
-          // fatal error
-          updateResult(ISEMAIL_ERR_NOLOCALPART);
-        } else if (elementLength === 0) {
-          // fatal error
-          updateResult(ISEMAIL_ERR_DOT_END);
-        // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.1
-        //   the maximum total length of a user name or other local-part is 64
-        //   octets
-        } else if (parseData.local.length > 64) {
-          updateResult(ISEMAIL_RFC5322_LOCAL_TOOLONG);
-        // http://tools.ietf.org/html/rfc5322#section-3.4.1
-        //   comments and folding white space
-        //   SHOULD NOT be used around the "@" in the addr-spec
-        //
-        // http://tools.ietf.org/html/rfc2119
-        // 4. SHOULD NOT  this phrase, or the phrase "NOT RECOMMENDED" mean that
-        //    there may exist valid reasons in particular circumstances when the
-        //    particular behavior is acceptable or even useful, but the full
-        //    implications should be understood and the case carefully weighed
-        //    before implementing any behavior described with this label
-        } else if ((context.prev === CONTEXT_COMMENT) ||
-            (context.prev === CONTEXT_FWS)) {
-          updateResult(ISEMAIL_DEPREC_CFWS_NEAR_AT);
-        }
+    var diagnose;
+    var threshold;
 
-        // clear everything down for the domain parsing
-        context.now = COMPONENT_DOMAIN; // where we are
-        context.stack[0] = COMPONENT_DOMAIN; // where we have been
-        elementCount = 0;
-        elementLength = 0;
-        assertEnd = false; // CFWS can only appear at the end of the element
-        break;
-      // atext
-      default:
-        // http://tools.ietf.org/html/rfc5322#section-3.2.3
-        //    atext = ALPHA / DIGIT / ; Printable US-ASCII
-        //            "!" / "#" /     ;  characters not including
-        //            "$" / "%" /     ;  specials.  Used for atoms.
-        //            "&" / "'" /
-        //            "*" / "+" /
-        //            "-" / "/" /
-        //            "=" / "?" /
-        //            "^" / "_" /
-        //            "`" / "{" /
-        //            "|" / "}" /
-        //            "~"
-        if (assertEnd) {
-          // we have encountered atext where it is no longer valid
-          switch (context.prev) {
-          case CONTEXT_COMMENT:
-          case CONTEXT_FWS:
-            updateResult(ISEMAIL_ERR_ATEXT_AFTER_CFWS);
+    if (typeof options.errorLevel === 'number') {
+        diagnose = true;
+        threshold = options.errorLevel;
+    }
+    else {
+        diagnose = !!options.errorLevel;
+        threshold = internals.diagnoses.valid;
+    }
+
+    if (options.tldWhitelist) {
+        if (typeof options.tldWhitelist === 'string') {
+            options.tldWhitelist = [options.tldWhitelist];
+        } else if (typeof options.tldWhitelist !== 'object') {
+            throw new TypeError('expected array or object tldWhitelist');
+        }
+    }
+
+    if (options.minDomainAtoms && (options.minDomainAtoms !== ((+options.minDomainAtoms) | 0) || options.minDomainAtoms < 0)) {
+        throw new TypeError('expected positive integer minDomainAtoms');
+    }
+
+    var maxResult = internals.diagnoses.valid;
+
+    var updateResult = function updateResult (value) {
+
+        if (value > maxResult) {
+            maxResult = value;
+        }
+    };
+
+    var context = {
+        now: internals.components.localpart,
+        prev: internals.components.localpart,
+        stack: [internals.components.localpart]
+    };
+
+    var token;
+    var prevToken = '';
+    var charCode = 0;
+
+    var parseData = {
+        local: '',
+        domain: ''
+    };
+    var atomData = {
+        locals: [''],
+        domains: ['']
+    };
+
+    var elementCount = 0;
+    var elementLength = 0;
+    var crlfCount = 0;
+
+    var hyphenFlag = false;
+    var assertEnd = false;
+
+    var emailLength = email.length;
+
+    for (var i = 0, il = emailLength; i < il; ++i) {
+        // Token is used outside the loop, must declare similarly
+        token = email[i];
+
+        switch (context.now) {
+            // Local-part
+            case internals.components.localpart:
+                // http://tools.ietf.org/html/rfc5322#section-3.4.1
+                //   local-part      =   dot-atom / quoted-string / obs-local-part
+                //
+                //   dot-atom        =   [CFWS] dot-atom-text [CFWS]
+                //
+                //   dot-atom-text   =   1*atext *("." 1*atext)
+                //
+                //   quoted-string   =   [CFWS]
+                //                       DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+                //                       [CFWS]
+                //
+                //   obs-local-part  =   word *("." word)
+                //
+                //   word            =   atom / quoted-string
+                //
+                //   atom            =   [CFWS] 1*atext [CFWS]
+                switch (token) {
+                    // Comment
+                    case '(':
+                        if (elementLength === 0) {
+                            // Comments are OK at the beginning of an element
+                            updateResult(elementCount === 0 ? internals.diagnoses.cfwsComment : internals.diagnoses.deprecatedComment);
+                        }
+                        else {
+                            updateResult(internals.diagnoses.cfwsComment);
+                             // Cannot start a comment in an element, should be end
+                            assertEnd = true;
+                        }
+
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextComment;
+                        break;
+
+                    // Next dot-atom element
+                    case '.':
+                        if (elementLength === 0) {
+                            // Another dot, already?
+                            updateResult(elementCount === 0 ? internals.diagnoses.errDotStart : internals.diagnoses.errConsecutiveDots);
+                        }
+                        else {
+                            // The entire local-part can be a quoted string for RFC 5321; if one atom is quoted it's an RFC 5322 obsolete form
+                            if (assertEnd) {
+                                updateResult(internals.diagnoses.deprecatedLocalPart);
+                            }
+
+                            // CFWS & quoted strings are OK again now we're at the beginning of an element (although they are obsolete forms)
+                            assertEnd = false;
+                            elementLength = 0;
+                            ++elementCount;
+                            parseData.local += token;
+                            atomData.locals[elementCount] = '';
+                        }
+
+                        break;
+
+                    // Quoted string
+                    case '"':
+                        if (elementLength === 0) {
+                            // The entire local-part can be a quoted string for RFC 5321; if one atom is quoted it's an RFC 5322 obsolete form
+                            updateResult(elementCount === 0 ? internals.diagnoses.rfc5321QuotedString : internals.diagnoses.deprecatedLocalPart);
+
+                            parseData.local += token;
+                            atomData.locals[elementCount] += token;
+                            ++elementLength;
+
+                            // Quoted string must be the entire element
+                            assertEnd = true;
+                            context.stack.push(context.now);
+                            context.now = internals.components.contextQuotedString;
+                        }
+                        else {
+                            updateResult(internals.diagnoses.errExpectingATEXT);
+                        }
+
+                        break;
+
+                    // Folding white space
+                    case '\r':
+                        if (emailLength === ++i || email[i] !== '\n') {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errCRNoLF);
+                            break;
+                        }
+
+                        // Fallthrough
+
+                    case ' ':
+                    case '\t':
+                        if (elementLength === 0) {
+                            updateResult(elementCount === 0 ? internals.diagnoses.cfwsFWS : internals.diagnoses.deprecatedFWS);
+                        }
+                        else {
+                            // We can't start FWS in the middle of an element, better be end
+                            assertEnd = true;
+                        }
+
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextFWS;
+                        prevToken = token;
+                        break;
+
+                    case '@':
+                        // At this point we should have a valid local-part
+                        // $lab:coverage:off$
+                        if (context.stack.length !== 1) {
+                            throw new Error('unexpected item on context stack');
+                        }
+                        // $lab:coverage:on$
+
+                        if (parseData.local.length === 0) {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errNoLocalPart);
+                        }
+                        else if (elementLength === 0) {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errDotEnd);
+                        }
+                        // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.1 the maximum total length of a user name or other local-part is 64
+                        //    octets
+                        else if (parseData.local.length > 64) {
+                            updateResult(internals.diagnoses.rfc5322LocalTooLong);
+                        }
+                        // http://tools.ietf.org/html/rfc5322#section-3.4.1 comments and folding white space SHOULD NOT be used around "@" in the
+                        //    addr-spec
+                        //
+                        // http://tools.ietf.org/html/rfc2119
+                        // 4. SHOULD NOT this phrase, or the phrase "NOT RECOMMENDED" mean that there may exist valid reasons in particular
+                        //    circumstances when the particular behavior is acceptable or even useful, but the full implications should be understood
+                        //    and the case carefully weighed before implementing any behavior described with this label.
+                        else if (context.prev === internals.components.contextComment || context.prev === internals.components.contextFWS) {
+                            updateResult(internals.diagnoses.deprecatedCFWSNearAt);
+                        }
+
+                        // Clear everything down for the domain parsing
+                        context.now = internals.components.domain;
+                        context.stack[0] = internals.components.domain;
+                        elementCount = 0;
+                        elementLength = 0;
+                        assertEnd = false; // CFWS can only appear at the end of the element
+                        break;
+
+                    // ATEXT
+                    default:
+                        // http://tools.ietf.org/html/rfc5322#section-3.2.3
+                        //    atext = ALPHA / DIGIT / ; Printable US-ASCII
+                        //            "!" / "#" /     ;  characters not including
+                        //            "$" / "%" /     ;  specials.  Used for atoms.
+                        //            "&" / "'" /
+                        //            "*" / "+" /
+                        //            "-" / "/" /
+                        //            "=" / "?" /
+                        //            "^" / "_" /
+                        //            "`" / "{" /
+                        //            "|" / "}" /
+                        //            "~"
+                        if (assertEnd) {
+                            // We have encountered atext where it is no longer valid
+                            switch (context.prev) {
+                                case internals.components.contextComment:
+                                case internals.components.contextFWS:
+                                    updateResult(internals.diagnoses.errATEXTAfterCFWS);
+                                    break;
+
+                                case internals.components.contextQuotedString:
+                                    updateResult(internals.diagnoses.errATEXTAfterQS);
+                                    break;
+
+                                // $lab:coverage:off$
+                                default:
+                                    throw new Error('more atext found where none is allowed, but unrecognized prev context: ' + context.prev);
+                                // $lab:coverage:on$
+                            }
+                        }
+                        else {
+                            context.prev = context.now;
+                            charCode = token.charCodeAt(0);
+
+                            // Especially if charCode == 10
+                            if (charCode < 33 || charCode > 126 || specialsLookup(charCode)) {
+
+                                // Fatal error
+                                updateResult(internals.diagnoses.errExpectingATEXT);
+                            }
+
+                            parseData.local += token;
+                            atomData.locals[elementCount] += token;
+                            ++elementLength;
+                        }
+                }
+
+                break;
+
+            case internals.components.domain:
+                // http://tools.ietf.org/html/rfc5322#section-3.4.1
+                //   domain          =   dot-atom / domain-literal / obs-domain
+                //
+                //   dot-atom        =   [CFWS] dot-atom-text [CFWS]
+                //
+                //   dot-atom-text   =   1*atext *("." 1*atext)
+                //
+                //   domain-literal  =   [CFWS] "[" *([FWS] dtext) [FWS] "]" [CFWS]
+                //
+                //   dtext           =   %d33-90 /          ; Printable US-ASCII
+                //                       %d94-126 /         ;  characters not including
+                //                       obs-dtext          ;  "[", "]", or "\"
+                //
+                //   obs-domain      =   atom *("." atom)
+                //
+                //   atom            =   [CFWS] 1*atext [CFWS]
+
+                // http://tools.ietf.org/html/rfc5321#section-4.1.2
+                //   Mailbox        = Local-part "@" ( Domain / address-literal )
+                //
+                //   Domain         = sub-domain *("." sub-domain)
+                //
+                //   address-literal  = "[" ( IPv4-address-literal /
+                //                    IPv6-address-literal /
+                //                    General-address-literal ) "]"
+                //                    ; See Section 4.1.3
+
+                // http://tools.ietf.org/html/rfc5322#section-3.4.1
+                //      Note: A liberal syntax for the domain portion of addr-spec is
+                //      given here.  However, the domain portion contains addressing
+                //      information specified by and used in other protocols (e.g.,
+                //      [RFC1034], [RFC1035], [RFC1123], [RFC5321]).  It is therefore
+                //      incumbent upon implementations to conform to the syntax of
+                //      addresses for the context in which they are used.
+                //
+                // is_email() author's note: it's not clear how to interpret this in
+                // he context of a general email address validator. The conclusion I
+                // have reached is this: "addressing information" must comply with
+                // RFC 5321 (and in turn RFC 1035), anything that is "semantically
+                // invisible" must comply only with RFC 5322.
+                switch (token) {
+                    // Comment
+                    case '(':
+                        if (elementLength === 0) {
+                            // Comments at the start of the domain are deprecated in the text, comments at the start of a subdomain are obs-domain
+                            // http://tools.ietf.org/html/rfc5322#section-3.4.1
+                            updateResult(elementCount === 0 ? internals.diagnoses.deprecatedCFWSNearAt : internals.diagnoses.deprecatedComment);
+                        }
+                        else {
+                            // We can't start a comment mid-element, better be at the end
+                            assertEnd = true;
+                            updateResult(internals.diagnoses.cfwsComment);
+                        }
+
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextComment;
+                        break;
+
+                    // Next dot-atom element
+                    case '.':
+                        if (elementLength === 0) {
+                            // Another dot, already? Fatal error.
+                            updateResult(elementCount === 0 ? internals.diagnoses.errDotStart : internals.diagnoses.errConsecutiveDots);
+                        }
+                        else if (hyphenFlag) {
+                            // Previous subdomain ended in a hyphen. Fatal error.
+                            updateResult(internals.diagnoses.errDomainHyphenEnd);
+                        }
+                        else if (elementLength > 63) {
+                            // Nowhere in RFC 5321 does it say explicitly that the domain part of a Mailbox must be a valid domain according to the
+                            // DNS standards set out in RFC 1035, but this *is* implied in several places. For instance, wherever the idea of host
+                            // routing is discussed the RFC says that the domain must be looked up in the DNS. This would be nonsense unless the
+                            // domain was designed to be a valid DNS domain. Hence we must conclude that the RFC 1035 restriction on label length
+                            // also applies to RFC 5321 domains.
+                            //
+                            // http://tools.ietf.org/html/rfc1035#section-2.3.4
+                            // labels          63 octets or less
+
+                            updateResult(internals.diagnoses.rfc5322LabelTooLong);
+                        }
+
+                        // CFWS is OK again now we're at the beginning of an element (although
+                        // it may be obsolete CFWS)
+                        assertEnd = false;
+                        elementLength = 0;
+                        ++elementCount;
+                        atomData.domains[elementCount] = '';
+                        parseData.domain += token;
+
+                        break;
+
+                    // Domain literal
+                    case '[':
+                        if (parseData.domain.length === 0) {
+                            // Domain literal must be the only component
+                            assertEnd = true;
+                            ++elementLength;
+                            context.stack.push(context.now);
+                            context.now = internals.components.literal;
+                            parseData.domain += token;
+                            atomData.domains[elementCount] += token;
+                            parseData.literal = '';
+                        }
+                        else {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errExpectingATEXT);
+                        }
+
+                        break;
+
+                    // Folding white space
+                    case '\r':
+                        if (emailLength === ++i || email[i] !== '\n') {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errCRNoLF);
+                            break;
+                        }
+
+                        // Fallthrough
+
+                    case ' ':
+                    case '\t':
+                        if (elementLength === 0) {
+                            updateResult(elementCount === 0 ? internals.diagnoses.deprecatedCFWSNearAt : internals.diagnoses.deprecatedFWS);
+                        }
+                        else {
+                            // We can't start FWS in the middle of an element, so this better be the end
+                            updateResult(internals.diagnoses.cfwsFWS);
+                            assertEnd = true;
+                        }
+
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextFWS;
+                        prevToken = token;
+                        break;
+
+                    // This must be ATEXT
+                    default:
+                        // RFC 5322 allows any atext...
+                        // http://tools.ietf.org/html/rfc5322#section-3.2.3
+                        //    atext = ALPHA / DIGIT / ; Printable US-ASCII
+                        //            "!" / "#" /     ;  characters not including
+                        //            "$" / "%" /     ;  specials.  Used for atoms.
+                        //            "&" / "'" /
+                        //            "*" / "+" /
+                        //            "-" / "/" /
+                        //            "=" / "?" /
+                        //            "^" / "_" /
+                        //            "`" / "{" /
+                        //            "|" / "}" /
+                        //            "~"
+
+                        // But RFC 5321 only allows letter-digit-hyphen to comply with DNS rules
+                        //   (RFCs 1034 & 1123)
+                        // http://tools.ietf.org/html/rfc5321#section-4.1.2
+                        //   sub-domain     = Let-dig [Ldh-str]
+                        //
+                        //   Let-dig        = ALPHA / DIGIT
+                        //
+                        //   Ldh-str        = *( ALPHA / DIGIT / "-" ) Let-dig
+                        //
+                        if (assertEnd) {
+                            // We have encountered ATEXT where it is no longer valid
+                            switch (context.prev) {
+                                case internals.components.contextComment:
+                                case internals.components.contextFWS:
+                                    updateResult(internals.diagnoses.errATEXTAfterCFWS);
+                                    break;
+
+                                case internals.components.literal:
+                                    updateResult(internals.diagnoses.errATEXTAfterDomainLiteral);
+                                    break;
+
+                                // $lab:coverage:off$
+                                default:
+                                    throw new Error('more atext found where none is allowed, but unrecognized prev context: ' + context.prev);
+                                // $lab:coverage:on$
+                            }
+                        }
+
+                        charCode = token.charCodeAt(0);
+                        // Assume this token isn't a hyphen unless we discover it is
+                        hyphenFlag = false;
+
+                        if (charCode < 33 || charCode > 126 || specialsLookup(charCode)) {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errExpectingATEXT);
+                        }
+                        else if (token === '-') {
+                            if (elementLength === 0) {
+                                // Hyphens cannot be at the beginning of a subdomain, fatal error
+                                updateResult(internals.diagnoses.errDomainHyphenStart);
+                            }
+
+                            hyphenFlag = true;
+                        }
+                        // Check if it's a neither a number nor a latin letter
+                        else if (charCode < 48 || charCode > 122 || (charCode > 57 && charCode < 65) || (charCode > 90 && charCode < 97)) {
+                            // This is not an RFC 5321 subdomain, but still OK by RFC 5322
+                            updateResult(internals.diagnoses.rfc5322Domain);
+                        }
+
+                        parseData.domain += token;
+                        atomData.domains[elementCount] += token;
+                        ++elementLength;
+                }
+
+                break;
+
+            // Domain literal
+            case internals.components.literal:
+                // http://tools.ietf.org/html/rfc5322#section-3.4.1
+                //   domain-literal  =   [CFWS] "[" *([FWS] dtext) [FWS] "]" [CFWS]
+                //
+                //   dtext           =   %d33-90 /          ; Printable US-ASCII
+                //                       %d94-126 /         ;  characters not including
+                //                       obs-dtext          ;  "[", "]", or "\"
+                //
+                //   obs-dtext       =   obs-NO-WS-CTL / quoted-pair
+                switch (token) {
+                    // End of domain literal
+                    case ']':
+                        if (maxResult < internals.categories.deprecated) {
+                            // Could be a valid RFC 5321 address literal, so let's check
+
+                            // http://tools.ietf.org/html/rfc5321#section-4.1.2
+                            //   address-literal  = "[" ( IPv4-address-literal /
+                            //                    IPv6-address-literal /
+                            //                    General-address-literal ) "]"
+                            //                    ; See Section 4.1.3
+                            //
+                            // http://tools.ietf.org/html/rfc5321#section-4.1.3
+                            //   IPv4-address-literal  = Snum 3("."  Snum)
+                            //
+                            //   IPv6-address-literal  = "IPv6:" IPv6-addr
+                            //
+                            //   General-address-literal  = Standardized-tag ":" 1*dcontent
+                            //
+                            //   Standardized-tag  = Ldh-str
+                            //                     ; Standardized-tag MUST be specified in a
+                            //                     ; Standards-Track RFC and registered with IANA
+                            //
+                            //   dcontent      = %d33-90 / ; Printable US-ASCII
+                            //                 %d94-126 ; excl. "[", "\", "]"
+                            //
+                            //   Snum          = 1*3DIGIT
+                            //                 ; representing a decimal integer
+                            //                 ; value in the range 0 through 255
+                            //
+                            //   IPv6-addr     = IPv6-full / IPv6-comp / IPv6v4-full / IPv6v4-comp
+                            //
+                            //   IPv6-hex      = 1*4HEXDIG
+                            //
+                            //   IPv6-full     = IPv6-hex 7(":" IPv6-hex)
+                            //
+                            //   IPv6-comp     = [IPv6-hex *5(":" IPv6-hex)] "::"
+                            //                 [IPv6-hex *5(":" IPv6-hex)]
+                            //                 ; The "::" represents at least 2 16-bit groups of
+                            //                 ; zeros.  No more than 6 groups in addition to the
+                            //                 ; "::" may be present.
+                            //
+                            //   IPv6v4-full   = IPv6-hex 5(":" IPv6-hex) ":" IPv4-address-literal
+                            //
+                            //   IPv6v4-comp   = [IPv6-hex *3(":" IPv6-hex)] "::"
+                            //                 [IPv6-hex *3(":" IPv6-hex) ":"]
+                            //                 IPv4-address-literal
+                            //                 ; The "::" represents at least 2 16-bit groups of
+                            //                 ; zeros.  No more than 4 groups in addition to the
+                            //                 ; "::" and IPv4-address-literal may be present.
+
+                            var index = -1;
+                            var addressLiteral = parseData.literal;
+                            var matchesIP = IPv4_REGEX.exec(addressLiteral);
+
+                            // Maybe extract IPv4 part from the end of the address-literal
+                            if (matchesIP) {
+                                index = matchesIP.index;
+                                if (index !== 0) {
+                                    // Convert IPv4 part to IPv6 format for futher testing
+                                    addressLiteral = addressLiteral.slice(0, index) + '0:0';
+                                }
+                            }
+
+                            if (index === 0) {
+                                // Nothing there except a valid IPv4 address, so...
+                                updateResult(internals.diagnoses.rfc5321AddressLiteral);
+                            }
+                            else if (addressLiteral.slice(0, 5).toLowerCase() !== 'ipv6:') {
+                                updateResult(internals.diagnoses.rfc5322DomainLiteral);
+                            }
+                            else {
+                                var match = addressLiteral.slice(5);
+                                var maxGroups = internals.maxIPv6Groups;
+                                var groups = match.split(':');
+                                index = match.indexOf('::');
+
+                                if (!~index) {
+                                    // Need exactly the right number of groups
+                                    if (groups.length !== maxGroups) {
+                                        updateResult(internals.diagnoses.rfc5322IPv6GroupCount);
+                                    }
+                                }
+                                else if (index !== match.lastIndexOf('::')) {
+                                    updateResult(internals.diagnoses.rfc5322IPv62x2xColon);
+                                }
+                                else {
+                                    if (index === 0 || index === match.length - 2) {
+                                        // RFC 4291 allows :: at the start or end of an address with 7 other groups in addition
+                                        ++maxGroups;
+                                    }
+
+                                    if (groups.length > maxGroups) {
+                                        updateResult(internals.diagnoses.rfc5322IPv6MaxGroups);
+                                    }
+                                    else if (groups.length === maxGroups) {
+                                        // Eliding a single "::"
+                                        updateResult(internals.diagnoses.deprecatedIPv6);
+                                    }
+                                }
+
+                                // IPv6 testing strategy
+                                if (match[0] === ':' && match[1] !== ':') {
+                                    updateResult(internals.diagnoses.rfc5322IPv6ColonStart);
+                                }
+                                else if (match[match.length - 1] === ':' && match[match.length - 2] !== ':') {
+                                    updateResult(internals.diagnoses.rfc5322IPv6ColonEnd);
+                                }
+                                else if (groups.every(IPv6_REGEX_TEST)) {
+                                    updateResult(internals.diagnoses.rfc5321AddressLiteral);
+                                }
+                                else {
+                                    updateResult(internals.diagnoses.rfc5322IPv6BadCharacter);
+                                }
+                            }
+                        }
+                        else {
+                            updateResult(internals.diagnoses.rfc5322DomainLiteral);
+                        }
+
+                        parseData.domain += token;
+                        atomData.domains[elementCount] += token;
+                        ++elementLength;
+                        context.prev = context.now;
+                        context.now = context.stack.pop();
+                        break;
+
+                    case '\\':
+                        updateResult(internals.diagnoses.rfc5322DomainLiteralOBSDText);
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextQuotedPair;
+                        break;
+
+                    // Folding white space
+                    case '\r':
+                        if (emailLength === ++i || email[i] !== '\n') {
+                            updateResult(internals.diagnoses.errCRNoLF);
+                            break;
+                        }
+
+                        // Fallthrough
+
+                    case ' ':
+                    case '\t':
+                        updateResult(internals.diagnoses.cfwsFWS);
+
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextFWS;
+                        prevToken = token;
+                        break;
+
+                    // DTEXT
+                    default:
+                        // http://tools.ietf.org/html/rfc5322#section-3.4.1
+                        //   dtext         =   %d33-90 /  ; Printable US-ASCII
+                        //                     %d94-126 / ;  characters not including
+                        //                     obs-dtext  ;  "[", "]", or "\"
+                        //
+                        //   obs-dtext     =   obs-NO-WS-CTL / quoted-pair
+                        //
+                        //   obs-NO-WS-CTL =   %d1-8 /    ; US-ASCII control
+                        //                     %d11 /     ;  characters that do not
+                        //                     %d12 /     ;  include the carriage
+                        //                     %d14-31 /  ;  return, line feed, and
+                        //                     %d127      ;  white space characters
+                        charCode = token.charCodeAt(0);
+
+                        // '\r', '\n', ' ', and '\t' have already been parsed above
+                        if (charCode > 127 || charCode === 0 || token === '[') {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errExpectingDTEXT);
+                            break;
+                        }
+                        else if (charCode < 33 || charCode === 127) {
+                            updateResult(internals.diagnoses.rfc5322DomainLiteralOBSDText);
+                        }
+
+                        parseData.literal += token;
+                        parseData.domain += token;
+                        atomData.domains[elementCount] += token;
+                        ++elementLength;
+                }
+
+                break;
+
+            // Quoted string
+            case internals.components.contextQuotedString:
+                // http://tools.ietf.org/html/rfc5322#section-3.2.4
+                //   quoted-string = [CFWS]
+                //                   DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+                //                   [CFWS]
+                //
+                //   qcontent      = qtext / quoted-pair
+                switch (token) {
+                    // Quoted pair
+                    case '\\':
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextQuotedPair;
+                        break;
+
+                    // Folding white space. Spaces are allowed as regular characters inside a quoted string - it's only FWS if we include '\t' or '\r\n'
+                    case '\r':
+                        if (emailLength === ++i || email[i] !== '\n') {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errCRNoLF);
+                            break;
+                        }
+
+                        // Fallthrough
+
+                    case '\t':
+                        // http://tools.ietf.org/html/rfc5322#section-3.2.2
+                        //   Runs of FWS, comment, or CFWS that occur between lexical tokens in
+                        //   a structured header field are semantically interpreted as a single
+                        //   space character.
+
+                        // http://tools.ietf.org/html/rfc5322#section-3.2.4
+                        //   the CRLF in any FWS/CFWS that appears within the quoted-string [is]
+                        //   semantically "invisible" and therefore not part of the
+                        //   quoted-string
+
+                        parseData.local += ' ';
+                        atomData.locals[elementCount] += ' ';
+                        ++elementLength;
+
+                        updateResult(internals.diagnoses.cfwsFWS);
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextFWS;
+                        prevToken = token;
+                        break;
+
+                    // End of quoted string
+                    case '"':
+                        parseData.local += token;
+                        atomData.locals[elementCount] += token;
+                        ++elementLength;
+                        context.prev = context.now;
+                        context.now = context.stack.pop();
+                        break;
+
+                    // QTEXT
+                    default:
+                        // http://tools.ietf.org/html/rfc5322#section-3.2.4
+                        //   qtext          =   %d33 /             ; Printable US-ASCII
+                        //                      %d35-91 /          ;  characters not including
+                        //                      %d93-126 /         ;  "\" or the quote character
+                        //                      obs-qtext
+                        //
+                        //   obs-qtext      =   obs-NO-WS-CTL
+                        //
+                        //   obs-NO-WS-CTL  =   %d1-8 /            ; US-ASCII control
+                        //                      %d11 /             ;  characters that do not
+                        //                      %d12 /             ;  include the carriage
+                        //                      %d14-31 /          ;  return, line feed, and
+                        //                      %d127              ;  white space characters
+                        charCode = token.charCodeAt(0);
+
+                        if (charCode > 127 || charCode === 0 || charCode === 10) {
+                            updateResult(internals.diagnoses.errExpectingQTEXT);
+                        }
+                        else if (charCode < 32 || charCode === 127) {
+                            updateResult(internals.diagnoses.deprecatedQTEXT);
+                        }
+
+                        parseData.local += token;
+                        atomData.locals[elementCount] += token;
+                        ++elementLength;
+                }
+
+                // http://tools.ietf.org/html/rfc5322#section-3.4.1
+                //   If the string can be represented as a dot-atom (that is, it contains
+                //   no characters other than atext characters or "." surrounded by atext
+                //   characters), then the dot-atom form SHOULD be used and the quoted-
+                //   string form SHOULD NOT be used.
+
+                break;
+            // Quoted pair
+            case internals.components.contextQuotedPair:
+                // http://tools.ietf.org/html/rfc5322#section-3.2.1
+                //   quoted-pair     =   ("\" (VCHAR / WSP)) / obs-qp
+                //
+                //   VCHAR           =  %d33-126   ; visible (printing) characters
+                //   WSP             =  SP / HTAB  ; white space
+                //
+                //   obs-qp          =   "\" (%d0 / obs-NO-WS-CTL / LF / CR)
+                //
+                //   obs-NO-WS-CTL   =   %d1-8 /   ; US-ASCII control
+                //                       %d11 /    ;  characters that do not
+                //                       %d12 /    ;  include the carriage
+                //                       %d14-31 / ;  return, line feed, and
+                //                       %d127     ;  white space characters
+                //
+                // i.e. obs-qp       =  "\" (%d0-8, %d10-31 / %d127)
+                charCode = token.charCodeAt(0);
+
+                if (charCode > 127) {
+                    // Fatal error
+                    updateResult(internals.diagnoses.errExpectingQPair);
+                }
+                else if ((charCode < 31 && charCode !== 9) || charCode === 127) {
+                    // ' ' and '\t' are allowed
+                    updateResult(internals.diagnoses.deprecatedQP);
+                }
+
+                // At this point we know where this qpair occurred so we could check to see if the character actually needed to be quoted at all.
+                // http://tools.ietf.org/html/rfc5321#section-4.1.2
+                //   the sending system SHOULD transmit the form that uses the minimum quoting possible.
+
+                context.prev = context.now;
+                // End of qpair
+                context.now = context.stack.pop();
+                token = '\\' + token;
+
+                switch (context.now) {
+                    case internals.components.contextComment:
+                        break;
+
+                    case internals.components.contextQuotedString:
+                        parseData.local += token;
+                        atomData.locals[elementCount] += token;
+
+                        // The maximum sizes specified by RFC 5321 are octet counts, so we must include the backslash
+                        elementLength += 2;
+                        break;
+
+                    case internals.components.literal:
+                        parseData.domain += token;
+                        atomData.domains[elementCount] += token;
+
+                        // The maximum sizes specified by RFC 5321 are octet counts, so we must include the backslash
+                        elementLength += 2;
+                        break;
+
+                    // $lab:coverage:off$
+                    default:
+                        throw new Error('quoted pair logic invoked in an invalid context: ' + context.now);
+                    // $lab:coverage:on$
+                }
+                break;
+
+            // Comment
+            case internals.components.contextComment:
+                // http://tools.ietf.org/html/rfc5322#section-3.2.2
+                //   comment  = "(" *([FWS] ccontent) [FWS] ")"
+                //
+                //   ccontent = ctext / quoted-pair / comment
+                switch (token) {
+                    // Nested comment
+                    case '(':
+                        // Nested comments are ok
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextComment;
+                        break;
+
+                    // End of comment
+                    case ')':
+                        context.prev = context.now;
+                        context.now = context.stack.pop();
+                        break;
+
+                    // Quoted pair
+                    case '\\':
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextQuotedPair;
+                        break;
+
+                    // Folding white space
+                    case '\r':
+                        if (emailLength === ++i || email[i] !== '\n') {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errCRNoLF);
+                            break;
+                        }
+
+                        // Fallthrough
+
+                    case ' ':
+                    case '\t':
+                        updateResult(internals.diagnoses.cfwsFWS);
+
+                        context.stack.push(context.now);
+                        context.now = internals.components.contextFWS;
+                        prevToken = token;
+                        break;
+
+                    // CTEXT
+                    default:
+                        // http://tools.ietf.org/html/rfc5322#section-3.2.3
+                        //   ctext         = %d33-39 /  ; Printable US-ASCII
+                        //                   %d42-91 /  ;  characters not including
+                        //                   %d93-126 / ;  "(", ")", or "\"
+                        //                   obs-ctext
+                        //
+                        //   obs-ctext     = obs-NO-WS-CTL
+                        //
+                        //   obs-NO-WS-CTL = %d1-8 /    ; US-ASCII control
+                        //                   %d11 /     ;  characters that do not
+                        //                   %d12 /     ;  include the carriage
+                        //                   %d14-31 /  ;  return, line feed, and
+                        //                   %d127      ;  white space characters
+                        charCode = token.charCodeAt(0);
+
+                        if (charCode > 127 || charCode === 0 || charCode === 10) {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errExpectingCTEXT);
+                            break;
+                        }
+                        else if (charCode < 32 || charCode === 127) {
+                            updateResult(internals.diagnoses.deprecatedCTEXT);
+                        }
+                }
+
+                break;
+
+            // Folding white space
+            case internals.components.contextFWS:
+                // http://tools.ietf.org/html/rfc5322#section-3.2.2
+                //   FWS     =   ([*WSP CRLF] 1*WSP) /  obs-FWS
+                //                                   ; Folding white space
+
+                // But note the erratum:
+                // http://www.rfc-editor.org/errata_search.php?rfc=5322&eid=1908:
+                //   In the obsolete syntax, any amount of folding white space MAY be
+                //   inserted where the obs-FWS rule is allowed.  This creates the
+                //   possibility of having two consecutive "folds" in a line, and
+                //   therefore the possibility that a line which makes up a folded header
+                //   field could be composed entirely of white space.
+                //
+                //   obs-FWS =   1*([CRLF] WSP)
+
+                if (prevToken === '\r') {
+                    if (token === '\r') {
+                        // Fatal error
+                        updateResult(internals.diagnoses.errFWSCRLFx2);
+                        break;
+                    }
+
+                    if (++crlfCount > 1) {
+                        // Multiple folds => obsolete FWS
+                        updateResult(internals.diagnoses.deprecatedFWS);
+                    }
+                    else {
+                        crlfCount = 1;
+                    }
+                }
+
+                switch (token) {
+                    case '\r':
+                        if (emailLength === ++i || email[i] !== '\n') {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errCRNoLF);
+                        }
+
+                        break;
+
+                    case ' ':
+                    case '\t':
+                        break;
+
+                    default:
+                        if (prevToken === '\r') {
+                            // Fatal error
+                            updateResult(internals.diagnoses.errFWSCRLFEnd);
+                        }
+
+                        crlfCount = 0;
+
+                        // End of FWS
+                        context.prev = context.now;
+                        context.now = context.stack.pop();
+
+                        // Look at this token again in the parent context
+                        --i;
+                }
+
+                prevToken = token;
+                break;
+
+            // Unexpected context
+            // $lab:coverage:off$
+            default:
+                throw new Error('unknown context: ' + context.now);
+            // $lab:coverage:on$
+        } // Primary state machine
+
+        if (maxResult > internals.categories.rfc5322) {
+            // Fatal error, no point continuing
             break;
-          case CONTEXT_QUOTEDSTRING:
-            updateResult(ISEMAIL_ERR_ATEXT_AFTER_QS);
-            break;
-          /* istanbul ignore next: logically unreachable */
-          default:
-            throw new Error('more atext found where none is allowed, ' +
-              'but unrecognized prev context: ' + context.prev);
-          }
-        } else {
-          context.prev = context.now;
-          charCode = token.charCodeAt(0);
-
-          if (charCode < 33 || charCode > 126 || charCode === 10 ||
-              specialsLookup(charCode)) {
-            // fatal error
-            updateResult(ISEMAIL_ERR_EXPECTING_ATEXT);
-          }
-
-          parseData.local += token;
-          atomList.local[elementCount] += token;
-          elementLength++;
         }
-      }
-      break;
-    case COMPONENT_DOMAIN:
-      // http://tools.ietf.org/html/rfc5322#section-3.4.1
-      //   domain          =   dot-atom / domain-literal / obs-domain
-      //
-      //   dot-atom        =   [CFWS] dot-atom-text [CFWS]
-      //
-      //   dot-atom-text   =   1*atext *("." 1*atext)
-      //
-      //   domain-literal  =   [CFWS] "[" *([FWS] dtext) [FWS] "]" [CFWS]
-      //
-      //   dtext           =   %d33-90 /          ; Printable US-ASCII
-      //                       %d94-126 /         ;  characters not including
-      //                       obs-dtext          ;  "[", "]", or "\"
-      //
-      //   obs-domain      =   atom *("." atom)
-      //
-      //   atom            =   [CFWS] 1*atext [CFWS]
+    } // Token loop
 
-      // http://tools.ietf.org/html/rfc5321#section-4.1.2
-      //   Mailbox        = Local-part "@" ( Domain / address-literal )
-      //
-      //   Domain         = sub-domain *("." sub-domain)
-      //
-      //   address-literal  = "[" ( IPv4-address-literal /
-      //                    IPv6-address-literal /
-      //                    General-address-literal ) "]"
-      //                    ; See Section 4.1.3
-
-      // http://tools.ietf.org/html/rfc5322#section-3.4.1
-      //      Note: A liberal syntax for the domain portion of addr-spec is
-      //      given here.  However, the domain portion contains addressing
-      //      information specified by and used in other protocols (e.g.,
-      //      [RFC1034], [RFC1035], [RFC1123], [RFC5321]).  It is therefore
-      //      incumbent upon implementations to conform to the syntax of
-      //      addresses for the context in which they are used.
-      // is_email() author's note: it's not clear how to interpret this in
-      // the context of a general email address validator. The conclusion I
-      // have reached is this: "addressing information" must comply with
-      // RFC 5321 (and in turn RFC 1035), anything that is "semantically
-      // invisible" must comply only with RFC 5322.
-      switch (token) {
-      // comment
-      case '(':
-        if (elementLength === 0) {
-          // comments at the start of the domain are deprecated in the text
-          // comments at the start of a subdomain are obs-domain
-          // (http://tools.ietf.org/html/rfc5322#section-3.4.1)
-          updateResult(elementCount === 0 ? ISEMAIL_DEPREC_CFWS_NEAR_AT :
-            ISEMAIL_DEPREC_COMMENT);
-        } else {
-          updateResult(ISEMAIL_CFWS_COMMENT);
-          assertEnd = true; // can't start a comment mid-element, better be end
+    // Check for errors
+    if (maxResult < internals.categories.rfc5322) {
+        // Fatal errors
+        if (context.now === internals.components.contextQuotedString) {
+            updateResult(internals.diagnoses.errUnclosedQuotedString);
+        }
+        else if (context.now === internals.components.contextQuotedPair) {
+            updateResult(internals.diagnoses.errBackslashEnd);
+        }
+        else if (context.now === internals.components.contextComment) {
+            updateResult(internals.diagnoses.errUnclosedComment);
+        }
+        else if (context.now === internals.components.literal) {
+            updateResult(internals.diagnoses.errUnclosedDomainLiteral);
+        }
+        else if (token === '\r') {
+            updateResult(internals.diagnoses.errFWSCRLFEnd);
+        }
+        else if (parseData.domain.length === 0) {
+            updateResult(internals.diagnoses.errNoDomain);
+        }
+        else if (elementLength === 0) {
+            updateResult(internals.diagnoses.errDotEnd);
+        }
+        else if (hyphenFlag) {
+            updateResult(internals.diagnoses.errDomainHyphenEnd);
         }
 
-        context.stack.push(context.now);
-        context.now = CONTEXT_COMMENT;
-        break;
-      // next dot-atom element
-      case '.':
-        if (elementLength === 0) {
-          // another dot, already? fatal error
-          updateResult(elementCount === 0 ? ISEMAIL_ERR_DOT_START :
-            ISEMAIL_ERR_CONSECUTIVEDOTS);
-        } else if (hyphenFlag) {
-          // previous subdomain ended in a hyphen
-          updateResult(ISEMAIL_ERR_DOMAINHYPHENEND); // fatal error
-        } else if (elementLength > 63) {
-          // Nowhere in RFC 5321 does it say explicitly that the
-          // domain part of a Mailbox must be a valid domain according
-          // to the DNS standards set out in RFC 1035, but this *is*
-          // implied in several places. For instance, wherever the idea
-          // of host routing is discussed the RFC says that the domain
-          // must be looked up in the DNS. This would be nonsense unless
-          // the domain was designed to be a valid DNS domain. Hence we
-          // must conclude that the RFC 1035 restriction on label length
-          // also applies to RFC 5321 domains.
-          //
-          // http://tools.ietf.org/html/rfc1035#section-2.3.4
-          // labels          63 octets or less
-
-          updateResult(ISEMAIL_RFC5322_LABEL_TOOLONG);
+        // Other errors
+        else if (parseData.domain.length > 255) {
+            // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.2
+            //   The maximum total length of a domain name or number is 255 octets.
+            updateResult(internals.diagnoses.rfc5322DomainTooLong);
         }
-
-        // CFWS is OK again now we're at the beginning of an element (although
-        // it may be obsolete CFWS)
-        assertEnd = false;
-        elementLength = 0;
-        elementCount++;
-        atomList.domain[elementCount] = '';
-        parseData.domain += token;
-
-        break;
-      // domain literal
-      case '[':
-        if (parseData.domain.length === 0) {
-          // domain literal must be the only component
-          assertEnd = true;
-          elementLength++;
-          context.stack.push(context.now);
-          context.now = COMPONENT_LITERAL;
-          parseData.domain += token;
-          atomList.domain[elementCount] += token;
-          parseData.literal = '';
-        } else {
-          // fatal error
-          updateResult(ISEMAIL_ERR_EXPECTING_ATEXT);
+        else if (parseData.local.length + parseData.domain.length + /* '@' */ 1 > 254) {
+            // http://tools.ietf.org/html/rfc5321#section-4.1.2
+            //   Forward-path   = Path
+            //
+            //   Path           = "<" [ A-d-l ":" ] Mailbox ">"
+            //
+            // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.3
+            //   The maximum total length of a reverse-path or forward-path is 256 octets (including the punctuation and element separators).
+            //
+            // Thus, even without (obsolete) routing information, the Mailbox can only be 254 characters long. This is confirmed by this verified
+            // erratum to RFC 3696:
+            //
+            // http://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
+            //   However, there is a restriction in RFC 2821 on the length of an address in MAIL and RCPT commands of 254 characters.  Since
+            //   addresses that do not fit in those fields are not normally useful, the upper limit on address lengths should normally be considered
+            //   to be 254.
+            updateResult(internals.diagnoses.rfc5322TooLong);
         }
-        break;
-      // folding white space
-      case '\r':
-        if ((++i === email.length) || email[i] !== '\n') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_CR_NO_LF);
-          break;
+        else if (elementLength > 63) {
+            // http://tools.ietf.org/html/rfc1035#section-2.3.4
+            // labels   63 octets or less
+            updateResult(internals.diagnoses.rfc5322LabelTooLong);
         }
-      case ' ':
-      case '\t':
-        if (elementLength === 0) {
-          updateResult(elementCount === 0 ? ISEMAIL_DEPREC_CFWS_NEAR_AT :
-            ISEMAIL_DEPREC_FWS);
-        } else {
-          // we can't start FWS in the middle of an element, so this better be
-          // the end
-          updateResult(ISEMAIL_CFWS_FWS);
-          assertEnd = true;
+        else if (options.minDomainAtoms && atomData.domains.length < options.minDomainAtoms) {
+            updateResult(internals.diagnoses.errDomainTooShort);
         }
+        else if (options.tldWhitelist) {
+            var tldAtom = atomData.domains[elementCount];
+            if (Array.isArray(options.tldWhitelist)) {
+                var tldValid = false;
+                for (i = 0, il = options.tldWhitelist.length; i < il; ++i) {
+                    if (tldAtom === options.tldWhitelist[i]) {
+                        tldValid = true;
+                        break;
+                    }
+                }
 
-        context.stack.push(context.now);
-        context.now = CONTEXT_FWS;
-        prevToken = token;
-        break;
-      // atext
-      default:
-        // RFC 5322 allows any atext...
-        // http://tools.ietf.org/html/rfc5322#section-3.2.3
-        //    atext = ALPHA / DIGIT / ; Printable US-ASCII
-        //            "!" / "#" /     ;  characters not including
-        //            "$" / "%" /     ;  specials.  Used for atoms.
-        //            "&" / "'" /
-        //            "*" / "+" /
-        //            "-" / "/" /
-        //            "=" / "?" /
-        //            "^" / "_" /
-        //            "`" / "{" /
-        //            "|" / "}" /
-        //            "~"
-
-        // But RFC 5321 only allows letter-digit-hyphen to comply with DNS rules
-        //   (RFCs 1034 & 1123)
-        // http://tools.ietf.org/html/rfc5321#section-4.1.2
-        //   sub-domain     = Let-dig [Ldh-str]
-        //
-        //   Let-dig        = ALPHA / DIGIT
-        //
-        //   Ldh-str        = *( ALPHA / DIGIT / "-" ) Let-dig
-        //
-        if (assertEnd) {
-          // we have encountered atext where it is no longer valid
-          switch (context.prev) {
-          case CONTEXT_COMMENT:
-          case CONTEXT_FWS:
-            updateResult(ISEMAIL_ERR_ATEXT_AFTER_CFWS);
-            break;
-          case COMPONENT_LITERAL:
-            updateResult(ISEMAIL_ERR_ATEXT_AFTER_DOMLIT);
-            break;
-          /* istanbul ignore next: logically unreachable */
-          default:
-            throw new Error('more atext found where none is allowed, ' +
-              'but unrecognized prev context: ' + context.prev);
-          }
-        }
-
-        charCode = token.charCodeAt(0);
-        // assume this token isn't a hyphen unless we discover it is
-        hyphenFlag = false;
-
-        if (charCode < 33 || charCode > 126 || specialsLookup(charCode)) {
-          // fatal error
-          updateResult(ISEMAIL_ERR_EXPECTING_ATEXT);
-        } else if (token === '-') {
-          if (elementLength === 0) {
-            // hyphens can't be at the beginning of a subdomain
-            updateResult(ISEMAIL_ERR_DOMAINHYPHENSTART); // fatal error
-          }
-
-          hyphenFlag = true;
-        } else if (!((charCode > 47 && charCode < 58) ||
-                     (charCode > 64 && charCode < 91) ||
-                     (charCode > 96 && charCode < 123))) {
-          // not an RFC 5321 subdomain, but still OK by RFC 5322
-          updateResult(ISEMAIL_RFC5322_DOMAIN);
-        }
-
-        parseData.domain += token;
-        atomList.domain[elementCount] += token;
-        elementLength++;
-      }
-      break;
-    // domain literal
-    case COMPONENT_LITERAL:
-      // http://tools.ietf.org/html/rfc5322#section-3.4.1
-      //   domain-literal  =   [CFWS] "[" *([FWS] dtext) [FWS] "]" [CFWS]
-      //
-      //   dtext           =   %d33-90 /          ; Printable US-ASCII
-      //                       %d94-126 /         ;  characters not including
-      //                       obs-dtext          ;  "[", "]", or "\"
-      //
-      //   obs-dtext       =   obs-NO-WS-CTL / quoted-pair
-      switch (token) {
-      // end of domain literal
-      case ']':
-        if (maxResult < ISEMAIL_DEPREC) {
-          // Could be a valid RFC 5321 address literal, so let's check
-
-          // http://tools.ietf.org/html/rfc5321#section-4.1.2
-          //   address-literal  = "[" ( IPv4-address-literal /
-          //                    IPv6-address-literal /
-          //                    General-address-literal ) "]"
-          //                    ; See Section 4.1.3
-          //
-          // http://tools.ietf.org/html/rfc5321#section-4.1.3
-          //   IPv4-address-literal  = Snum 3("."  Snum)
-          //
-          //   IPv6-address-literal  = "IPv6:" IPv6-addr
-          //
-          //   General-address-literal  = Standardized-tag ":" 1*dcontent
-          //
-          //   Standardized-tag  = Ldh-str
-          //                     ; Standardized-tag MUST be specified in a
-          //                     ; Standards-Track RFC and registered with IANA
-          //
-          //   dcontent      = %d33-90 / ; Printable US-ASCII
-          //                 %d94-126 ; excl. "[", "\", "]"
-          //
-          //   Snum          = 1*3DIGIT
-          //                 ; representing a decimal integer
-          //                 ; value in the range 0 through 255
-          //
-          //   IPv6-addr     = IPv6-full / IPv6-comp / IPv6v4-full / IPv6v4-comp
-          //
-          //   IPv6-hex      = 1*4HEXDIG
-          //
-          //   IPv6-full     = IPv6-hex 7(":" IPv6-hex)
-          //
-          //   IPv6-comp     = [IPv6-hex *5(":" IPv6-hex)] "::"
-          //                 [IPv6-hex *5(":" IPv6-hex)]
-          //                 ; The "::" represents at least 2 16-bit groups of
-          //                 ; zeros.  No more than 6 groups in addition to the
-          //                 ; "::" may be present.
-          //
-          //   IPv6v4-full   = IPv6-hex 5(":" IPv6-hex) ":" IPv4-address-literal
-          //
-          //   IPv6v4-comp   = [IPv6-hex *3(":" IPv6-hex)] "::"
-          //                 [IPv6-hex *3(":" IPv6-hex) ":"]
-          //                 IPv4-address-literal
-          //                 ; The "::" represents at least 2 16-bit groups of
-          //                 ; zeros.  No more than 4 groups in addition to the
-          //                 ; "::" and IPv4-address-literal may be present.
-          //
-          // is_email() author's note: We can't use ip2long() to validate
-          // IPv4 addresses because it accepts abbreviated addresses
-          // (xxx.xxx.xxx), expanding the last group to complete the address.
-          // filter_var() validates IPv6 address inconsistently (up to PHP 5.3.3
-          // at least) -- see http://bugs.php.net/bug.php?id=53236 for example
-
-          // TODO: var here?
-          var maxGroups = 8, matchesIP, index = false;
-          var addressLiteral = parseData.literal;
-
-          // maybe extract IPv4 part from the end of the address-literal
-          if (matchesIP = IPv4_REGEX.exec(addressLiteral)) {
-            if ((index = matchesIP.index) !== 0) {
-              // convert IPv4 part to IPv6 format for futher testing
-              addressLiteral = addressLiteral.slice(0, matchesIP.index) + '0:0';
+                if (!tldValid) {
+                    updateResult(internals.diagnoses.errUnknownTLD);
+                }
             }
-          }
+            else if (!hasOwn.call(options.tldWhitelist, tldAtom)) {
+                updateResult(internals.diagnoses.errUnknownTLD);
+            }
+        }
+    } // Check for errors
 
-          if (index === 0) {
-            // nothing there except a valid IPv4 address, so...
-            updateResult(ISEMAIL_RFC5321_ADDRESSLITERAL);
-          } else if (addressLiteral.slice(0, 5).toLowerCase() !== 'ipv6:') {
-            updateResult(ISEMAIL_RFC5322_DOMAINLITERAL);
-          } else {
-            var match = addressLiteral.substr(5);
-            matchesIP = match.split(':');
-            index = match.indexOf('::');
+    var dnsPositive = false;
+    var finishImmediately = false;
 
-            if (!~index) {
-              // need exactly the right number of groups
-              if (matchesIP.length !== maxGroups) {
-                updateResult(ISEMAIL_RFC5322_IPV6_GRPCOUNT);
-              }
-            } else if (index !== match.lastIndexOf('::')) {
-              updateResult(ISEMAIL_RFC5322_IPV6_2X2XCOLON);
+    var finish = function finish () {
+
+        if (!dnsPositive && maxResult < internals.categories.dnsWarn) {
+            // Per RFC 5321, domain atoms are limited to letter-digit-hyphen, so we only need to check code <= 57 to check for a digit
+            var code = atomData.domains[elementCount].charCodeAt(0);
+            if (code <= 57) {
+                updateResult(internals.diagnoses.rfc5321TLDNumeric);
+            }
+            else if (elementCount === 0) {
+                updateResult(internals.diagnoses.rfc5321TLD);
+            }
+        }
+
+        if (maxResult < threshold) {
+            maxResult = internals.diagnoses.valid;
+        }
+
+        var finishResult = diagnose ? maxResult : maxResult < internals.defaultThreshold;
+
+        if (callback) {
+            if (finishImmediately) {
+                callback(finishResult);
             } else {
-              if (index === 0 || index === match.length - 2) {
-                // RFC 4291 allows :: at the start or end of an address with
-                // 7 other groups in addition
-                maxGroups++;
-              }
+                internals.defer(callback.bind(null, finishResult));
+            }
+        }
 
-              if (matchesIP.length > maxGroups) {
-                updateResult(ISEMAIL_RFC5322_IPV6_MAXGRPS);
-              } else if (matchesIP.length === maxGroups) {
-                // eliding a single "::"
-                updateResult(ISEMAIL_RFC5321_IPV6DEPRECATED);
-              }
+        return finishResult;
+    }; // Finish
+
+    if (options.checkDNS && maxResult < internals.categories.dnsWarn) {
+        // http://tools.ietf.org/html/rfc5321#section-2.3.5
+        //   Names that can be resolved to MX RRs or address (i.e., A or AAAA) RRs (as discussed in Section 5) are permitted, as are CNAME RRs whose
+        //   targets can be resolved, in turn, to MX or address RRs.
+        //
+        // http://tools.ietf.org/html/rfc5321#section-5.1
+        //   The lookup first attempts to locate an MX record associated with the name.  If a CNAME record is found, the resulting name is processed
+        //   as if it were the initial name. ... If an empty list of MXs is returned, the address is treated as if it was associated with an implicit
+        //   MX RR, with a preference of 0, pointing to that host.
+        //
+        // isEmail() author's note: We will regard the existence of a CNAME to be sufficient evidence of the domain's existence. For performance
+        // reasons we will not repeat the DNS lookup for the CNAME's target, but we will raise a warning because we didn't immediately find an MX
+        // record.
+        if (elementCount === 0) {
+            // Checking TLD DNS only works if you explicitly check from the root
+            parseData.domain += '.';
+        }
+
+        var dnsDomain = parseData.domain;
+        Dns.resolveMx(dnsDomain, function resolveDNS (err, mxRecords) {
+
+            // If we have a fatal error, then we must assume that there are no records
+            if (err && err.code !== Dns.NODATA) {
+                updateResult(internals.diagnoses.dnsWarnNoRecord);
+                return finish();
             }
 
-            // IPv6 testing strategy
-            if (match[0] === ':' && match[1] !== ':') {
-              updateResult(ISEMAIL_RFC5322_IPV6_COLONSTRT);
-            } else if (match[match.length - 1] === ':' &&
-                       match[match.length - 2] !== ':') {
-              updateResult(ISEMAIL_RFC5322_IPV6_COLONEND);
-            } else if (matchesIP.every(IPv6_REGEX_TEST)) {
-              updateResult(ISEMAIL_RFC5321_ADDRESSLITERAL);
-            } else {
-              updateResult(ISEMAIL_RFC5322_IPV6_BADCHAR);
+            if (mxRecords && mxRecords.length) {
+                dnsPositive = true;
+                return finish();
             }
-          }
-        } else {
-          updateResult(ISEMAIL_RFC5322_DOMAINLITERAL);
-        }
 
-        parseData.domain += token;
-        atomList.domain[elementCount] += token;
-        elementLength++;
-        context.prev = context.now;
-        context.now = context.stack.pop();
-        break;
-      case '\\':
-        updateResult(ISEMAIL_RFC5322_DOMLIT_OBSDTEXT);
-        context.stack.push(context.now);
-        context.now = CONTEXT_QUOTEDPAIR;
-        break;
-      // folding white space
-      case '\r':
-        if ((++i === email.length) || email[i] !== '\n') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_CR_NO_LF);
-          break;
-        }
-      case ' ':
-      case '\t':
-        updateResult(ISEMAIL_CFWS_FWS);
+            var count = 3;
+            var done = false;
+            updateResult(internals.diagnoses.dnsWarnNoMXRecord);
 
-        context.stack.push(context.now);
-        context.now = CONTEXT_FWS;
-        prevToken = token;
-        break;
-      // dtext
-      default:
-        // http://tools.ietf.org/html/rfc5322#section-3.4.1
-        //   dtext         =   %d33-90 /  ; Printable US-ASCII
-        //                     %d94-126 / ;  characters not including
-        //                     obs-dtext  ;  "[", "]", or "\"
-        //
-        //   obs-dtext     =   obs-NO-WS-CTL / quoted-pair
-        //
-        //   obs-NO-WS-CTL =   %d1-8 /    ; US-ASCII control
-        //                     %d11 /     ;  characters that do not
-        //                     %d12 /     ;  include the carriage
-        //                     %d14-31 /  ;  return, line feed, and
-        //                     %d127      ;  white space characters
-        charCode = token.charCodeAt(0);
+            var handleRecords = function handleRecords (err, records) {
 
-        // CR, LF, SP & HTAB have already been parsed above
-        if (charCode > 127 || charCode === 0 || token === '[') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_EXPECTING_DTEXT);
-          break;
-        } else if (charCode < 33 || charCode === 127) {
-          updateResult(ISEMAIL_RFC5322_DOMLIT_OBSDTEXT);
-        }
+                if (done) {
+                    return;
+                }
 
-        parseData.literal += token;
-        parseData.domain += token;
-        atomList.domain[elementCount] += token;
-        elementLength++;
-      }
-      break;
-    // quoted string
-    case CONTEXT_QUOTEDSTRING:
-      // http://tools.ietf.org/html/rfc5322#section-3.2.4
-      //   quoted-string = [CFWS]
-      //                   DQUOTE *([FWS] qcontent) [FWS] DQUOTE
-      //                   [CFWS]
-      //
-      //   qcontent      = qtext / quoted-pair
-      switch (token) {
-      // quoted pair
-      case '\\':
-        context.stack.push(context.now);
-        context.now = CONTEXT_QUOTEDPAIR;
-        break;
-      // folding white space
-      // inside a quoted string, spaces are allowed as regular characters
-      // it's only FWS if we include HTAB or CRLF
-      case '\r':
-        if ((++i === email.length) || email[i] !== '\n') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_CR_NO_LF);
-          break;
-        }
-      case '\t':
-        // http://tools.ietf.org/html/rfc5322#section-3.2.2
-        //   Runs of FWS, comment, or CFWS that occur between lexical tokens in
-        //   a structured header field are semantically interpreted as a single
-        //   space character.
+                --count;
 
-        // http://tools.ietf.org/html/rfc5322#section-3.2.4
-        //   the CRLF in any FWS/CFWS that appears within the quoted-string [is]
-        //   semantically "invisible" and therefore not part of the
-        //   quoted-string
+                if (records && records.length) {
+                    done = true;
+                    return finish();
+                }
 
-        parseData.local += ' ';
-        atomList.local[elementCount] += ' ';
-        elementLength++;
+                if (count === 0) {
+                    // No usable records for the domain can be found
+                    updateResult(internals.diagnoses.dnsWarnNoRecord);
+                    done = true;
+                    finish();
+                }
+            };
 
-        updateResult(ISEMAIL_CFWS_FWS);
-        context.stack.push(context.now);
-        context.now = CONTEXT_FWS;
-        prevToken = token;
-        break;
-      // end of quoted string
-      case '"':
-        parseData.local += token;
-        atomList.local[elementCount] += token;
-        elementLength++;
-        context.prev = context.now;
-        context.now = context.stack.pop();
-        break;
-      // qtext
-      default:
-        // http://tools.ietf.org/html/rfc5322#section-3.2.4
-        //   qtext          =   %d33 /             ; Printable US-ASCII
-        //                      %d35-91 /          ;  characters not including
-        //                      %d93-126 /         ;  "\" or the quote character
-        //                      obs-qtext
-        //
-        //   obs-qtext      =   obs-NO-WS-CTL
-        //
-        //   obs-NO-WS-CTL  =   %d1-8 /            ; US-ASCII control
-        //                      %d11 /             ;  characters that do not
-        //                      %d12 /             ;  include the carriage
-        //                      %d14-31 /          ;  return, line feed, and
-        //                      %d127              ;  white space characters
-        charCode = token.charCodeAt(0);
+            Dns.resolveCname(dnsDomain, handleRecords);
+            Dns.resolve4(dnsDomain, handleRecords);
+            Dns.resolve6(dnsDomain, handleRecords);
+        });
 
-        if (charCode > 127 || charCode === 0 || charCode === 10) {
-          updateResult(ISEMAIL_ERR_EXPECTING_QTEXT);
-        } else if (charCode < 32 || charCode === 127) {
-          updateResult(ISEMAIL_DEPREC_QTEXT);
-        }
-
-        parseData.local += token;
-        atomList.local[elementCount] += token;
-        elementLength++;
-      }
-
-      // http://tools.ietf.org/html/rfc5322#section-3.4.1
-      //   If the string can be represented as a dot-atom (that is, it contains
-      //   no characters other than atext characters or "." surrounded by atext
-      //   characters), then the dot-atom form SHOULD be used and the quoted-
-      //   string form SHOULD NOT be used.
-
-      break;
-    // quoted pair
-    case CONTEXT_QUOTEDPAIR:
-      // http://tools.ietf.org/html/rfc5322#section-3.2.1
-      //   quoted-pair     =   ("\" (VCHAR / WSP)) / obs-qp
-      //
-      //   VCHAR           =  %d33-126   ; visible (printing) characters
-      //   WSP             =  SP / HTAB  ; white space
-      //
-      //   obs-qp          =   "\" (%d0 / obs-NO-WS-CTL / LF / CR)
-      //
-      //   obs-NO-WS-CTL   =   %d1-8 /   ; US-ASCII control
-      //                       %d11 /    ;  characters that do not
-      //                       %d12 /    ;  include the carriage
-      //                       %d14-31 / ;  return, line feed, and
-      //                       %d127     ;  white space characters
-      //
-      // i.e. obs-qp       =  "\" (%d0-8, %d10-31 / %d127)
-      charCode = token.charCodeAt(0);
-
-      if (charCode > 127) {
-        // fatal error
-        updateResult(ISEMAIL_ERR_EXPECTING_QPAIR);
-      } else if ((charCode < 31 && charCode !== 9) || charCode === 127) {
-        // SP & HTAB are allowed
-        updateResult(ISEMAIL_DEPREC_QP);
-      }
-
-      // At this point we know where this qpair occurred so
-      // we could check to see if the character actually
-      // needed to be quoted at all.
-      // http://tools.ietf.org/html/rfc5321#section-4.1.2
-      //   the sending system SHOULD transmit the
-      //   form that uses the minimum quoting possible.
-
-      // TODO: check whether the character needs to be quoted (escaped)
-      // in this context
-
-      context.prev = context.now;
-      context.now = context.stack.pop(); // end of qpair
-      token = '\\' + token;
-
-      switch (context.now) {
-      case CONTEXT_COMMENT: break;
-      case CONTEXT_QUOTEDSTRING:
-        parseData.local += token;
-        atomList.local[elementCount] += token;
-
-        // the maximum sizes specified by RFC 5321 are octet counts,
-        // so we must include the backslash
-        elementLength += 2;
-        break;
-      case COMPONENT_LITERAL:
-        parseData.domain += token;
-        atomList.domain[elementCount] += token;
-
-        // the maximum sizes specified by RFC 5321 are octet counts,
-        // so we must include the backslash
-        elementLength += 2;
-        break;
-      /* istanbul ignore next: logically unreachable */
-      default:
-        throw new Error('quoted pair logic invoked in an invalid context: ' +
-          context.now);
-      }
-      break;
-    // comment
-    case CONTEXT_COMMENT:
-      // http://tools.ietf.org/html/rfc5322#section-3.2.2
-      //   comment  = "(" *([FWS] ccontent) [FWS] ")"
-      //
-      //   ccontent = ctext / quoted-pair / comment
-      switch (token) {
-      // nested comment
-      case '(':
-        // nested comments are ok
-        context.stack.push(context.now);
-        context.now = CONTEXT_COMMENT;
-        break;
-      // end of comment
-      case ')':
-        context.prev = context.now;
-        context.now = context.stack.pop();
-
-        break;
-      // quoted pair
-      case '\\':
-        context.stack.push(context.now);
-        context.now = CONTEXT_QUOTEDPAIR;
-        break;
-      // folding white space
-      case '\r':
-        if ((++i === email.length) || email[i] !== '\n') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_CR_NO_LF);
-          break;
-        }
-      case ' ':
-      case '\t':
-        updateResult(ISEMAIL_CFWS_FWS);
-
-        context.stack.push(context.now);
-        context.now = CONTEXT_FWS;
-        prevToken = token;
-        break;
-      // ctext
-      default:
-        // http://tools.ietf.org/html/rfc5322#section-3.2.3
-        //   ctext         = %d33-39 /  ; Printable US-ASCII
-        //                   %d42-91 /  ;  characters not including
-        //                   %d93-126 / ;  "(", ")", or "\"
-        //                   obs-ctext
-        //
-        //   obs-ctext     = obs-NO-WS-CTL
-        //
-        //   obs-NO-WS-CTL = %d1-8 /    ; US-ASCII control
-        //                   %d11 /     ;  characters that do not
-        //                   %d12 /     ;  include the carriage
-        //                   %d14-31 /  ;  return, line feed, and
-        //                   %d127      ;  white space characters
-        charCode = token.charCodeAt(0);
-
-        if (charCode > 127 || charCode === 0 || charCode === 10) {
-          // fatal error
-          updateResult(ISEMAIL_ERR_EXPECTING_CTEXT);
-          break;
-        } else if (charCode < 32 || charCode === 127) {
-          updateResult(ISEMAIL_DEPREC_CTEXT);
-        }
-      }
-      break;
-    // folding white space
-    case CONTEXT_FWS:
-      // http://tools.ietf.org/html/rfc5322#section-3.2.2
-      //   FWS     =   ([*WSP CRLF] 1*WSP) /  obs-FWS
-      //                                   ; Folding white space
-
-      // But note the erratum:
-      // http://www.rfc-editor.org/errata_search.php?rfc=5322&eid=1908:
-      //   In the obsolete syntax, any amount of folding white space MAY be
-      //   inserted where the obs-FWS rule is allowed.  This creates the
-      //   possibility of having two consecutive "folds" in a line, and
-      //   therefore the possibility that a line which makes up a folded header
-      //   field could be composed entirely of white space.
-      //
-      //   obs-FWS =   1*([CRLF] WSP)
-
-      if (prevToken === '\r') {
-        if (token === '\r') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_FWS_CRLF_X2);
-          break;
-        }
-
-        if (++crlfCount > 1) {
-          // multiple folds = obsolete FWS
-          updateResult(ISEMAIL_DEPREC_FWS);
-        } else {
-          crlfCount = 1;
-        }
-      }
-
-      switch (token) {
-      case '\r':
-        if ((++i === email.length) || email[i] !== '\n') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_CR_NO_LF);
-        }
-        break;
-      case ' ':
-      case '\t':
-        break;
-      default:
-        if (prevToken === '\r') {
-          // fatal error
-          updateResult(ISEMAIL_ERR_FWS_CRLF_END);
-        }
-
-        crlfCount = 0;
-
-        context.prev = context.now;
-        context.now = context.stack.pop(); // end of FWS
-
-        i--; // look at this token again in the parent context
-      }
-      prevToken = token;
-      break;
-    // unexpected context
-    /* istanbul ignore next: logically unreachable */
-    default:
-      throw new Error('unknown context: ' + context.now);
-    } // primary state machine
-
-    if (maxResult > ISEMAIL_RFC5322) {
-      // fatal error, no point continuing
-      break;
+        finishImmediately = true;
     }
-  } // token loop
+    else {
+        var result = finish();
+        finishImmediately = true;
+        return result;
+    } // CheckDNS
+};
 
-  // check for errors
-  if (maxResult < ISEMAIL_RFC5322) {
-    // fatal errors
-    if (context.now === CONTEXT_QUOTEDSTRING) {
-      updateResult(ISEMAIL_ERR_UNCLOSEDQUOTEDSTR);
-    } else if (context.now === CONTEXT_QUOTEDPAIR) {
-      updateResult(ISEMAIL_ERR_BACKSLASHEND);
-    } else if (context.now === CONTEXT_COMMENT) {
-      updateResult(ISEMAIL_ERR_UNCLOSEDCOMMENT);
-    } else if (context.now === COMPONENT_LITERAL) {
-      updateResult(ISEMAIL_ERR_UNCLOSEDDOMLIT);
-    } else if (token === '\r') {
-      updateResult(ISEMAIL_ERR_FWS_CRLF_END);
-    } else if (parseData.domain.length === 0) {
-      updateResult(ISEMAIL_ERR_NODOMAIN);
-    } else if (elementLength === 0) {
-      updateResult(ISEMAIL_ERR_DOT_END);
-    } else if (hyphenFlag) {
-      updateResult(ISEMAIL_ERR_DOMAINHYPHENEND);
 
-    // other errors
-    } else if (parseData.domain.length > 255) {
-      // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.2
-      //   The maximum total length of a domain name or number is 255 octets.
-      updateResult(ISEMAIL_RFC5322_DOMAIN_TOOLONG);
-    } else if (parseData.local.length + parseData.domain.length + /* '@' */ 1 >
-        254) {
-      // http://tools.ietf.org/html/rfc5321#section-4.1.2
-      //   Forward-path   = Path
-      //
-      //   Path           = "<" [ A-d-l ":" ] Mailbox ">"
-      //
-      // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.3
-      //   The maximum total length of a reverse-path or forward-path is 256
-      //   octets (including the punctuation and element separators).
-      //
-      // Thus, even without (obsolete) routing information, the Mailbox can
-      // only be 254 characters long. This is confirmed by this verified
-      // erratum to RFC 3696:
-      //
-      // http://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
-      //   However, there is a restriction in RFC 2821 on the length of an
-      //   address in MAIL and RCPT commands of 254 characters.  Since addresses
-      //   that do not fit in those fields are not normally useful, the upper
-      //   limit on address lengths should normally be considered to be 254.
-      updateResult(ISEMAIL_RFC5322_TOOLONG);
-    } else if (elementLength > 63) {
-      // http://tools.ietf.org/html/rfc1035#section-2.3.4
-      // labels   63 octets or less
-      updateResult(ISEMAIL_RFC5322_LABEL_TOOLONG);
-    } else if (options.minDomainAtoms && atomList.domain.length <
-        options.minDomainAtoms) {
-      updateResult(ISEMAIL_ERR_TOOSHORT_DOMAIN);
-    } else if (options.tldWhitelist) {
-      var tldAtom = atomList.domain[elementCount], tldValid = false, n;
-      if (Array.isArray(options.tldWhitelist)) {
-        for (i = 0, n = options.tldWhitelist.length; i < n; i++) {
-          if (tldAtom === options.tldWhitelist[i]) {
-            tldValid = true;
-            break;
-          }
-        }
-      } else {
-        tldValid = hasOwn.call(options.tldWhitelist, tldAtom);
-      }
-      if (!tldValid) {
-        updateResult(ISEMAIL_ERR_UNKNOWN_TLD);
-      }
+isEmail.diagnoses = (function exportDiagnoses () {
+
+    var diag = {};
+    for (var key in internals.diagnoses) {
+        diag[key] = internals.diagnoses[key];
     }
-  } // check for errors
-
-  var dnsPositive = false;
-
-  if (options.checkDNS && maxResult < ISEMAIL_DNSWARN && HAS_REQUIRE) {
-    dns || (dns = require('dns'));
-    // http://tools.ietf.org/html/rfc5321#section-2.3.5
-    //   Names that can
-    //   be resolved to MX RRs or address (i.e., A or AAAA) RRs (as discussed
-    //   in Section 5) are permitted, as are CNAME RRs whose targets can be
-    //   resolved, in turn, to MX or address RRs.
-    //
-    // http://tools.ietf.org/html/rfc5321#section-5.1
-    //   The lookup first attempts to locate an MX record associated with the
-    //   name.  If a CNAME record is found, the resulting name is processed as
-    //   if it were the initial name. ... If an empty list of MXs is returned,
-    //   the address is treated as if it was associated with an implicit MX
-    //   RR, with a preference of 0, pointing to that host.
-    //
-    // isEmail() author's note: We will regard the existence of a CNAME to be
-    // sufficient evidence of the domain's existence. For performance reasons
-    // we will not repeat the DNS lookup for the CNAME's target, but we will
-    // raise a warning because we didn't immediately find an MX record.
-    if (elementCount === 0) {
-      // checking TLD DNS only works if you explicitly check from the root
-      parseData.domain += '.';
-    }
-
-    var dnsDomain = parseData.domain;
-    dns.resolveMx(dnsDomain, function(err, records) {
-      if ((err && err.code !== dns.NODATA) || (!err && !records)) {
-        updateResult(ISEMAIL_DNSWARN_NO_RECORD);
-        return finish();
-      }
-      if (records && records.length) {
-        dnsPositive = true;
-        return finish();
-      }
-      var done = false, count = 3;
-      updateResult(ISEMAIL_DNSWARN_NO_MX_RECORD);
-      dns.resolveCname(dnsDomain, handleRecords);
-      dns.resolve4(dnsDomain, handleRecords);
-      dns.resolve6(dnsDomain, handleRecords);
-      function handleRecords(err, records) {
-        if (done) return;
-        count--;
-        if (!err && records && records.length) {
-          done = true;
-          return finish();
-        }
-        if (count === 0) {
-          // no usable records for the domain can be found
-          updateResult(ISEMAIL_DNSWARN_NO_RECORD);
-          done = true;
-          finish();
-        }
-      }
-    });
-  } else if (options.checkDNS) {
-    // guarantee asynchronicity
-    typeof process !== 'undefined' && process &&
-      typeof process.nextTick === 'function'
-      ? process.nextTick(finish)
-      : setTimeout(finish, 1);
-  } else {
-    return finish();
-  } // checkDNS
-
-  function finish() {
-    if (!dnsPositive && maxResult < ISEMAIL_DNSWARN) {
-      if (elementCount === 0) {
-        updateResult(ISEMAIL_RFC5321_TLD);
-      } else {
-        var charCode = atomList.domain[elementCount].charCodeAt(0);
-        if (charCode >= 48 && charCode <= 57) {
-          updateResult(ISEMAIL_RFC5321_TLDNUMERIC);
-        }
-      }
-    }
-
-    if (maxResult < threshold) {
-      maxResult = ISEMAIL_VALID;
-    }
-
-    if (!diagnose) {
-      maxResult = maxResult < THRESHOLD;
-    }
-
-    if (typeof callback === 'function') {
-      callback(maxResult);
-    }
-
-    return maxResult;
-  } // finish
-} // isEmail
+    return diag;
+})();
 
 module.exports = isEmail;
 
 }).call(this,require('_process'))
-},{"_process":197,"dns":50}],47:[function(require,module,exports){
-module.exports = require('./lib');
-},{"./lib":48}],48:[function(require,module,exports){
+},{"_process":194,"dns":47}],45:[function(require,module,exports){
 // Load modules
 
 var Hoek = require('hoek');
@@ -13014,6 +13523,7 @@ internals.Topo.prototype.add = function (nodes, options) {
     var before = [].concat(options.before || []);
     var after = [].concat(options.after || []);
     var group = options.group || '?';
+    var sort = options.sort || 0;                   // Used for merging only
 
     Hoek.assert(before.indexOf(group) === -1, 'Item cannot come before itself:', group);
     Hoek.assert(before.indexOf('?') === -1, 'Item cannot come before unassociated items');
@@ -13024,6 +13534,7 @@ internals.Topo.prototype.add = function (nodes, options) {
 
         var item = {
             seq: self._items.length,
+            sort: sort,
             before: before,
             after: after,
             group: group,
@@ -13039,6 +13550,39 @@ internals.Topo.prototype.add = function (nodes, options) {
     Hoek.assert(!error, 'item', (group !== '?' ? 'added into group ' + group : ''), 'created a dependencies error');
 
     return this.nodes;
+};
+
+
+internals.Topo.prototype.merge = function (others) {
+
+    others = [].concat(others);
+    for (var o = 0, ol = others.length; o < ol; ++o) {
+        var other = others[o];
+        if (other) {
+            for (var i = 0, il = other._items.length; i < il; ++i) {
+                var item = Hoek.shallow(other._items[i]);
+                this._items.push(item);
+            }
+        }
+    }
+
+    // Sort items
+
+    this._items.sort(internals.mergeSort);
+    for (i = 0, il = this._items.length; i < il; ++i) {
+        this._items[i].seq = i;
+    }
+
+    var error = this._sort();
+    Hoek.assert(!error, 'merge created a dependencies error');
+
+    return this.nodes;
+};
+
+
+internals.mergeSort = function (a, b) {
+
+    return a.sort === b.sort ? 0 : (a.sort < b.sort ? -1 : 1);
 };
 
 
@@ -13062,7 +13606,7 @@ internals.Topo.prototype._sort = function () {
 
         // Build intermediary graph using 'before'
 
-        graph[seq] = [item.before];
+        graph[seq] = item.before;
 
         // Build second intermediary graph with 'after'
 
@@ -13081,12 +13625,13 @@ internals.Topo.prototype._sort = function () {
 
         var graphNodeItems = Object.keys(graph[node]);
         for (j = 0, jl = graphNodeItems.length; j < jl; ++j) {
-            var group = graph[node][graphNodeItems[j]];
+            group = graph[node][graphNodeItems[j]];
             groups[group] = groups[group] || [];
-            groups[group].forEach(function (d) {
 
-                expandedGroups.push(d);
-            });
+            for (var k = 0, kl = groups[group].length; k < kl; ++k) {
+
+                expandedGroups.push(groups[group][k]);
+            }
         }
         graph[node] = expandedGroups;
     }
@@ -13095,11 +13640,11 @@ internals.Topo.prototype._sort = function () {
 
     var afterNodes = Object.keys(graphAfters);
     for (i = 0, il = afterNodes.length; i < il; ++i) {
-        var group = afterNodes[i];
+        group = afterNodes[i];
 
         if (groups[group]) {
             for (j = 0, jl = groups[group].length; j < jl; ++j) {
-                var node = groups[group][j];
+                node = groups[group][j];
                 graph[node] = graph[node].concat(graphAfters[group]);
             }
         }
@@ -13107,11 +13652,12 @@ internals.Topo.prototype._sort = function () {
 
     // Compile ancestors
 
+    var children;
     var ancestors = {};
     graphNodes = Object.keys(graph);
     for (i = 0, il = graphNodes.length; i < il; ++i) {
-        var node = graphNodes[i];
-        var children = graph[node];
+        node = graphNodes[i];
+        children = graph[node];
 
         for (j = 0, jl = children.length; j < jl; ++j) {
             ancestors[children[j]] = (ancestors[children[j]] || []).concat(node);
@@ -13164,23 +13710,24 @@ internals.Topo.prototype._sort = function () {
     }
 
     var seqIndex = {};
-    this._items.forEach(function (item) {
+    for (i = 0, il = this._items.length; i < il; ++i) {
 
+        item = this._items[i];
         seqIndex[item.seq] = item;
-    });
+    }
 
     var sortedNodes = [];
     this._items = sorted.map(function (value) {
 
-        var item = seqIndex[value];
-        sortedNodes.push(item.node);
-        return item;
+        var sortedItem = seqIndex[value];
+        sortedNodes.push(sortedItem.node);
+        return sortedItem;
     });
 
     this.nodes = sortedNodes;
 };
 
-},{"hoek":42}],49:[function(require,module,exports){
+},{"hoek":42}],46:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -22392,11 +22939,11 @@ return jQuery;
 
 }));
 
-},{}],50:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 
-},{}],51:[function(require,module,exports){
-arguments[4][50][0].apply(exports,arguments)
-},{"dup":50}],52:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
+arguments[4][47][0].apply(exports,arguments)
+},{"dup":47}],49:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -23812,7 +24359,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":53,"ieee754":54,"is-array":55}],53:[function(require,module,exports){
+},{"base64-js":50,"ieee754":51,"is-array":52}],50:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -23938,7 +24485,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],54:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -24024,7 +24571,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],55:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 
 /**
  * isArray
@@ -24059,7 +24606,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],56:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = require('randombytes')
@@ -24140,7 +24687,7 @@ var publicEncrypt = require('public-encrypt');
   }
 })
 
-},{"browserify-aes":60,"browserify-sign":76,"browserify-sign/algos":75,"create-ecdh":122,"create-hash":145,"create-hmac":157,"diffie-hellman":158,"pbkdf2":165,"public-encrypt":166,"randombytes":192}],57:[function(require,module,exports){
+},{"browserify-aes":57,"browserify-sign":73,"browserify-sign/algos":72,"create-ecdh":119,"create-hash":142,"create-hmac":154,"diffie-hellman":155,"pbkdf2":162,"public-encrypt":163,"randombytes":189}],54:[function(require,module,exports){
 (function (Buffer){
 var md5 = require('create-hash/md5')
 module.exports = EVP_BytesToKey
@@ -24206,7 +24753,7 @@ function EVP_BytesToKey (password, keyLen, ivLen) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52,"create-hash/md5":147}],58:[function(require,module,exports){
+},{"buffer":49,"create-hash/md5":144}],55:[function(require,module,exports){
 (function (Buffer){
 // based on the aes implimentation in triple sec
 // https://github.com/keybase/triplesec
@@ -24387,7 +24934,7 @@ AES.prototype._doCryptBlock = function (M, keySchedule, SUB_MIX, SBOX) {
 exports.AES = AES
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],59:[function(require,module,exports){
+},{"buffer":49}],56:[function(require,module,exports){
 (function (Buffer){
 var aes = require('./aes')
 var Transform = require('./cipherBase')
@@ -24488,7 +25035,7 @@ function xorTest (a, b) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./aes":58,"./cipherBase":61,"./ghash":64,"./xor":74,"buffer":52,"inherits":194}],60:[function(require,module,exports){
+},{"./aes":55,"./cipherBase":58,"./ghash":61,"./xor":71,"buffer":49,"inherits":191}],57:[function(require,module,exports){
 var ciphers = require('./encrypter')
 exports.createCipher = exports.Cipher = ciphers.createCipher
 exports.createCipheriv = exports.Cipheriv = ciphers.createCipheriv
@@ -24501,7 +25048,7 @@ function getCiphers () {
 }
 exports.listCiphers = exports.getCiphers = getCiphers
 
-},{"./decrypter":62,"./encrypter":63,"./modes":65}],61:[function(require,module,exports){
+},{"./decrypter":59,"./encrypter":60,"./modes":62}],58:[function(require,module,exports){
 (function (Buffer){
 var Transform = require('stream').Transform
 var inherits = require('inherits')
@@ -24542,7 +25089,7 @@ CipherBase.prototype.final = function (outputEnc) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52,"inherits":194,"stream":209}],62:[function(require,module,exports){
+},{"buffer":49,"inherits":191,"stream":206}],59:[function(require,module,exports){
 (function (Buffer){
 var aes = require('./aes')
 var Transform = require('./cipherBase')
@@ -24682,7 +25229,7 @@ exports.createDecipher = createDecipher
 exports.createDecipheriv = createDecipheriv
 
 }).call(this,require("buffer").Buffer)
-},{"./EVP_BytesToKey":57,"./aes":58,"./authCipher":59,"./cipherBase":61,"./modes":65,"./modes/cbc":66,"./modes/cfb":67,"./modes/cfb1":68,"./modes/cfb8":69,"./modes/ctr":70,"./modes/ecb":71,"./modes/ofb":72,"./streamCipher":73,"buffer":52,"inherits":194}],63:[function(require,module,exports){
+},{"./EVP_BytesToKey":54,"./aes":55,"./authCipher":56,"./cipherBase":58,"./modes":62,"./modes/cbc":63,"./modes/cfb":64,"./modes/cfb1":65,"./modes/cfb8":66,"./modes/ctr":67,"./modes/ecb":68,"./modes/ofb":69,"./streamCipher":70,"buffer":49,"inherits":191}],60:[function(require,module,exports){
 (function (Buffer){
 var aes = require('./aes')
 var Transform = require('./cipherBase')
@@ -24807,7 +25354,7 @@ exports.createCipheriv = createCipheriv
 exports.createCipher = createCipher
 
 }).call(this,require("buffer").Buffer)
-},{"./EVP_BytesToKey":57,"./aes":58,"./authCipher":59,"./cipherBase":61,"./modes":65,"./modes/cbc":66,"./modes/cfb":67,"./modes/cfb1":68,"./modes/cfb8":69,"./modes/ctr":70,"./modes/ecb":71,"./modes/ofb":72,"./streamCipher":73,"buffer":52,"inherits":194}],64:[function(require,module,exports){
+},{"./EVP_BytesToKey":54,"./aes":55,"./authCipher":56,"./cipherBase":58,"./modes":62,"./modes/cbc":63,"./modes/cfb":64,"./modes/cfb1":65,"./modes/cfb8":66,"./modes/ctr":67,"./modes/ecb":68,"./modes/ofb":69,"./streamCipher":70,"buffer":49,"inherits":191}],61:[function(require,module,exports){
 (function (Buffer){
 var zeros = new Buffer(16)
 zeros.fill(0)
@@ -24909,7 +25456,7 @@ function xor (a, b) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],65:[function(require,module,exports){
+},{"buffer":49}],62:[function(require,module,exports){
 exports['aes-128-ecb'] = {
   cipher: 'AES',
   key: 128,
@@ -25082,7 +25629,7 @@ exports['aes-256-gcm'] = {
   type: 'auth'
 }
 
-},{}],66:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 var xor = require('../xor')
 exports.encrypt = function (self, block) {
   var data = xor(block, self._prev)
@@ -25096,7 +25643,7 @@ exports.decrypt = function (self, block) {
   return xor(out, pad)
 }
 
-},{"../xor":74}],67:[function(require,module,exports){
+},{"../xor":71}],64:[function(require,module,exports){
 (function (Buffer){
 var xor = require('../xor')
 exports.encrypt = function (self, data, decrypt) {
@@ -25127,7 +25674,7 @@ function encryptStart (self, data, decrypt) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../xor":74,"buffer":52}],68:[function(require,module,exports){
+},{"../xor":71,"buffer":49}],65:[function(require,module,exports){
 (function (Buffer){
 function encryptByte (self, byteParam, decrypt) {
   var pad
@@ -25165,7 +25712,7 @@ function shiftIn (buffer, value) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],69:[function(require,module,exports){
+},{"buffer":49}],66:[function(require,module,exports){
 (function (Buffer){
 function encryptByte (self, byteParam, decrypt) {
   var pad = self._cipher.encryptBlock(self._prev)
@@ -25184,7 +25731,7 @@ exports.encrypt = function (self, chunk, decrypt) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],70:[function(require,module,exports){
+},{"buffer":49}],67:[function(require,module,exports){
 (function (Buffer){
 var xor = require('../xor')
 function getBlock (self) {
@@ -25216,7 +25763,7 @@ function incr32 (iv) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../xor":74,"buffer":52}],71:[function(require,module,exports){
+},{"../xor":71,"buffer":49}],68:[function(require,module,exports){
 exports.encrypt = function (self, block) {
   return self._cipher.encryptBlock(block)
 }
@@ -25224,7 +25771,7 @@ exports.decrypt = function (self, block) {
   return self._cipher.decryptBlock(block)
 }
 
-},{}],72:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 (function (Buffer){
 var xor = require('../xor')
 function getBlock (self) {
@@ -25241,7 +25788,7 @@ exports.encrypt = function (self, chunk) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../xor":74,"buffer":52}],73:[function(require,module,exports){
+},{"../xor":71,"buffer":49}],70:[function(require,module,exports){
 (function (Buffer){
 var aes = require('./aes')
 var Transform = require('./cipherBase')
@@ -25270,7 +25817,7 @@ StreamCipher.prototype._final = function () {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./aes":58,"./cipherBase":61,"buffer":52,"inherits":194}],74:[function(require,module,exports){
+},{"./aes":55,"./cipherBase":58,"buffer":49,"inherits":191}],71:[function(require,module,exports){
 (function (Buffer){
 module.exports = xor
 function xor (a, b) {
@@ -25284,7 +25831,7 @@ function xor (a, b) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],75:[function(require,module,exports){
+},{"buffer":49}],72:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 exports['RSA-SHA224'] = exports.sha224WithRSAEncryption = {
@@ -25359,7 +25906,7 @@ exports['RSA-MD5'] = exports.md5WithRSAEncryption = {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],76:[function(require,module,exports){
+},{"buffer":49}],73:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 var sign = require('./sign')
@@ -25456,7 +26003,7 @@ Verify.prototype.verify = function verifyMethod (key, sig, enc) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./algos":75,"./sign":119,"./verify":120,"buffer":52,"create-hash":145,"inherits":194,"stream":209}],77:[function(require,module,exports){
+},{"./algos":72,"./sign":116,"./verify":117,"buffer":49,"create-hash":142,"inherits":191,"stream":206}],74:[function(require,module,exports){
 'use strict'
 exports['1.3.132.0.10'] = 'secp256k1'
 
@@ -25466,7 +26013,7 @@ exports['1.2.840.10045.3.1.1'] = 'p192'
 
 exports['1.2.840.10045.3.1.7'] = 'p256'
 
-},{}],78:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 (function (module, exports) {
 
 'use strict';
@@ -27758,7 +28305,7 @@ Mont.prototype.invm = function invm(a) {
 
 })(typeof module === 'undefined' || module, this);
 
-},{}],79:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 (function (Buffer){
 var bn = require('bn.js');
 var randomBytes = require('randombytes');
@@ -27807,7 +28354,7 @@ function getr(priv) {
   return r;
 }
 }).call(this,require("buffer").Buffer)
-},{"bn.js":78,"buffer":52,"randombytes":192}],80:[function(require,module,exports){
+},{"bn.js":75,"buffer":49,"randombytes":189}],77:[function(require,module,exports){
 'use strict';
 
 var elliptic = exports;
@@ -27822,7 +28369,7 @@ elliptic.curves = require('./elliptic/curves');
 // Protocols
 elliptic.ec = require('./elliptic/ec');
 
-},{"../package.json":100,"./elliptic/curve":83,"./elliptic/curves":86,"./elliptic/ec":87,"./elliptic/hmac-drbg":90,"./elliptic/utils":92,"brorand":93}],81:[function(require,module,exports){
+},{"../package.json":97,"./elliptic/curve":80,"./elliptic/curves":83,"./elliptic/ec":84,"./elliptic/hmac-drbg":87,"./elliptic/utils":89,"brorand":90}],78:[function(require,module,exports){
 'use strict';
 
 var bn = require('bn.js');
@@ -28139,7 +28686,7 @@ BasePoint.prototype.dblp = function dblp(k) {
   return r;
 };
 
-},{"../../elliptic":80,"bn.js":78}],82:[function(require,module,exports){
+},{"../../elliptic":77,"bn.js":75}],79:[function(require,module,exports){
 'use strict';
 
 var curve = require('../curve');
@@ -28512,7 +29059,7 @@ Point.prototype.getY = function getY() {
 Point.prototype.toP = Point.prototype.normalize;
 Point.prototype.mixedAdd = Point.prototype.add;
 
-},{"../../elliptic":80,"../curve":83,"bn.js":78,"inherits":194}],83:[function(require,module,exports){
+},{"../../elliptic":77,"../curve":80,"bn.js":75,"inherits":191}],80:[function(require,module,exports){
 'use strict';
 
 var curve = exports;
@@ -28522,7 +29069,7 @@ curve.short = require('./short');
 curve.mont = require('./mont');
 curve.edwards = require('./edwards');
 
-},{"./base":81,"./edwards":82,"./mont":84,"./short":85}],84:[function(require,module,exports){
+},{"./base":78,"./edwards":79,"./mont":81,"./short":82}],81:[function(require,module,exports){
 'use strict';
 
 var curve = require('../curve');
@@ -28685,7 +29232,7 @@ Point.prototype.getX = function getX() {
   return this.x.fromRed();
 };
 
-},{"../curve":83,"bn.js":78,"inherits":194}],85:[function(require,module,exports){
+},{"../curve":80,"bn.js":75,"inherits":191}],82:[function(require,module,exports){
 'use strict';
 
 var curve = require('../curve');
@@ -29594,7 +30141,7 @@ JPoint.prototype.isInfinity = function isInfinity() {
   return this.z.cmpn(0) === 0;
 };
 
-},{"../../elliptic":80,"../curve":83,"bn.js":78,"inherits":194}],86:[function(require,module,exports){
+},{"../../elliptic":77,"../curve":80,"bn.js":75,"inherits":191}],83:[function(require,module,exports){
 'use strict';
 
 var curves = exports;
@@ -29753,7 +30300,7 @@ defineCurve('secp256k1', {
   ]
 });
 
-},{"../elliptic":80,"./precomputed/secp256k1":91,"hash.js":94}],87:[function(require,module,exports){
+},{"../elliptic":77,"./precomputed/secp256k1":88,"hash.js":91}],84:[function(require,module,exports){
 'use strict';
 
 var bn = require('bn.js');
@@ -29964,7 +30511,7 @@ EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
   throw new Error('Unable to find valid recovery factor');
 };
 
-},{"../../elliptic":80,"./key":88,"./signature":89,"bn.js":78}],88:[function(require,module,exports){
+},{"../../elliptic":77,"./key":85,"./signature":86,"bn.js":75}],85:[function(require,module,exports){
 'use strict';
 
 var bn = require('bn.js');
@@ -30116,7 +30663,7 @@ KeyPair.prototype.inspect = function inspect() {
          ' pub: ' + (this.pub && this.pub.inspect()) + ' >';
 };
 
-},{"../../elliptic":80,"bn.js":78}],89:[function(require,module,exports){
+},{"../../elliptic":77,"bn.js":75}],86:[function(require,module,exports){
 'use strict';
 
 var bn = require('bn.js');
@@ -30188,7 +30735,7 @@ Signature.prototype.toDER = function toDER(enc) {
   return utils.encode(res, enc);
 };
 
-},{"../../elliptic":80,"bn.js":78}],90:[function(require,module,exports){
+},{"../../elliptic":77,"bn.js":75}],87:[function(require,module,exports){
 'use strict';
 
 var hash = require('hash.js');
@@ -30304,7 +30851,7 @@ HmacDRBG.prototype.generate = function generate(len, enc, add, addEnc) {
   return utils.encode(res, enc);
 };
 
-},{"../elliptic":80,"hash.js":94}],91:[function(require,module,exports){
+},{"../elliptic":77,"hash.js":91}],88:[function(require,module,exports){
 module.exports = {
   doubles: {
     step: 4,
@@ -31086,7 +31633,7 @@ module.exports = {
   }
 };
 
-},{}],92:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 'use strict';
 
 var utils = exports;
@@ -31238,7 +31785,7 @@ function getJSF(k1, k2) {
 }
 utils.getJSF = getJSF;
 
-},{}],93:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 var r;
 
 module.exports = function rand(len) {
@@ -31297,7 +31844,7 @@ if (typeof window === 'object') {
   }
 }
 
-},{}],94:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 var hash = exports;
 
 hash.utils = require('./hash/utils');
@@ -31314,7 +31861,7 @@ hash.sha384 = hash.sha.sha384;
 hash.sha512 = hash.sha.sha512;
 hash.ripemd160 = hash.ripemd.ripemd160;
 
-},{"./hash/common":95,"./hash/hmac":96,"./hash/ripemd":97,"./hash/sha":98,"./hash/utils":99}],95:[function(require,module,exports){
+},{"./hash/common":92,"./hash/hmac":93,"./hash/ripemd":94,"./hash/sha":95,"./hash/utils":96}],92:[function(require,module,exports){
 var hash = require('../hash');
 var utils = hash.utils;
 var assert = utils.assert;
@@ -31407,7 +31954,7 @@ BlockHash.prototype._pad = function pad() {
   return res;
 };
 
-},{"../hash":94}],96:[function(require,module,exports){
+},{"../hash":91}],93:[function(require,module,exports){
 var hmac = exports;
 
 var hash = require('../hash');
@@ -31457,7 +32004,7 @@ Hmac.prototype.digest = function digest(enc) {
   return this.outer.digest(enc);
 };
 
-},{"../hash":94}],97:[function(require,module,exports){
+},{"../hash":91}],94:[function(require,module,exports){
 var hash = require('../hash');
 var utils = hash.utils;
 
@@ -31603,7 +32150,7 @@ var sh = [
   8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11
 ];
 
-},{"../hash":94}],98:[function(require,module,exports){
+},{"../hash":91}],95:[function(require,module,exports){
 var hash = require('../hash');
 var utils = hash.utils;
 var assert = utils.assert;
@@ -32169,7 +32716,7 @@ function g1_512_lo(xh, xl) {
   return r;
 }
 
-},{"../hash":94}],99:[function(require,module,exports){
+},{"../hash":91}],96:[function(require,module,exports){
 var utils = exports;
 var inherits = require('inherits');
 
@@ -32428,7 +32975,7 @@ function shr64_lo(ah, al, num) {
 };
 exports.shr64_lo = shr64_lo;
 
-},{"inherits":194}],100:[function(require,module,exports){
+},{"inherits":191}],97:[function(require,module,exports){
 module.exports={
   "name": "elliptic",
   "version": "3.1.0",
@@ -32494,7 +33041,7 @@ module.exports={
   "readme": "ERROR: No README data found!"
 }
 
-},{}],101:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 (function (Buffer){
 var createHash = require('create-hash');
 module.exports = function evp(password, salt, keyLen) {
@@ -32536,7 +33083,7 @@ module.exports = function evp(password, salt, keyLen) {
   return key;
 };
 }).call(this,require("buffer").Buffer)
-},{"buffer":52,"create-hash":145}],102:[function(require,module,exports){
+},{"buffer":49,"create-hash":142}],99:[function(require,module,exports){
 module.exports={"2.16.840.1.101.3.4.1.1": "aes-128-ecb",
 "2.16.840.1.101.3.4.1.2": "aes-128-cbc",
 "2.16.840.1.101.3.4.1.3": "aes-128-ofb",
@@ -32550,7 +33097,7 @@ module.exports={"2.16.840.1.101.3.4.1.1": "aes-128-ecb",
 "2.16.840.1.101.3.4.1.43": "aes-256-ofb",
 "2.16.840.1.101.3.4.1.44": "aes-256-cfb"
 }
-},{}],103:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 // from https://github.com/indutny/self-signed/blob/gh-pages/lib/asn1.js
 // Fedor, you are amazing.
 
@@ -32669,7 +33216,7 @@ exports.signature = asn1.define('signature', function() {
   );
 });
 
-},{"asn1.js":106}],104:[function(require,module,exports){
+},{"asn1.js":103}],101:[function(require,module,exports){
 (function (Buffer){
 // adapted from https://github.com/apatil/pemstrip
 var findProc = /Proc-Type: 4,ENCRYPTED\r?\nDEK-Info: AES-((?:128)|(?:192)|(?:256))-CBC,([0-9A-H]+)\r?\n\r?\n([0-9A-z\n\r\+\/\=]+)\r?\n/m;
@@ -32713,7 +33260,7 @@ function wrap (str) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./EVP_BytesToKey":101,"browserify-aes":60,"buffer":52}],105:[function(require,module,exports){
+},{"./EVP_BytesToKey":98,"browserify-aes":57,"buffer":49}],102:[function(require,module,exports){
 (function (Buffer){
 var asn1 = require('./asn1');
 var aesid = require('./aesid.json');
@@ -32818,7 +33365,7 @@ function decrypt(data, password) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./aesid.json":102,"./asn1":103,"./fixProc":104,"browserify-aes":60,"buffer":52,"pbkdf2":165}],106:[function(require,module,exports){
+},{"./aesid.json":99,"./asn1":100,"./fixProc":101,"browserify-aes":57,"buffer":49,"pbkdf2":162}],103:[function(require,module,exports){
 var asn1 = exports;
 
 asn1.bignum = require('bn.js');
@@ -32829,7 +33376,7 @@ asn1.constants = require('./asn1/constants');
 asn1.decoders = require('./asn1/decoders');
 asn1.encoders = require('./asn1/encoders');
 
-},{"./asn1/api":107,"./asn1/base":109,"./asn1/constants":113,"./asn1/decoders":115,"./asn1/encoders":117,"bn.js":78}],107:[function(require,module,exports){
+},{"./asn1/api":104,"./asn1/base":106,"./asn1/constants":110,"./asn1/decoders":112,"./asn1/encoders":114,"bn.js":75}],104:[function(require,module,exports){
 var asn1 = require('../asn1');
 var inherits = require('inherits');
 
@@ -32890,7 +33437,7 @@ Entity.prototype.encode = function encode(data, enc, /* internal */ reporter) {
   return this._getEncoder(enc).encode(data, reporter);
 };
 
-},{"../asn1":106,"inherits":194,"vm":213}],108:[function(require,module,exports){
+},{"../asn1":103,"inherits":191,"vm":210}],105:[function(require,module,exports){
 var inherits = require('inherits');
 var Reporter = require('../base').Reporter;
 var Buffer = require('buffer').Buffer;
@@ -33008,7 +33555,7 @@ EncoderBuffer.prototype.join = function join(out, offset) {
   return out;
 };
 
-},{"../base":109,"buffer":52,"inherits":194}],109:[function(require,module,exports){
+},{"../base":106,"buffer":49,"inherits":191}],106:[function(require,module,exports){
 var base = exports;
 
 base.Reporter = require('./reporter').Reporter;
@@ -33016,7 +33563,7 @@ base.DecoderBuffer = require('./buffer').DecoderBuffer;
 base.EncoderBuffer = require('./buffer').EncoderBuffer;
 base.Node = require('./node');
 
-},{"./buffer":108,"./node":110,"./reporter":111}],110:[function(require,module,exports){
+},{"./buffer":105,"./node":107,"./reporter":108}],107:[function(require,module,exports){
 var Reporter = require('../base').Reporter;
 var EncoderBuffer = require('../base').EncoderBuffer;
 var assert = require('minimalistic-assert');
@@ -33594,7 +34141,7 @@ Node.prototype._encodePrimitive = function encodePrimitive(tag, data) {
     throw new Error('Unsupported tag: ' + tag);
 };
 
-},{"../base":109,"minimalistic-assert":118}],111:[function(require,module,exports){
+},{"../base":106,"minimalistic-assert":115}],108:[function(require,module,exports){
 var inherits = require('inherits');
 
 function Reporter(options) {
@@ -33698,7 +34245,7 @@ ReporterError.prototype.rethrow = function rethrow(msg) {
   return this;
 };
 
-},{"inherits":194}],112:[function(require,module,exports){
+},{"inherits":191}],109:[function(require,module,exports){
 var constants = require('../constants');
 
 exports.tagClass = {
@@ -33742,7 +34289,7 @@ exports.tag = {
 };
 exports.tagByName = constants._reverse(exports.tag);
 
-},{"../constants":113}],113:[function(require,module,exports){
+},{"../constants":110}],110:[function(require,module,exports){
 var constants = exports;
 
 // Helper
@@ -33763,7 +34310,7 @@ constants._reverse = function reverse(map) {
 
 constants.der = require('./der');
 
-},{"./der":112}],114:[function(require,module,exports){
+},{"./der":109}],111:[function(require,module,exports){
 var inherits = require('inherits');
 
 var asn1 = require('../../asn1');
@@ -34054,12 +34601,12 @@ function derDecodeLen(buf, primitive, fail) {
   return len;
 }
 
-},{"../../asn1":106,"inherits":194}],115:[function(require,module,exports){
+},{"../../asn1":103,"inherits":191}],112:[function(require,module,exports){
 var decoders = exports;
 
 decoders.der = require('./der');
 
-},{"./der":114}],116:[function(require,module,exports){
+},{"./der":111}],113:[function(require,module,exports){
 var inherits = require('inherits');
 var Buffer = require('buffer').Buffer;
 
@@ -34331,12 +34878,12 @@ function encodeTag(tag, primitive, cls, reporter) {
   return res;
 }
 
-},{"../../asn1":106,"buffer":52,"inherits":194}],117:[function(require,module,exports){
+},{"../../asn1":103,"buffer":49,"inherits":191}],114:[function(require,module,exports){
 var encoders = exports;
 
 encoders.der = require('./der');
 
-},{"./der":116}],118:[function(require,module,exports){
+},{"./der":113}],115:[function(require,module,exports){
 module.exports = assert;
 
 function assert(val, msg) {
@@ -34349,7 +34896,7 @@ assert.equal = function assertEqual(l, r, msg) {
     throw new Error(msg || ('Assertion failed: ' + l + ' != ' + r));
 };
 
-},{}],119:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 (function (Buffer){
 // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
 var parseKeys = require('parse-asn1')
@@ -34527,7 +35074,7 @@ function makeR (g, k, p, q) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./curves":77,"bn.js":78,"browserify-rsa":79,"buffer":52,"create-hmac":157,"elliptic":80,"parse-asn1":105}],120:[function(require,module,exports){
+},{"./curves":74,"bn.js":75,"browserify-rsa":76,"buffer":49,"create-hmac":154,"elliptic":77,"parse-asn1":102}],117:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
@@ -34631,7 +35178,7 @@ function checkValue (b, q) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./curves":77,"bn.js":78,"buffer":52,"elliptic":80,"parse-asn1":105}],121:[function(require,module,exports){
+},{"./curves":74,"bn.js":75,"buffer":49,"elliptic":77,"parse-asn1":102}],118:[function(require,module,exports){
 (function (Buffer){
 var elliptic = require('elliptic');
 var BN = require('bn.js');
@@ -34747,55 +35294,55 @@ function formatReturnValue(bn, enc, len) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"bn.js":123,"buffer":52,"elliptic":124}],122:[function(require,module,exports){
+},{"bn.js":120,"buffer":49,"elliptic":121}],119:[function(require,module,exports){
 var createECDH = require('crypto').createECDH;
 
 module.exports = createECDH || require('./browser');
-},{"./browser":121,"crypto":56}],123:[function(require,module,exports){
+},{"./browser":118,"crypto":53}],120:[function(require,module,exports){
+arguments[4][75][0].apply(exports,arguments)
+},{"dup":75}],121:[function(require,module,exports){
+arguments[4][77][0].apply(exports,arguments)
+},{"../package.json":141,"./elliptic/curve":124,"./elliptic/curves":127,"./elliptic/ec":128,"./elliptic/hmac-drbg":131,"./elliptic/utils":133,"brorand":134,"dup":77}],122:[function(require,module,exports){
 arguments[4][78][0].apply(exports,arguments)
-},{"dup":78}],124:[function(require,module,exports){
+},{"../../elliptic":121,"bn.js":120,"dup":78}],123:[function(require,module,exports){
+arguments[4][79][0].apply(exports,arguments)
+},{"../../elliptic":121,"../curve":124,"bn.js":120,"dup":79,"inherits":191}],124:[function(require,module,exports){
 arguments[4][80][0].apply(exports,arguments)
-},{"../package.json":144,"./elliptic/curve":127,"./elliptic/curves":130,"./elliptic/ec":131,"./elliptic/hmac-drbg":134,"./elliptic/utils":136,"brorand":137,"dup":80}],125:[function(require,module,exports){
+},{"./base":122,"./edwards":123,"./mont":125,"./short":126,"dup":80}],125:[function(require,module,exports){
 arguments[4][81][0].apply(exports,arguments)
-},{"../../elliptic":124,"bn.js":123,"dup":81}],126:[function(require,module,exports){
+},{"../curve":124,"bn.js":120,"dup":81,"inherits":191}],126:[function(require,module,exports){
 arguments[4][82][0].apply(exports,arguments)
-},{"../../elliptic":124,"../curve":127,"bn.js":123,"dup":82,"inherits":194}],127:[function(require,module,exports){
+},{"../../elliptic":121,"../curve":124,"bn.js":120,"dup":82,"inherits":191}],127:[function(require,module,exports){
 arguments[4][83][0].apply(exports,arguments)
-},{"./base":125,"./edwards":126,"./mont":128,"./short":129,"dup":83}],128:[function(require,module,exports){
+},{"../elliptic":121,"./precomputed/secp256k1":132,"dup":83,"hash.js":135}],128:[function(require,module,exports){
 arguments[4][84][0].apply(exports,arguments)
-},{"../curve":127,"bn.js":123,"dup":84,"inherits":194}],129:[function(require,module,exports){
+},{"../../elliptic":121,"./key":129,"./signature":130,"bn.js":120,"dup":84}],129:[function(require,module,exports){
 arguments[4][85][0].apply(exports,arguments)
-},{"../../elliptic":124,"../curve":127,"bn.js":123,"dup":85,"inherits":194}],130:[function(require,module,exports){
+},{"../../elliptic":121,"bn.js":120,"dup":85}],130:[function(require,module,exports){
 arguments[4][86][0].apply(exports,arguments)
-},{"../elliptic":124,"./precomputed/secp256k1":135,"dup":86,"hash.js":138}],131:[function(require,module,exports){
+},{"../../elliptic":121,"bn.js":120,"dup":86}],131:[function(require,module,exports){
 arguments[4][87][0].apply(exports,arguments)
-},{"../../elliptic":124,"./key":132,"./signature":133,"bn.js":123,"dup":87}],132:[function(require,module,exports){
+},{"../elliptic":121,"dup":87,"hash.js":135}],132:[function(require,module,exports){
 arguments[4][88][0].apply(exports,arguments)
-},{"../../elliptic":124,"bn.js":123,"dup":88}],133:[function(require,module,exports){
+},{"dup":88}],133:[function(require,module,exports){
 arguments[4][89][0].apply(exports,arguments)
-},{"../../elliptic":124,"bn.js":123,"dup":89}],134:[function(require,module,exports){
+},{"dup":89}],134:[function(require,module,exports){
 arguments[4][90][0].apply(exports,arguments)
-},{"../elliptic":124,"dup":90,"hash.js":138}],135:[function(require,module,exports){
+},{"dup":90}],135:[function(require,module,exports){
 arguments[4][91][0].apply(exports,arguments)
-},{"dup":91}],136:[function(require,module,exports){
+},{"./hash/common":136,"./hash/hmac":137,"./hash/ripemd":138,"./hash/sha":139,"./hash/utils":140,"dup":91}],136:[function(require,module,exports){
 arguments[4][92][0].apply(exports,arguments)
-},{"dup":92}],137:[function(require,module,exports){
+},{"../hash":135,"dup":92}],137:[function(require,module,exports){
 arguments[4][93][0].apply(exports,arguments)
-},{"dup":93}],138:[function(require,module,exports){
+},{"../hash":135,"dup":93}],138:[function(require,module,exports){
 arguments[4][94][0].apply(exports,arguments)
-},{"./hash/common":139,"./hash/hmac":140,"./hash/ripemd":141,"./hash/sha":142,"./hash/utils":143,"dup":94}],139:[function(require,module,exports){
+},{"../hash":135,"dup":94}],139:[function(require,module,exports){
 arguments[4][95][0].apply(exports,arguments)
-},{"../hash":138,"dup":95}],140:[function(require,module,exports){
+},{"../hash":135,"dup":95}],140:[function(require,module,exports){
 arguments[4][96][0].apply(exports,arguments)
-},{"../hash":138,"dup":96}],141:[function(require,module,exports){
+},{"dup":96,"inherits":191}],141:[function(require,module,exports){
 arguments[4][97][0].apply(exports,arguments)
-},{"../hash":138,"dup":97}],142:[function(require,module,exports){
-arguments[4][98][0].apply(exports,arguments)
-},{"../hash":138,"dup":98}],143:[function(require,module,exports){
-arguments[4][99][0].apply(exports,arguments)
-},{"dup":99,"inherits":194}],144:[function(require,module,exports){
-arguments[4][100][0].apply(exports,arguments)
-},{"dup":100}],145:[function(require,module,exports){
+},{"dup":97}],142:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var inherits = require('inherits')
@@ -34888,7 +35435,7 @@ module.exports = function createHash (alg) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./md5":147,"buffer":52,"inherits":194,"ripemd160":148,"sha.js":150,"stream":209}],146:[function(require,module,exports){
+},{"./md5":144,"buffer":49,"inherits":191,"ripemd160":145,"sha.js":147,"stream":206}],143:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var intSize = 4;
@@ -34925,7 +35472,7 @@ function hash(buf, fn, hashSize, bigEndian) {
 }
 exports.hash = hash;
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],147:[function(require,module,exports){
+},{"buffer":49}],144:[function(require,module,exports){
 'use strict';
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
@@ -35082,7 +35629,7 @@ function bit_rol(num, cnt)
 module.exports = function md5(buf) {
   return helpers.hash(buf, core_md5, 16);
 };
-},{"./helpers":146}],148:[function(require,module,exports){
+},{"./helpers":143}],145:[function(require,module,exports){
 (function (Buffer){
 /*
 CryptoJS v3.1.2
@@ -35296,7 +35843,7 @@ function ripemd160 (message) {
 module.exports = ripemd160
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],149:[function(require,module,exports){
+},{"buffer":49}],146:[function(require,module,exports){
 (function (Buffer){
 // prototype class for hash functions
 function Hash (blockSize, finalSize) {
@@ -35369,7 +35916,7 @@ Hash.prototype._update = function () {
 module.exports = Hash
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],150:[function(require,module,exports){
+},{"buffer":49}],147:[function(require,module,exports){
 var exports = module.exports = function SHA (algorithm) {
   algorithm = algorithm.toLowerCase()
 
@@ -35386,7 +35933,7 @@ exports.sha256 = require('./sha256')
 exports.sha384 = require('./sha384')
 exports.sha512 = require('./sha512')
 
-},{"./sha":151,"./sha1":152,"./sha224":153,"./sha256":154,"./sha384":155,"./sha512":156}],151:[function(require,module,exports){
+},{"./sha":148,"./sha1":149,"./sha224":150,"./sha256":151,"./sha384":152,"./sha512":153}],148:[function(require,module,exports){
 (function (Buffer){
 /*
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-0, as defined
@@ -35489,7 +36036,7 @@ module.exports = Sha
 
 
 }).call(this,require("buffer").Buffer)
-},{"./hash":149,"buffer":52,"inherits":194}],152:[function(require,module,exports){
+},{"./hash":146,"buffer":49,"inherits":191}],149:[function(require,module,exports){
 (function (Buffer){
 /*
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
@@ -35588,7 +36135,7 @@ Sha1.prototype._hash = function () {
 module.exports = Sha1
 
 }).call(this,require("buffer").Buffer)
-},{"./hash":149,"buffer":52,"inherits":194}],153:[function(require,module,exports){
+},{"./hash":146,"buffer":49,"inherits":191}],150:[function(require,module,exports){
 (function (Buffer){
 /**
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
@@ -35644,7 +36191,7 @@ Sha224.prototype._hash = function () {
 module.exports = Sha224
 
 }).call(this,require("buffer").Buffer)
-},{"./hash":149,"./sha256":154,"buffer":52,"inherits":194}],154:[function(require,module,exports){
+},{"./hash":146,"./sha256":151,"buffer":49,"inherits":191}],151:[function(require,module,exports){
 (function (Buffer){
 /**
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
@@ -35797,7 +36344,7 @@ Sha256.prototype._hash = function () {
 module.exports = Sha256
 
 }).call(this,require("buffer").Buffer)
-},{"./hash":149,"buffer":52,"inherits":194}],155:[function(require,module,exports){
+},{"./hash":146,"buffer":49,"inherits":191}],152:[function(require,module,exports){
 (function (Buffer){
 var inherits = require('inherits')
 var SHA512 = require('./sha512')
@@ -35857,7 +36404,7 @@ Sha384.prototype._hash = function () {
 module.exports = Sha384
 
 }).call(this,require("buffer").Buffer)
-},{"./hash":149,"./sha512":156,"buffer":52,"inherits":194}],156:[function(require,module,exports){
+},{"./hash":146,"./sha512":153,"buffer":49,"inherits":191}],153:[function(require,module,exports){
 (function (Buffer){
 var inherits = require('inherits')
 var Hash = require('./hash')
@@ -36106,7 +36653,7 @@ Sha512.prototype._hash = function () {
 module.exports = Sha512
 
 }).call(this,require("buffer").Buffer)
-},{"./hash":149,"buffer":52,"inherits":194}],157:[function(require,module,exports){
+},{"./hash":146,"buffer":49,"inherits":191}],154:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var createHash = require('create-hash/browser');
@@ -36178,7 +36725,7 @@ module.exports = function createHmac(alg, key) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52,"create-hash/browser":145,"inherits":194,"stream":209}],158:[function(require,module,exports){
+},{"buffer":49,"create-hash/browser":142,"inherits":191,"stream":206}],155:[function(require,module,exports){
 (function (Buffer){
 var generatePrime = require('./lib/generatePrime');
 var primes = require('./lib/primes');
@@ -36222,7 +36769,7 @@ exports.DiffieHellmanGroup = exports.createDiffieHellmanGroup = exports.getDiffi
 exports.createDiffieHellman = exports.DiffieHellman = createDiffieHellman;
 
 }).call(this,require("buffer").Buffer)
-},{"./lib/dh":159,"./lib/generatePrime":160,"./lib/primes":161,"buffer":52}],159:[function(require,module,exports){
+},{"./lib/dh":156,"./lib/generatePrime":157,"./lib/primes":158,"buffer":49}],156:[function(require,module,exports){
 (function (Buffer){
 var BN = require('bn.js');
 var MillerRabin = require('miller-rabin');
@@ -36392,7 +36939,7 @@ function formatReturnValue(bn, enc) {
   }
 }
 }).call(this,require("buffer").Buffer)
-},{"./generatePrime":160,"bn.js":162,"buffer":52,"miller-rabin":163,"randombytes":192}],160:[function(require,module,exports){
+},{"./generatePrime":157,"bn.js":159,"buffer":49,"miller-rabin":160,"randombytes":189}],157:[function(require,module,exports){
 var randomBytes = require('randombytes');
 module.exports = findPrime;
 findPrime.simpleSieve = simpleSieve;
@@ -36525,7 +37072,7 @@ function findPrime(bits, gen) {
   }
 
 }
-},{"bn.js":162,"miller-rabin":163,"randombytes":192}],161:[function(require,module,exports){
+},{"bn.js":159,"miller-rabin":160,"randombytes":189}],158:[function(require,module,exports){
 module.exports={
     "modp1": {
         "gen": "02",
@@ -36560,9 +37107,9 @@ module.exports={
         "prime": "ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aaac42dad33170d04507a33a85521abdf1cba64ecfb850458dbef0a8aea71575d060c7db3970f85a6e1e4c7abf5ae8cdb0933d71e8c94e04a25619dcee3d2261ad2ee6bf12ffa06d98a0864d87602733ec86a64521f2b18177b200cbbe117577a615d6c770988c0bad946e208e24fa074e5ab3143db5bfce0fd108e4b82d120a92108011a723c12a787e6d788719a10bdba5b2699c327186af4e23c1a946834b6150bda2583e9ca2ad44ce8dbbbc2db04de8ef92e8efc141fbecaa6287c59474e6bc05d99b2964fa090c3a2233ba186515be7ed1f612970cee2d7afb81bdd762170481cd0069127d5b05aa993b4ea988d8fddc186ffb7dc90a6c08f4df435c93402849236c3fab4d27c7026c1d4dcb2602646dec9751e763dba37bdf8ff9406ad9e530ee5db382f413001aeb06a53ed9027d831179727b0865a8918da3edbebcf9b14ed44ce6cbaced4bb1bdb7f1447e6cc254b332051512bd7af426fb8f401378cd2bf5983ca01c64b92ecf032ea15d1721d03f482d7ce6e74fef6d55e702f46980c82b5a84031900b1c9e59e7c97fbec7e8f323a97a7e36cc88be0f1d45b7ff585ac54bd407b22b4154aacc8f6d7ebf48e1d814cc5ed20f8037e0a79715eef29be32806a1d58bb7c5da76f550aa3d8a1fbff0eb19ccb1a313d55cda56c9ec2ef29632387fe8d76e3c0468043e8f663f4860ee12bf2d5b0b7474d6e694f91e6dbe115974a3926f12fee5e438777cb6a932df8cd8bec4d073b931ba3bc832b68d9dd300741fa7bf8afc47ed2576f6936ba424663aab639c5ae4f5683423b4742bf1c978238f16cbe39d652de3fdb8befc848ad922222e04a4037c0713eb57a81a23f0c73473fc646cea306b4bcbc8862f8385ddfa9d4b7fa2c087e879683303ed5bdd3a062b3cf5b3a278a66d2a13f83f44f82ddf310ee074ab6a364597e899a0255dc164f31cc50846851df9ab48195ded7ea1b1d510bd7ee74d73faf36bc31ecfa268359046f4eb879f924009438b481c6cd7889a002ed5ee382bc9190da6fc026e479558e4475677e9aa9e3050e2765694dfc81f56e880b96e7160c980dd98edd3dfffffffffffffffff"
     }
 }
-},{}],162:[function(require,module,exports){
-arguments[4][78][0].apply(exports,arguments)
-},{"dup":78}],163:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
+arguments[4][75][0].apply(exports,arguments)
+},{"dup":75}],160:[function(require,module,exports){
 var bn = require('bn.js');
 var brorand = require('brorand');
 
@@ -36677,9 +37224,9 @@ MillerRabin.prototype.getDivisor = function getDivisor(n, k) {
   return false;
 };
 
-},{"bn.js":162,"brorand":164}],164:[function(require,module,exports){
-arguments[4][93][0].apply(exports,arguments)
-},{"dup":93}],165:[function(require,module,exports){
+},{"bn.js":159,"brorand":161}],161:[function(require,module,exports){
+arguments[4][90][0].apply(exports,arguments)
+},{"dup":90}],162:[function(require,module,exports){
 (function (Buffer){
 var createHmac = require('create-hmac')
 var MAX_ALLOC = Math.pow(2, 30) - 1 // default in iojs
@@ -36763,7 +37310,7 @@ function pbkdf2Sync (password, salt, iterations, keylen, digest) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":52,"create-hmac":157}],166:[function(require,module,exports){
+},{"buffer":49,"create-hmac":154}],163:[function(require,module,exports){
 exports.publicEncrypt = require('./publicEncrypt');
 exports.privateDecrypt = require('./privateDecrypt');
 
@@ -36774,7 +37321,7 @@ exports.privateEncrypt = function privateEncrypt(key, buf) {
 exports.publicDecrypt = function publicDecrypt(key, buf) {
   return exports.privateDecrypt(key, buf, true);
 };
-},{"./privateDecrypt":188,"./publicEncrypt":189}],167:[function(require,module,exports){
+},{"./privateDecrypt":185,"./publicEncrypt":186}],164:[function(require,module,exports){
 (function (Buffer){
 var createHash = require('create-hash');
 module.exports = function (seed, len) {
@@ -36793,47 +37340,47 @@ function i2ops(c) {
   return out;
 }
 }).call(this,require("buffer").Buffer)
-},{"buffer":52,"create-hash":145}],168:[function(require,module,exports){
-arguments[4][78][0].apply(exports,arguments)
-},{"dup":78}],169:[function(require,module,exports){
-arguments[4][79][0].apply(exports,arguments)
-},{"bn.js":168,"buffer":52,"dup":79,"randombytes":192}],170:[function(require,module,exports){
+},{"buffer":49,"create-hash":142}],165:[function(require,module,exports){
+arguments[4][75][0].apply(exports,arguments)
+},{"dup":75}],166:[function(require,module,exports){
+arguments[4][76][0].apply(exports,arguments)
+},{"bn.js":165,"buffer":49,"dup":76,"randombytes":189}],167:[function(require,module,exports){
+arguments[4][98][0].apply(exports,arguments)
+},{"buffer":49,"create-hash":142,"dup":98}],168:[function(require,module,exports){
+arguments[4][99][0].apply(exports,arguments)
+},{"dup":99}],169:[function(require,module,exports){
+arguments[4][100][0].apply(exports,arguments)
+},{"asn1.js":172,"dup":100}],170:[function(require,module,exports){
 arguments[4][101][0].apply(exports,arguments)
-},{"buffer":52,"create-hash":145,"dup":101}],171:[function(require,module,exports){
+},{"./EVP_BytesToKey":167,"browserify-aes":57,"buffer":49,"dup":101}],171:[function(require,module,exports){
 arguments[4][102][0].apply(exports,arguments)
-},{"dup":102}],172:[function(require,module,exports){
+},{"./aesid.json":168,"./asn1":169,"./fixProc":170,"browserify-aes":57,"buffer":49,"dup":102,"pbkdf2":162}],172:[function(require,module,exports){
 arguments[4][103][0].apply(exports,arguments)
-},{"asn1.js":175,"dup":103}],173:[function(require,module,exports){
+},{"./asn1/api":173,"./asn1/base":175,"./asn1/constants":179,"./asn1/decoders":181,"./asn1/encoders":183,"bn.js":165,"dup":103}],173:[function(require,module,exports){
 arguments[4][104][0].apply(exports,arguments)
-},{"./EVP_BytesToKey":170,"browserify-aes":60,"buffer":52,"dup":104}],174:[function(require,module,exports){
+},{"../asn1":172,"dup":104,"inherits":191,"vm":210}],174:[function(require,module,exports){
 arguments[4][105][0].apply(exports,arguments)
-},{"./aesid.json":171,"./asn1":172,"./fixProc":173,"browserify-aes":60,"buffer":52,"dup":105,"pbkdf2":165}],175:[function(require,module,exports){
+},{"../base":175,"buffer":49,"dup":105,"inherits":191}],175:[function(require,module,exports){
 arguments[4][106][0].apply(exports,arguments)
-},{"./asn1/api":176,"./asn1/base":178,"./asn1/constants":182,"./asn1/decoders":184,"./asn1/encoders":186,"bn.js":168,"dup":106}],176:[function(require,module,exports){
+},{"./buffer":174,"./node":176,"./reporter":177,"dup":106}],176:[function(require,module,exports){
 arguments[4][107][0].apply(exports,arguments)
-},{"../asn1":175,"dup":107,"inherits":194,"vm":213}],177:[function(require,module,exports){
+},{"../base":175,"dup":107,"minimalistic-assert":184}],177:[function(require,module,exports){
 arguments[4][108][0].apply(exports,arguments)
-},{"../base":178,"buffer":52,"dup":108,"inherits":194}],178:[function(require,module,exports){
+},{"dup":108,"inherits":191}],178:[function(require,module,exports){
 arguments[4][109][0].apply(exports,arguments)
-},{"./buffer":177,"./node":179,"./reporter":180,"dup":109}],179:[function(require,module,exports){
+},{"../constants":179,"dup":109}],179:[function(require,module,exports){
 arguments[4][110][0].apply(exports,arguments)
-},{"../base":178,"dup":110,"minimalistic-assert":187}],180:[function(require,module,exports){
+},{"./der":178,"dup":110}],180:[function(require,module,exports){
 arguments[4][111][0].apply(exports,arguments)
-},{"dup":111,"inherits":194}],181:[function(require,module,exports){
+},{"../../asn1":172,"dup":111,"inherits":191}],181:[function(require,module,exports){
 arguments[4][112][0].apply(exports,arguments)
-},{"../constants":182,"dup":112}],182:[function(require,module,exports){
+},{"./der":180,"dup":112}],182:[function(require,module,exports){
 arguments[4][113][0].apply(exports,arguments)
-},{"./der":181,"dup":113}],183:[function(require,module,exports){
+},{"../../asn1":172,"buffer":49,"dup":113,"inherits":191}],183:[function(require,module,exports){
 arguments[4][114][0].apply(exports,arguments)
-},{"../../asn1":175,"dup":114,"inherits":194}],184:[function(require,module,exports){
+},{"./der":182,"dup":114}],184:[function(require,module,exports){
 arguments[4][115][0].apply(exports,arguments)
-},{"./der":183,"dup":115}],185:[function(require,module,exports){
-arguments[4][116][0].apply(exports,arguments)
-},{"../../asn1":175,"buffer":52,"dup":116,"inherits":194}],186:[function(require,module,exports){
-arguments[4][117][0].apply(exports,arguments)
-},{"./der":185,"dup":117}],187:[function(require,module,exports){
-arguments[4][118][0].apply(exports,arguments)
-},{"dup":118}],188:[function(require,module,exports){
+},{"dup":115}],185:[function(require,module,exports){
 (function (Buffer){
 var parseKeys = require('parse-asn1');
 var mgf = require('./mgf');
@@ -36944,7 +37491,7 @@ function compare(a, b){
   return dif;
 }
 }).call(this,require("buffer").Buffer)
-},{"./mgf":167,"./withPublic":190,"./xor":191,"bn.js":168,"browserify-rsa":169,"buffer":52,"create-hash":145,"parse-asn1":174}],189:[function(require,module,exports){
+},{"./mgf":164,"./withPublic":187,"./xor":188,"bn.js":165,"browserify-rsa":166,"buffer":49,"create-hash":142,"parse-asn1":171}],186:[function(require,module,exports){
 (function (Buffer){
 var parseKeys = require('parse-asn1');
 var randomBytes = require('randombytes');
@@ -37042,7 +37589,7 @@ function nonZero(len, crypto) {
   return out;
 }
 }).call(this,require("buffer").Buffer)
-},{"./mgf":167,"./withPublic":190,"./xor":191,"bn.js":168,"browserify-rsa":169,"buffer":52,"create-hash":145,"parse-asn1":174,"randombytes":192}],190:[function(require,module,exports){
+},{"./mgf":164,"./withPublic":187,"./xor":188,"bn.js":165,"browserify-rsa":166,"buffer":49,"create-hash":142,"parse-asn1":171,"randombytes":189}],187:[function(require,module,exports){
 (function (Buffer){
 var bn = require('bn.js');
 function withPublic(paddedMsg, key) {
@@ -37055,7 +37602,7 @@ function withPublic(paddedMsg, key) {
 
 module.exports = withPublic;
 }).call(this,require("buffer").Buffer)
-},{"bn.js":168,"buffer":52}],191:[function(require,module,exports){
+},{"bn.js":165,"buffer":49}],188:[function(require,module,exports){
 module.exports = function xor(a, b) {
   var len = a.length;
   var i = -1;
@@ -37064,7 +37611,7 @@ module.exports = function xor(a, b) {
   }
   return a
 };
-},{}],192:[function(require,module,exports){
+},{}],189:[function(require,module,exports){
 (function (process,global,Buffer){
 'use strict';
 
@@ -37096,7 +37643,7 @@ function oldBrowser() {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"_process":197,"buffer":52}],193:[function(require,module,exports){
+},{"_process":194,"buffer":49}],190:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -37399,7 +37946,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],194:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -37424,12 +37971,12 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],195:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],196:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -37657,7 +38204,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":197}],197:[function(require,module,exports){
+},{"_process":194}],194:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -37717,10 +38264,10 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],198:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":199}],199:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":196}],196:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -37813,7 +38360,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":201,"./_stream_writable":203,"_process":197,"core-util-is":204,"inherits":194}],200:[function(require,module,exports){
+},{"./_stream_readable":198,"./_stream_writable":200,"_process":194,"core-util-is":201,"inherits":191}],197:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -37861,7 +38408,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":202,"core-util-is":204,"inherits":194}],201:[function(require,module,exports){
+},{"./_stream_transform":199,"core-util-is":201,"inherits":191}],198:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -38816,7 +39363,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":199,"_process":197,"buffer":52,"core-util-is":204,"events":193,"inherits":194,"isarray":195,"stream":209,"string_decoder/":210,"util":51}],202:[function(require,module,exports){
+},{"./_stream_duplex":196,"_process":194,"buffer":49,"core-util-is":201,"events":190,"inherits":191,"isarray":192,"stream":206,"string_decoder/":207,"util":48}],199:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -39027,7 +39574,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":199,"core-util-is":204,"inherits":194}],203:[function(require,module,exports){
+},{"./_stream_duplex":196,"core-util-is":201,"inherits":191}],200:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -39508,7 +40055,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":199,"_process":197,"buffer":52,"core-util-is":204,"inherits":194,"stream":209}],204:[function(require,module,exports){
+},{"./_stream_duplex":196,"_process":194,"buffer":49,"core-util-is":201,"inherits":191,"stream":206}],201:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -39618,10 +40165,10 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 }).call(this,require("buffer").Buffer)
-},{"buffer":52}],205:[function(require,module,exports){
+},{"buffer":49}],202:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":200}],206:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":197}],203:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
 exports.Readable = exports;
@@ -39630,13 +40177,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":199,"./lib/_stream_passthrough.js":200,"./lib/_stream_readable.js":201,"./lib/_stream_transform.js":202,"./lib/_stream_writable.js":203,"stream":209}],207:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":196,"./lib/_stream_passthrough.js":197,"./lib/_stream_readable.js":198,"./lib/_stream_transform.js":199,"./lib/_stream_writable.js":200,"stream":206}],204:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":202}],208:[function(require,module,exports){
+},{"./lib/_stream_transform.js":199}],205:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":203}],209:[function(require,module,exports){
+},{"./lib/_stream_writable.js":200}],206:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -39765,7 +40312,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":193,"inherits":194,"readable-stream/duplex.js":198,"readable-stream/passthrough.js":205,"readable-stream/readable.js":206,"readable-stream/transform.js":207,"readable-stream/writable.js":208}],210:[function(require,module,exports){
+},{"events":190,"inherits":191,"readable-stream/duplex.js":195,"readable-stream/passthrough.js":202,"readable-stream/readable.js":203,"readable-stream/transform.js":204,"readable-stream/writable.js":205}],207:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -39988,14 +40535,14 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":52}],211:[function(require,module,exports){
+},{"buffer":49}],208:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],212:[function(require,module,exports){
+},{}],209:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -40585,7 +41132,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":211,"_process":197,"inherits":194}],213:[function(require,module,exports){
+},{"./support/isBuffer":208,"_process":194,"inherits":191}],210:[function(require,module,exports){
 var indexOf = require('indexof');
 
 var Object_keys = function (obj) {
@@ -40725,7 +41272,7 @@ exports.createContext = Script.createContext = function (context) {
     return copy;
 };
 
-},{"indexof":214}],214:[function(require,module,exports){
+},{"indexof":211}],211:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -40736,9 +41283,9 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],215:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 //! moment.js
-//! version : 2.10.3
+//! version : 2.10.6
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -40833,6 +41380,7 @@ module.exports = function(arr, obj){
                 flags.overflow < 0 &&
                 !flags.empty &&
                 !flags.invalidMonth &&
+                !flags.invalidWeekday &&
                 !flags.nullInput &&
                 !flags.invalidFormat &&
                 !flags.userInvalidated;
@@ -40913,7 +41461,7 @@ module.exports = function(arr, obj){
     // Moment prototype object
     function Moment(config) {
         copyConfig(this, config);
-        this._d = new Date(+config._d);
+        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
         // Prevent infinite loop in case updateOffset creates new moment
         // objects.
         if (updateInProgress === false) {
@@ -40927,16 +41475,20 @@ module.exports = function(arr, obj){
         return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
     }
 
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
+        }
+    }
+
     function toInt(argumentForCoercion) {
         var coercedNumber = +argumentForCoercion,
             value = 0;
 
         if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-            if (coercedNumber >= 0) {
-                value = Math.floor(coercedNumber);
-            } else {
-                value = Math.ceil(coercedNumber);
-            }
+            value = absFloor(coercedNumber);
         }
 
         return value;
@@ -41034,9 +41586,7 @@ module.exports = function(arr, obj){
     function defineLocale (name, values) {
         if (values !== null) {
             values.abbr = name;
-            if (!locales[name]) {
-                locales[name] = new Locale();
-            }
+            locales[name] = locales[name] || new Locale();
             locales[name].set(values);
 
             // backwards compat for now: also set the locale
@@ -41140,16 +41690,14 @@ module.exports = function(arr, obj){
     }
 
     function zeroFill(number, targetLength, forceSign) {
-        var output = '' + Math.abs(number),
+        var absNumber = '' + Math.abs(number),
+            zerosToFill = targetLength - absNumber.length,
             sign = number >= 0;
-
-        while (output.length < targetLength) {
-            output = '0' + output;
-        }
-        return (sign ? (forceSign ? '+' : '') : '-') + output;
+        return (sign ? (forceSign ? '+' : '') : '-') +
+            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|x|X|zz?|ZZ?|.)/g;
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
     var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
 
@@ -41217,10 +41765,7 @@ module.exports = function(arr, obj){
         }
 
         format = expandFormat(format, m.localeData());
-
-        if (!formatFunctions[format]) {
-            formatFunctions[format] = makeFormatFunction(format);
-        }
+        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
 
         return formatFunctions[format](m);
     }
@@ -41264,8 +41809,15 @@ module.exports = function(arr, obj){
 
     var regexes = {};
 
+    function isFunction (sth) {
+        // https://github.com/moment/moment/issues/2325
+        return typeof sth === 'function' &&
+            Object.prototype.toString.call(sth) === '[object Function]';
+    }
+
+
     function addRegexToken (token, regex, strictRegex) {
-        regexes[token] = typeof regex === 'function' ? regex : function (isStrict) {
+        regexes[token] = isFunction(regex) ? regex : function (isStrict) {
             return (isStrict && strictRegex) ? strictRegex : regex;
         };
     }
@@ -41473,12 +42025,11 @@ module.exports = function(arr, obj){
     }
 
     function deprecate(msg, fn) {
-        var firstTime = true,
-            msgWithStack = msg + '\n' + (new Error()).stack;
+        var firstTime = true;
 
         return extend(function () {
             if (firstTime) {
-                warn(msgWithStack);
+                warn(msg + '\n' + (new Error()).stack);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -41526,14 +42077,14 @@ module.exports = function(arr, obj){
             getParsingFlags(config).iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
-                    // match[5] should be 'T' or undefined
-                    config._f = isoDates[i][0] + (match[6] || ' ');
+                    config._f = isoDates[i][0];
                     break;
                 }
             }
             for (i = 0, l = isoTimes.length; i < l; i++) {
                 if (isoTimes[i][1].exec(string)) {
-                    config._f += isoTimes[i][0];
+                    // match[6] should be 'T' or space
+                    config._f += (match[6] || ' ') + isoTimes[i][0];
                     break;
                 }
             }
@@ -41612,7 +42163,10 @@ module.exports = function(arr, obj){
     addRegexToken('YYYYY',  match1to6, match6);
     addRegexToken('YYYYYY', match1to6, match6);
 
-    addParseToken(['YYYY', 'YYYYY', 'YYYYYY'], YEAR);
+    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YYYY', function (input, array) {
+        array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
+    });
     addParseToken('YY', function (input, array) {
         array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
     });
@@ -41739,18 +42293,18 @@ module.exports = function(arr, obj){
 
     //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
     function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
-        var d = createUTCDate(year, 0, 1).getUTCDay();
-        var daysToAdd;
-        var dayOfYear;
+        var week1Jan = 6 + firstDayOfWeek - firstDayOfWeekOfYear, janX = createUTCDate(year, 0, 1 + week1Jan), d = janX.getUTCDay(), dayOfYear;
+        if (d < firstDayOfWeek) {
+            d += 7;
+        }
 
-        d = d === 0 ? 7 : d;
-        weekday = weekday != null ? weekday : firstDayOfWeek;
-        daysToAdd = firstDayOfWeek - d + (d > firstDayOfWeekOfYear ? 7 : 0) - (d < firstDayOfWeek ? 7 : 0);
-        dayOfYear = 7 * (week - 1) + (weekday - firstDayOfWeek) + daysToAdd + 1;
+        weekday = weekday != null ? 1 * weekday : firstDayOfWeek;
+
+        dayOfYear = 1 + week1Jan + 7 * (week - 1) - d + weekday;
 
         return {
-            year      : dayOfYear > 0 ? year      : year - 1,
-            dayOfYear : dayOfYear > 0 ? dayOfYear : daysInYear(year - 1) + dayOfYear
+            year: dayOfYear > 0 ? year : year - 1,
+            dayOfYear: dayOfYear > 0 ?  dayOfYear : daysInYear(year - 1) + dayOfYear
         };
     }
 
@@ -42036,9 +42590,19 @@ module.exports = function(arr, obj){
     }
 
     function createFromConfig (config) {
+        var res = new Moment(checkOverflow(prepareConfig(config)));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
+    }
+
+    function prepareConfig (config) {
         var input = config._i,
-            format = config._f,
-            res;
+            format = config._f;
 
         config._locale = config._locale || locale_locales__getLocale(config._l);
 
@@ -42062,14 +42626,7 @@ module.exports = function(arr, obj){
             configFromInput(config);
         }
 
-        res = new Moment(checkOverflow(config));
-        if (res._nextDay) {
-            // Adding is smart enough around DST
-            res.add(1, 'd');
-            res._nextDay = undefined;
-        }
-
-        return res;
+        return config;
     }
 
     function configFromInput(config) {
@@ -42149,7 +42706,7 @@ module.exports = function(arr, obj){
         }
         res = moments[0];
         for (i = 1; i < moments.length; ++i) {
-            if (moments[i][fn](res)) {
+            if (!moments[i].isValid() || moments[i][fn](res)) {
                 res = moments[i];
             }
         }
@@ -42261,7 +42818,6 @@ module.exports = function(arr, obj){
         } else {
             return local__createLocal(input).local();
         }
-        return model._isUTC ? local__createLocal(input).zone(model._offset || 0) : local__createLocal(input).local();
     }
 
     function getDateOffset (m) {
@@ -42361,12 +42917,7 @@ module.exports = function(arr, obj){
     }
 
     function hasAlignedHourOffset (input) {
-        if (!input) {
-            input = 0;
-        }
-        else {
-            input = local__createLocal(input).utcOffset();
-        }
+        input = input ? local__createLocal(input).utcOffset() : 0;
 
         return (this.utcOffset() - input) % 60 === 0;
     }
@@ -42379,12 +42930,24 @@ module.exports = function(arr, obj){
     }
 
     function isDaylightSavingTimeShifted () {
-        if (this._a) {
-            var other = this._isUTC ? create_utc__createUTC(this._a) : local__createLocal(this._a);
-            return this.isValid() && compareArrays(this._a, other.toArray()) > 0;
+        if (typeof this._isDSTShifted !== 'undefined') {
+            return this._isDSTShifted;
         }
 
-        return false;
+        var c = {};
+
+        copyConfig(c, this);
+        c = prepareConfig(c);
+
+        if (c._a) {
+            var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
+            this._isDSTShifted = this.isValid() &&
+                compareArrays(c._a, other.toArray()) > 0;
+        } else {
+            this._isDSTShifted = false;
+        }
+
+        return this._isDSTShifted;
     }
 
     function isLocal () {
@@ -42544,7 +43107,7 @@ module.exports = function(arr, obj){
     var add_subtract__add      = createAdder(1, 'add');
     var add_subtract__subtract = createAdder(-1, 'subtract');
 
-    function moment_calendar__calendar (time) {
+    function moment_calendar__calendar (time, formats) {
         // We want to compare the start of today, vs this.
         // Getting start-of-today depends on whether we're local/utc/offset or not.
         var now = time || local__createLocal(),
@@ -42556,7 +43119,7 @@ module.exports = function(arr, obj){
                 diff < 1 ? 'sameDay' :
                 diff < 2 ? 'nextDay' :
                 diff < 7 ? 'nextWeek' : 'sameElse';
-        return this.format(this.localeData().calendar(format, this, local__createLocal(now)));
+        return this.format(formats && formats[format] || this.localeData().calendar(format, this, local__createLocal(now)));
     }
 
     function clone () {
@@ -42600,14 +43163,6 @@ module.exports = function(arr, obj){
         } else {
             inputMs = +local__createLocal(input);
             return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
-        }
-    }
-
-    function absFloor (number) {
-        if (number < 0) {
-            return Math.ceil(number);
-        } else {
-            return Math.floor(number);
         }
     }
 
@@ -42801,6 +43356,19 @@ module.exports = function(arr, obj){
         return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
     }
 
+    function toObject () {
+        var m = this;
+        return {
+            years: m.year(),
+            months: m.month(),
+            date: m.date(),
+            hours: m.hours(),
+            minutes: m.minutes(),
+            seconds: m.seconds(),
+            milliseconds: m.milliseconds()
+        };
+    }
+
     function moment_valid__isValid () {
         return valid__isValid(this);
     }
@@ -42972,18 +43540,20 @@ module.exports = function(arr, obj){
     // HELPERS
 
     function parseWeekday(input, locale) {
-        if (typeof input === 'string') {
-            if (!isNaN(input)) {
-                input = parseInt(input, 10);
-            }
-            else {
-                input = locale.weekdaysParse(input);
-                if (typeof input !== 'number') {
-                    return null;
-                }
-            }
+        if (typeof input !== 'string') {
+            return input;
         }
-        return input;
+
+        if (!isNaN(input)) {
+            return parseInt(input, 10);
+        }
+
+        input = locale.weekdaysParse(input);
+        if (typeof input === 'number') {
+            return input;
+        }
+
+        return null;
     }
 
     // LOCALES
@@ -43006,9 +43576,7 @@ module.exports = function(arr, obj){
     function localeWeekdaysParse (weekdayName) {
         var i, mom, regex;
 
-        if (!this._weekdaysParse) {
-            this._weekdaysParse = [];
-        }
+        this._weekdaysParse = this._weekdaysParse || [];
 
         for (i = 0; i < 7; i++) {
             // make the regex if we don't have it already
@@ -43155,12 +43723,26 @@ module.exports = function(arr, obj){
         return ~~(this.millisecond() / 10);
     });
 
-    function millisecond__milliseconds (token) {
-        addFormatToken(0, [token, 3], 0, 'millisecond');
-    }
+    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+    addFormatToken(0, ['SSSS', 4], 0, function () {
+        return this.millisecond() * 10;
+    });
+    addFormatToken(0, ['SSSSS', 5], 0, function () {
+        return this.millisecond() * 100;
+    });
+    addFormatToken(0, ['SSSSSS', 6], 0, function () {
+        return this.millisecond() * 1000;
+    });
+    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
+        return this.millisecond() * 10000;
+    });
+    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
+        return this.millisecond() * 100000;
+    });
+    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
+        return this.millisecond() * 1000000;
+    });
 
-    millisecond__milliseconds('SSS');
-    millisecond__milliseconds('SSSS');
 
     // ALIASES
 
@@ -43171,11 +43753,19 @@ module.exports = function(arr, obj){
     addRegexToken('S',    match1to3, match1);
     addRegexToken('SS',   match1to3, match2);
     addRegexToken('SSS',  match1to3, match3);
-    addRegexToken('SSSS', matchUnsigned);
-    addParseToken(['S', 'SS', 'SSS', 'SSSS'], function (input, array) {
-        array[MILLISECOND] = toInt(('0.' + input) * 1000);
-    });
 
+    var token;
+    for (token = 'SSSS'; token.length <= 9; token += 'S') {
+        addRegexToken(token, matchUnsigned);
+    }
+
+    function parseMs(input, array) {
+        array[MILLISECOND] = toInt(('0.' + input) * 1000);
+    }
+
+    for (token = 'S'; token.length <= 9; token += 'S') {
+        addParseToken(token, parseMs);
+    }
     // MOMENTS
 
     var getSetMillisecond = makeGetSet('Milliseconds', false);
@@ -43222,6 +43812,7 @@ module.exports = function(arr, obj){
     momentPrototype__proto.startOf      = startOf;
     momentPrototype__proto.subtract     = add_subtract__subtract;
     momentPrototype__proto.toArray      = toArray;
+    momentPrototype__proto.toObject     = toObject;
     momentPrototype__proto.toDate       = toDate;
     momentPrototype__proto.toISOString  = moment_format__toISOString;
     momentPrototype__proto.toJSON       = moment_format__toISOString;
@@ -43321,19 +43912,23 @@ module.exports = function(arr, obj){
         LT   : 'h:mm A',
         L    : 'MM/DD/YYYY',
         LL   : 'MMMM D, YYYY',
-        LLL  : 'MMMM D, YYYY LT',
-        LLLL : 'dddd, MMMM D, YYYY LT'
+        LLL  : 'MMMM D, YYYY h:mm A',
+        LLLL : 'dddd, MMMM D, YYYY h:mm A'
     };
 
     function longDateFormat (key) {
-        var output = this._longDateFormat[key];
-        if (!output && this._longDateFormat[key.toUpperCase()]) {
-            output = this._longDateFormat[key.toUpperCase()].replace(/MMMM|MM|DD|dddd/g, function (val) {
-                return val.slice(1);
-            });
-            this._longDateFormat[key] = output;
+        var format = this._longDateFormat[key],
+            formatUpper = this._longDateFormat[key.toUpperCase()];
+
+        if (format || !formatUpper) {
+            return format;
         }
-        return output;
+
+        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
+            return val.slice(1);
+        });
+
+        return this._longDateFormat[key];
     }
 
     var defaultInvalidDate = 'Invalid date';
@@ -43542,12 +44137,29 @@ module.exports = function(arr, obj){
         return duration_add_subtract__addSubtract(this, input, value, -1);
     }
 
+    function absCeil (number) {
+        if (number < 0) {
+            return Math.floor(number);
+        } else {
+            return Math.ceil(number);
+        }
+    }
+
     function bubble () {
         var milliseconds = this._milliseconds;
         var days         = this._days;
         var months       = this._months;
         var data         = this._data;
-        var seconds, minutes, hours, years = 0;
+        var seconds, minutes, hours, years, monthsFromDays;
+
+        // if we have a mix of positive and negative values, bubble down first
+        // check: https://github.com/moment/moment/issues/2166
+        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
+                (milliseconds <= 0 && days <= 0 && months <= 0))) {
+            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+            days = 0;
+            months = 0;
+        }
 
         // The following code bubbles up values, see the tests for
         // examples of what that means.
@@ -43564,17 +44176,13 @@ module.exports = function(arr, obj){
 
         days += absFloor(hours / 24);
 
-        // Accurately convert days to years, assume start from year 0.
-        years = absFloor(daysToYears(days));
-        days -= absFloor(yearsToDays(years));
-
-        // 30 days to a month
-        // TODO (iskren): Use anchor date (like 1st Jan) to compute this.
-        months += absFloor(days / 30);
-        days   %= 30;
+        // convert days to months
+        monthsFromDays = absFloor(daysToMonths(days));
+        months += monthsFromDays;
+        days -= absCeil(monthsToDays(monthsFromDays));
 
         // 12 months -> 1 year
-        years  += absFloor(months / 12);
+        years = absFloor(months / 12);
         months %= 12;
 
         data.days   = days;
@@ -43584,15 +44192,15 @@ module.exports = function(arr, obj){
         return this;
     }
 
-    function daysToYears (days) {
+    function daysToMonths (days) {
         // 400 years have 146097 days (taking into account leap year rules)
-        return days * 400 / 146097;
+        // 400 years have 12 months === 4800
+        return days * 4800 / 146097;
     }
 
-    function yearsToDays (years) {
-        // years * 365 + absFloor(years / 4) -
-        //     absFloor(years / 100) + absFloor(years / 400);
-        return years * 146097 / 400;
+    function monthsToDays (months) {
+        // the reverse of daysToMonths
+        return months * 146097 / 4800;
     }
 
     function as (units) {
@@ -43604,11 +44212,11 @@ module.exports = function(arr, obj){
 
         if (units === 'month' || units === 'year') {
             days   = this._days   + milliseconds / 864e5;
-            months = this._months + daysToYears(days) * 12;
+            months = this._months + daysToMonths(days);
             return units === 'month' ? months : months / 12;
         } else {
             // handle milliseconds separately because of floating point math errors (issue #1867)
-            days = this._days + Math.round(yearsToDays(this._months / 12));
+            days = this._days + Math.round(monthsToDays(this._months));
             switch (units) {
                 case 'week'   : return days / 7     + milliseconds / 6048e5;
                 case 'day'    : return days         + milliseconds / 864e5;
@@ -43658,7 +44266,7 @@ module.exports = function(arr, obj){
         };
     }
 
-    var duration_get__milliseconds = makeGetter('milliseconds');
+    var milliseconds = makeGetter('milliseconds');
     var seconds      = makeGetter('seconds');
     var minutes      = makeGetter('minutes');
     var hours        = makeGetter('hours');
@@ -43736,13 +44344,36 @@ module.exports = function(arr, obj){
     var iso_string__abs = Math.abs;
 
     function iso_string__toISOString() {
+        // for ISO strings we do not use the normal bubbling rules:
+        //  * milliseconds bubble up until they become hours
+        //  * days do not bubble at all
+        //  * months bubble up until they become years
+        // This is because there is no context-free conversion between hours and days
+        // (think of clock changes)
+        // and also not between days and months (28-31 days per month)
+        var seconds = iso_string__abs(this._milliseconds) / 1000;
+        var days         = iso_string__abs(this._days);
+        var months       = iso_string__abs(this._months);
+        var minutes, hours, years;
+
+        // 3600 seconds -> 60 minutes -> 1 hour
+        minutes           = absFloor(seconds / 60);
+        hours             = absFloor(minutes / 60);
+        seconds %= 60;
+        minutes %= 60;
+
+        // 12 months -> 1 year
+        years  = absFloor(months / 12);
+        months %= 12;
+
+
         // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
-        var Y = iso_string__abs(this.years());
-        var M = iso_string__abs(this.months());
-        var D = iso_string__abs(this.days());
-        var h = iso_string__abs(this.hours());
-        var m = iso_string__abs(this.minutes());
-        var s = iso_string__abs(this.seconds() + this.milliseconds() / 1000);
+        var Y = years;
+        var M = months;
+        var D = days;
+        var h = hours;
+        var m = minutes;
+        var s = seconds;
         var total = this.asSeconds();
 
         if (!total) {
@@ -43779,7 +44410,7 @@ module.exports = function(arr, obj){
     duration_prototype__proto.valueOf        = duration_as__valueOf;
     duration_prototype__proto._bubble        = bubble;
     duration_prototype__proto.get            = duration_get__get;
-    duration_prototype__proto.milliseconds   = duration_get__milliseconds;
+    duration_prototype__proto.milliseconds   = milliseconds;
     duration_prototype__proto.seconds        = seconds;
     duration_prototype__proto.minutes        = minutes;
     duration_prototype__proto.hours          = hours;
@@ -43817,7 +44448,7 @@ module.exports = function(arr, obj){
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.10.3';
+    utils_hooks__hooks.version = '2.10.6';
 
     setHookCallback(local__createLocal);
 
@@ -43848,7 +44479,7 @@ module.exports = function(arr, obj){
     return _moment;
 
 }));
-},{}],216:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -43881,7 +44512,7 @@ var Accordion = _react2['default'].createClass({
 
 exports['default'] = Accordion;
 module.exports = exports['default'];
-},{"./PanelGroup":259,"react":475}],217:[function(require,module,exports){
+},{"./PanelGroup":256,"react":475}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -43932,7 +44563,7 @@ var Affix = _react2['default'].createClass({
 
 exports['default'] = Affix;
 module.exports = exports['default'];
-},{"./AffixMixin":218,"./utils/domUtils":283,"classnames":284,"react":475}],218:[function(require,module,exports){
+},{"./AffixMixin":215,"./utils/domUtils":280,"classnames":281,"react":475}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44079,7 +44710,7 @@ var AffixMixin = {
 
 exports['default'] = AffixMixin;
 module.exports = exports['default'];
-},{"./utils/EventListener":275,"./utils/domUtils":283,"react":475}],219:[function(require,module,exports){
+},{"./utils/EventListener":272,"./utils/domUtils":280,"react":475}],216:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44158,7 +44789,7 @@ var Alert = _react2['default'].createClass({
 
 exports['default'] = Alert;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],220:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44208,7 +44839,7 @@ var Badge = _react2['default'].createClass({
 
 exports['default'] = Badge;
 module.exports = exports['default'];
-},{"./utils/ValidComponentChildren":278,"classnames":284,"react":475}],221:[function(require,module,exports){
+},{"./utils/ValidComponentChildren":275,"classnames":281,"react":475}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44262,7 +44893,7 @@ var BootstrapMixin = {
 
 exports['default'] = BootstrapMixin;
 module.exports = exports['default'];
-},{"./styleMaps":273,"./utils/CustomPropTypes":274}],222:[function(require,module,exports){
+},{"./styleMaps":270,"./utils/CustomPropTypes":271}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44369,7 +45000,7 @@ var Button = _react2['default'].createClass({
 exports['default'] = Button;
 module.exports = exports['default'];
 // eslint-disable-line object-shorthand
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],223:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44425,7 +45056,7 @@ var ButtonGroup = _react2['default'].createClass({
 
 exports['default'] = ButtonGroup;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],224:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44531,7 +45162,7 @@ ButtonInput.propTypes = {
 
 exports['default'] = ButtonInput;
 module.exports = exports['default'];
-},{"./Button":222,"./FormGroup":237,"./InputBase":241,"react":475}],225:[function(require,module,exports){
+},{"./Button":219,"./FormGroup":234,"./InputBase":238,"react":475}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44580,7 +45211,7 @@ var ButtonToolbar = _react2['default'].createClass({
 
 exports['default'] = ButtonToolbar;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],226:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],223:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44874,7 +45505,7 @@ var Carousel = _react2['default'].createClass({
 
 exports['default'] = Carousel;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./utils/ValidComponentChildren":278,"classnames":284,"react":475}],227:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./utils/ValidComponentChildren":275,"classnames":281,"react":475}],224:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -44987,7 +45618,7 @@ var CarouselItem = _react2['default'].createClass({
 
 exports['default'] = CarouselItem;
 module.exports = exports['default'];
-},{"./utils/TransitionEvents":277,"classnames":284,"react":475}],228:[function(require,module,exports){
+},{"./utils/TransitionEvents":274,"classnames":281,"react":475}],225:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45081,7 +45712,7 @@ var Col = _react2['default'].createClass({
 
 exports['default'] = Col;
 module.exports = exports['default'];
-},{"./styleMaps":273,"classnames":284,"react":475}],229:[function(require,module,exports){
+},{"./styleMaps":270,"classnames":281,"react":475}],226:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45127,7 +45758,7 @@ var CollapsableMixin = (0, _utilsObjectAssign2['default'])({}, _CollapsibleMixin
 
 exports['default'] = CollapsableMixin;
 module.exports = exports['default'];
-},{"./CollapsibleMixin":231,"./utils/Object.assign":276,"./utils/deprecationWarning":282}],230:[function(require,module,exports){
+},{"./CollapsibleMixin":228,"./utils/Object.assign":273,"./utils/deprecationWarning":279}],227:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45160,7 +45791,7 @@ var CollapsableNav = _react2['default'].createClass(specCollapsableNav);
 
 exports['default'] = CollapsableNav;
 module.exports = exports['default'];
-},{"./CollapsibleNav":232,"./utils/Object.assign":276,"./utils/deprecationWarning":282,"react":475}],231:[function(require,module,exports){
+},{"./CollapsibleNav":229,"./utils/Object.assign":273,"./utils/deprecationWarning":279,"react":475}],228:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45349,7 +45980,7 @@ var CollapsibleMixin = {
 
 exports['default'] = CollapsibleMixin;
 module.exports = exports['default'];
-},{"./utils/TransitionEvents":277,"./utils/deprecationWarning":282,"react":475}],232:[function(require,module,exports){
+},{"./utils/TransitionEvents":274,"./utils/deprecationWarning":279,"react":475}],229:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45493,7 +46124,7 @@ var CollapsibleNav = _react2['default'].createClass(specCollapsibleNav);
 
 exports.specCollapsibleNav = specCollapsibleNav;
 exports['default'] = CollapsibleNav;
-},{"./BootstrapMixin":221,"./CollapsibleMixin":231,"./utils/ValidComponentChildren":278,"./utils/createChainedFunction":279,"./utils/deprecatedProperty":281,"./utils/domUtils":283,"classnames":284,"react":475}],233:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./CollapsibleMixin":228,"./utils/ValidComponentChildren":275,"./utils/createChainedFunction":276,"./utils/deprecatedProperty":278,"./utils/domUtils":280,"classnames":281,"react":475}],230:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45647,7 +46278,7 @@ var DropdownButton = _react2['default'].createClass({
 
 exports['default'] = DropdownButton;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./Button":222,"./ButtonGroup":223,"./DropdownMenu":234,"./DropdownStateMixin":235,"./utils/ValidComponentChildren":278,"./utils/createChainedFunction":279,"classnames":284,"react":475}],234:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./Button":219,"./ButtonGroup":220,"./DropdownMenu":231,"./DropdownStateMixin":232,"./utils/ValidComponentChildren":275,"./utils/createChainedFunction":276,"classnames":281,"react":475}],231:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45710,7 +46341,7 @@ var DropdownMenu = _react2['default'].createClass({
 
 exports['default'] = DropdownMenu;
 module.exports = exports['default'];
-},{"./utils/ValidComponentChildren":278,"./utils/createChainedFunction":279,"classnames":284,"react":475}],235:[function(require,module,exports){
+},{"./utils/ValidComponentChildren":275,"./utils/createChainedFunction":276,"classnames":281,"react":475}],232:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45809,7 +46440,7 @@ var DropdownStateMixin = {
 
 exports['default'] = DropdownStateMixin;
 module.exports = exports['default'];
-},{"./utils/EventListener":275,"./utils/domUtils":283,"react":475}],236:[function(require,module,exports){
+},{"./utils/EventListener":272,"./utils/domUtils":280,"react":475}],233:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45897,7 +46528,7 @@ exports['default'] = {
   }
 };
 module.exports = exports['default'];
-},{"./utils/domUtils":283,"react":475}],237:[function(require,module,exports){
+},{"./utils/domUtils":280,"react":475}],234:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -45975,7 +46606,7 @@ FormGroup.propTypes = {
 
 exports['default'] = FormGroup;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],238:[function(require,module,exports){
+},{"classnames":281,"react":475}],235:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46032,7 +46663,7 @@ var Glyphicon = _react2['default'].createClass({
 
 exports['default'] = Glyphicon;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./styleMaps":273,"classnames":284,"react":475}],239:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./styleMaps":270,"classnames":281,"react":475}],236:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46080,7 +46711,7 @@ var Grid = _react2['default'].createClass({
 
 exports['default'] = Grid;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],240:[function(require,module,exports){
+},{"classnames":281,"react":475}],237:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46143,7 +46774,7 @@ var Input = (function (_InputBase) {
 
 exports['default'] = Input;
 module.exports = exports['default'];
-},{"./ButtonInput":224,"./InputBase":241,"./utils/deprecationWarning":282,"react":475}],241:[function(require,module,exports){
+},{"./ButtonInput":221,"./InputBase":238,"./utils/deprecationWarning":279,"react":475}],238:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46411,7 +47042,7 @@ InputBase.propTypes = {
 
 exports['default'] = InputBase;
 module.exports = exports['default'];
-},{"./FormGroup":237,"classnames":284,"react":475}],242:[function(require,module,exports){
+},{"./FormGroup":234,"classnames":281,"react":475}],239:[function(require,module,exports){
 // https://www.npmjs.org/package/react-interpolate-component
 // TODO: Drop this in favor of es6 string interpolation
 
@@ -46509,7 +47140,7 @@ var Interpolate = _react2['default'].createClass({
 
 exports['default'] = Interpolate;
 module.exports = exports['default'];
-},{"./utils/Object.assign":276,"./utils/ValidComponentChildren":278,"react":475}],243:[function(require,module,exports){
+},{"./utils/Object.assign":273,"./utils/ValidComponentChildren":275,"react":475}],240:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46542,7 +47173,7 @@ var Jumbotron = _react2['default'].createClass({
 
 exports['default'] = Jumbotron;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],244:[function(require,module,exports){
+},{"classnames":281,"react":475}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46590,7 +47221,7 @@ var Label = _react2['default'].createClass({
 
 exports['default'] = Label;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],245:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],242:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46703,7 +47334,7 @@ ListGroup.propTypes = {
 
 exports['default'] = ListGroup;
 module.exports = exports['default'];
-},{"./utils/ValidComponentChildren":278,"classnames":284,"react":475}],246:[function(require,module,exports){
+},{"./utils/ValidComponentChildren":275,"classnames":281,"react":475}],243:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46818,7 +47449,7 @@ var ListGroupItem = _react2['default'].createClass({
 
 exports['default'] = ListGroupItem;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],247:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],244:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -46898,7 +47529,7 @@ var MenuItem = _react2['default'].createClass({
 
 exports['default'] = MenuItem;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],248:[function(require,module,exports){
+},{"classnames":281,"react":475}],245:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -47092,7 +47723,7 @@ var Modal = _react2['default'].createClass({
 
 exports['default'] = Modal;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./FadeMixin":236,"./utils/EventListener":275,"./utils/domUtils":283,"classnames":284,"react":475}],249:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./FadeMixin":233,"./utils/EventListener":272,"./utils/domUtils":280,"classnames":281,"react":475}],246:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -47192,7 +47823,7 @@ ModalTrigger.withContext = (0, _utilsCreateContextWrapper2['default'])(ModalTrig
 
 exports['default'] = ModalTrigger;
 module.exports = exports['default'];
-},{"./OverlayMixin":253,"./utils/createChainedFunction":279,"./utils/createContextWrapper":280,"react":475}],250:[function(require,module,exports){
+},{"./OverlayMixin":250,"./utils/createChainedFunction":276,"./utils/createContextWrapper":277,"react":475}],247:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -47339,7 +47970,7 @@ var Nav = _react2['default'].createClass({
 
 exports['default'] = Nav;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./CollapsibleMixin":231,"./utils/ValidComponentChildren":278,"./utils/createChainedFunction":279,"./utils/deprecatedProperty":281,"./utils/domUtils":283,"classnames":284,"react":475}],251:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./CollapsibleMixin":228,"./utils/ValidComponentChildren":275,"./utils/createChainedFunction":276,"./utils/deprecatedProperty":278,"./utils/domUtils":280,"classnames":281,"react":475}],248:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -47437,7 +48068,7 @@ var NavItem = _react2['default'].createClass({
 
 exports['default'] = NavItem;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],252:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],249:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -47607,7 +48238,7 @@ var Navbar = _react2['default'].createClass({
 
 exports['default'] = Navbar;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./utils/ValidComponentChildren":278,"./utils/createChainedFunction":279,"classnames":284,"react":475}],253:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./utils/ValidComponentChildren":275,"./utils/createChainedFunction":276,"classnames":281,"react":475}],250:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -47692,7 +48323,7 @@ exports['default'] = {
   }
 };
 module.exports = exports['default'];
-},{"./utils/CustomPropTypes":274,"./utils/domUtils":283,"react":475}],254:[function(require,module,exports){
+},{"./utils/CustomPropTypes":271,"./utils/domUtils":280,"react":475}],251:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48039,7 +48670,7 @@ OverlayTrigger.withContext = (0, _utilsCreateContextWrapper2['default'])(Overlay
 
 exports['default'] = OverlayTrigger;
 module.exports = exports['default'];
-},{"./OverlayMixin":253,"./RootCloseWrapper":262,"./utils/Object.assign":276,"./utils/createChainedFunction":279,"./utils/createContextWrapper":280,"./utils/domUtils":283,"react":475}],255:[function(require,module,exports){
+},{"./OverlayMixin":250,"./RootCloseWrapper":259,"./utils/Object.assign":273,"./utils/createChainedFunction":276,"./utils/createContextWrapper":277,"./utils/domUtils":280,"react":475}],252:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48076,7 +48707,7 @@ var PageHeader = _react2['default'].createClass({
 
 exports['default'] = PageHeader;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],256:[function(require,module,exports){
+},{"classnames":281,"react":475}],253:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48152,7 +48783,7 @@ var PageItem = _react2['default'].createClass({
 
 exports['default'] = PageItem;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],257:[function(require,module,exports){
+},{"classnames":281,"react":475}],254:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48205,7 +48836,7 @@ var Pager = _react2['default'].createClass({
 
 exports['default'] = Pager;
 module.exports = exports['default'];
-},{"./utils/ValidComponentChildren":278,"./utils/createChainedFunction":279,"classnames":284,"react":475}],258:[function(require,module,exports){
+},{"./utils/ValidComponentChildren":275,"./utils/createChainedFunction":276,"classnames":281,"react":475}],255:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48443,7 +49074,7 @@ var Panel = _react2['default'].createClass({
 
 exports['default'] = Panel;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./CollapsibleMixin":231,"./utils/deprecatedProperty":281,"classnames":284,"react":475}],259:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./CollapsibleMixin":228,"./utils/deprecatedProperty":278,"classnames":281,"react":475}],256:[function(require,module,exports){
 /* eslint react/prop-types: [1, {ignore: ["children", "className", "bsStyle"]}]*/
 /* BootstrapMixin contains `bsStyle` type validation */
 'use strict';
@@ -48551,7 +49182,7 @@ var PanelGroup = _react2['default'].createClass({
 
 exports['default'] = PanelGroup;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./utils/ValidComponentChildren":278,"classnames":284,"react":475}],260:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./utils/ValidComponentChildren":275,"classnames":281,"react":475}],257:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48645,7 +49276,7 @@ exports['default'] = Popover;
 module.exports = exports['default'];
 
 // in class will be added by the FadeMixin when the animation property is true
-},{"./BootstrapMixin":221,"./FadeMixin":236,"classnames":284,"react":475}],261:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./FadeMixin":233,"classnames":281,"react":475}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48796,7 +49427,7 @@ var ProgressBar = _react2['default'].createClass({
 
 exports['default'] = ProgressBar;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./Interpolate":242,"./utils/ValidComponentChildren":278,"classnames":284,"react":475}],262:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./Interpolate":239,"./utils/ValidComponentChildren":275,"classnames":281,"react":475}],259:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48920,7 +49551,7 @@ RootCloseWrapper.propTypes = {
   onRootClose: _react2['default'].PropTypes.func.isRequired
 };
 module.exports = exports['default'];
-},{"./utils/EventListener":275,"./utils/domUtils":283,"react":475}],263:[function(require,module,exports){
+},{"./utils/EventListener":272,"./utils/domUtils":280,"react":475}],260:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -48965,7 +49596,7 @@ var Row = _react2['default'].createClass({
 
 exports['default'] = Row;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],264:[function(require,module,exports){
+},{"classnames":281,"react":475}],261:[function(require,module,exports){
 /* eslint react/prop-types: [1, {ignore: ["children", "className", "bsSize"]}]*/
 /* BootstrapMixin contains `bsSize` type validation */
 'use strict';
@@ -49116,7 +49747,7 @@ var SplitButton = _react2['default'].createClass({
 
 exports['default'] = SplitButton;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./Button":222,"./ButtonGroup":223,"./DropdownMenu":234,"./DropdownStateMixin":235,"classnames":284,"react":475}],265:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./Button":219,"./ButtonGroup":220,"./DropdownMenu":231,"./DropdownStateMixin":232,"classnames":281,"react":475}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49277,7 +49908,7 @@ var SubNav = _react2['default'].createClass({
 
 exports['default'] = SubNav;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./utils/ValidComponentChildren":278,"./utils/createChainedFunction":279,"classnames":284,"react":475}],266:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./utils/ValidComponentChildren":275,"./utils/createChainedFunction":276,"classnames":281,"react":475}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49384,7 +50015,7 @@ var TabPane = _react2['default'].createClass({
 
 exports['default'] = TabPane;
 module.exports = exports['default'];
-},{"./utils/TransitionEvents":277,"classnames":284,"react":475}],267:[function(require,module,exports){
+},{"./utils/TransitionEvents":274,"classnames":281,"react":475}],264:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49550,7 +50181,7 @@ var TabbedArea = _react2['default'].createClass({
 
 exports['default'] = TabbedArea;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"./Nav":250,"./NavItem":251,"./utils/ValidComponentChildren":278,"react":475}],268:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./Nav":247,"./NavItem":248,"./utils/ValidComponentChildren":275,"react":475}],265:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49604,7 +50235,7 @@ var Table = _react2['default'].createClass({
 
 exports['default'] = Table;
 module.exports = exports['default'];
-},{"classnames":284,"react":475}],269:[function(require,module,exports){
+},{"classnames":281,"react":475}],266:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49672,7 +50303,7 @@ var Thumbnail = _react2['default'].createClass({
 
 exports['default'] = Thumbnail;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],270:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],267:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49755,7 +50386,7 @@ exports['default'] = Tooltip;
 module.exports = exports['default'];
 
 // in class will be added by the FadeMixin when the animation property is true
-},{"./BootstrapMixin":221,"./FadeMixin":236,"classnames":284,"react":475}],271:[function(require,module,exports){
+},{"./BootstrapMixin":218,"./FadeMixin":233,"classnames":281,"react":475}],268:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49802,7 +50433,7 @@ var Well = _react2['default'].createClass({
 
 exports['default'] = Well;
 module.exports = exports['default'];
-},{"./BootstrapMixin":221,"classnames":284,"react":475}],272:[function(require,module,exports){
+},{"./BootstrapMixin":218,"classnames":281,"react":475}],269:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50084,7 +50715,7 @@ exports['default'] = {
   styleMaps: _styleMaps2['default']
 };
 module.exports = exports['default'];
-},{"./Accordion":216,"./Affix":217,"./AffixMixin":218,"./Alert":219,"./Badge":220,"./BootstrapMixin":221,"./Button":222,"./ButtonGroup":223,"./ButtonInput":224,"./ButtonToolbar":225,"./Carousel":226,"./CarouselItem":227,"./Col":228,"./CollapsableMixin":229,"./CollapsableNav":230,"./CollapsibleMixin":231,"./CollapsibleNav":232,"./DropdownButton":233,"./DropdownMenu":234,"./DropdownStateMixin":235,"./FadeMixin":236,"./Glyphicon":238,"./Grid":239,"./Input":240,"./Interpolate":242,"./Jumbotron":243,"./Label":244,"./ListGroup":245,"./ListGroupItem":246,"./MenuItem":247,"./Modal":248,"./ModalTrigger":249,"./Nav":250,"./NavItem":251,"./Navbar":252,"./OverlayMixin":253,"./OverlayTrigger":254,"./PageHeader":255,"./PageItem":256,"./Pager":257,"./Panel":258,"./PanelGroup":259,"./Popover":260,"./ProgressBar":261,"./Row":263,"./SplitButton":264,"./SubNav":265,"./TabPane":266,"./TabbedArea":267,"./Table":268,"./Thumbnail":269,"./Tooltip":270,"./Well":271,"./styleMaps":273}],273:[function(require,module,exports){
+},{"./Accordion":213,"./Affix":214,"./AffixMixin":215,"./Alert":216,"./Badge":217,"./BootstrapMixin":218,"./Button":219,"./ButtonGroup":220,"./ButtonInput":221,"./ButtonToolbar":222,"./Carousel":223,"./CarouselItem":224,"./Col":225,"./CollapsableMixin":226,"./CollapsableNav":227,"./CollapsibleMixin":228,"./CollapsibleNav":229,"./DropdownButton":230,"./DropdownMenu":231,"./DropdownStateMixin":232,"./FadeMixin":233,"./Glyphicon":235,"./Grid":236,"./Input":237,"./Interpolate":239,"./Jumbotron":240,"./Label":241,"./ListGroup":242,"./ListGroupItem":243,"./MenuItem":244,"./Modal":245,"./ModalTrigger":246,"./Nav":247,"./NavItem":248,"./Navbar":249,"./OverlayMixin":250,"./OverlayTrigger":251,"./PageHeader":252,"./PageItem":253,"./Pager":254,"./Panel":255,"./PanelGroup":256,"./Popover":257,"./ProgressBar":258,"./Row":260,"./SplitButton":261,"./SubNav":262,"./TabPane":263,"./TabbedArea":264,"./Table":265,"./Thumbnail":266,"./Tooltip":267,"./Well":268,"./styleMaps":270}],270:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50138,7 +50769,7 @@ var styleMaps = {
 
 exports['default'] = styleMaps;
 module.exports = exports['default'];
-},{}],274:[function(require,module,exports){
+},{}],271:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50218,7 +50849,7 @@ function createKeyOfChecker(obj) {
 
 exports['default'] = CustomPropTypes;
 module.exports = exports['default'];
-},{}],275:[function(require,module,exports){
+},{}],272:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -50279,7 +50910,7 @@ var EventListener = {
 
 exports['default'] = EventListener;
 module.exports = exports['default'];
-},{}],276:[function(require,module,exports){
+},{}],273:[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -50333,7 +50964,7 @@ function assign(target, sources) {
 
 exports['default'] = assign;
 module.exports = exports['default'];
-},{}],277:[function(require,module,exports){
+},{}],274:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -50449,7 +51080,7 @@ var ReactTransitionEvents = {
 
 exports['default'] = ReactTransitionEvents;
 module.exports = exports['default'];
-},{}],278:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50553,7 +51184,7 @@ exports['default'] = {
   hasValidComponent: hasValidComponent
 };
 module.exports = exports['default'];
-},{"react":475}],279:[function(require,module,exports){
+},{"react":475}],276:[function(require,module,exports){
 /**
  * Safe chained function
  *
@@ -50591,7 +51222,7 @@ function createChainedFunction(one, two) {
 
 exports['default'] = createChainedFunction;
 module.exports = exports['default'];
-},{}],280:[function(require,module,exports){
+},{}],277:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50695,7 +51326,7 @@ function createContextWrapper(Trigger, propName) {
 }
 
 module.exports = exports['default'];
-},{"react":475}],281:[function(require,module,exports){
+},{"react":475}],278:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50721,7 +51352,7 @@ function collapsable(props, propName, componentName) {
 }
 
 module.exports = exports['default'];
-},{"./deprecationWarning":282,"react":475}],282:[function(require,module,exports){
+},{"./deprecationWarning":279,"react":475}],279:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -50747,7 +51378,7 @@ function deprecationWarning(oldname, newname, link) {
 
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"_process":197}],283:[function(require,module,exports){
+},{"_process":194}],280:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50879,7 +51510,7 @@ exports['default'] = {
   offsetParent: offsetParentFunc
 };
 module.exports = exports['default'];
-},{"react":475}],284:[function(require,module,exports){
+},{"react":475}],281:[function(require,module,exports){
 /*!
   Copyright (c) 2015 Jed Watson.
   Licensed under the MIT License (MIT), see
@@ -50930,7 +51561,7 @@ module.exports = exports['default'];
 
 }());
 
-},{}],285:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 var Joi = require('joi');
 var union = require('lodash.union');
 
@@ -50973,7 +51604,7 @@ var JoiValidationStrategy = {
 
 module.exports = JoiValidationStrategy;
 
-},{"joi":33,"lodash.union":308}],286:[function(require,module,exports){
+},{"joi":32,"lodash.union":305}],283:[function(require,module,exports){
 require('object.assign').shim();
 var isEmpty = require('lodash.isempty');
 var flatten = require('lodash.flatten');
@@ -51004,7 +51635,7 @@ var ValidationFactory = Object.assign({
 
 module.exports = ValidationFactory;
 
-},{"./JoiValidationStrategy":285,"he":288,"lodash.flatten":289,"lodash.isempty":294,"object.assign":318}],287:[function(require,module,exports){
+},{"./JoiValidationStrategy":282,"he":285,"lodash.flatten":286,"lodash.isempty":291,"object.assign":316}],284:[function(require,module,exports){
 'use strict';
 
 require('object.assign').shim();
@@ -51111,7 +51742,7 @@ var ValidationMixin = {
 
 module.exports = ValidationMixin;
 
-},{"./ValidationFactory":286,"lodash.isempty":294,"lodash.isobject":301,"lodash.result":302,"object.assign":318}],288:[function(require,module,exports){
+},{"./ValidationFactory":283,"lodash.isempty":291,"lodash.isobject":298,"lodash.result":299,"object.assign":316}],285:[function(require,module,exports){
 (function (global){
 /*! http://mths.be/he v0.5.0 by @mathias | MIT license */
 ;(function(root) {
@@ -51444,7 +52075,7 @@ module.exports = ValidationMixin;
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],289:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 /**
  * lodash 3.0.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -51486,9 +52117,9 @@ function flatten(array, isDeep, guard) {
 
 module.exports = flatten;
 
-},{"lodash._baseflatten":290,"lodash._isiterateecall":293}],290:[function(require,module,exports){
+},{"lodash._baseflatten":287,"lodash._isiterateecall":290}],287:[function(require,module,exports){
 /**
- * lodash 3.1.3 (Custom Build) <https://lodash.com/>
+ * lodash 3.1.4 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -51510,10 +52141,29 @@ function isObjectLike(value) {
 }
 
 /**
- * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
  */
 var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * Appends the elements of `values` to `array`.
+ *
+ * @private
+ * @param {Array} array The array to modify.
+ * @param {Array} values The values to append.
+ * @returns {Array} Returns `array`.
+ */
+function arrayPush(array, values) {
+  var index = -1,
+      length = values.length,
+      offset = array.length;
+
+  while (++index < length) {
+    array[offset + index] = values[index];
+  }
+  return array;
+}
 
 /**
  * The base implementation of `_.flatten` with added support for restricting
@@ -51523,13 +52173,14 @@ var MAX_SAFE_INTEGER = 9007199254740991;
  * @param {Array} array The array to flatten.
  * @param {boolean} [isDeep] Specify a deep flatten.
  * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
+ * @param {Array} [result=[]] The initial result value.
  * @returns {Array} Returns the new flattened array.
  */
-function baseFlatten(array, isDeep, isStrict) {
+function baseFlatten(array, isDeep, isStrict, result) {
+  result || (result = []);
+
   var index = -1,
-      length = array.length,
-      resIndex = -1,
-      result = [];
+      length = array.length;
 
   while (++index < length) {
     var value = array[index];
@@ -51537,16 +52188,12 @@ function baseFlatten(array, isDeep, isStrict) {
         (isStrict || isArray(value) || isArguments(value))) {
       if (isDeep) {
         // Recursively flatten arrays (susceptible to call stack limits).
-        value = baseFlatten(value, isDeep, isStrict);
-      }
-      var valIndex = -1,
-          valLength = value.length;
-
-      while (++valIndex < valLength) {
-        result[++resIndex] = value[valIndex];
+        baseFlatten(value, isDeep, isStrict, result);
+      } else {
+        arrayPush(result, value);
       }
     } else if (!isStrict) {
-      result[++resIndex] = value;
+      result[result.length] = value;
     }
   }
   return result;
@@ -51591,7 +52238,7 @@ function isArrayLike(value) {
 /**
  * Checks if `value` is a valid array-like length.
  *
- * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
  *
  * @private
  * @param {*} value The value to check.
@@ -51603,18 +52250,15 @@ function isLength(value) {
 
 module.exports = baseFlatten;
 
-},{"lodash.isarguments":291,"lodash.isarray":292}],291:[function(require,module,exports){
+},{"lodash.isarguments":288,"lodash.isarray":289}],288:[function(require,module,exports){
 /**
- * lodash 3.0.3 (Custom Build) <https://lodash.com/>
+ * lodash 3.0.4 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  * Available under MIT license <https://lodash.com/license>
  */
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]';
 
 /**
  * Checks if `value` is object-like.
@@ -51630,14 +52274,14 @@ function isObjectLike(value) {
 /** Used for native method references. */
 var objectProto = Object.prototype;
 
-/**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Native method references. */
+var propertyIsEnumerable = objectProto.propertyIsEnumerable;
 
 /**
- * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
  */
 var MAX_SAFE_INTEGER = 9007199254740991;
@@ -51681,7 +52325,7 @@ function isArrayLike(value) {
 /**
  * Checks if `value` is a valid array-like length.
  *
- * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
  *
  * @private
  * @param {*} value The value to check.
@@ -51708,14 +52352,15 @@ function isLength(value) {
  * // => false
  */
 function isArguments(value) {
-  return isObjectLike(value) && isArrayLike(value) && objToString.call(value) == argsTag;
+  return isObjectLike(value) && isArrayLike(value) &&
+    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
 }
 
 module.exports = isArguments;
 
-},{}],292:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 /**
- * lodash 3.0.3 (Custom Build) <https://lodash.com/>
+ * lodash 3.0.4 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -51727,31 +52372,8 @@ module.exports = isArguments;
 var arrayTag = '[object Array]',
     funcTag = '[object Function]';
 
-/**
- * Used to match `RegExp` [special characters](http://www.regular-expressions.info/characters.html#special).
- * In addition to special characters the forward slash is escaped to allow for
- * easier `eval` use and `Function` compilation.
- */
-var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
-    reHasRegExpChars = RegExp(reRegExpChars.source);
-
 /** Used to detect host constructors (Safari > 5). */
 var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/**
- * Converts `value` to a string if it's not one. An empty string is returned
- * for `null` or `undefined` values.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {string} Returns the string.
- */
-function baseToString(value) {
-  if (typeof value == 'string') {
-    return value;
-  }
-  return value == null ? '' : (value + '');
-}
 
 /**
  * Checks if `value` is object-like.
@@ -51774,14 +52396,14 @@ var fnToString = Function.prototype.toString;
 var hasOwnProperty = objectProto.hasOwnProperty;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
 
 /** Used to detect if a method is native. */
 var reIsNative = RegExp('^' +
-  escapeRegExp(fnToString.call(hasOwnProperty))
+  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
   .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
 );
 
@@ -51789,7 +52411,7 @@ var reIsNative = RegExp('^' +
 var nativeIsArray = getNative(Array, 'isArray');
 
 /**
- * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
  */
 var MAX_SAFE_INTEGER = 9007199254740991;
@@ -51810,7 +52432,7 @@ function getNative(object, key) {
 /**
  * Checks if `value` is a valid array-like length.
  *
- * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
  *
  * @private
  * @param {*} value The value to check.
@@ -51841,6 +52463,56 @@ var isArray = nativeIsArray || function(value) {
 };
 
 /**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in older versions of Chrome and Safari which return 'function' for regexes
+  // and Safari 8 equivalents which return 'object' for typed array constructors.
+  return isObject(value) && objToString.call(value) == funcTag;
+}
+
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
  * Checks if `value` is a native function.
  *
  * @static
@@ -51860,36 +52532,15 @@ function isNative(value) {
   if (value == null) {
     return false;
   }
-  if (objToString.call(value) == funcTag) {
+  if (isFunction(value)) {
     return reIsNative.test(fnToString.call(value));
   }
   return isObjectLike(value) && reIsHostCtor.test(value);
 }
 
-/**
- * Escapes the `RegExp` special characters "\", "/", "^", "$", ".", "|", "?",
- * "*", "+", "(", ")", "[", "]", "{" and "}" in `string`.
- *
- * @static
- * @memberOf _
- * @category String
- * @param {string} [string=''] The string to escape.
- * @returns {string} Returns the escaped string.
- * @example
- *
- * _.escapeRegExp('[lodash](https://lodash.com/)');
- * // => '\[lodash\]\(https:\/\/lodash\.com\/\)'
- */
-function escapeRegExp(string) {
-  string = baseToString(string);
-  return (string && reHasRegExpChars.test(string))
-    ? string.replace(reRegExpChars, '\\$&')
-    : string;
-}
-
 module.exports = isArray;
 
-},{}],293:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 /**
  * lodash 3.0.9 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -52023,7 +52674,7 @@ function isObject(value) {
 
 module.exports = isIterateeCall;
 
-},{}],294:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 /**
  * lodash 3.0.4 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -52144,14 +52795,13 @@ function isEmpty(value) {
 
 module.exports = isEmpty;
 
-},{"lodash.isarguments":295,"lodash.isarray":296,"lodash.isfunction":297,"lodash.isstring":298,"lodash.keys":299}],295:[function(require,module,exports){
-arguments[4][291][0].apply(exports,arguments)
-},{"dup":291}],296:[function(require,module,exports){
-arguments[4][292][0].apply(exports,arguments)
-},{"dup":292}],297:[function(require,module,exports){
-(function (global){
+},{"lodash.isarguments":292,"lodash.isarray":293,"lodash.isfunction":294,"lodash.isstring":295,"lodash.keys":296}],292:[function(require,module,exports){
+arguments[4][288][0].apply(exports,arguments)
+},{"dup":288}],293:[function(require,module,exports){
+arguments[4][289][0].apply(exports,arguments)
+},{"dup":289}],294:[function(require,module,exports){
 /**
- * lodash 3.0.5 (Custom Build) <https://lodash.com/>
+ * lodash 3.0.6 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -52162,93 +52812,14 @@ arguments[4][292][0].apply(exports,arguments)
 /** `Object#toString` result references. */
 var funcTag = '[object Function]';
 
-/**
- * Used to match `RegExp` [special characters](http://www.regular-expressions.info/characters.html#special).
- * In addition to special characters the forward slash is escaped to allow for
- * easier `eval` use and `Function` compilation.
- */
-var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
-    reHasRegExpChars = RegExp(reRegExpChars.source);
-
-/** Used to detect host constructors (Safari > 5). */
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/**
- * The base implementation of `_.isFunction` without support for environments
- * with incorrect `typeof` results.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- */
-function baseIsFunction(value) {
-  // Avoid a Chakra JIT bug in compatibility modes of IE 11.
-  // See https://github.com/jashkenas/underscore/issues/1621 for more details.
-  return typeof value == 'function' || false;
-}
-
-/**
- * Converts `value` to a string if it's not one. An empty string is returned
- * for `null` or `undefined` values.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {string} Returns the string.
- */
-function baseToString(value) {
-  if (typeof value == 'string') {
-    return value;
-  }
-  return value == null ? '' : (value + '');
-}
-
-/**
- * Checks if `value` is object-like.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
 /** Used for native method references. */
 var objectProto = Object.prototype;
 
-/** Used to resolve the decompiled source of functions. */
-var fnToString = Function.prototype.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
-
-/** Used to detect if a method is native. */
-var reIsNative = RegExp('^' +
-  escapeRegExp(fnToString.call(hasOwnProperty))
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-);
-
-/** Native method references. */
-var Uint8Array = getNative(global, 'Uint8Array');
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = object == null ? undefined : object[key];
-  return isNative(value) ? value : undefined;
-}
 
 /**
  * Checks if `value` is classified as a `Function` object.
@@ -52266,64 +52837,43 @@ function getNative(object, key) {
  * _.isFunction(/abc/);
  * // => false
  */
-var isFunction = !(baseIsFunction(/x/) || (Uint8Array && !baseIsFunction(Uint8Array))) ? baseIsFunction : function(value) {
+function isFunction(value) {
   // The use of `Object#toString` avoids issues with the `typeof` operator
   // in older versions of Chrome and Safari which return 'function' for regexes
   // and Safari 8 equivalents which return 'object' for typed array constructors.
-  return objToString.call(value) == funcTag;
-};
+  return isObject(value) && objToString.call(value) == funcTag;
+}
 
 /**
- * Checks if `value` is a native function.
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
  *
  * @static
  * @memberOf _
  * @category Lang
  * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
  * @example
  *
- * _.isNative(Array.prototype.push);
+ * _.isObject({});
  * // => true
  *
- * _.isNative(_);
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
  * // => false
  */
-function isNative(value) {
-  if (value == null) {
-    return false;
-  }
-  if (objToString.call(value) == funcTag) {
-    return reIsNative.test(fnToString.call(value));
-  }
-  return isObjectLike(value) && reIsHostCtor.test(value);
-}
-
-/**
- * Escapes the `RegExp` special characters "\", "/", "^", "$", ".", "|", "?",
- * "*", "+", "(", ")", "[", "]", "{" and "}" in `string`.
- *
- * @static
- * @memberOf _
- * @category String
- * @param {string} [string=''] The string to escape.
- * @returns {string} Returns the escaped string.
- * @example
- *
- * _.escapeRegExp('[lodash](https://lodash.com/)');
- * // => '\[lodash\]\(https:\/\/lodash\.com\/\)'
- */
-function escapeRegExp(string) {
-  string = baseToString(string);
-  return (string && reHasRegExpChars.test(string))
-    ? string.replace(reRegExpChars, '\\$&')
-    : string;
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
 }
 
 module.exports = isFunction;
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],298:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 /**
  * lodash 3.0.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -52378,9 +52928,9 @@ function isString(value) {
 
 module.exports = isString;
 
-},{}],299:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 /**
- * lodash 3.1.1 (Custom Build) <https://lodash.com/>
+ * lodash 3.1.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -52404,7 +52954,7 @@ var hasOwnProperty = objectProto.hasOwnProperty;
 var nativeKeys = getNative(Object, 'keys');
 
 /**
- * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
  */
 var MAX_SAFE_INTEGER = 9007199254740991;
@@ -52462,7 +53012,7 @@ function isIndex(value, length) {
 /**
  * Checks if `value` is a valid array-like length.
  *
- * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
  *
  * @private
  * @param {*} value The value to check.
@@ -52531,7 +53081,7 @@ function isObject(value) {
  * Creates an array of the own enumerable property names of `object`.
  *
  * **Note:** Non-object values are coerced to objects. See the
- * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.keys)
+ * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
  * for more details.
  *
  * @static
@@ -52555,7 +53105,7 @@ function isObject(value) {
  * // => ['0', '1']
  */
 var keys = !nativeKeys ? shimKeys : function(object) {
-  var Ctor = object == null ? null : object.constructor;
+  var Ctor = object == null ? undefined : object.constructor;
   if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
       (typeof object != 'function' && isArrayLike(object))) {
     return shimKeys(object);
@@ -52616,9 +53166,9 @@ function keysIn(object) {
 
 module.exports = keys;
 
-},{"lodash._getnative":300,"lodash.isarguments":295,"lodash.isarray":296}],300:[function(require,module,exports){
+},{"lodash._getnative":297,"lodash.isarguments":292,"lodash.isarray":293}],297:[function(require,module,exports){
 /**
- * lodash 3.9.0 (Custom Build) <https://lodash.com/>
+ * lodash 3.9.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -52629,31 +53179,8 @@ module.exports = keys;
 /** `Object#toString` result references. */
 var funcTag = '[object Function]';
 
-/**
- * Used to match `RegExp` [special characters](http://www.regular-expressions.info/characters.html#special).
- * In addition to special characters the forward slash is escaped to allow for
- * easier `eval` use and `Function` compilation.
- */
-var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
-    reHasRegExpChars = RegExp(reRegExpChars.source);
-
 /** Used to detect host constructors (Safari > 5). */
 var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/**
- * Converts `value` to a string if it's not one. An empty string is returned
- * for `null` or `undefined` values.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {string} Returns the string.
- */
-function baseToString(value) {
-  if (typeof value == 'string') {
-    return value;
-  }
-  return value == null ? '' : (value + '');
-}
 
 /**
  * Checks if `value` is object-like.
@@ -52676,14 +53203,14 @@ var fnToString = Function.prototype.toString;
 var hasOwnProperty = objectProto.hasOwnProperty;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
 
 /** Used to detect if a method is native. */
 var reIsNative = RegExp('^' +
-  escapeRegExp(fnToString.call(hasOwnProperty))
+  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
   .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
 );
 
@@ -52698,6 +53225,56 @@ var reIsNative = RegExp('^' +
 function getNative(object, key) {
   var value = object == null ? undefined : object[key];
   return isNative(value) ? value : undefined;
+}
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in older versions of Chrome and Safari which return 'function' for regexes
+  // and Safari 8 equivalents which return 'object' for typed array constructors.
+  return isObject(value) && objToString.call(value) == funcTag;
+}
+
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
 }
 
 /**
@@ -52720,36 +53297,15 @@ function isNative(value) {
   if (value == null) {
     return false;
   }
-  if (objToString.call(value) == funcTag) {
+  if (isFunction(value)) {
     return reIsNative.test(fnToString.call(value));
   }
   return isObjectLike(value) && reIsHostCtor.test(value);
 }
 
-/**
- * Escapes the `RegExp` special characters "\", "/", "^", "$", ".", "|", "?",
- * "*", "+", "(", ")", "[", "]", "{" and "}" in `string`.
- *
- * @static
- * @memberOf _
- * @category String
- * @param {string} [string=''] The string to escape.
- * @returns {string} Returns the escaped string.
- * @example
- *
- * _.escapeRegExp('[lodash](https://lodash.com/)');
- * // => '\[lodash\]\(https:\/\/lodash\.com\/\)'
- */
-function escapeRegExp(string) {
-  string = baseToString(string);
-  return (string && reHasRegExpChars.test(string))
-    ? string.replace(reRegExpChars, '\\$&')
-    : string;
-}
-
 module.exports = getNative;
 
-},{}],301:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 /**
  * lodash 3.0.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -52788,7 +53344,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],302:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 /**
  * lodash 3.1.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -52926,7 +53482,7 @@ function result(object, path, defaultValue) {
 
 module.exports = result;
 
-},{"lodash._baseget":303,"lodash._baseslice":304,"lodash._topath":305,"lodash.isarray":306,"lodash.isfunction":307}],303:[function(require,module,exports){
+},{"lodash._baseget":300,"lodash._baseslice":301,"lodash._topath":302,"lodash.isarray":303,"lodash.isfunction":304}],300:[function(require,module,exports){
 /**
  * lodash 3.7.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -53002,7 +53558,7 @@ function isObject(value) {
 
 module.exports = baseGet;
 
-},{}],304:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 /**
  * lodash 3.0.3 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -53045,9 +53601,9 @@ function baseSlice(array, start, end) {
 
 module.exports = baseSlice;
 
-},{}],305:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 /**
- * lodash 3.8.0 (Custom Build) <https://lodash.com/>
+ * lodash 3.8.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -53063,7 +53619,7 @@ var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?
 var reEscapeChar = /\\(\\)?/g;
 
 /**
- * Converts `value` to a string if it is not one. An empty string is returned
+ * Converts `value` to a string if it's not one. An empty string is returned
  * for `null` or `undefined` values.
  *
  * @private
@@ -53071,14 +53627,11 @@ var reEscapeChar = /\\(\\)?/g;
  * @returns {string} Returns the string.
  */
 function baseToString(value) {
-  if (typeof value == 'string') {
-    return value;
-  }
   return value == null ? '' : (value + '');
 }
 
 /**
- * Converts `value` to property path array if it is not one.
+ * Converts `value` to property path array if it's not one.
  *
  * @private
  * @param {*} value The value to process.
@@ -53097,11 +53650,11 @@ function toPath(value) {
 
 module.exports = toPath;
 
-},{"lodash.isarray":306}],306:[function(require,module,exports){
-arguments[4][292][0].apply(exports,arguments)
-},{"dup":292}],307:[function(require,module,exports){
-arguments[4][297][0].apply(exports,arguments)
-},{"dup":297}],308:[function(require,module,exports){
+},{"lodash.isarray":303}],303:[function(require,module,exports){
+arguments[4][289][0].apply(exports,arguments)
+},{"dup":289}],304:[function(require,module,exports){
+arguments[4][294][0].apply(exports,arguments)
+},{"dup":294}],305:[function(require,module,exports){
 /**
  * lodash 3.1.0 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -53138,24 +53691,27 @@ var union = restParam(function(arrays) {
 
 module.exports = union;
 
-},{"lodash._baseflatten":309,"lodash._baseuniq":312,"lodash.restparam":317}],309:[function(require,module,exports){
-arguments[4][290][0].apply(exports,arguments)
-},{"dup":290,"lodash.isarguments":310,"lodash.isarray":311}],310:[function(require,module,exports){
-arguments[4][291][0].apply(exports,arguments)
-},{"dup":291}],311:[function(require,module,exports){
-arguments[4][292][0].apply(exports,arguments)
-},{"dup":292}],312:[function(require,module,exports){
+},{"lodash._baseflatten":306,"lodash._baseuniq":309,"lodash.restparam":314}],306:[function(require,module,exports){
+arguments[4][287][0].apply(exports,arguments)
+},{"dup":287,"lodash.isarguments":307,"lodash.isarray":308}],307:[function(require,module,exports){
+arguments[4][288][0].apply(exports,arguments)
+},{"dup":288}],308:[function(require,module,exports){
+arguments[4][289][0].apply(exports,arguments)
+},{"dup":289}],309:[function(require,module,exports){
 /**
- * lodash 3.0.2 (Custom Build) <https://lodash.com/>
+ * lodash 3.0.3 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.8.2 <http://underscorejs.org/LICENSE>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  * Available under MIT license <https://lodash.com/license>
  */
 var baseIndexOf = require('lodash._baseindexof'),
     cacheIndexOf = require('lodash._cacheindexof'),
     createCache = require('lodash._createcache');
+
+/** Used as the size to enable large array optimizations. */
+var LARGE_ARRAY_SIZE = 200;
 
 /**
  * The base implementation of `_.uniq` without support for callback shorthands
@@ -53171,7 +53727,7 @@ function baseUniq(array, iteratee) {
       indexOf = baseIndexOf,
       length = array.length,
       isCommon = true,
-      isLarge = isCommon && length >= 200,
+      isLarge = isCommon && length >= LARGE_ARRAY_SIZE,
       seen = isLarge ? createCache() : null,
       result = [];
 
@@ -53211,7 +53767,7 @@ function baseUniq(array, iteratee) {
 
 module.exports = baseUniq;
 
-},{"lodash._baseindexof":313,"lodash._cacheindexof":314,"lodash._createcache":315}],313:[function(require,module,exports){
+},{"lodash._baseindexof":310,"lodash._cacheindexof":311,"lodash._createcache":312}],310:[function(require,module,exports){
 /**
  * lodash 3.1.0 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -53270,7 +53826,7 @@ function indexOfNaN(array, fromIndex, fromRight) {
 
 module.exports = baseIndexOf;
 
-},{}],314:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 /**
  * lodash 3.0.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -53325,10 +53881,10 @@ function isObject(value) {
 
 module.exports = cacheIndexOf;
 
-},{}],315:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 (function (global){
 /**
- * lodash 3.1.1 (Custom Build) <https://lodash.com/>
+ * lodash 3.1.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -53383,9 +53939,9 @@ function cachePush(value) {
  * @param {Array} [values] The values to cache.
  * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
  */
-var createCache = !(nativeCreate && Set) ? constant(null) : function(values) {
-  return new SetCache(values);
-};
+function createCache(values) {
+  return (nativeCreate && Set) ? new SetCache(values) : null;
+}
 
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
@@ -53414,37 +53970,15 @@ function isObject(value) {
   return !!value && (type == 'object' || type == 'function');
 }
 
-/**
- * Creates a function that returns `value`.
- *
- * @static
- * @memberOf _
- * @category Utility
- * @param {*} value The value to return from the new function.
- * @returns {Function} Returns the new function.
- * @example
- *
- * var object = { 'user': 'fred' };
- * var getter = _.constant(object);
- *
- * getter() === object;
- * // => true
- */
-function constant(value) {
-  return function() {
-    return value;
-  };
-}
-
 // Add functions to the `Set` cache.
 SetCache.prototype.push = cachePush;
 
 module.exports = createCache;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lodash._getnative":316}],316:[function(require,module,exports){
-arguments[4][300][0].apply(exports,arguments)
-},{"dup":300}],317:[function(require,module,exports){
+},{"lodash._getnative":313}],313:[function(require,module,exports){
+arguments[4][297][0].apply(exports,arguments)
+},{"dup":297}],314:[function(require,module,exports){
 /**
  * lodash 3.6.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -53513,7 +54047,38 @@ function restParam(func, start) {
 
 module.exports = restParam;
 
-},{}],318:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
+var keys = require('object-keys');
+
+module.exports = function hasSymbols() {
+	if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
+	if (typeof Symbol.iterator === 'symbol') { return true; }
+
+	var obj = {};
+	var sym = Symbol('test');
+	if (typeof sym === 'string') { return false; }
+	if (sym instanceof Symbol) { return false; }
+	obj[sym] = 42;
+	for (sym in obj) { return false; }
+	if (keys(obj).length !== 0) { return false; }
+	if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
+
+	if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
+
+	var syms = Object.getOwnPropertySymbols(obj);
+	if (syms.length !== 1 || syms[0] !== sym) { return false; }
+
+	if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
+
+	if (typeof Object.getOwnPropertyDescriptor === 'function') {
+		var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+		if (descriptor.value !== 42 || descriptor.enumerable !== true) { return false; }
+	}
+
+	return true;
+};
+
+},{"object-keys":319}],316:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es6-shim
@@ -53521,14 +54086,27 @@ var keys = require('object-keys');
 var canBeObject = function (obj) {
 	return typeof obj !== 'undefined' && obj !== null;
 };
+var hasSymbols = require('./hasSymbols')();
+var defineProperties = require('define-properties');
+var toObject = Object;
+var push = Array.prototype.push;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
 var assignShim = function assign(target, source1) {
 	if (!canBeObject(target)) { throw new TypeError('target must be an object'); }
-	var objTarget = Object(target);
-	var s, source, i, props;
+	var objTarget = toObject(target);
+	var s, source, i, props, syms;
 	for (s = 1; s < arguments.length; ++s) {
-		source = Object(arguments[s]);
+		source = toObject(arguments[s]);
 		props = keys(source);
+		if (hasSymbols && Object.getOwnPropertySymbols) {
+			syms = Object.getOwnPropertySymbols(source);
+			for (i = 0; i < syms.length; ++i) {
+				if (propIsEnumerable.call(source, syms[i])) {
+					push.call(props, syms[i]);
+				}
+			}
+		}
 		for (i = 0; i < props.length; ++i) {
 			objTarget[props[i]] = source[props[i]];
 		}
@@ -53536,17 +54114,115 @@ var assignShim = function assign(target, source1) {
 	return objTarget;
 };
 
-assignShim.shim = function shimObjectAssign() {
-	if (!Object.assign) {
-		Object.assign = assignShim;
+defineProperties(assignShim, {
+	shim: function shimObjectAssign() {
+		var assignHasPendingExceptions = function () {
+			if (!Object.assign || !Object.preventExtensions) {
+				return false;
+			}
+			// Firefox 37 still has "pending exception" logic in its Object.assign implementation,
+			// which is 72% slower than our shim, and Firefox 40's native implementation.
+			var thrower = Object.preventExtensions({ 1: 2 });
+			try {
+				Object.assign(thrower, 'xy');
+			} catch (e) {
+				return thrower[1] === 'y';
+			}
+		};
+		defineProperties(
+			Object,
+			{ assign: assignShim },
+			{ assign: assignHasPendingExceptions }
+		);
+		return Object.assign || assignShim;
 	}
-	return Object.assign || assignShim;
-};
+});
 
 module.exports = assignShim;
 
+},{"./hasSymbols":315,"define-properties":317,"object-keys":319}],317:[function(require,module,exports){
+'use strict';
 
-},{"object-keys":319}],319:[function(require,module,exports){
+var keys = require('object-keys');
+var foreach = require('foreach');
+var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
+
+var toStr = Object.prototype.toString;
+
+var isFunction = function (fn) {
+	return typeof fn === 'function' && toStr.call(fn) === '[object Function]';
+};
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+        /* eslint-disable no-unused-vars, no-restricted-syntax */
+        for (var _ in obj) { return false; }
+        /* eslint-enable no-unused-vars, no-restricted-syntax */
+		return obj.x === obj;
+	} catch (e) { /* this is IE 8. */
+		return false;
+	}
+};
+var supportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported();
+
+var defineProperty = function (object, name, value, predicate) {
+	if (name in object && (!isFunction(predicate) || !predicate())) {
+		return;
+	}
+	if (supportsDescriptors) {
+		Object.defineProperty(object, name, {
+			configurable: true,
+			enumerable: false,
+			value: value,
+			writable: true
+		});
+	} else {
+		object[name] = value;
+	}
+};
+
+var defineProperties = function (object, map) {
+	var predicates = arguments.length > 2 ? arguments[2] : {};
+	var props = keys(map);
+	if (hasSymbols) {
+		props = props.concat(Object.getOwnPropertySymbols(map));
+	}
+	foreach(props, function (name) {
+		defineProperty(object, name, map[name], predicates[name]);
+	});
+};
+
+defineProperties.supportsDescriptors = !!supportsDescriptors;
+
+module.exports = defineProperties;
+
+},{"foreach":318,"object-keys":319}],318:[function(require,module,exports){
+
+var hasOwn = Object.prototype.hasOwnProperty;
+var toString = Object.prototype.toString;
+
+module.exports = function forEach (obj, fn, ctx) {
+    if (toString.call(fn) !== '[object Function]') {
+        throw new TypeError('iterator must be a function');
+    }
+    var l = obj.length;
+    if (l === +l) {
+        for (var i = 0; i < l; i++) {
+            fn.call(ctx, obj[i], i, obj);
+        }
+    } else {
+        for (var k in obj) {
+            if (hasOwn.call(obj, k)) {
+                fn.call(ctx, obj[k], k, obj);
+            }
+        }
+    }
+};
+
+
+},{}],319:[function(require,module,exports){
 'use strict';
 
 // modified from https://github.com/es-shims/es5-shim
@@ -53554,7 +54230,7 @@ var has = Object.prototype.hasOwnProperty;
 var toStr = Object.prototype.toString;
 var slice = Array.prototype.slice;
 var isArgs = require('./isArguments');
-var hasDontEnumBug = !({ 'toString': null }).propertyIsEnumerable('toString');
+var hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString');
 var hasProtoEnumBug = function () {}.propertyIsEnumerable('prototype');
 var dontEnums = [
 	'toString',
@@ -53565,6 +54241,50 @@ var dontEnums = [
 	'propertyIsEnumerable',
 	'constructor'
 ];
+var equalsConstructorPrototype = function (o) {
+	var ctor = o.constructor;
+	return ctor && ctor.prototype === o;
+};
+var blacklistedKeys = {
+	$console: true,
+	$frame: true,
+	$frameElement: true,
+	$frames: true,
+	$parent: true,
+	$self: true,
+	$webkitIndexedDB: true,
+	$webkitStorageInfo: true,
+	$window: true
+};
+var hasAutomationEqualityBug = (function () {
+	/* global window */
+	if (typeof window === 'undefined') { return false; }
+	for (var k in window) {
+		try {
+			if (!blacklistedKeys['$' + k] && has.call(window, k) && window[k] !== null && typeof window[k] === 'object') {
+				try {
+					equalsConstructorPrototype(window[k]);
+				} catch (e) {
+					return true;
+				}
+			}
+		} catch (e) {
+			return true;
+		}
+	}
+	return false;
+}());
+var equalsConstructorPrototypeIfNotBuggy = function (o) {
+	/* global window */
+	if (typeof window === 'undefined' || !hasAutomationEqualityBug) {
+		return equalsConstructorPrototype(o);
+	}
+	try {
+		return equalsConstructorPrototype(o);
+	} catch (e) {
+		return false;
+	}
+};
 
 var keysShim = function keys(object) {
 	var isObject = object !== null && typeof object === 'object';
@@ -53597,8 +54317,7 @@ var keysShim = function keys(object) {
 	}
 
 	if (hasDontEnumBug) {
-		var ctor = object.constructor;
-		var skipConstructor = ctor && ctor.prototype === object;
+		var skipConstructor = equalsConstructorPrototypeIfNotBuggy(object);
 
 		for (var k = 0; k < dontEnums.length; ++k) {
 			if (!(skipConstructor && dontEnums[k] === 'constructor') && has.call(object, dontEnums[k])) {
@@ -53610,9 +54329,7 @@ var keysShim = function keys(object) {
 };
 
 keysShim.shim = function shimObjectKeys() {
-	if (!Object.keys) {
-		Object.keys = keysShim;
-	} else {
+	if (Object.keys) {
 		var keysWorksWithArguments = (function () {
 			// Safari 5.0 bug
 			return (Object.keys(arguments) || '').length === 2;
@@ -53627,6 +54344,8 @@ keysShim.shim = function shimObjectKeys() {
 				}
 			};
 		}
+	} else {
+		Object.keys = keysShim;
 	}
 	return Object.keys || keysShim;
 };
@@ -54481,7 +55200,7 @@ var CSSPropertyOperations = {
 module.exports = CSSPropertyOperations;
 
 }).call(this,require('_process'))
-},{"./CSSProperty":323,"./ExecutionEnvironment":340,"./camelizeStyleName":428,"./dangerousStyleValue":433,"./hyphenateStyleName":453,"./memoizeStringOnly":463,"./warning":474,"_process":197}],325:[function(require,module,exports){
+},{"./CSSProperty":323,"./ExecutionEnvironment":340,"./camelizeStyleName":428,"./dangerousStyleValue":433,"./hyphenateStyleName":453,"./memoizeStringOnly":463,"./warning":474,"_process":194}],325:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -54581,7 +55300,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 module.exports = CallbackQueue;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./PooledClass":347,"./invariant":455,"_process":197}],326:[function(require,module,exports){
+},{"./Object.assign":346,"./PooledClass":347,"./invariant":455,"_process":194}],326:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -55126,7 +55845,7 @@ var DOMChildrenOperations = {
 module.exports = DOMChildrenOperations;
 
 }).call(this,require('_process'))
-},{"./Danger":331,"./ReactMultiChildUpdateTypes":392,"./invariant":455,"./setTextContent":469,"_process":197}],329:[function(require,module,exports){
+},{"./Danger":331,"./ReactMultiChildUpdateTypes":392,"./invariant":455,"./setTextContent":469,"_process":194}],329:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -55425,7 +56144,7 @@ var DOMProperty = {
 module.exports = DOMProperty;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],330:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],330:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -55617,7 +56336,7 @@ var DOMPropertyOperations = {
 module.exports = DOMPropertyOperations;
 
 }).call(this,require('_process'))
-},{"./DOMProperty":329,"./quoteAttributeValueForBrowser":467,"./warning":474,"_process":197}],331:[function(require,module,exports){
+},{"./DOMProperty":329,"./quoteAttributeValueForBrowser":467,"./warning":474,"_process":194}],331:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -55804,7 +56523,7 @@ var Danger = {
 module.exports = Danger;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":340,"./createNodesFromMarkup":432,"./emptyFunction":434,"./getMarkupWrap":447,"./invariant":455,"_process":197}],332:[function(require,module,exports){
+},{"./ExecutionEnvironment":340,"./createNodesFromMarkup":432,"./emptyFunction":434,"./getMarkupWrap":447,"./invariant":455,"_process":194}],332:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -56145,7 +56864,7 @@ var EventListener = {
 module.exports = EventListener;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":434,"_process":197}],336:[function(require,module,exports){
+},{"./emptyFunction":434,"_process":194}],336:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -56423,7 +57142,7 @@ var EventPluginHub = {
 module.exports = EventPluginHub;
 
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":337,"./EventPluginUtils":338,"./accumulateInto":425,"./forEachAccumulated":440,"./invariant":455,"_process":197}],337:[function(require,module,exports){
+},{"./EventPluginRegistry":337,"./EventPluginUtils":338,"./accumulateInto":425,"./forEachAccumulated":440,"./invariant":455,"_process":194}],337:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -56703,7 +57422,7 @@ var EventPluginRegistry = {
 module.exports = EventPluginRegistry;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],338:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],338:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -56924,7 +57643,7 @@ var EventPluginUtils = {
 module.exports = EventPluginUtils;
 
 }).call(this,require('_process'))
-},{"./EventConstants":334,"./invariant":455,"_process":197}],339:[function(require,module,exports){
+},{"./EventConstants":334,"./invariant":455,"_process":194}],339:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -57066,7 +57785,7 @@ var EventPropagators = {
 module.exports = EventPropagators;
 
 }).call(this,require('_process'))
-},{"./EventConstants":334,"./EventPluginHub":336,"./accumulateInto":425,"./forEachAccumulated":440,"_process":197}],340:[function(require,module,exports){
+},{"./EventConstants":334,"./EventPluginHub":336,"./accumulateInto":425,"./forEachAccumulated":440,"_process":194}],340:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -57568,7 +58287,7 @@ var LinkedValueUtils = {
 module.exports = LinkedValueUtils;
 
 }).call(this,require('_process'))
-},{"./ReactPropTypes":398,"./invariant":455,"_process":197}],344:[function(require,module,exports){
+},{"./ReactPropTypes":398,"./invariant":455,"_process":194}],344:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -57625,7 +58344,7 @@ var LocalEventTrapMixin = {
 module.exports = LocalEventTrapMixin;
 
 }).call(this,require('_process'))
-},{"./ReactBrowserEventEmitter":350,"./accumulateInto":425,"./forEachAccumulated":440,"./invariant":455,"_process":197}],345:[function(require,module,exports){
+},{"./ReactBrowserEventEmitter":350,"./accumulateInto":425,"./forEachAccumulated":440,"./invariant":455,"_process":194}],345:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -57848,7 +58567,7 @@ var PooledClass = {
 module.exports = PooledClass;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],348:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],348:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -58000,7 +58719,7 @@ React.version = '0.13.3';
 module.exports = React;
 
 }).call(this,require('_process'))
-},{"./EventPluginUtils":338,"./ExecutionEnvironment":340,"./Object.assign":346,"./ReactChildren":352,"./ReactClass":353,"./ReactComponent":354,"./ReactContext":358,"./ReactCurrentOwner":359,"./ReactDOM":360,"./ReactDOMTextComponent":371,"./ReactDefaultInjection":374,"./ReactElement":377,"./ReactElementValidator":378,"./ReactInstanceHandles":386,"./ReactMount":390,"./ReactPerf":395,"./ReactPropTypes":398,"./ReactReconciler":401,"./ReactServerRendering":404,"./findDOMNode":437,"./onlyChild":464,"_process":197}],349:[function(require,module,exports){
+},{"./EventPluginUtils":338,"./ExecutionEnvironment":340,"./Object.assign":346,"./ReactChildren":352,"./ReactClass":353,"./ReactComponent":354,"./ReactContext":358,"./ReactCurrentOwner":359,"./ReactDOM":360,"./ReactDOMTextComponent":371,"./ReactDefaultInjection":374,"./ReactElement":377,"./ReactElementValidator":378,"./ReactInstanceHandles":386,"./ReactMount":390,"./ReactPerf":395,"./ReactPropTypes":398,"./ReactReconciler":401,"./ReactServerRendering":404,"./findDOMNode":437,"./onlyChild":464,"_process":194}],349:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -58664,7 +59383,7 @@ var ReactChildren = {
 module.exports = ReactChildren;
 
 }).call(this,require('_process'))
-},{"./PooledClass":347,"./ReactFragment":383,"./traverseAllChildren":473,"./warning":474,"_process":197}],353:[function(require,module,exports){
+},{"./PooledClass":347,"./ReactFragment":383,"./traverseAllChildren":473,"./warning":474,"_process":194}],353:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -59610,7 +60329,7 @@ var ReactClass = {
 module.exports = ReactClass;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./ReactComponent":354,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactErrorUtils":380,"./ReactInstanceMap":387,"./ReactLifeCycle":388,"./ReactPropTypeLocationNames":396,"./ReactPropTypeLocations":397,"./ReactUpdateQueue":406,"./invariant":455,"./keyMirror":460,"./keyOf":461,"./warning":474,"_process":197}],354:[function(require,module,exports){
+},{"./Object.assign":346,"./ReactComponent":354,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactErrorUtils":380,"./ReactInstanceMap":387,"./ReactLifeCycle":388,"./ReactPropTypeLocationNames":396,"./ReactPropTypeLocations":397,"./ReactUpdateQueue":406,"./invariant":455,"./keyMirror":460,"./keyOf":461,"./warning":474,"_process":194}],354:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -59764,7 +60483,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = ReactComponent;
 
 }).call(this,require('_process'))
-},{"./ReactUpdateQueue":406,"./invariant":455,"./warning":474,"_process":197}],355:[function(require,module,exports){
+},{"./ReactUpdateQueue":406,"./invariant":455,"./warning":474,"_process":194}],355:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -59872,7 +60591,7 @@ var ReactComponentEnvironment = {
 module.exports = ReactComponentEnvironment;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],357:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],357:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -60785,7 +61504,7 @@ var ReactCompositeComponent = {
 module.exports = ReactCompositeComponent;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./ReactComponentEnvironment":356,"./ReactContext":358,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactElementValidator":378,"./ReactInstanceMap":387,"./ReactLifeCycle":388,"./ReactNativeComponent":393,"./ReactPerf":395,"./ReactPropTypeLocationNames":396,"./ReactPropTypeLocations":397,"./ReactReconciler":401,"./ReactUpdates":407,"./emptyObject":435,"./invariant":455,"./shouldUpdateReactComponent":471,"./warning":474,"_process":197}],358:[function(require,module,exports){
+},{"./Object.assign":346,"./ReactComponentEnvironment":356,"./ReactContext":358,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactElementValidator":378,"./ReactInstanceMap":387,"./ReactLifeCycle":388,"./ReactNativeComponent":393,"./ReactPerf":395,"./ReactPropTypeLocationNames":396,"./ReactPropTypeLocations":397,"./ReactReconciler":401,"./ReactUpdates":407,"./emptyObject":435,"./invariant":455,"./shouldUpdateReactComponent":471,"./warning":474,"_process":194}],358:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -60863,7 +61582,7 @@ var ReactContext = {
 module.exports = ReactContext;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./emptyObject":435,"./warning":474,"_process":197}],359:[function(require,module,exports){
+},{"./Object.assign":346,"./emptyObject":435,"./warning":474,"_process":194}],359:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -61076,7 +61795,7 @@ var ReactDOM = mapObject({
 module.exports = ReactDOM;
 
 }).call(this,require('_process'))
-},{"./ReactElement":377,"./ReactElementValidator":378,"./mapObject":462,"_process":197}],361:[function(require,module,exports){
+},{"./ReactElement":377,"./ReactElementValidator":378,"./mapObject":462,"_process":194}],361:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -61650,7 +62369,7 @@ ReactDOMComponent.injection = {
 module.exports = ReactDOMComponent;
 
 }).call(this,require('_process'))
-},{"./CSSPropertyOperations":324,"./DOMProperty":329,"./DOMPropertyOperations":330,"./Object.assign":346,"./ReactBrowserEventEmitter":350,"./ReactComponentBrowserEnvironment":355,"./ReactMount":390,"./ReactMultiChild":391,"./ReactPerf":395,"./escapeTextContentForBrowser":436,"./invariant":455,"./isEventSupported":456,"./keyOf":461,"./warning":474,"_process":197}],363:[function(require,module,exports){
+},{"./CSSPropertyOperations":324,"./DOMProperty":329,"./DOMPropertyOperations":330,"./Object.assign":346,"./ReactBrowserEventEmitter":350,"./ReactComponentBrowserEnvironment":355,"./ReactMount":390,"./ReactMultiChild":391,"./ReactPerf":395,"./escapeTextContentForBrowser":436,"./invariant":455,"./isEventSupported":456,"./keyOf":461,"./warning":474,"_process":194}],363:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -61867,7 +62586,7 @@ ReactPerf.measureMethods(ReactDOMIDOperations, 'ReactDOMIDOperations', {
 module.exports = ReactDOMIDOperations;
 
 }).call(this,require('_process'))
-},{"./CSSPropertyOperations":324,"./DOMChildrenOperations":328,"./DOMPropertyOperations":330,"./ReactMount":390,"./ReactPerf":395,"./invariant":455,"./setInnerHTML":468,"_process":197}],365:[function(require,module,exports){
+},{"./CSSPropertyOperations":324,"./DOMChildrenOperations":328,"./DOMPropertyOperations":330,"./ReactMount":390,"./ReactPerf":395,"./invariant":455,"./setInnerHTML":468,"_process":194}],365:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -62135,7 +62854,7 @@ var ReactDOMInput = ReactClass.createClass({
 module.exports = ReactDOMInput;
 
 }).call(this,require('_process'))
-},{"./AutoFocusMixin":321,"./DOMPropertyOperations":330,"./LinkedValueUtils":343,"./Object.assign":346,"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactElement":377,"./ReactMount":390,"./ReactUpdates":407,"./invariant":455,"_process":197}],368:[function(require,module,exports){
+},{"./AutoFocusMixin":321,"./DOMPropertyOperations":330,"./LinkedValueUtils":343,"./Object.assign":346,"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactElement":377,"./ReactMount":390,"./ReactUpdates":407,"./invariant":455,"_process":194}],368:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -62187,7 +62906,7 @@ var ReactDOMOption = ReactClass.createClass({
 module.exports = ReactDOMOption;
 
 }).call(this,require('_process'))
-},{"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactElement":377,"./warning":474,"_process":197}],369:[function(require,module,exports){
+},{"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactElement":377,"./warning":474,"_process":194}],369:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -62835,7 +63554,7 @@ var ReactDOMTextarea = ReactClass.createClass({
 module.exports = ReactDOMTextarea;
 
 }).call(this,require('_process'))
-},{"./AutoFocusMixin":321,"./DOMPropertyOperations":330,"./LinkedValueUtils":343,"./Object.assign":346,"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactElement":377,"./ReactUpdates":407,"./invariant":455,"./warning":474,"_process":197}],373:[function(require,module,exports){
+},{"./AutoFocusMixin":321,"./DOMPropertyOperations":330,"./LinkedValueUtils":343,"./Object.assign":346,"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactElement":377,"./ReactUpdates":407,"./invariant":455,"./warning":474,"_process":194}],373:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -63067,7 +63786,7 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"./BeforeInputEventPlugin":322,"./ChangeEventPlugin":326,"./ClientReactRootIndex":327,"./DefaultEventPluginOrder":332,"./EnterLeaveEventPlugin":333,"./ExecutionEnvironment":340,"./HTMLDOMPropertyConfig":342,"./MobileSafariClickEventPlugin":345,"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactComponentBrowserEnvironment":355,"./ReactDOMButton":361,"./ReactDOMComponent":362,"./ReactDOMForm":363,"./ReactDOMIDOperations":364,"./ReactDOMIframe":365,"./ReactDOMImg":366,"./ReactDOMInput":367,"./ReactDOMOption":368,"./ReactDOMSelect":369,"./ReactDOMTextComponent":371,"./ReactDOMTextarea":372,"./ReactDefaultBatchingStrategy":373,"./ReactDefaultPerf":375,"./ReactElement":377,"./ReactEventListener":382,"./ReactInjection":384,"./ReactInstanceHandles":386,"./ReactMount":390,"./ReactReconcileTransaction":400,"./SVGDOMPropertyConfig":408,"./SelectEventPlugin":409,"./ServerReactRootIndex":410,"./SimpleEventPlugin":411,"./createFullPageComponent":431,"_process":197}],375:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":322,"./ChangeEventPlugin":326,"./ClientReactRootIndex":327,"./DefaultEventPluginOrder":332,"./EnterLeaveEventPlugin":333,"./ExecutionEnvironment":340,"./HTMLDOMPropertyConfig":342,"./MobileSafariClickEventPlugin":345,"./ReactBrowserComponentMixin":349,"./ReactClass":353,"./ReactComponentBrowserEnvironment":355,"./ReactDOMButton":361,"./ReactDOMComponent":362,"./ReactDOMForm":363,"./ReactDOMIDOperations":364,"./ReactDOMIframe":365,"./ReactDOMImg":366,"./ReactDOMInput":367,"./ReactDOMOption":368,"./ReactDOMSelect":369,"./ReactDOMTextComponent":371,"./ReactDOMTextarea":372,"./ReactDefaultBatchingStrategy":373,"./ReactDefaultPerf":375,"./ReactElement":377,"./ReactEventListener":382,"./ReactInjection":384,"./ReactInstanceHandles":386,"./ReactMount":390,"./ReactReconcileTransaction":400,"./SVGDOMPropertyConfig":408,"./SelectEventPlugin":409,"./ServerReactRootIndex":410,"./SimpleEventPlugin":411,"./createFullPageComponent":431,"_process":194}],375:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -63847,7 +64566,7 @@ ReactElement.isValidElement = function(object) {
 module.exports = ReactElement;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./ReactContext":358,"./ReactCurrentOwner":359,"./warning":474,"_process":197}],378:[function(require,module,exports){
+},{"./Object.assign":346,"./ReactContext":358,"./ReactCurrentOwner":359,"./warning":474,"_process":194}],378:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -64312,7 +65031,7 @@ var ReactElementValidator = {
 module.exports = ReactElementValidator;
 
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactFragment":383,"./ReactNativeComponent":393,"./ReactPropTypeLocationNames":396,"./ReactPropTypeLocations":397,"./getIteratorFn":446,"./invariant":455,"./warning":474,"_process":197}],379:[function(require,module,exports){
+},{"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactFragment":383,"./ReactNativeComponent":393,"./ReactPropTypeLocationNames":396,"./ReactPropTypeLocations":397,"./getIteratorFn":446,"./invariant":455,"./warning":474,"_process":194}],379:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -64407,7 +65126,7 @@ var ReactEmptyComponent = {
 module.exports = ReactEmptyComponent;
 
 }).call(this,require('_process'))
-},{"./ReactElement":377,"./ReactInstanceMap":387,"./invariant":455,"_process":197}],380:[function(require,module,exports){
+},{"./ReactElement":377,"./ReactInstanceMap":387,"./invariant":455,"_process":194}],380:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -64857,7 +65576,7 @@ var ReactFragment = {
 module.exports = ReactFragment;
 
 }).call(this,require('_process'))
-},{"./ReactElement":377,"./warning":474,"_process":197}],384:[function(require,module,exports){
+},{"./ReactElement":377,"./warning":474,"_process":194}],384:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -65370,7 +66089,7 @@ var ReactInstanceHandles = {
 module.exports = ReactInstanceHandles;
 
 }).call(this,require('_process'))
-},{"./ReactRootIndex":403,"./invariant":455,"_process":197}],387:[function(require,module,exports){
+},{"./ReactRootIndex":403,"./invariant":455,"_process":194}],387:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -66395,7 +67114,7 @@ ReactPerf.measureMethods(ReactMount, 'ReactMount', {
 module.exports = ReactMount;
 
 }).call(this,require('_process'))
-},{"./DOMProperty":329,"./ReactBrowserEventEmitter":350,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactElementValidator":378,"./ReactEmptyComponent":379,"./ReactInstanceHandles":386,"./ReactInstanceMap":387,"./ReactMarkupChecksum":389,"./ReactPerf":395,"./ReactReconciler":401,"./ReactUpdateQueue":406,"./ReactUpdates":407,"./containsNode":429,"./emptyObject":435,"./getReactRootElementInContainer":449,"./instantiateReactComponent":454,"./invariant":455,"./setInnerHTML":468,"./shouldUpdateReactComponent":471,"./warning":474,"_process":197}],391:[function(require,module,exports){
+},{"./DOMProperty":329,"./ReactBrowserEventEmitter":350,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactElementValidator":378,"./ReactEmptyComponent":379,"./ReactInstanceHandles":386,"./ReactInstanceMap":387,"./ReactMarkupChecksum":389,"./ReactPerf":395,"./ReactReconciler":401,"./ReactUpdateQueue":406,"./ReactUpdates":407,"./containsNode":429,"./emptyObject":435,"./getReactRootElementInContainer":449,"./instantiateReactComponent":454,"./invariant":455,"./setInnerHTML":468,"./shouldUpdateReactComponent":471,"./warning":474,"_process":194}],391:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -66965,7 +67684,7 @@ var ReactNativeComponent = {
 module.exports = ReactNativeComponent;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./invariant":455,"_process":197}],394:[function(require,module,exports){
+},{"./Object.assign":346,"./invariant":455,"_process":194}],394:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -67077,7 +67796,7 @@ var ReactOwner = {
 module.exports = ReactOwner;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],395:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],395:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -67181,7 +67900,7 @@ function _noMeasure(objName, fnName, func) {
 module.exports = ReactPerf;
 
 }).call(this,require('_process'))
-},{"_process":197}],396:[function(require,module,exports){
+},{"_process":194}],396:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -67209,7 +67928,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = ReactPropTypeLocationNames;
 
 }).call(this,require('_process'))
-},{"_process":197}],397:[function(require,module,exports){
+},{"_process":194}],397:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -67938,7 +68657,7 @@ var ReactReconciler = {
 module.exports = ReactReconciler;
 
 }).call(this,require('_process'))
-},{"./ReactElementValidator":378,"./ReactRef":402,"_process":197}],402:[function(require,module,exports){
+},{"./ReactElementValidator":378,"./ReactRef":402,"_process":194}],402:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -68122,7 +68841,7 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"./ReactElement":377,"./ReactInstanceHandles":386,"./ReactMarkupChecksum":389,"./ReactServerRenderingTransaction":405,"./emptyObject":435,"./instantiateReactComponent":454,"./invariant":455,"_process":197}],405:[function(require,module,exports){
+},{"./ReactElement":377,"./ReactInstanceHandles":386,"./ReactMarkupChecksum":389,"./ReactServerRenderingTransaction":405,"./emptyObject":435,"./instantiateReactComponent":454,"./invariant":455,"_process":194}],405:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -68534,7 +69253,7 @@ var ReactUpdateQueue = {
 module.exports = ReactUpdateQueue;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactInstanceMap":387,"./ReactLifeCycle":388,"./ReactUpdates":407,"./invariant":455,"./warning":474,"_process":197}],407:[function(require,module,exports){
+},{"./Object.assign":346,"./ReactCurrentOwner":359,"./ReactElement":377,"./ReactInstanceMap":387,"./ReactLifeCycle":388,"./ReactUpdates":407,"./invariant":455,"./warning":474,"_process":194}],407:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -68816,7 +69535,7 @@ var ReactUpdates = {
 module.exports = ReactUpdates;
 
 }).call(this,require('_process'))
-},{"./CallbackQueue":325,"./Object.assign":346,"./PooledClass":347,"./ReactCurrentOwner":359,"./ReactPerf":395,"./ReactReconciler":401,"./Transaction":423,"./invariant":455,"./warning":474,"_process":197}],408:[function(require,module,exports){
+},{"./CallbackQueue":325,"./Object.assign":346,"./PooledClass":347,"./ReactCurrentOwner":359,"./ReactPerf":395,"./ReactReconciler":401,"./Transaction":423,"./invariant":455,"./warning":474,"_process":194}],408:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -69564,7 +70283,7 @@ var SimpleEventPlugin = {
 module.exports = SimpleEventPlugin;
 
 }).call(this,require('_process'))
-},{"./EventConstants":334,"./EventPluginUtils":338,"./EventPropagators":339,"./SyntheticClipboardEvent":412,"./SyntheticDragEvent":414,"./SyntheticEvent":415,"./SyntheticFocusEvent":416,"./SyntheticKeyboardEvent":418,"./SyntheticMouseEvent":419,"./SyntheticTouchEvent":420,"./SyntheticUIEvent":421,"./SyntheticWheelEvent":422,"./getEventCharCode":442,"./invariant":455,"./keyOf":461,"./warning":474,"_process":197}],412:[function(require,module,exports){
+},{"./EventConstants":334,"./EventPluginUtils":338,"./EventPropagators":339,"./SyntheticClipboardEvent":412,"./SyntheticDragEvent":414,"./SyntheticEvent":415,"./SyntheticFocusEvent":416,"./SyntheticKeyboardEvent":418,"./SyntheticMouseEvent":419,"./SyntheticTouchEvent":420,"./SyntheticUIEvent":421,"./SyntheticWheelEvent":422,"./getEventCharCode":442,"./invariant":455,"./keyOf":461,"./warning":474,"_process":194}],412:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -70524,7 +71243,7 @@ var Transaction = {
 module.exports = Transaction;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],424:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],424:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -70619,7 +71338,7 @@ function accumulateInto(current, next) {
 module.exports = accumulateInto;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],426:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],426:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -70919,7 +71638,7 @@ function createFullPageComponent(tag) {
 module.exports = createFullPageComponent;
 
 }).call(this,require('_process'))
-},{"./ReactClass":353,"./ReactElement":377,"./invariant":455,"_process":197}],432:[function(require,module,exports){
+},{"./ReactClass":353,"./ReactElement":377,"./invariant":455,"_process":194}],432:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -71009,7 +71728,7 @@ function createNodesFromMarkup(markup, handleScript) {
 module.exports = createNodesFromMarkup;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":340,"./createArrayFromMixed":430,"./getMarkupWrap":447,"./invariant":455,"_process":197}],433:[function(require,module,exports){
+},{"./ExecutionEnvironment":340,"./createArrayFromMixed":430,"./getMarkupWrap":447,"./invariant":455,"_process":194}],433:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -71125,7 +71844,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = emptyObject;
 
 }).call(this,require('_process'))
-},{"_process":197}],436:[function(require,module,exports){
+},{"_process":194}],436:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -71238,7 +71957,7 @@ function findDOMNode(componentOrElement) {
 module.exports = findDOMNode;
 
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":359,"./ReactInstanceMap":387,"./ReactMount":390,"./invariant":455,"./isNode":457,"./warning":474,"_process":197}],438:[function(require,module,exports){
+},{"./ReactCurrentOwner":359,"./ReactInstanceMap":387,"./ReactMount":390,"./invariant":455,"./isNode":457,"./warning":474,"_process":194}],438:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -71296,7 +72015,7 @@ function flattenChildren(children) {
 module.exports = flattenChildren;
 
 }).call(this,require('_process'))
-},{"./traverseAllChildren":473,"./warning":474,"_process":197}],439:[function(require,module,exports){
+},{"./traverseAllChildren":473,"./warning":474,"_process":194}],439:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -71783,7 +72502,7 @@ function getMarkupWrap(nodeName) {
 module.exports = getMarkupWrap;
 
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":340,"./invariant":455,"_process":197}],448:[function(require,module,exports){
+},{"./ExecutionEnvironment":340,"./invariant":455,"_process":194}],448:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -72182,7 +72901,7 @@ function instantiateReactComponent(node, parentCompositeType) {
 module.exports = instantiateReactComponent;
 
 }).call(this,require('_process'))
-},{"./Object.assign":346,"./ReactCompositeComponent":357,"./ReactEmptyComponent":379,"./ReactNativeComponent":393,"./invariant":455,"./warning":474,"_process":197}],455:[function(require,module,exports){
+},{"./Object.assign":346,"./ReactCompositeComponent":357,"./ReactEmptyComponent":379,"./ReactNativeComponent":393,"./invariant":455,"./warning":474,"_process":194}],455:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -72239,7 +72958,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":197}],456:[function(require,module,exports){
+},{"_process":194}],456:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -72454,7 +73173,7 @@ var keyMirror = function(obj) {
 module.exports = keyMirror;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],461:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],461:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -72616,7 +73335,7 @@ function onlyChild(children) {
 module.exports = onlyChild;
 
 }).call(this,require('_process'))
-},{"./ReactElement":377,"./invariant":455,"_process":197}],465:[function(require,module,exports){
+},{"./ReactElement":377,"./invariant":455,"_process":194}],465:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -72979,7 +73698,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 module.exports = shouldUpdateReactComponent;
 
 }).call(this,require('_process'))
-},{"./warning":474,"_process":197}],472:[function(require,module,exports){
+},{"./warning":474,"_process":194}],472:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -73051,7 +73770,7 @@ function toArray(obj) {
 module.exports = toArray;
 
 }).call(this,require('_process'))
-},{"./invariant":455,"_process":197}],473:[function(require,module,exports){
+},{"./invariant":455,"_process":194}],473:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -73304,7 +74023,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 module.exports = traverseAllChildren;
 
 }).call(this,require('_process'))
-},{"./ReactElement":377,"./ReactFragment":383,"./ReactInstanceHandles":386,"./getIteratorFn":446,"./invariant":455,"./warning":474,"_process":197}],474:[function(require,module,exports){
+},{"./ReactElement":377,"./ReactFragment":383,"./ReactInstanceHandles":386,"./getIteratorFn":446,"./invariant":455,"./warning":474,"_process":194}],474:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -73367,7 +74086,7 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = warning;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":434,"_process":197}],475:[function(require,module,exports){
+},{"./emptyFunction":434,"_process":194}],475:[function(require,module,exports){
 module.exports = require('./lib/React');
 
 },{"./lib/React":348}],476:[function(require,module,exports){
@@ -78477,7 +79196,7 @@ var AdminForms = function AdminForms() {
 
     var $ = require('jquery');
 
-    console.log('Admin Forms Loading');
+    console.log("Admin Forms Loading");
 
     $(document).ready(function () {
 
@@ -78487,26 +79206,26 @@ var AdminForms = function AdminForms() {
 
                 $.ajax({
                     type: 'POST',
-                    dataType: 'json',
+                    dataType: "json",
                     data: $form.serialize(),
                     url: $form.attr('action')
 
                 }).then(function (data) {
                     BB.SnackBar.displayMessage(data);
                 }, function () {
-                    BB.SnackBar.displayMessage('There was an error');
+                    BB.SnackBar.displayMessage("There was an error");
                 });
             });
         });
     });
 
-    console.log('Admin Forms Loaded');
+    console.log("Admin Forms Loaded");
 };
 
 exports['default'] = AdminForms;
 module.exports = exports['default'];
 
-},{"jquery":49}],479:[function(require,module,exports){
+},{"jquery":46}],479:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -78520,7 +79239,7 @@ var FeedbackWidget = function FeedbackWidget() {
 
     var $ = require('jquery');
 
-    console.log('Feedback Widget Loading');
+    console.log("Feedback Widget Loading");
 
     (function ($) {
 
@@ -78558,7 +79277,7 @@ var FeedbackWidget = function FeedbackWidget() {
             }
         }
         function feedbackFormError(xhr, status, error) {
-            var errors = eval('(' + xhr.responseText + ')');
+            var errors = eval("(" + xhr.responseText + ")");
             for (var n in errors) {
                 var $field = $('.js-feedbackModalForm').find('.js-field-' + n + '');
                 $field.addClass('has-error');
@@ -78567,13 +79286,13 @@ var FeedbackWidget = function FeedbackWidget() {
         }
     })($);
 
-    console.log('Feedback Widget Loaded');
+    console.log("Feedback Widget Loaded");
 };
 
 exports['default'] = FeedbackWidget;
 module.exports = exports['default'];
 
-},{"jquery":49}],480:[function(require,module,exports){
+},{"jquery":46}],480:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -78586,7 +79305,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var SiteInteraction = function SiteInteraction() {
     _classCallCheck(this, SiteInteraction);
 
-    var jQuery = require("jquery");
+    var jQuery = require('jquery');
 
     console.log("Site Interaction Loading");
 
@@ -78599,58 +79318,58 @@ var SiteInteraction = function SiteInteraction() {
     });
 
     //Navbar top menu
-    jQuery(".mainSidenav .toggleSettings").on("click", function (event) {
+    jQuery(".mainSidenav .toggleSettings").on('click', function (event) {
         event.preventDefault();
-        jQuery(".mainSidenav .memberAccountLinks").toggleClass("open");
+        jQuery(".mainSidenav .memberAccountLinks").toggleClass('open');
     });
 
     global.jQuery = jQuery;
 
     //Tooltips
-    require("bootstrap");
-    jQuery("[data-toggle=tooltip]").tooltip({});
+    require('bootstrap');
+    jQuery('[data-toggle=tooltip]').tooltip({});
 
     //Fancy dropdown
-    require("select2");
+    require('select2');
     jQuery(".js-advanced-dropdown").select2({ dropdownAutoWidth: false });
 
     //Main side nav - mobile view
-    jQuery(".menuToggleButton").on("click", function () {
+    jQuery(".menuToggleButton").on('click', function () {
         jQuery("body").addClass("menuOpen");
         jQuery(".modalMask").addClass("display");
     });
 
     //Modal window background mask
-    jQuery(".modalMask").on("click", function () {
+    jQuery(".modalMask").on('click', function () {
         jQuery(".modalMask").removeClass("display");
         jQuery("body").removeClass("menuOpen");
     });
 
     //Change sub amount button
-    jQuery(".js-show-alter-subscription-amount").click(function (event) {
+    jQuery('.js-show-alter-subscription-amount').click(function (event) {
         event.preventDefault();
-        jQuery(".js-alter-subscription-amount-form").removeClass("hidden");
+        jQuery('.js-alter-subscription-amount-form').removeClass('hidden');
         jQuery(this).hide();
     });
 
-    jQuery(".js-notification-row").click(function (event) {
+    jQuery('.js-notification-row').click(function (event) {
         event.preventDefault();
-        var id = jQuery(this).data("id");
+        var id = jQuery(this).data('id');
         var that = this;
-        jQuery.post("notifications/" + id, { read: true, _method: "PUT" }, function () {
-            jQuery(that).removeClass("success");
-            jQuery(that).find(".js-unread").text("");
+        jQuery.post('notifications/' + id, { read: true, _method: 'PUT' }, function () {
+            jQuery(that).removeClass('success');
+            jQuery(that).find('.js-unread').text('');
         });
     });
 
     //Activity page - Date picker, auto form submit
-    jQuery("#activityDatePicker").find("input").on("change", function (e) {
-        jQuery("#activityDatePicker").submit();
+    jQuery('#activityDatePicker').find('input').on('change', function (e) {
+        jQuery('#activityDatePicker').submit();
     });
 
     //Input date picker
-    require("bootstrap-datepicker");
-    jQuery(".js-date-select").datepicker({
+    require('bootstrap-datepicker');
+    jQuery('.js-date-select').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true,
         todayHighlight: true
@@ -78663,7 +79382,7 @@ exports["default"] = SiteInteraction;
 module.exports = exports["default"];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"bootstrap":5,"bootstrap-datepicker":4,"jquery":49,"select2":476}],481:[function(require,module,exports){
+},{"bootstrap":5,"bootstrap-datepicker":4,"jquery":46,"select2":476}],481:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -78675,7 +79394,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Snackbar = function Snackbar() {
     _classCallCheck(this, Snackbar);
 
-    var $ = require("jquery");
+    var $ = require('jquery');
 
     console.log("Snackbar Loading");
 
@@ -78705,7 +79424,7 @@ var Snackbar = function Snackbar() {
             //Add the content to the div
             var snackBarContent = document.createElement("div");
             snackBarContent.innerHTML = message;
-            this.snackBarDiv.innerHTML = "";
+            this.snackBarDiv.innerHTML = '';
             this.snackBarDiv.appendChild(snackBarContent);
 
             this.display();
@@ -78716,31 +79435,31 @@ var Snackbar = function Snackbar() {
             }, 3000);
         },
         displayMessages: function displayMessages(messages) {
-            var message = "<ul>";
+            var message = '<ul>';
             for (var i = 0; i < messages.length; i++) {
-                message += "<li>" + messages[i] + "</li>";
+                message += '<li>' + messages[i] + '</li>';
             }
-            message += "</ul>";
+            message += '</ul>';
 
             this.displayMessage(message);
         },
         display: function display() {
             //Remove the hidden class
-            this.snackBarDiv.className = "snackBar";
+            this.snackBarDiv.className = 'snackBar';
 
             this.onScreen = true;
         },
         remove: function remove() {
             window.clearTimeout(this.timeoutID);
 
-            this.snackBarDiv.className = this.snackBarDiv.className + " snackBarHidden";
+            this.snackBarDiv.className = this.snackBarDiv.className + ' snackBarHidden';
 
             this.onScreen = false;
         },
         createElement: function createElement() {
             //Create the snackbar div
             this.snackBarDiv = document.createElement("div");
-            this.snackBarDiv.className = "snackBar snackBarHidden";
+            this.snackBarDiv.className = 'snackBar snackBarHidden';
 
             //Add the div to the page
             document.body.appendChild(this.snackBarDiv);
@@ -78755,9 +79474,9 @@ var Snackbar = function Snackbar() {
 
     //Fetch any existing messages from the dom
     $(document).ready(function () {
-        var message = $("#snackbarMessage").val();
-        var level = $("#snackbarLevel").val();
-        var messages = $("#snackbarMessages").val();
+        var message = $('#snackbarMessage').val();
+        var level = $('#snackbarLevel').val();
+        var messages = $('#snackbarMessages').val();
         if (messages) {
             messages = JSON.parse(messages);
         }
@@ -78777,7 +79496,7 @@ var Snackbar = function Snackbar() {
 exports["default"] = Snackbar;
 module.exports = exports["default"];
 
-},{"jquery":49}],482:[function(require,module,exports){
+},{"jquery":46}],482:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -78836,20 +79555,22 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = require('react');
 var PaymentTable = require('./PaymentTable');
 
 var FilterablePaymentTable = (function (_React$Component) {
+    _inherits(FilterablePaymentTable, _React$Component);
+
     function FilterablePaymentTable() {
         _classCallCheck(this, FilterablePaymentTable);
 
-        if (_React$Component != null) {
-            _React$Component.apply(this, arguments);
-        }
+        _get(Object.getPrototypeOf(FilterablePaymentTable.prototype), 'constructor', this).apply(this, arguments);
 
         this.state = {
             items: [{ id: 1, date: '2015-02-01', user: { id: 1, name: 'John Doe' }, reason: 'reason', method: 'method', amount: 50, reference: 'ref', status: 'paid' }, { id: 2, date: '2015-02-01', user: { id: 1, name: 'John Doe' }, reason: 'reason', method: 'method', amount: 50, reference: 'ref', status: 'paid' }, { id: 3, date: '2015-02-01', user: { id: 2, name: 'Steve' }, reason: 'reason', method: 'method', amount: 50, reference: 'ref', status: 'paid' }],
@@ -78858,8 +79579,6 @@ var FilterablePaymentTable = (function (_React$Component) {
             filterReason: 'subscription'
         };
     }
-
-    _inherits(FilterablePaymentTable, _React$Component);
 
     _createClass(FilterablePaymentTable, [{
         key: 'componentDidMount',
@@ -78933,13 +79652,13 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -78950,6 +79669,8 @@ var Select = require('./form/Select');
 var Loader = require('halogen/PulseLoader');
 
 var PaymentModule = (function (_React$Component) {
+    _inherits(PaymentModule, _React$Component);
+
     function PaymentModule(props) {
         var _this = this;
 
@@ -78979,17 +79700,25 @@ var PaymentModule = (function (_React$Component) {
         });
 
         this.availableMethods = [{ key: 'gocardless', value: 'Direct Debit' }, { key: 'balance', value: 'Balance' }, { key: 'stripe', value: 'Credit/Debit Card' }];
+
+        this.availablePaymentMethods = this.getPaymentMethodArray();
     }
 
-    _inherits(PaymentModule, _React$Component);
-
     _createClass(PaymentModule, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            //Set the default payment method to be the first item in the array, the one the user sees
+            this.setState({ method: this.availablePaymentMethods[0].key });
+        }
+    }, {
         key: 'handleAmountChange',
         value: function handleAmountChange(event) {
             //this doesn't allow decimal places to be entered by hand
             var amount = parseFloat(event.target.value);
 
-            if (amount > 200) {}
+            if (amount > 200) {
+                //We should probably do something here as gocardless will most likely fail
+            }
 
             this.setState({ amount: amount });
 
@@ -79004,14 +79733,14 @@ var PaymentModule = (function (_React$Component) {
 
             this.checkLowValue(method, this.state.amount);
         }
-    }, {
-        key: 'checkLowValue',
 
         /**
          * Ensure that if stripe is being used the amount isnt to low
          * @param method
          * @param amount
          */
+    }, {
+        key: 'checkLowValue',
         value: function checkLowValue(method, amount) {
             var stripeLowValueWarning = method === 'stripe' && amount < 10;
             this.setState({ stripeLowValueWarning: stripeLowValueWarning });
@@ -79044,7 +79773,7 @@ var PaymentModule = (function (_React$Component) {
             $.ajax({
                 url: this.getTargetUrl(this.props.userId, this.state.method),
                 dataType: 'json',
-                contentType: 'application/json',
+                contentType: "application/json",
                 type: 'POST',
                 data: this.prepareRequestData(),
                 success: (function (responseData) {
@@ -79071,13 +79800,13 @@ var PaymentModule = (function (_React$Component) {
                 }).bind(this)
             });
         }
-    }, {
-        key: 'prepareRequestData',
 
         /**
          * Generate data data for the ajax request
          * @returns string
          */
+    }, {
+        key: 'prepareRequestData',
         value: function prepareRequestData() {
             return JSON.stringify({
                 amount: this.state.amount * 100 + '',
@@ -79087,8 +79816,6 @@ var PaymentModule = (function (_React$Component) {
                 stripeToken: this.state.stripeToken
             });
         }
-    }, {
-        key: 'getTargetUrl',
 
         /**
          * Where will the request be sent?
@@ -79097,17 +79824,19 @@ var PaymentModule = (function (_React$Component) {
          * @param method
          * @returns {string}
          */
+    }, {
+        key: 'getTargetUrl',
         value: function getTargetUrl(userId, method) {
             return '/account/' + userId + '/payment/' + method;
         }
-    }, {
-        key: 'getPaymentMethodArray',
 
         /**
          * Get an array of payment methods for the dropdown, this is controlled by the data being passed in
          *
          * @returns {Array}
          */
+    }, {
+        key: 'getPaymentMethodArray',
         value: function getPaymentMethodArray() {
             var methods = [];
             for (var i in this.availableMethods) {
@@ -79145,7 +79874,7 @@ var PaymentModule = (function (_React$Component) {
                 'div',
                 { className: 'form-inline multi-payment-form' },
                 amountField,
-                _react2['default'].createElement(Select, { value: this.state.method, onChange: this.handleMethodChange, options: this.getPaymentMethodArray(), style: { width: 150 } }),
+                _react2['default'].createElement(Select, { value: this.state.method, onChange: this.handleMethodChange, options: this.availablePaymentMethods, style: { width: 150 } }),
                 _react2['default'].createElement(
                     'button',
                     { className: 'btn btn-primary', disabled: this.state.requestInProgress, onClick: function (x) {
@@ -79195,9 +79924,7 @@ PaymentModule.defaultProps = {
 exports['default'] = PaymentModule;
 module.exports = exports['default'];
 
-//We should probably do something here as gocardless will most likely fail
-
-},{"../services/StripePayment":499,"./form/Select":492,"halogen/PulseLoader":18,"jquery":49,"react":475}],486:[function(require,module,exports){
+},{"../services/StripePayment":499,"./form/Select":492,"halogen/PulseLoader":18,"jquery":46,"react":475}],486:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79206,11 +79933,13 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -79219,15 +79948,13 @@ var _react2 = _interopRequireDefault(_react);
 var PaymentTableRow = require('./PaymentTableRow');
 
 var PaymentTable = (function (_React$Component) {
+    _inherits(PaymentTable, _React$Component);
+
     function PaymentTable() {
         _classCallCheck(this, PaymentTable);
 
-        if (_React$Component != null) {
-            _React$Component.apply(this, arguments);
-        }
+        _get(Object.getPrototypeOf(PaymentTable.prototype), 'constructor', this).apply(this, arguments);
     }
-
-    _inherits(PaymentTable, _React$Component);
 
     _createClass(PaymentTable, [{
         key: 'render',
@@ -79316,26 +80043,26 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
 var PaymentTableRow = (function (_React$Component) {
+    _inherits(PaymentTableRow, _React$Component);
+
     function PaymentTableRow() {
         _classCallCheck(this, PaymentTableRow);
 
-        if (_React$Component != null) {
-            _React$Component.apply(this, arguments);
-        }
+        _get(Object.getPrototypeOf(PaymentTableRow.prototype), 'constructor', this).apply(this, arguments);
     }
-
-    _inherits(PaymentTableRow, _React$Component);
 
     _createClass(PaymentTableRow, [{
         key: 'render',
@@ -79399,26 +80126,26 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
 var Tick = (function (_React$Component) {
+    _inherits(Tick, _React$Component);
+
     function Tick() {
         _classCallCheck(this, Tick);
 
-        if (_React$Component != null) {
-            _React$Component.apply(this, arguments);
-        }
+        _get(Object.getPrototypeOf(Tick.prototype), "constructor", this).apply(this, arguments);
     }
-
-    _inherits(Tick, _React$Component);
 
     _createClass(Tick, [{
         key: "render",
@@ -79446,11 +80173,13 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -79459,15 +80188,13 @@ var _react2 = _interopRequireDefault(_react);
 var moment = require('moment');
 
 var ExpenseItem = (function (_React$Component) {
+    _inherits(ExpenseItem, _React$Component);
+
     function ExpenseItem() {
         _classCallCheck(this, ExpenseItem);
 
-        if (_React$Component != null) {
-            _React$Component.apply(this, arguments);
-        }
+        _get(Object.getPrototypeOf(ExpenseItem.prototype), 'constructor', this).apply(this, arguments);
     }
-
-    _inherits(ExpenseItem, _React$Component);
 
     _createClass(ExpenseItem, [{
         key: 'capitalizeFirstLetter',
@@ -79531,7 +80258,7 @@ var ExpenseItem = (function (_React$Component) {
 exports['default'] = ExpenseItem;
 module.exports = exports['default'];
 
-},{"moment":215,"react":475}],490:[function(require,module,exports){
+},{"moment":212,"react":475}],490:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79582,7 +80309,14 @@ var MemberExpenses = _react2['default'].createClass({
         this.props.expenses.fetch({ data: { user_id: this.props.userId } });
     },
 
-    componentDidUpdate: function componentDidUpdate() {},
+    componentDidUpdate: function componentDidUpdate() {
+        //we wont allow editing of expenses, just creation so this may not be needed
+
+        //this triggers a lot of updates, I am not sure why its needed
+        //this.props.expenses.forEach(function (expense) {
+        //    expense.save();
+        //});
+    },
 
     handleNewTodoKeyDown: function handleNewTodoKeyDown(event) {
         if (event.which !== ENTER_KEY) {
@@ -79712,14 +80446,7 @@ var MemberExpenses = _react2['default'].createClass({
 exports['default'] = MemberExpenses;
 module.exports = exports['default'];
 
-//we wont allow editing of expenses, just creation so this may not be needed
-
-//this triggers a lot of updates, I am not sure why its needed
-//this.props.expenses.forEach(function (expense) {
-//    expense.save();
-//});
-
-},{"../../mixins/Backbone":496,"./ExpenseItem":489,"./NewExpenseModal":491,"react":475,"react-bootstrap":272}],491:[function(require,module,exports){
+},{"../../mixins/Backbone":496,"./ExpenseItem":489,"./NewExpenseModal":491,"react":475,"react-bootstrap":269}],491:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79917,7 +80644,7 @@ var NewExpenseModal = _react2['default'].createClass({
 exports['default'] = NewExpenseModal;
 module.exports = exports['default'];
 
-},{"../form/Select":492,"backbone-model-file-upload":2,"joi":33,"jquery":49,"react":475,"react-bootstrap":272,"react-validation-mixin":287}],492:[function(require,module,exports){
+},{"../form/Select":492,"backbone-model-file-upload":2,"joi":32,"jquery":46,"react":475,"react-bootstrap":269,"react-validation-mixin":284}],492:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79926,26 +80653,26 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
 var Select = (function (_React$Component) {
+    _inherits(Select, _React$Component);
+
     function Select() {
         _classCallCheck(this, Select);
 
-        if (_React$Component != null) {
-            _React$Component.apply(this, arguments);
-        }
+        _get(Object.getPrototypeOf(Select.prototype), 'constructor', this).apply(this, arguments);
     }
-
-    _inherits(Select, _React$Component);
 
     _createClass(Select, [{
         key: 'render',
@@ -80057,13 +80784,13 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -80074,6 +80801,8 @@ var moment = require('moment');
 var Tick = require('./../elements/Tick');
 
 var NotificationTableRow = (function (_React$Component) {
+    _inherits(NotificationTableRow, _React$Component);
+
     function NotificationTableRow(props) {
         _classCallCheck(this, NotificationTableRow);
 
@@ -80081,8 +80810,6 @@ var NotificationTableRow = (function (_React$Component) {
 
         this.markAsRead = this.markAsRead.bind(this);
     }
-
-    _inherits(NotificationTableRow, _React$Component);
 
     _createClass(NotificationTableRow, [{
         key: 'markAsRead',
@@ -80139,7 +80866,7 @@ var NotificationTableRow = (function (_React$Component) {
 exports['default'] = NotificationTableRow;
 module.exports = exports['default'];
 
-},{"./../elements/Tick":488,"moment":215,"react":475}],495:[function(require,module,exports){
+},{"./../elements/Tick":488,"moment":212,"react":475}],495:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80164,7 +80891,10 @@ var NotificationsTable = _react2['default'].createClass({
         return [this.props.notifications];
     },
 
-    componentDidMount: function componentDidMount() {},
+    componentDidMount: function componentDidMount() {
+        //Notifications are loaded in the main app file and the connection is passed in
+        //this.props.notifications.fetch();
+    },
 
     render: function render() {
 
@@ -80221,9 +80951,6 @@ var NotificationsTable = _react2['default'].createClass({
 
 exports['default'] = NotificationsTable;
 module.exports = exports['default'];
-
-//Notifications are loaded in the main app file and the connection is passed in
-//this.props.notifications.fetch();
 
 },{"../../mixins/Backbone":496,"./NotificationTableRow":494,"react":475}],496:[function(require,module,exports){
 'use strict';
@@ -80346,6 +81073,8 @@ var StripePayment = (function () {
         this.onTokenCallback = null;
     }
 
+    //Returns a singleton
+
     _createClass(StripePayment, [{
         key: 'loadConfigureStripe',
         value: function loadConfigureStripe(stripeKey, name, email, onTokenCallback) {
@@ -80383,12 +81112,12 @@ var StripePayment = (function () {
             //We are done so lets not do it again
             this.isLoaded = true;
         }
-    }, {
-        key: 'createHandler',
 
         /**
          * Create the stripe handler which will control the modal generation
          */
+    }, {
+        key: 'createHandler',
         value: function createHandler() {
             this.stripeHandler = StripeCheckout.configure({
                 key: this.stripeKey,
@@ -80399,8 +81128,6 @@ var StripePayment = (function () {
                 token: this.onTokenGeneration.bind(this)
             });
         }
-    }, {
-        key: 'collectCardDetails',
 
         /**
          * Load the collection dialog box
@@ -80408,22 +81135,24 @@ var StripePayment = (function () {
          * @param amount        amount in pence
          * @param description   description for the dialog box
          */
+    }, {
+        key: 'collectCardDetails',
         value: function collectCardDetails(amount) {
-            var description = arguments[1] === undefined ? null : arguments[1];
+            var description = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
             this.stripeHandler.open({
                 description: description,
                 amount: amount
             });
         }
-    }, {
-        key: 'onTokenGeneration',
 
         /**
          * When a token is generated, what do we do?
          *
          * @param token
          */
+    }, {
+        key: 'onTokenGeneration',
         value: function onTokenGeneration(token) {
             if (this.onTokenCallback) {
                 this.onTokenCallback(token);
@@ -80434,7 +81163,6 @@ var StripePayment = (function () {
     return StripePayment;
 })();
 
-//Returns a singleton
 exports['default'] = new StripePayment();
 module.exports = exports['default'];
 
