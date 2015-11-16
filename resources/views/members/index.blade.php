@@ -25,7 +25,7 @@ Members
                     @if ($user->keyholderStatus())
                         <i class="material-icons" data-toggle="tooltip" data-placement="top" title="Key Holder">vpn_key</i>
                     @endif
-                    @if ($user->director)
+                    @if ($user->hasRole('trustees'))
                         <i class="material-icons" data-toggle="tooltip" data-placement="top" title="Trustee">star</i>
                     @endif
                     </span>

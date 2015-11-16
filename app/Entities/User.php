@@ -83,7 +83,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'trusted'               => 0,
         'email_verified'        => 0,
         'founder'               => 0,
-        'director'              => 0,
         'induction_completed'   => 0,
         'payment_day'           => 0,
         'profile_private'       => 0,
