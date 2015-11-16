@@ -25,7 +25,7 @@ class RemoveUserDirectorField extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('director');
+            $table->boolean('director')->default(0);
         });
     }
 }
