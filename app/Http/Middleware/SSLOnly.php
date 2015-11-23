@@ -15,7 +15,7 @@ class SSLOnly
     {
         if( ! $request->isSecure() && env('FORCE_SECURE', 'true')) {
             if ((strpos($request->path(), 'access-control/') !== 0) && ($request->path() !== 'acs') && ($request->path() !== 'acs/spark')) {
-                return redirect()->secure($request->path());
+                //return redirect()->secure($request->path());
             }
         }
 
