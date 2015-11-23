@@ -1,11 +1,13 @@
 <?php namespace BB\Providers;
 
 use BB\Events\MemberBalanceChanged;
+use BB\Events\SubscriptionPayment;
 use BB\Listeners\AddApprovedExpenseToBalance;
 use BB\Listeners\EmailDonorAboutUnknownPayPalPayment;
 use BB\Listeners\EmailMemberAboutApprovedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
+use BB\Listeners\EmailMemberAboutFailedSubscriptionPayment;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\EmailTrusteesAboutExpense;
 use BB\Listeners\ExtendMembership;
@@ -74,6 +76,9 @@ class EventServiceProvider extends ServiceProvider {
         MemberBalanceChanged::class => [
             RecalculateMemberBalance::class
         ],
+		SubscriptionPayment\FailedInsufficientFunds::class => [
+			EmailMemberAboutFailedSubscriptionPayment::class
+		],
 	];
 
 	/**

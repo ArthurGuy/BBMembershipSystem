@@ -1,6 +1,8 @@
 <?php namespace BB\Services;
 
 use BB\Entities\User;
+use BB\Events\MemberBalanceChanged;
+use BB\Events\SubscriptionPayment;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
@@ -84,6 +86,20 @@ class MemberSubscriptionCharges
                 if ($bill) {
                     $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
                 }
+            } elseif ($charge->user->payment_method == 'balance') {
+
+                if (($charge->user->monthly_subscription * 100) > $charge->user->cash_balance) {
+                    //user doesn't have enough money
+
+                    event(new SubscriptionPayment\FailedInsufficientFunds($charge->user->id, $charge->id));
+
+                    continue;
+                }
+
+                $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'balance', '', $charge->user->monthly_subscription, 'paid', 0, $charge->id);
+
+                event(new MemberBalanceChanged($charge->user->id));
+
             }
         }
     }
