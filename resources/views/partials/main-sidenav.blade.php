@@ -53,6 +53,9 @@
         @if (!Auth::guest() && Auth::user()->hasRole('finance'))
             {!! HTML::sideNavLink('Payments', 'payments.index') !!}
         @endif
+        @if (!Auth::guest() && Auth::user()->hasRole('admin'))
+            {!! HTML::sideNavLink('Log Files', 'logs') !!}
+        @endif
     </ul>
 
     <ul class="nav secondaryNav">

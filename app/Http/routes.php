@@ -278,7 +278,7 @@ Route::group(array('middleware' => 'role:member'), function() {
 # Logviewer
 ##########################
 
-Route::get('logviewer', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', 'middleware'=>'role:admin']);
+Route::get('logs', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', 'middleware'=>'role:admin'])->name('logs');
 
 
 
