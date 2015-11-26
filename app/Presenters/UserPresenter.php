@@ -23,6 +23,9 @@ class UserPresenter extends Presenter
             case 'standing-order':
                 return 'Standing Order';
 
+            case 'balance':
+                return 'Balance payment';
+
             case '':
                 return '-';
         }

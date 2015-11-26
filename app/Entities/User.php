@@ -206,7 +206,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function canMemberChangeSubAmount()
     {
-        return ($this->attributes['payment_method'] == 'gocardless-variable');
+        return in_array($this->attributes['payment_method'], ['gocardless-variable', 'balance']);
     }
 
     /**

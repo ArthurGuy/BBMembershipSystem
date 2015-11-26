@@ -6,11 +6,12 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <p class="lead">
-                    Will you switch to a Direct Debit payment?
+                    Will you switch to a monthly Direct Debit?
                 </p>
                 <div>
-                    Processing the standing order bank transfers each month takes time and introduces delays.<br />
-                    A monthly Direct Debit payment is quick and fully automated and if you need you have the ability to cancel the payment from here or from your bank.<br />
+                    Processing the standing order payments each month takes up member time and introduces delays.<br />
+                    A monthly Direct Debit payment is quick and painless and if you need you can cancel the payment from here or from your bank.<br />
+                    <br />
                     Switching only takes a minute, just follow the link below to the <a href="https://gocardless.com/security" target="_blank">GoCardless</a> website (our payment processor) and complete the form.<br />
                     <br />
                     <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
@@ -24,8 +25,9 @@
                     {!! Form::close() !!}
                     <br />
                     <p>
-                        Don't forget to cancel your current subscription payment.<br />
-                        <small>By switching you will also protected by the <a href="https://gocardless.com/direct-debit/guarantee/">direct debit guarantee.</a></small>
+                        <small>By switching you will also protected by the <a href="https://gocardless.com/direct-debit/guarantee/">Direct Debit guarantee.</a></small><br />
+                        <br  />
+                        Don't forget to cancel your current subscription payment.
                     </p>
                 </div>
             </div>
