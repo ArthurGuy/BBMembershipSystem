@@ -27,6 +27,12 @@
             </li>
             @endif
 
+            @if ($user->induction_completed && $user->inducted_by)
+                <li>
+                    <p class="navbar-text"><label class="label label-success">Inducted</label></p>
+                </li>
+            @endif
+
             @if (0 && $user->active)
             <li>
                 <p class="navbar-text">{{ $user->present()->subscriptionDetailLine }}</p>

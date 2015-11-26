@@ -40,7 +40,9 @@ Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'Accou
 Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
 //BB Credit
 Route::get('account/{account}/balance', ['uses'=>'BBCreditController@index', 'as'=>'account.balance.index', 'middleware'=>'role:member']);
-
+//Inductions
+Route::get('account/{account}/induction', ['uses'=>'AccountController@induction', 'as'=>'account.induction', 'middleware'=>'role:member']);
+Route::put('account/{account}/induction', ['uses'=>'AccountController@updateInduction', 'as'=>'account.induction.update', 'middleware'=>'role:member']);
 
 
 ##########################

@@ -79,19 +79,6 @@
     </div>
     -->
 
-    @if (!$user->induction_completed)
-    <div class="col-xs-12 col-sm-6">
-        {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) !!}
-        <div class="form-group">
-            {!! Form::label('induction_completed', 'Induction Completed', ['class'=>'col-sm-4 control-label']) !!}
-            <div class="col-sm-8">
-                {!! Form::select('induction_completed', ['0'=>'No', '1'=>'Yes'], $user->induction_completed, ['class'=>'form-control']) !!}
-            </div>
-        </div>
-        {!! Form::close() !!}
-    </div>
-    @endif
-
 
     <div class="col-xs-12 col-sm-6">
         @if ($user->keyFob())
@@ -217,4 +204,24 @@
     @endif
 
 </div>
+
+@if ($user->induction_completed && !$user->inducted_by)
+    <div class="row">
+        <div class="col-xs-12 col-lg-8">
+            <div class="well">
+
+            <p>
+                <strong>Trustees Only</strong><br />
+                The member has completed the induction agreement page, please confirm below that you have personally inducted this member
+            </p>
+
+            {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
+                {!! Form::hidden('inducted_by', true) !!}
+                {!! Form::submit('Confirm User Induction Has Been Given', array('class'=>'btn btn-primary')) !!}
+            {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+@endif
+
 @endif

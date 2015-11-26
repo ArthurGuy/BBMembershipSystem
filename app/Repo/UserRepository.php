@@ -207,4 +207,20 @@ class UserRepository extends DBRepository
         $user->save();
     }
 
+    /**
+     * Record the fact that the user has agreed to the member induction and the rules
+     *
+     * @param $userId
+     */
+    public function recordInductionCompleted($userId)
+    {
+        $user = $this->getById($userId);
+
+        $user->induction_completed = true;
+
+        $user->rules_agreed = $user->rules_agreed? $user->rules_agreed: Carbon::now();
+
+        $user->save();
+    }
+
 }

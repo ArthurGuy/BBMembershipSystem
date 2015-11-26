@@ -6,6 +6,7 @@ use BB\Entities\User;
 use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
 use BB\Exceptions\ValidationException;
+use BB\Validators\InductionValidator;
 
 class AccountController extends Controller
 {
@@ -50,6 +51,10 @@ class AccountController extends Controller
      * @var \BB\Repo\SubscriptionChargeRepository
      */
     private $subscriptionChargeRepository;
+    /**
+     * @var InductionValidator
+     */
+    private $inductionValidator;
 
 
     function __construct(
@@ -64,7 +69,8 @@ class AccountController extends Controller
         \BB\Repo\UserRepository $userRepository,
         \BB\Validators\ProfileValidator $profileValidator,
         \BB\Repo\AddressRepository $addressRepository,
-        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository)
+        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository,
+        InductionValidator $inductionValidator)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -78,6 +84,7 @@ class AccountController extends Controller
         $this->profileValidator = $profileValidator;
         $this->addressRepository = $addressRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+        $this->inductionValidator = $inductionValidator;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride( ! \Auth::guest() && \Auth::user()->hasRole('admin'));
@@ -94,6 +101,7 @@ class AccountController extends Controller
         ];
         \View::share('paymentMethods', $paymentMethods);
         \View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
+
     }
 
     /**
@@ -188,6 +196,26 @@ class AccountController extends Controller
         return \View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress)->with('subscriptionCharges', $subscriptionCharges);
     }
 
+    public function induction($id)
+    {
+        $user = User::findWithPermission($id);
+
+        return view('account.induction')->with('user', $user);
+    }
+
+    public function updateInduction($id)
+    {
+        $user = User::findWithPermission($id);
+
+        $input = \Input::only('rules_agreed', 'induction_completed');
+
+        $this->inductionValidator->validate($input);
+
+        $this->userRepository->recordInductionCompleted($id);
+
+        return \Redirect::route('account.show', [$user->id]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -266,6 +294,10 @@ class AccountController extends Controller
                 $profile->update(['new_profile_photo' => false]);
                 event(new MemberPhotoWasDeclined($user));
             }
+        }
+
+        if (\Input::has('inducted_by')) {
+            $user->inducted_by = \Auth::id();
         }
 
         $user->save();
