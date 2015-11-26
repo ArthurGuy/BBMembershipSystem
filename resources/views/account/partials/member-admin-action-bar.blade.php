@@ -62,6 +62,7 @@
     </div>
     @endif
 
+    <!--
     <div class="col-xs-12 col-sm-6">
         <div class="row">
             <div class="col-xs-12">
@@ -76,6 +77,7 @@
             </div>
         </div>
     </div>
+    -->
 
     @if (!$user->induction_completed)
     <div class="col-xs-12 col-sm-6">
