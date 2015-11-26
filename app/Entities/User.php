@@ -29,6 +29,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property bool $banned
  * @property bool $email_verified
  * @property bool $induction_completed
+ * @property integer $inducted_by
  * @property integer $payment_day
  * @property string $status
  * @property string $payment_method
