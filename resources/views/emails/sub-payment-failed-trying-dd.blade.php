@@ -9,10 +9,11 @@
     Your latest subscription payment has failed<br />
     <br />
     We tried to take money from your balance but were unable to do so.<br />
-    We will attempt to take payment from your backup source, you will be notified if this fails.<br />
+    We will attempt to take payment from your backup source, you will be notified if this fails.
     <br />
     <br />
-    BBMS
+    <br />
+    <small>This is an automated email sent by the Build Brighton Member System</small>
 </p>
 </body>
 </html>

@@ -17,12 +17,12 @@
     <a href="mailto:info@buildbrighton.com">info@buildbrighton.com</a> and let us know if you're going to be coming
     to the space on Thursday (our open evening) and we will make sure someone will be around to show you the ropes.<br />
     <br />
-    We would also like you to join the mailing list, this is where most of the communication between members occurs and is where
-    things get decided and you find out about what's going on.<br />
+    We would also like you to join the mailing list or Slack group, this is where most of the communication between
+    members occurs and is where things get decided and you find out about what's going on.<br />
     <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">Mailing list</a> - please use the same
     email address as you did when signing up.<br />
     <br />
-    We also have an active community on <a href="https://slack.com/">Slack</a>, for an invite please use the following
+    <a href="https://slack.com/">Slack</a>, for an invite please use the following
     site to request an invite <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a>
 </p>
 <p>
@@ -38,7 +38,7 @@
     If you ever have any concerns about any aspect of Build Brighton please email the <a href="mailto:trustees@buildbrighton.com">trustees</a>.
 </p>
 <p>
-    Finally, if you could follow the link below to confirm your email address that would help us ensure we have a accurate details.<br />
+    Finally, if you could follow the link below to confirm your email address that would help us ensure we have accurate details.<br />
     <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a>.<br/>
 </p>
 <p>

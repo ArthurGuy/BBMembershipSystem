@@ -13,7 +13,12 @@
     Date: {{ $expense->expense_date }}<br />
 </p>
 <p>
-    This can be approved or declined from the expenses section of the BBMS
+    This can be approved or declined from the expenses section of the BBMS, if further information is required
+    please contact the member directly.
+    <br />
+    <br />
+    <br />
+    <small>This is an automated email sent by the Build Brighton Member System</small>
 </p>
 </body>
 </html>

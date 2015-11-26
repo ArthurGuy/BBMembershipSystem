@@ -13,7 +13,8 @@
 </p>
 @if ($memberBox)
 <p>
-    It looks like you have a members storage box, it would be great if you could you make sure you have removed all your items from it.
+    It looks like you have a members storage box, this will be put back into circulation so please ensure you have
+    removed all your items from it, if you haven't you must arrange a time to collect things otherwise they may be recycled.
 </p>
 @endif
 <p>

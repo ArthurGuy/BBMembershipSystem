@@ -12,6 +12,11 @@
     Description: {{ $expense->description }}<br />
     Amount: {{ number_format($expense->amount / 100, 2) }}<br />
     Date: {{ $expense->expense_date }}<br />
+
+    <br />
+    <br />
+    <br />
+    <small>This is an automated email sent by the Build Brighton Member System</small>
 </p>
 </body>
 </html>

@@ -14,6 +14,10 @@
     If in doubt please upload a passport style photo.<br />
     <br />
     If you require further information please email the trustees, <a href="trustees@buildbrighton.com">trustees@buildbrighton.com</a><br />
+    <br />
+    <br />
+    <br />
+    <small>This is an automated email sent by the Build Brighton Member System</small>
 </p>
 </body>
 </html>
