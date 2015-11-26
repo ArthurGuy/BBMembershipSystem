@@ -44,10 +44,14 @@ class BillMembers extends Command
     public function handle()
     {
         //Update the payments status from pending to due
+        $this->info('Moving sub charges to due');
         $this->subscriptionChargeService->makeChargesDue();
 
         //Bill the due charges
+        $this->info('Billing members');
         $this->subscriptionChargeService->billMembers();
+
+        $this->info('Finished');
     }
 
 }

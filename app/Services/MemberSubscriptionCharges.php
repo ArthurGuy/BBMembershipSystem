@@ -72,37 +72,56 @@ class MemberSubscriptionCharges
     {
         $subCharges = $this->subscriptionChargeRepository->getDue();
 
-        foreach ($subCharges as $charge) {
-            if ($charge->user->payment_method == 'gocardless-variable') {
+        //Check each of the due charges, if they have previous attempted payments ignore them
+        // we don't want to retry failed payments as for DD's this will generate bank charges
+        $subCharges->reject(function ($charge) {
+            return $this->paymentRepository->getPaymentsByReference($charge->id)->count() > 0;
+        });
 
-                //Look the the previous attempts - there may be multiple failures
-                $existingPayments = $this->paymentRepository->getPaymentsByReference($charge->id);
-                if ($existingPayments->count() > 0) {
-                    //We will let the user retry the payment if it fails
-                    continue;
-                }
-                
-                $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription, $this->goCardless->getNameFromReason('subscription'));
-                if ($bill) {
-                    $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
-                }
-            } elseif ($charge->user->payment_method == 'balance') {
+        //Filter the list into two gocardless and balance subscriptions
+        $goCardlessUsers = $subCharges->filter(function ($charge) {
+            return $charge->user->payment_method == 'gocardless-variable';
+        });
 
-                if (($charge->user->monthly_subscription * 100) > $charge->user->cash_balance) {
-                    //user doesn't have enough money
+        $balanceUsers = $subCharges->filter(function ($charge) {
+            return $charge->user->payment_method == 'balance';
+        });
 
+
+        //Charge the balance users
+        foreach ($balanceUsers as $charge) {
+            if (($charge->user->monthly_subscription * 100) > $charge->user->cash_balance) {
+                //user doesn't have enough money
+
+                //If they have a secondary payment method of gocardless try that
+                if ($charge->user->secondary_payment_method == 'gocardless-variable') {
+
+                    //Add the charge to the gocardless list for processing
+                    $goCardlessUsers->push($charge);
+
+                    event(new SubscriptionPayment\InsufficientFundsTryingDirectDebit($charge->user->id, $charge->id));
+                } else {
                     event(new SubscriptionPayment\FailedInsufficientFunds($charge->user->id, $charge->id));
-
-                    continue;
                 }
-
-                $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'balance', '', $charge->user->monthly_subscription, 'paid', 0, $charge->id);
-
-                event(new MemberBalanceChanged($charge->user->id));
-
+                continue;
             }
+
+            $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'balance', '', $charge->user->monthly_subscription, 'paid', 0, $charge->id);
+
+            event(new MemberBalanceChanged($charge->user->id));
         }
+
+
+        //Charge the gocardless users
+        foreach ($goCardlessUsers as $charge) {
+            $bill = $this->goCardless->newBill($charge->user->subscription_id, $charge->user->monthly_subscription, $this->goCardless->getNameFromReason('subscription'));
+            if ($bill) {
+                $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
+            }
+        };
+
     }
+
 
     /**
      * Get a users latest sub payment

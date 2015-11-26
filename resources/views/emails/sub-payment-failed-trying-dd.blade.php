@@ -9,7 +9,7 @@
     Your latest subscription payment has failed<br />
     <br />
     We tried to take money from your balance but were unable to do so.<br />
-    Please top up within the new few days so you don't loose access to Build Brighton.<br />
+    We will attempt to take payment from your backup source, you will be notified if this fails.<br />
     <br />
     <br />
     BBMS

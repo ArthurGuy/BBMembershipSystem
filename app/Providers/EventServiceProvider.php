@@ -2,12 +2,14 @@
 
 use BB\Events\MemberBalanceChanged;
 use BB\Events\SubscriptionPayment;
+use BB\Events\UnknownPayPalPaymentReceived;
 use BB\Listeners\AddApprovedExpenseToBalance;
 use BB\Listeners\EmailDonorAboutUnknownPayPalPayment;
 use BB\Listeners\EmailMemberAboutApprovedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailMemberAboutFailedSubscriptionPayment;
+use BB\Listeners\EmailMemberAboutFailedSubscriptionPaymentGoingToBackup;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\EmailTrusteesAboutExpense;
 use BB\Listeners\ExtendMembership;
@@ -70,7 +72,7 @@ class EventServiceProvider extends ServiceProvider {
         'BB\Events\NewMemberNotification' => [
             SlackMemberNotification::class
         ],
-        '\BB\Events\UnknownPayPalPaymentReceived' => [
+        UnknownPayPalPaymentReceived::class => [
             EmailDonorAboutUnknownPayPalPayment::class
         ],
         MemberBalanceChanged::class => [
@@ -78,6 +80,9 @@ class EventServiceProvider extends ServiceProvider {
         ],
 		SubscriptionPayment\FailedInsufficientFunds::class => [
 			EmailMemberAboutFailedSubscriptionPayment::class
+		],
+		SubscriptionPayment\InsufficientFundsTryingDirectDebit::class => [
+			EmailMemberAboutFailedSubscriptionPaymentGoingToBackup::class
 		],
 	];
 

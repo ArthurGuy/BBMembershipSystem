@@ -83,7 +83,7 @@ class GoCardlessHelper
      * @param             $amount
      * @param null|string $name
      * @param null|string $description
-     * @return bool
+     * @return bool|mixed
      */
     public function newBill($preauthId, $amount, $name = null, $description = null)
     {
