@@ -15,9 +15,6 @@
         @if ($user->profile->new_profile_photo)
             <br /><span class="label label-info">Photo to approve</span>
         @endif
-        @if ($user->induction_completed && !$user->inducted_by)
-            <br /><span class="label label-info">Trustee induction to complete</span>
-        @endif
     </td>
     <td class="hidden-xs">
         @if($user->key_holder)

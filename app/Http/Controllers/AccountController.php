@@ -51,10 +51,6 @@ class AccountController extends Controller
      * @var \BB\Repo\SubscriptionChargeRepository
      */
     private $subscriptionChargeRepository;
-    /**
-     * @var InductionValidator
-     */
-    private $inductionValidator;
 
 
     function __construct(
@@ -69,8 +65,7 @@ class AccountController extends Controller
         \BB\Repo\UserRepository $userRepository,
         \BB\Validators\ProfileValidator $profileValidator,
         \BB\Repo\AddressRepository $addressRepository,
-        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository,
-        InductionValidator $inductionValidator)
+        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -84,7 +79,6 @@ class AccountController extends Controller
         $this->profileValidator = $profileValidator;
         $this->addressRepository = $addressRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
-        $this->inductionValidator = $inductionValidator;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride( ! \Auth::guest() && \Auth::user()->hasRole('admin'));
@@ -194,26 +188,6 @@ class AccountController extends Controller
         $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($id);
 
         return \View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress)->with('subscriptionCharges', $subscriptionCharges);
-    }
-
-    public function induction($id)
-    {
-        $user = User::findWithPermission($id);
-
-        return view('account.induction')->with('user', $user);
-    }
-
-    public function updateInduction($id)
-    {
-        $user = User::findWithPermission($id);
-
-        $input = \Input::only('rules_agreed', 'induction_completed');
-
-        $this->inductionValidator->validate($input);
-
-        $this->userRepository->recordInductionCompleted($id);
-
-        return \Redirect::route('account.show', [$user->id]);
     }
 
 

@@ -16,12 +16,7 @@
 @section('content')
 
     <div class="col-sm-12 col-lg-8 col-sm-offset-2">
-        <p>
-            Content goes here
-        </p>
-        <p>
-            <span class="help-block"><a href="https://bbms.buildbrighton.com/resources/policy/rules" target="_blank">Build Brighton Rules</a></span>
-        </p>
+        {!! $document !!}
     </div>
 
     {!! Form::open(array('route' => ['account.induction.update', $user->id], 'class'=>'form-horizontal', 'method'=>'PUT')) !!}
@@ -29,7 +24,7 @@
     <div class="form-group {{ Notification::hasErrorDetail('induction_completed', 'has-error has-feedback') }}">
         <div class="col-sm-12 col-lg-8 col-sm-offset-2">
             {!! Form::checkbox('induction_completed', true, $user->induction_completed, ['class'=>'']) !!}
-            {!! Form::label('induction_completed', 'I have received an induction and understand what is being asked of me', ['class'=>'']) !!}
+            {!! Form::label('induction_completed', 'I have read and understand this guidance for members and I agree to follow it.', ['class'=>'']) !!}
             {!! Notification::getErrorDetail('induction_completed') !!}
         </div>
     </div>
