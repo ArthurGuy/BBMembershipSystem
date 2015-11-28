@@ -27,9 +27,9 @@
             </li>
             @endif
 
-            @if ($user->induction_completed && $user->inducted_by)
+            @if ($user->isInducted())
                 <li>
-                    <p class="navbar-text"><label class="label label-success">Inducted</label></p>
+                    <p class="navbar-text"><label class="label label-success" data-toggle="tooltip" data-placement="top" title="Confirmed by {{ $user->inductedBy()->name }}">Inducted</label></p>
                 </li>
             @endif
 

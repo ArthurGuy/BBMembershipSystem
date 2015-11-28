@@ -45,6 +45,9 @@
         {!! HTML::sideNavLink('Expenses', 'expenses.index') !!}
         {!! HTML::sideNavLink('Groups', 'groups.index') !!}
         @if (!Auth::guest() && Auth::user()->hasRole('admin'))
+            {!! HTML::sideNavLink('Members Inductions', 'account.induction.index') !!}
+        @endif
+        @if (!Auth::guest() && Auth::user()->hasRole('admin'))
             {!! HTML::sideNavLink('Manage Members', 'account.index') !!}
         @endif
         @if (!Auth::guest() && Auth::user()->hasRole('acs'))

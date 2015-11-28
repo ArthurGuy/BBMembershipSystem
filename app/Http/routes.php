@@ -41,8 +41,10 @@ Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 
 //BB Credit
 Route::get('account/{account}/balance', ['uses'=>'BBCreditController@index', 'as'=>'account.balance.index', 'middleware'=>'role:member']);
 //Inductions
-Route::get('account/{account}/induction', ['uses'=>'MemberInductionController@show', 'as'=>'account.induction', 'middleware'=>'role:member']);
+Route::get('account/{account}/induction', ['uses'=>'MemberInductionController@show', 'as'=>'account.induction.show', 'middleware'=>'role:member']);
 Route::put('account/{account}/induction', ['uses'=>'MemberInductionController@update', 'as'=>'account.induction.update', 'middleware'=>'role:member']);
+Route::get('member_inductions', ['uses'=>'MemberInductionController@index', 'as'=>'account.induction.index', 'middleware'=>'role:member']);
+Route::put('member_inductions/{account}', ['uses'=>'MemberInductionController@approve', 'as'=>'account.induction.approve', 'middleware'=>'role:member']);
 
 
 ##########################

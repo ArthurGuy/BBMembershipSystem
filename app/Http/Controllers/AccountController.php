@@ -270,10 +270,6 @@ class AccountController extends Controller
             }
         }
 
-        if (\Input::has('inducted_by')) {
-            $user->inducted_by = \Auth::id();
-        }
-
         $user->save();
 
         if (\Input::has('approve_new_address')) {

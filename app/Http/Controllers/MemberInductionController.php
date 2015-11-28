@@ -40,7 +40,31 @@ class MemberInductionController extends Controller
      */
     public function index()
     {
-        //
+        $users = $this->userRepository->getPendingInductionConfirmation();
+        return \View::make('account.induction.index')->withUsers($users);
+    }
+
+    /**
+     * Action the admin approve requests
+     *
+     * @param $id
+     *
+     * @return mixed
+     * @throws \BB\Exceptions\AuthenticationException
+     */
+    public function approve($id)
+    {
+        $user = User::findWithPermission($id);
+
+        if (\Input::has('inducted_by')) {
+            $user->inducted_by = \Auth::id();
+
+            $user->save();
+
+            \Notification::success('Updated');
+        }
+
+        return \Redirect::route('account.induction.index');
     }
 
     /**
@@ -57,7 +81,7 @@ class MemberInductionController extends Controller
 
         $htmlDocument = Markdown::defaultTransform($document);
 
-        return view('account.induction')->with('user', $user)->with('document', $htmlDocument);
+        return view('account.induction.show')->with('user', $user)->with('document', $htmlDocument);
     }
 
     /**

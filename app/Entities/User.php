@@ -294,6 +294,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return ($this->status == 'suspended');
     }
 
+    /**
+     * @return bool
+     */
+    public function isInducted()
+    {
+        return $this->induction_completed && $this->inducted_by;
+    }
+
+    public function inductedBy()
+    {
+        return User::findOrFail($this->inducted_by);
+    }
 
 
     /*

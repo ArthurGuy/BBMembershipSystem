@@ -223,4 +223,13 @@ class UserRepository extends DBRepository
         $user->save();
     }
 
+    public function getPendingInductionConfirmation()
+    {
+        return $this->model
+            ->where('status', '!=', 'left')
+            ->where('induction_completed', true)
+            ->where('inducted_by', null)
+            ->get();
+    }
+
 }
