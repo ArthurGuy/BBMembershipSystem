@@ -60,12 +60,6 @@ var MemberExpenses = React.createClass({
         this.setState({editing: null});
     },
 
-    clearCompleted: function () {
-        this.props.expenses.completed().forEach(function (todo) {
-            todo.destroy();
-        });
-    },
-
     render: function () {
         var main = <p>Bought an item for Build Brighton, claim the money back here. If your planning on spending over £10
             please confirm the purchase with a trustee first.</p>;
