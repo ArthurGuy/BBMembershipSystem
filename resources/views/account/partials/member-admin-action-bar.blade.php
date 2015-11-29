@@ -20,6 +20,7 @@
             </div>
         </div>
 
+        @if ($user->trusted && $user->key_deposit_payment_id)
         <div class="row">
             <div class="col-xs-12">
                 {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) !!}
@@ -32,6 +33,7 @@
                 {!! Form::close() !!}
             </div>
         </div>
+        @endif
     </div>
 
     @if ($user->profile->new_profile_photo)
