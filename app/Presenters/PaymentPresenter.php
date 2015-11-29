@@ -27,7 +27,7 @@ class PaymentPresenter extends Presenter
             case 'consumables':
                 return 'Consumables (' . $this->entity->reference . ')';
             case 'transfer':
-                return 'Transfer (to ' . $this->entity->reference . ')';
+                return 'Transfer (to user:' . $this->entity->reference . ')';
             case 'donation':
                 return 'Donation';
             default:
@@ -78,7 +78,7 @@ class PaymentPresenter extends Presenter
             case 'reimbursement':
                 return 'Reimbursement';
             case 'transfer':
-                return 'Transfer (from ' . $this->entity->source_id . ')';
+                return 'Transfer (from user:' . $this->entity->reference . ')';
             default:
                 return $this->entity->source;
         }

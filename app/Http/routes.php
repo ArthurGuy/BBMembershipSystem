@@ -28,18 +28,24 @@ Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'Remin
 
 Route::get('account/trusted_missing_photos', ['uses'=>'AccountController@trustedMissingPhotos', 'as'=>'account.trusted_missing_photos', 'middleware'=>'role:admin']);
 Route::resource('account', 'AccountController');
+
 //Editing the profile
 Route::get('account/{account}/profile/edit', ['uses'=>'ProfileController@edit', 'as'=>'account.profile.edit', 'middleware'=>'role:member']);
 Route::put('account/{account}/profile', ['uses'=>'ProfileController@update', 'as'=>'account.profile.update', 'middleware'=>'role:member']);
+
 //Short register url
 Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
+
 //Special account editing routes
 Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'middleware'=>'role:admin']);
 Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'middleware'=>'role:admin']);
 Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'AccountController@rejoin', 'middleware'=>'role:member']);
 Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
-//BB Credit
-Route::get('account/{account}/balance', ['uses'=>'BBCreditController@index', 'as'=>'account.balance.index', 'middleware'=>'role:member']);
+
+//Balance
+Route::get('account/{account}/balance', ['uses'=>'BalanceController@index', 'as'=>'account.balance.index', 'middleware'=>'role:member']);
+Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@recordTransfer', 'as'=>'account.balance.transfer.create']);
+
 //Inductions
 Route::get('account/{account}/induction', ['uses'=>'MemberInductionController@show', 'as'=>'account.induction.show', 'middleware'=>'role:member']);
 Route::put('account/{account}/induction', ['uses'=>'MemberInductionController@update', 'as'=>'account.induction.update', 'middleware'=>'role:member']);

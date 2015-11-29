@@ -384,4 +384,22 @@ class PaymentRepository extends DBRepository
     {
         return $this->model->where('source_id', $sourceId)->first();
     }
+
+    /**
+     * Record a balance payment transfer between two users
+     * 
+     * @param integer $sourceUserId
+     * @param integer $targetUserId
+     * @param double $amount
+     */
+    public function recordBalanceTransfer($sourceUserId, $targetUserId, $amount)
+    {
+        $paymentId = $this->recordPayment('transfer', $sourceUserId, 'balance', '', $amount, 'paid', 0, $targetUserId);
+        $this->recordPayment('balance', $targetUserId, 'transfer', $paymentId, $amount, 'paid', 0, $sourceUserId);
+
+        //Both of these events aren't needed adn the balance payment fires its own
+        // but for the sake of neatness they are here
+        event(new MemberBalanceChanged($sourceUserId));
+        event(new MemberBalanceChanged($targetUserId));
+    }
 } 
