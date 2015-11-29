@@ -40,7 +40,10 @@ class ExpensesController extends Controller {
         $direction    = \Request::get('direction', 'desc');
 
         if (\Request::ajax()) {
-            return \BB\Entities\Expense::where('user_id', $userId)->get();
+            if ($userId) {
+                return \BB\Entities\Expense::where('user_id', $userId)->get();
+            }
+            return \BB\Entities\Expense::all();
         }
 
         if ($userId) {
