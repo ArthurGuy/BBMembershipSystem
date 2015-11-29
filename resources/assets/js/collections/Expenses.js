@@ -6,14 +6,16 @@ var Expenses = Backbone.Collection.extend({
 
     url: '/expenses',
 
-    // Filter down the list of all todo items that are finished.
     approved: function () {
         return this.where({approved: true});
     },
 
-    // Filter down the list to only todo items that are still not finished.
     unapproved: function () {
         return this.where({approved: false});
+    },
+
+    forUser: function (userId) {
+        return this.where({user_id: userId});
     }
 });
 

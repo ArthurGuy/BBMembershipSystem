@@ -46,6 +46,10 @@ class Expense extends Model
         'file',
     ];
 
+    protected $casts = [
+        'approved' => 'boolean',
+    ];
+
     protected $presenter = 'BB\Presenters\ExpensePresenter';
 
     public function getDates()

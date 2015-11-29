@@ -85,19 +85,28 @@ jQuery('.paymentModule').each(function () {
     React.render(React.createElement(PaymentModule, { csrfToken: csrfToken, description: displayReason, reason: reason, amount: amount, email: memberEmail, userId: userId, onSuccess: handleSuccess, buttonLabel: buttonLabel, methods: methods, reference: ref, stripeKey: stripeKey }), jQuery(this)[0]);
 });
 
+//var Expenses = require('./collections/Expenses');
+//var expenses = new Expenses();
+//expenses.fetch();
+
 var memberExpensesPanel = jQuery('#memberExpenses');
 if (memberExpensesPanel.length) {
 
     var MemberExpenses = require('./components/expenses/MemberExpenses');
     var Expenses = require('./collections/Expenses');
     var expenses = new Expenses();
-    //global.expenses = expenses;
+
     var userId = memberExpensesPanel.data('userId');
     React.render(React.createElement(MemberExpenses, { expenses: expenses, userId: userId }), memberExpensesPanel[0]);
+
+    jQuery('.js-expenses-count').each(function () {
+        var ExpensesCount = require('./components/expenses/ExpensesCount');
+        React.render(React.createElement(ExpensesCount, { expenses: expenses }), jQuery(this)[0]);
+    });
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AdminForms":478,"./FeedbackWidget":479,"./SiteInteraction":480,"./Snackbar":481,"./collections/Expenses":482,"./collections/Notifications":483,"./components/FilterablePaymentTable":484,"./components/PaymentModule":485,"./components/expenses/MemberExpenses":490,"./components/notifications/NotificationCount":493,"./components/notifications/NotificationsTable":495,"bootstrap":5,"jquery":46,"react":475}],2:[function(require,module,exports){
+},{"./AdminForms":478,"./FeedbackWidget":479,"./SiteInteraction":480,"./Snackbar":481,"./collections/Expenses":482,"./collections/Notifications":483,"./components/FilterablePaymentTable":484,"./components/PaymentModule":485,"./components/expenses/ExpensesCount":490,"./components/expenses/MemberExpenses":491,"./components/notifications/NotificationCount":494,"./components/notifications/NotificationsTable":496,"bootstrap":5,"jquery":46,"react":475}],2:[function(require,module,exports){
 //     Backbone.Model File Upload v1.0.0
 //     by Joe Vu - joe.vu@homeslicesolutions.com
 //     For all details and documentation:
@@ -79510,21 +79519,23 @@ var Expenses = Backbone.Collection.extend({
 
     url: '/expenses',
 
-    // Filter down the list of all todo items that are finished.
     approved: function approved() {
         return this.where({ approved: true });
     },
 
-    // Filter down the list to only todo items that are still not finished.
     unapproved: function unapproved() {
         return this.where({ approved: false });
+    },
+
+    forUser: function forUser(userId) {
+        return this.where({ user_id: userId });
     }
 });
 
 exports['default'] = Expenses;
 module.exports = exports['default'];
 
-},{"../models/Expense":497,"backbone":3}],483:[function(require,module,exports){
+},{"../models/Expense":498,"backbone":3}],483:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -79546,7 +79557,7 @@ var Notifications = Backbone.Collection.extend({
 exports['default'] = Notifications;
 module.exports = exports['default'];
 
-},{"../models/Notification":498,"backbone":3}],484:[function(require,module,exports){
+},{"../models/Notification":499,"backbone":3}],484:[function(require,module,exports){
 //import React from 'react';
 'use strict';
 Object.defineProperty(exports, '__esModule', {
@@ -79924,7 +79935,7 @@ PaymentModule.defaultProps = {
 exports['default'] = PaymentModule;
 module.exports = exports['default'];
 
-},{"../services/StripePayment":499,"./form/Select":492,"halogen/PulseLoader":18,"jquery":46,"react":475}],486:[function(require,module,exports){
+},{"../services/StripePayment":500,"./form/Select":493,"halogen/PulseLoader":18,"jquery":46,"react":475}],486:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80272,6 +80283,46 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 var BackboneMixin = require('../../mixins/Backbone');
+
+var ExpensesCount = _react2['default'].createClass({
+    displayName: 'ExpensesCount',
+
+    mixins: [BackboneMixin],
+
+    getBackboneCollections: function getBackboneCollections() {
+        return [this.props.expenses];
+    },
+
+    render: function render() {
+
+        var expensesCount = this.props.expenses.unapproved().length;
+
+        return _react2['default'].createElement(
+            'span',
+            null,
+            expensesCount
+        );
+    }
+
+});
+
+exports['default'] = ExpensesCount;
+module.exports = exports['default'];
+
+},{"../../mixins/Backbone":497,"react":475}],491:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var BackboneMixin = require('../../mixins/Backbone');
 var ExpenseItem = require('./ExpenseItem');
 var ReactBootstrap = require('react-bootstrap');
 var NewExpenseModal = require('./NewExpenseModal');
@@ -80306,7 +80357,7 @@ var MemberExpenses = _react2['default'].createClass({
         */
 
         //Initial load of the expenses
-        this.props.expenses.fetch({ data: { user_id: this.props.userId } });
+        this.props.expenses.fetch();
     },
 
     componentDidUpdate: function componentDidUpdate() {
@@ -80316,31 +80367,6 @@ var MemberExpenses = _react2['default'].createClass({
         //this.props.expenses.forEach(function (expense) {
         //    expense.save();
         //});
-    },
-
-    handleNewTodoKeyDown: function handleNewTodoKeyDown(event) {
-        if (event.which !== ENTER_KEY) {
-            return;
-        }
-
-        var val = this.refs.newField.getDOMNode().value.trim();
-        if (val) {
-            this.props.expenses.create({
-                title: val,
-                completed: false,
-                order: this.props.expenses.nextOrder()
-            });
-            this.refs.newField.getDOMNode().value = '';
-        }
-
-        return false;
-    },
-
-    toggleAll: function toggleAll(event) {
-        var checked = event.target.checked;
-        this.props.expenses.forEach(function (todo) {
-            todo.set('completed', checked);
-        });
     },
 
     edit: function edit(todo, callback) {
@@ -80357,19 +80383,15 @@ var MemberExpenses = _react2['default'].createClass({
         this.setState({ editing: null });
     },
 
-    clearCompleted: function clearCompleted() {
-        this.props.expenses.completed().forEach(function (todo) {
-            todo.destroy();
-        });
-    },
-
     render: function render() {
         var main = _react2['default'].createElement(
             'p',
             null,
             'Bought an item for Build Brighton, claim the money back here. If your planning on spending over £10 please confirm the purchase with a trustee first.'
         );
-        var expenses = this.props.expenses;
+
+        //Fetch a list of expenses filtered to the current user
+        var expenses = this.props.expenses.forUser(this.props.userId);
 
         var expenseItems = expenses.map(function (expense) {
             return _react2['default'].createElement(ExpenseItem, { key: expense.get('id'), expense: expense });
@@ -80446,7 +80468,7 @@ var MemberExpenses = _react2['default'].createClass({
 exports['default'] = MemberExpenses;
 module.exports = exports['default'];
 
-},{"../../mixins/Backbone":496,"./ExpenseItem":489,"./NewExpenseModal":491,"react":475,"react-bootstrap":269}],491:[function(require,module,exports){
+},{"../../mixins/Backbone":497,"./ExpenseItem":489,"./NewExpenseModal":492,"react":475,"react-bootstrap":269}],492:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80644,7 +80666,7 @@ var NewExpenseModal = _react2['default'].createClass({
 exports['default'] = NewExpenseModal;
 module.exports = exports['default'];
 
-},{"../form/Select":492,"backbone-model-file-upload":2,"joi":32,"jquery":46,"react":475,"react-bootstrap":269,"react-validation-mixin":284}],492:[function(require,module,exports){
+},{"../form/Select":493,"backbone-model-file-upload":2,"joi":32,"jquery":46,"react":475,"react-bootstrap":269,"react-validation-mixin":284}],493:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80735,7 +80757,7 @@ var Select = (function (_React$Component) {
 exports['default'] = Select;
 module.exports = exports['default'];
 
-},{"react":475}],493:[function(require,module,exports){
+},{"react":475}],494:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80775,7 +80797,7 @@ var NotificationCount = _react2['default'].createClass({
 exports['default'] = NotificationCount;
 module.exports = exports['default'];
 
-},{"../../mixins/Backbone":496,"react":475}],494:[function(require,module,exports){
+},{"../../mixins/Backbone":497,"react":475}],495:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80866,7 +80888,7 @@ var NotificationTableRow = (function (_React$Component) {
 exports['default'] = NotificationTableRow;
 module.exports = exports['default'];
 
-},{"./../elements/Tick":488,"moment":212,"react":475}],495:[function(require,module,exports){
+},{"./../elements/Tick":488,"moment":212,"react":475}],496:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80952,7 +80974,7 @@ var NotificationsTable = _react2['default'].createClass({
 exports['default'] = NotificationsTable;
 module.exports = exports['default'];
 
-},{"../../mixins/Backbone":496,"./NotificationTableRow":494,"react":475}],496:[function(require,module,exports){
+},{"../../mixins/Backbone":497,"./NotificationTableRow":495,"react":475}],497:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -80983,7 +81005,7 @@ var BackboneMixin = {
 exports['default'] = BackboneMixin;
 module.exports = exports['default'];
 
-},{}],497:[function(require,module,exports){
+},{}],498:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -81018,7 +81040,7 @@ var Expense = Backbone.Model.extend({
 exports['default'] = Expense;
 module.exports = exports['default'];
 
-},{"backbone":3}],498:[function(require,module,exports){
+},{"backbone":3}],499:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -81049,7 +81071,7 @@ var Notification = Backbone.Model.extend({
 exports['default'] = Notification;
 module.exports = exports['default'];
 
-},{"backbone":3}],499:[function(require,module,exports){
+},{"backbone":3}],500:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {

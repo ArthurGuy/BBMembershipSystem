@@ -42,7 +42,7 @@
         {!! HTML::sideNavLink('Stats', 'stats.index') !!}
         {!! HTML::sideNavLink('Proposals', 'proposals.index') !!}
         {!! HTML::sideNavLink('Resources', 'resources.index') !!}
-        {!! HTML::sideNavLink('Expenses', 'expenses.index') !!}
+        {!! HTML::sideNavLink('Expenses <span class="badge js-expenses-count"></span>', 'expenses.index') !!}
         {!! HTML::sideNavLink('Groups', 'groups.index') !!}
         @if (!Auth::guest() && Auth::user()->hasRole('comms'))
             {!! HTML::sideNavLink('Members Inductions', 'account.induction.index') !!}

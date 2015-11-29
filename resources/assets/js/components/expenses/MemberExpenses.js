@@ -34,7 +34,7 @@ var MemberExpenses = React.createClass({
         */
 
         //Initial load of the expenses
-        this.props.expenses.fetch({ data: { user_id: this.props.userId } });
+        this.props.expenses.fetch();
     },
 
     componentDidUpdate: function () {
@@ -63,7 +63,9 @@ var MemberExpenses = React.createClass({
     render: function () {
         var main = <p>Bought an item for Build Brighton, claim the money back here. If your planning on spending over £10
             please confirm the purchase with a trustee first.</p>;
-        var expenses = this.props.expenses;
+
+        //Fetch a list of expenses filtered to the current user
+        var expenses = this.props.expenses.forUser(this.props.userId);
 
 
         var expenseItems = expenses.map(function (expense) {
