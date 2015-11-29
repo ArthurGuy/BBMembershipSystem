@@ -70,7 +70,7 @@ class PaymentPresenter extends Presenter
             case 'manual':
                 return 'Manual';
             case 'cash':
-                return 'Cash';
+                return 'Cash' . ($this->entity->source_id? ' (' . $this->entity->source_id . ')':'');
             case 'other':
                 return 'Other';
             case 'balance':

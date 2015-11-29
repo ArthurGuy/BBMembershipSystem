@@ -84,7 +84,7 @@ Route::get('account/{account}/payment/gocardless/manual-return', ['as'=>'account
 
 
 //Cash
-Route::group(array('middleware' => 'role:finance'), function() {
+Route::group(array('middleware' => 'role:admin'), function() {
     Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
     Route::delete('account/{account}/payment/cash', ['as'=>'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
 });

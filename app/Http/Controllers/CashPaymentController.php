@@ -37,9 +37,10 @@ class CashPaymentController extends Controller
 
         $amount     = \Request::get('amount');
         $reason     = \Request::get('reason');
+        $sourceId   = \Request::get('source_id');
         $returnPath = \Request::get('return_path');
 
-        $this->paymentRepository->recordPayment($reason, $userId, 'cash', '', $amount);
+        $this->paymentRepository->recordPayment($reason, $userId, 'cash', $sourceId, $amount);
 
         \Notification::success("Payment recorded");
 
