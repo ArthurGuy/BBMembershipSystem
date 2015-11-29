@@ -54,7 +54,7 @@ class MemberInductionController extends Controller
      */
     public function approve($id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findWithPermission($id, 'comms');
 
         if (\Input::has('inducted_by')) {
             $user->inducted_by = \Auth::id();

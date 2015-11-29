@@ -423,10 +423,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * Fetch a user record, performs a permission check
      *
      * @param integer|null $id
+     * @param string       $role
+     *
      * @return User
      * @throws AuthenticationException
      */
-    public static function findWithPermission($id = null)
+    public static function findWithPermission($id = null, $role = 'admin')
     {
         if (empty($id)) {
             //Return the logged in user
@@ -440,7 +442,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         //They are requesting a user that isn't them
-        if (Auth::user()->hasRole('admin')) {
+        if (Auth::user()->hasRole($role)) {
             //They are an admin so that's alright
             return $requestedUser;
         }
