@@ -46,31 +46,6 @@ var MemberExpenses = React.createClass({
         //});
     },
 
-    handleNewTodoKeyDown: function (event) {
-        if (event.which !== ENTER_KEY) {
-            return;
-        }
-
-        var val = this.refs.newField.getDOMNode().value.trim();
-        if (val) {
-            this.props.expenses.create({
-                title: val,
-                completed: false,
-                order: this.props.expenses.nextOrder()
-            });
-            this.refs.newField.getDOMNode().value = '';
-        }
-
-        return false;
-    },
-
-    toggleAll: function (event) {
-        var checked = event.target.checked;
-        this.props.expenses.forEach(function (todo) {
-            todo.set('completed', checked);
-        });
-    },
-
     edit: function (todo, callback) {
         // refer to todoItem.jsx `handleEdit` for the reason behind the callback
         this.setState({editing: todo.get('id')}, callback);
