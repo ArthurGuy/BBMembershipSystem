@@ -42,7 +42,7 @@ class BalancePaymentController extends Controller
         $amount      = ($requestData['amount'] * 1) / 100;
         $reason      = $requestData['reason'];
         $returnPath  = $requestData['return_path'];
-        $ref         = $requestData['ref'];
+        $ref         = $requestData['ref'] ?: '';
 
         //Can the users balance go below 0
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance($reason);
@@ -61,7 +61,7 @@ class BalancePaymentController extends Controller
             return \Redirect::to($returnPath);
         }
 
-        //Everything looks gooc, create the payment
+        //Everything looks good, create the payment
         $this->paymentRepository->recordPayment($reason, $userId, 'balance', '', $amount, 'paid', 0, $ref);
 
         //Update the users cached balance
