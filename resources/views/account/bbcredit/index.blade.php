@@ -81,28 +81,5 @@ Build Brighton Balance
         </div>
     </div>
 </div>
-
-<div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Transfer Credit</h3>
-            </div>
-            <div class="panel-body">
-                <p>You can send money to another member using the form below</p>
-
-                {!! Form::open(array('method'=>'POST', 'route' => ['account.balance.transfer.create', $user->id], 'class'=>'form-inline', 'onSubmit' => 'return window.confirm("Are you sure?")')) !!}
-                    <div class="input-group">
-                        <div class="input-group-addon">&pound;</div>
-                        {!! Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'required'=>'required']) !!}
-                    </div>
-                    {!! Form::select('target_user_id', [''=>'Select a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
-                    {!! Form::submit('Transfer', array('class'=>'btn btn-primary')) !!}
-                {!! Form::close() !!}
-
-            </div>
-        </div>
-    </div>
-</div>
-
+    
 @stop
