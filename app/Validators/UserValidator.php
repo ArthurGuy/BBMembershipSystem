@@ -20,7 +20,7 @@ class UserValidator extends FormValidator
         'address.line_3'        => '',
         'address.line_4'        => '',
         'address.postcode'      => 'required|postcode',
-        'monthly_subscription'  => 'required|integer|min:5',
+        'monthly_subscription'  => 'required|integer|min:15',
         'emergency_contact'     => 'required',
         'profile_private'       => 'boolean',
         'rules_agreed'          => 'accepted',
@@ -41,6 +41,7 @@ class UserValidator extends FormValidator
         'password'          => 'min:8',
         'emergency_contact' => '',
         'phone'             => '',
+        'monthly_subscription'  => 'required|integer|min:5',
     ];
 
 } 

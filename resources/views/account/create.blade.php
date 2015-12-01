@@ -223,6 +223,13 @@ Join Build Brighton
                     If you feel that the hackspace is worth more to you then please do adjust your subscription accordingly.
                     You can also change your subscription amount at any time!
                 </p>
+
+                <p>
+                    If you would like to pay less than &pound;15 a month please select an amount over £15 and complete
+                    this form, on the next page you will be asked to setup a subscription payment.
+                    Before you do this please send the trustees an email letting them know how much you would like to
+                    pay, they will then override the amount so you can continue to setup a subscription.
+                </p>
             </div>
         </div>
     </div>

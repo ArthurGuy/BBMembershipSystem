@@ -358,6 +358,8 @@ class AccountController extends Controller
 
         if ($amount < 5) {
             throw new ValidationException('The minimum subscription is 5 GBP');
+        } elseif (!\Auth::user()->isAdmin() && ($amount < 15)) {
+            throw new ValidationException('The minimum subscription is 15 GBP, please contact the trustees for a lower amount. trustees@buildbrighton.com');
         }
 
         $user = User::findWithPermission($id);
