@@ -65,7 +65,8 @@ class AccountController extends Controller
         \BB\Repo\UserRepository $userRepository,
         \BB\Validators\ProfileValidator $profileValidator,
         \BB\Repo\AddressRepository $addressRepository,
-        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository)
+        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository,
+        \BB\Services\Credit $bbCredit)
     {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
@@ -79,6 +80,7 @@ class AccountController extends Controller
         $this->profileValidator = $profileValidator;
         $this->addressRepository = $addressRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+        $this->bbCredit = $bbCredit;
 
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride( ! \Auth::guest() && \Auth::user()->hasRole('admin'));
@@ -187,7 +189,16 @@ class AccountController extends Controller
         //Get the member subscription payments
         $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($id);
 
-        return \View::make('account.show')->with('user', $user)->with('inductions', $inductions)->with('newAddress', $newAddress)->with('subscriptionCharges', $subscriptionCharges);
+        //Get the members balance
+        $this->bbCredit->setUserId($user->id);
+        $memberBalance = $this->bbCredit->getBalanceFormatted();
+
+        return \View::make('account.show')
+            ->with('user', $user)
+            ->with('inductions', $inductions)
+            ->with('newAddress', $newAddress)
+            ->with('subscriptionCharges', $subscriptionCharges)
+            ->with('memberBalance', $memberBalance);
     }
 
 
