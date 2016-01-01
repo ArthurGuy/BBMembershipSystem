@@ -36,6 +36,7 @@ class BalanceController extends Controller
         $this->bbCredit->setUserId($user->id);
 
         $userBalance = $this->bbCredit->getBalanceFormatted();
+        $userBalanceSign = $this->bbCredit->getBalanceSign();
 
         $payments = $this->bbCredit->getBalancePaymentsPaginated();
 
@@ -45,6 +46,7 @@ class BalanceController extends Controller
             ->with('user', $user)
             ->with('payments', $payments)
             ->with('userBalance', $userBalance)
+            ->with('userBalanceSign', $userBalanceSign)
             ->with('memberList', $memberList);
     }
 

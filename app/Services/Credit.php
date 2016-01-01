@@ -90,6 +90,15 @@ class Credit
         return $this->user->cash_balance / 100;
     }
 
+    /**
+     * Get the users balance sign (positive/negative)
+     * @return string
+     */
+    public function getBalanceSign()
+    {
+		return ( (int) $this->getBalance() >= 0 ? 'positive' : 'negative' );
+    }
+
     public function getBalanceFormatted()
     {
         return '&pound;' . number_format(($this->user->cash_balance / 100), 2);
