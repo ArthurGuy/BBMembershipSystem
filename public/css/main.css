@@ -7164,6 +7164,7 @@ body.register_login #pageTitle {
 @media screen and (min-width: 768px) {
   .memberSubAmount p {
     float: right !important;
+	text-align: right;
   }
   .memberSubAmount form {
     float: right !important;

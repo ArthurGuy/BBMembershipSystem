@@ -56,6 +56,7 @@
     <div class="col-xs-12 col-sm-4">
         <div class="memberSubAmount">
             <p class="navbar-text">
+                Balance: {{ $memberBalance }} <br />
                 {{ $user->present()->subscriptionDetailLine }}
                 @if ($user->canMemberChangeSubAmount())
                     <small><a href="#" class="js-show-alter-subscription-amount" title="Change Amount">Change</a></small>
