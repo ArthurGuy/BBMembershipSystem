@@ -96,7 +96,7 @@ class Credit
      */
     public function getBalanceSign()
     {
-		return ( (int) $this->getBalance() >= 0 ? 'positive' : 'negative' );
+        return ( (int) $this->getBalance() >= 0 ? 'positive' : 'negative' );
     }
 
     public function getBalanceFormatted()
