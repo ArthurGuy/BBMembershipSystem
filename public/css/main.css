@@ -7967,6 +7967,9 @@ body.register_login .top-alerts {
   font-weight: bold;
   color: #D9534F;
 }
+.credit-figure.positive {
+  color: #1e8c99;
+}
 .skill-list {
   text-align: center;
 }

@@ -41,7 +41,7 @@ Build Brighton Balance
                     <h3 class="panel-title">Balance</h3>
                 </div>
                 <div class="panel-body">
-                    <span class="credit-figure">{{ $userBalance }}</span>
+                    <span class="credit-figure {{ $userBalanceSign }}">{{ $userBalance }}</span>
                 </div>
             </div>
         </div>
