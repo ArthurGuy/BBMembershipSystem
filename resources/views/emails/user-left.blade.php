@@ -14,11 +14,12 @@
 @if ($memberBox)
 <p>
     It looks like you have a members storage box, this will be put back into circulation so please ensure you have
-    removed all your items from it, if you haven't you must arrange a time to collect things otherwise they may be recycled.
+    removed all your items from it otherwise they will be disposed of to free up space for other members.
 </p>
 @endif
 <p>
     If you have changed your mind and wish to remain part of Build Brighton you can do this by logging in and setting up a subscription payment.<br />
+    Alternatively if you believe this has been sent in error please reply with the details of your subscription payment and we will investigate.<br />
     <a href="{{ URL::route('home') }}">Build Brighton Member System</a><br/>
 </p>
 <p>
