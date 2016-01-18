@@ -18,7 +18,6 @@ Activity Log
     <div class="input-group date">
         <input name="date" type="text" class="form-control js-date-select" value="{{ $date->format('Y-m-d') }}">
     </div>
-
     {!! Form::close() !!}
 
     <ul class="pager">

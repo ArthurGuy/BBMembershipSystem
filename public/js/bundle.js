@@ -79371,17 +79371,21 @@ var SiteInteraction = function SiteInteraction() {
         });
     });
 
-    //Activity page - Date picker, auto form submit
-    jQuery('#activityDatePicker').find('input').on('change', function (e) {
-        jQuery('#activityDatePicker').submit();
-    });
-
     //Input date picker
     require('bootstrap-datepicker');
     jQuery('.js-date-select').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true,
         todayHighlight: true
+    });
+
+    //Activity page - Date picker, auto form submit
+    //jQuery('#activityDatePicker').find('input').on('changeDate', function(e){
+    //jQuery('#activityDatePicker').submit();
+    //});
+
+    jQuery('#activityDatePicker').find('.js-date-select').datepicker().on('changeDate', function (e) {
+        jQuery('#activityDatePicker').submit();
     });
 
     console.log("Site Interaction Loaded");
