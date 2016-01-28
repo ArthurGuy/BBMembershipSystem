@@ -13,8 +13,8 @@ Join Build Brighton
             <div class="page-header">
                 <h1>Join Build Brighton</h1>
                 <p>
-                    Build Brighton is a fantastic space and community of like minded people.<br />
-                    <strong>If you haven't visited one of our open nights yet then it is highly recommended that you do before signing up.</strong>
+                    Build Brighton is a fantastic space and community of like minded people.<br /><br />
+                    <strong>Before you signup we ask that you visit one of our open night first and find out about Build Brighton and how the shared community space works.</strong>
                 </p>
             </div>
         </div>
