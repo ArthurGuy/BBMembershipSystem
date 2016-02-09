@@ -38,8 +38,11 @@ class CheckSuspendedUsers
                 if ($paidUntil) {
                     if ( ! $user->subscription_expires || $user->subscription_expires->lt($paidUntil)) {
                         $user->extendMembership(null, $paidUntil);
+                        continue;
                     }
                 }
+
+                $this->userRepository->memberLeft($user->id);
 
                 //an email will be sent by the user observer
             } else {
