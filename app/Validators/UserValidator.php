@@ -24,6 +24,7 @@ class UserValidator extends FormValidator
         'emergency_contact'     => 'required',
         'profile_private'       => 'boolean',
         'rules_agreed'          => 'accepted',
+        'visited_space'         => 'accepted',
     ];
 
 

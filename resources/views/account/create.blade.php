@@ -13,8 +13,7 @@ Join Build Brighton
             <div class="page-header">
                 <h1>Join Build Brighton</h1>
                 <p>
-                    Build Brighton is a fantastic space and community of like minded people.<br /><br />
-                    <strong>Before you signup we ask that you visit one of our open night first and find out about Build Brighton and how the shared community space works.</strong>
+                    Build Brighton is a fantastic space and community of like minded people.
                 </p>
             </div>
         </div>
@@ -24,7 +23,7 @@ Join Build Brighton
     <div class="row">
         <div class="col-xs-12">
             <p>
-                Please fill out the form below, you will then be asked to setup a direct debit for the monthly payment.<br />
+                Please fill out the form below, on the next page you will be asked to setup a direct debit for the monthly payment.<br />
                 We need your real name and address, this is <a href="http://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a><br />
                 Your address will be kept private but your name will be listed publicly as being a member of our community
             </p>
@@ -80,6 +79,18 @@ Join Build Brighton
             </div>
             {!! Notification::getErrorDetail('monthly_subscription') !!}
             <span class="help-block"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#howMuchShouldIPayModal">How much should I pay?</button></span>
+        </div>
+    </div>
+
+    <div class="form-group {{ Notification::hasErrorDetail('visited_space', 'has-error has-feedback') }}">
+        <div class="col-sm-9 col-lg-7 col-sm-offset-3">
+            <span class="help-block">
+                Build Brighton may not be the type of space you expect so before joining you need to have come
+                along to one of our Thursday open evnings first
+            </span>
+            {!! Form::checkbox('visited_space', true, null, ['class'=>'']) !!}
+            {!! Form::label('visited_space', 'I have visited Build Brighton', ['class'=>'']) !!}
+            {!! Notification::getErrorDetail('visited_space') !!}
         </div>
     </div>
 

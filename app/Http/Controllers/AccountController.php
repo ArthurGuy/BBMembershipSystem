@@ -134,7 +134,25 @@ class AccountController extends Controller
      */
     public function store()
     {
-        $input = \Input::only('given_name', 'family_name', 'email', 'secondary_email', 'password', 'phone', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'monthly_subscription', 'emergency_contact', 'new_profile_photo', 'profile_photo_private', 'rules_agreed');
+        $input = \Input::only(
+            'given_name',
+            'family_name',
+            'email',
+            'secondary_email',
+            'password',
+            'phone',
+            'address.line_1',
+            'address.line_2',
+            'address.line_3',
+            'address.line_4',
+            'address.postcode',
+            'monthly_subscription',
+            'emergency_contact',
+            'new_profile_photo',
+            'profile_photo_private',
+            'rules_agreed',
+            'visited_space'
+        );
 
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);
