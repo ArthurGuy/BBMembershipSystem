@@ -158,4 +158,4 @@ class InductionRepository extends DBRepository
     {
         return $this->model->where('payment_id', $paymentId)->first();
     }
-} 
+}

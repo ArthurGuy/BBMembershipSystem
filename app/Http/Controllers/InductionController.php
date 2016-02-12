@@ -1,6 +1,8 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\Induction;
+use BB\Exceptions\PaymentException;
+use BB\Repo\PaymentRepository;
 
 class InductionController extends Controller
 {
@@ -13,14 +15,19 @@ class InductionController extends Controller
      * @var \BB\Repo\EquipmentRepository
      */
     private $equipmentRepository;
+    /**
+     * @var PaymentRepository
+     */
+    private $paymentRepository;
 
     /**
      * @param \BB\Repo\InductionRepository $inductionRepository
      */
-    function __construct(\BB\Repo\InductionRepository $inductionRepository, \BB\Repo\EquipmentRepository $equipmentRepository)
+    function __construct(\BB\Repo\InductionRepository $inductionRepository, \BB\Repo\EquipmentRepository $equipmentRepository, PaymentRepository $paymentRepository)
     {
         $this->inductionRepository = $inductionRepository;
         $this->equipmentRepository = $equipmentRepository;
+        $this->paymentRepository = $paymentRepository;
     }
 
 
@@ -43,6 +50,13 @@ class InductionController extends Controller
         } elseif (\Input::get('is_trainer', false)) {
             $induction->is_trainer = true;
             $induction->save();
+        } elseif (\Input::get('cancel_payment', false)) {
+            if ($induction->trained) {
+                throw new \BB\Exceptions\NotImplementedException();
+            }
+            //$payment = $this->paymentRepository->getById($induction->payment_id);
+            $this->paymentRepository->refundPaymentToBalance($induction->payment_id);
+            $this->inductionRepository->delete($id);
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }

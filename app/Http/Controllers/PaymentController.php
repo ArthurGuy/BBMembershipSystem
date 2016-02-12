@@ -425,6 +425,10 @@ class PaymentController extends Controller
 
             case 'refund-to-balance':
 
+                if ($payment->reason === 'induction') {
+                    throw new NotImplementedException('Please refund via the member induction list');
+                }
+
                 $this->paymentRepository->refundPaymentToBalance($paymentId);
 
                 \Notification::success('Payment updated');

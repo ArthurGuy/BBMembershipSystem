@@ -45,6 +45,13 @@
                 @endif
             </td>
             <td>
+                @if ($item->userInduction && $item->userInduction->paid && !$item->userInduction->is_trained)
+                {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) !!}
+                {!! Form::hidden('cancel_payment', '1') !!}
+                {!! Form::submit('Refund paymet to balance', array('class'=>'btn btn-default btn-xs')) !!}
+                {!! Form::close() !!}
+                @endif
+
                 @if (Auth::user()->isAdmin() && $item->userInduction && !$item->userInduction->is_trained)
                 {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) !!}
                 {!! Form::select('trainer_user_id', \BB\Entities\Induction::trainersForDropdown($item->key)) !!}
