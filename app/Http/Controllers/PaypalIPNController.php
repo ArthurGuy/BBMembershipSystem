@@ -61,8 +61,17 @@ class PaypalIPNController extends Controller
                 $this->setupNewMember($user, $ipnData['mc_gross']);
             }
 
-            //Record the subscription payment, this will automatically deal with locating the sub charge and updating that
-            $this->paymentRepository->recordSubscriptionPayment($user->id, 'paypal', $ipnData['txn_id'], $ipnData['mc_gross'], 'paid', $ipnData['mc_fee']);
+            $date = Carbon::now();
+            //If the user doesn't have an active sub charge record the payment as a balance payment
+            $subCharge = $this->subscriptionChargeRepository->findCharge($user->id, $date);
+            if ($subCharge) {
+                //Record the subscription payment, this will automatically deal with locating the sub charge and updating that
+                $this->paymentRepository->recordSubscriptionPayment($user->id, 'paypal', $ipnData['txn_id'],
+                    $ipnData['mc_gross'], 'paid', $ipnData['mc_fee']);
+            } else {
+                $this->paymentRepository->recordPayment('balance', $user->id, 'paypal', $ipnData['txn_id'],
+                    $ipnData['mc_gross'], 'paid', $ipnData['mc_fee']);
+            }
 
         } elseif (isset($ipnData['txn_type']) && ($ipnData['txn_type'] == 'subscr_cancel')) {
             $user = User::where('email', $ipnData['payer_email'])->first();
