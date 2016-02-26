@@ -238,7 +238,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function promoteGoCardless()
     {
-        return (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'));
+        return (($this->payment_method != 'balance' && $this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'));
     }
 
     /**
