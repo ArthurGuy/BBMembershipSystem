@@ -72,7 +72,7 @@ class BalanceController extends Controller
             'sortCode'      => $sortCode,
             'accountNumber' => $accountNumber
         ], function ($message) {
-            $message->to('arthurguy.84@gmail.com', 'Arthur Guy')->subject('User requested a withdrawal');
+            $message->to('trustees@buildbrighton.com', 'BB Trustees')->subject('User requested a withdrawal');
         });
 
         \Notification::success("Request sent");
