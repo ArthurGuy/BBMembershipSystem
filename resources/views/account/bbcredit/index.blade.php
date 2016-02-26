@@ -48,6 +48,49 @@ Build Brighton Balance
 </div>
 
 <div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Request a refund from your balance</h3>
+            </div>
+            <div class="panel-body">
+                {!! Form::open(array('method'=>'POST', 'route' => ['account.balance.withdrawal', $user->id], 'class'=>'form-inline')) !!}
+                <p>
+                    Please fill in the amount you want to withdraw and the account number and sortcode of the bank you want the money to go to.<br />
+                    We can only refund money reclaimed through expense submissions, anything else would be at the discretion of the
+                    <a href="mailto:trustees@buildbrighton.com">trustees</a>.
+                </p>
+
+                <div class="form-group">
+                    {!! Form::label('amount', 'Amount') !!}
+                    {!! Form::input('number', 'amount', $rawBalance, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'1', 'max' => $rawBalance, 'step' => '0.01']) !!}
+                    <span class="help-block"></span>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('account_number', 'Account Number') !!}
+                    {!! Form::input('text', 'account_number', null, ['class'=>'form-control', 'placeholder' => '12345678', 'pattern'=>'[0-9]{8}']) !!}
+                    <span class="help-block"></span>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('sort_code', 'Sort Code') !!}
+                    {!! Form::input('text', 'sort_code', null, ['class'=>'form-control', 'placeholder' => '12-34-56', 'pattern'=>'[0-9]{2}-[0-9]{2}-[0-9]{2}']) !!}
+                    <span class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    {!! Form::submit('Submit', ['class'=>'btn btn-primary']) !!}
+                </div>
+
+                <p>When you submit this request it will be forwarded to the trustees who will aim to action it within the new few weeks.</p>
+
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
