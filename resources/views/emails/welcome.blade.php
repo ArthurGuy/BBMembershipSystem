@@ -35,7 +35,7 @@
 </p>
 <p>
     <b>5. Any questions and concerns</b><br />
-    If you have any questions please use Slack, the members google group or ask another member who may be able to help, or point you in the direction of someone who can. If you need to contact the trustees please email us at trustees@buildbrighton.com. 
+    If you have any questions please use Slack, the members google group or ask another member who may be able to help, or point you in the direction of someone who can. If you need to contact the trustees please email us at <a href="mailto:trustees@buildbrighton.com">trustees@buildbrighton.com</a>. 
 </p>
 <p>
     <b>6. Confirm your email address</b><br />
