@@ -13,9 +13,9 @@
 <h3>Next Steps</h3>
 <p>
     <b>1. Join Slack and Arrange an Induction</b><br />
-    The first thing is to join Slack - a collaborative network for group and individual messaging.
-    Please use the New Members channel on Slack to arrange your induction. They are normally done every few weeks on a Thursday at 8pm (during our open evening) but can be done on other days if needed. 
-    For an invite to <a href="https://slack.com/">Slack</a> please go to <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a>
+    The first thing is to join Slack - a collaborative network for group and individual messaging.<br />
+    Please use the New Members channel on Slack to arrange your induction. They are normally done every few weeks on a Thursday at 8pm (during our open evening) but can be done on other days if needed.<br /> 
+    For an invite to <a href="https://slack.com/">Slack</a> please go to <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a><br /> 
     Once you’re signed in, you can join any other channels that take your interest such as 3D printing, electronics and photography.
 </p>
 <p>
@@ -24,9 +24,9 @@
 </p>
 <p>
     <b>3. Read the Code of Conduct and Rules</b><br />
-    We have a <a href="https://bbms.buildbrighton.com/resources/policy/code-of-conduct">Code of Conduct</a> which we expect all members to follow and a set of <a href="https://bbms.buildbrighton.com/resources/policy/rules">Rules</a> which govern how things are run. Please make sure you read and accept these.
-    The main points are: Be safe, keep things tidy and make a contribution. We’re a members club and the place gets better when members make it better. So if you spot something that could be improved we encourage a pro-active attitude, in collaboration with other members. All roles are done by volunteers, including the trustees.
-    If you break something or find something is not working, please let the members know (e.g. via Slack).
+    We have a <a href="https://bbms.buildbrighton.com/resources/policy/code-of-conduct">Code of Conduct</a> which we expect all members to follow and a set of <a href="https://bbms.buildbrighton.com/resources/policy/rules">Rules</a> which govern how things are run. Please make sure you read and accept these.<br /> 
+    The main points are: Be safe, keep things tidy and make a contribution. We’re a members club and the place gets better when members make it better. So if you spot something that could be improved we encourage a pro-active attitude, in collaboration with other members. All roles are done by volunteers, including the trustees.<br /> 
+    If you break something or find something is not working, please let the members know (e.g. via Slack).<br /> 
     Our policies are accessible from the <a href="https://bbms.buildbrighton.com/resources">resources</a> page of the Build Brighton Members System (BBMS).
 </p>
 <p>
@@ -41,17 +41,11 @@
     <b>6. Confirm your email address</b><br />
     Finally, please click the link below to confirm your email address and ensure we have your accurate details.<br />
     <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a>
-</p>
-    
-  
-    Finally, if you could follow the link below to confirm your email address that would help us ensure we have accurate details.<br />
-    <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a>.<br/>
-</p>
+</p>    
 <p>
-   Thank you and we hope you enjoy being a member of Build Brighton. <br /><br />
+    Thank you and we hope you enjoy being a member of Build Brighton. <br /><br />
     Best wishes, <br />
     The Build Brighton Trustees
 </p>
-
 </body>
 </html>
