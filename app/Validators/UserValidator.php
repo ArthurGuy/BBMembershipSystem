@@ -35,6 +35,7 @@ class UserValidator extends FormValidator
         'password'             => 'min:8',
         'monthly_subscription' => '',
         'rules_agreed'         => '',
+        'visited_space'        => '',
     ];
 
 
