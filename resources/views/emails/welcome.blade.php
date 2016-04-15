@@ -8,43 +8,44 @@
 
 <p>
     Hi {{ $user['given_name'] }},<br />
-    Thanks for signing up to be part of Build Brighton, Brighton's amazing maker space.
+    Thanks for joining the Build Brighton maker space. 
 </p>
 <h3>Next Steps</h3>
 <p>
-    The first thing to do is to arrange your induction.
-    The process for arranging this is still being sorted out so for now please email us at
-    <a href="mailto:info@buildbrighton.com">info@buildbrighton.com</a> and let us know if you're going to be coming
-    to the space on Thursday (our open evening) and we will make sure someone will be around to show you the ropes.<br />
-    <br />
-    We would also like you to join the mailing list or Slack group, this is where most of the communication between
-    members occurs and is where things get decided and you find out about what's going on.<br />
-    <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">Mailing list</a> - please use the same
-    email address as you did when signing up.<br />
-    <br />
-    <a href="https://slack.com/">Slack</a>, for an invite please use the following
-    site to request an invite <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a>
+    <b>1. Join Slack and Arrange an Induction</b><br /><br />
+    The first thing is to join Slack - a collaborative network for group and individual messaging.<br /><br />
+    Please use the New Members channel on Slack to arrange your induction. They are normally done every few weeks on a Thursday at 8pm (during our open evening) but can be done on other days if needed.<br /><br />
+    For an invite to <a href="https://slack.com/">Slack</a> please go to <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a><br /><br />
+    Once you’re signed in, you can join any other channels that take your interest such as 3D printing, electronics and photography.
 </p>
 <p>
-    We have a code of conduct which we expect all members to abide by and a set of rules which govern how things are run,
-    please make sure you read and accept these.<br />
-    If you have any questions please email the <a href="mailto:trustees@buildbrighton.com">trustees</a><br />
-    <a href="https://bbms.buildbrighton.com/resources/policy/rules">Rules</a>
-    and the <a href="https://bbms.buildbrighton.com/resources/policy/code-of-conduct">Code of Conduct</a>.<br />
-    <br />
-    There are also a number of policies which manage and guide other areas of Build Brighton,
-    these can be found on the <a href="https://bbms.buildbrighton.com/resources">resources</a> page and we recommend you take a look at them.<br />
-    <br />
-    If you ever have any concerns about any aspect of Build Brighton please email the <a href="mailto:trustees@buildbrighton.com">trustees</a>.
+    <b>2. Sign up to the Google groups/mailing list</b><br /><br />
+    You can sign up to our 3 Google groups <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">here</a> - please use the email address you used when joining Build Brighton. We have a public group that anyone can see and post to, plus a members only group. A lot of members have transitioned over to Slack, but not everyone has, so it’s a good idea to use both. Our third google group is for discussing proposals before they are voted on. 
 </p>
 <p>
-    Finally, if you could follow the link below to confirm your email address that would help us ensure we have accurate details.<br />
-    <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a>.<br/>
+    <b>3. Read the Code of Conduct and Rules</b><br />
+    We have a <a href="https://bbms.buildbrighton.com/resources/policy/code-of-conduct">Code of Conduct</a> which we expect all members to follow and a set of <a href="https://bbms.buildbrighton.com/resources/policy/rules">Rules</a> which govern how things are run. Please make sure you read and accept these.<br />
+    The main points are: Be safe, keep things tidy and make a contribution. We’re a members club and the place gets better when members make it better. So if you spot something that could be improved we encourage a pro-active attitude, in collaboration with other members. All roles are done by volunteers, including the trustees.<br />
+    If you break something or find something is not working, please let the members know (e.g. via Slack).<br /><br />
+    Our policies are accessible from the <a href="https://bbms.buildbrighton.com/resources">resources</a> page of the Build Brighton Members System (BBMS).
 </p>
 <p>
-    Thank you,
+    <b>4. Storage</b><br /><br />
+    There is limited storage space for members, but larger items can be kept in the space for a short time if agreed beforehand. To reserve your storage box go to the Members Storage page in BBMS. Each member can claim up to 19L of member storage, this can be one 19L box or a combination of 4L and 9L boxes. Each individual box requires a £5 deposit.
+</p>
+<p>
+    <b>5. Any questions and concerns</b><br /><br />
+    If you have any questions please use Slack, the members google group or ask another member who may be able to help, or point you in the direction of someone who can. If you need to contact the trustees please email us at <a href="mailto:trustees@buildbrighton.com">trustees@buildbrighton.com</a>. 
+</p>
+<p>
+    <b>6. Confirm your email address</b><br /><br />
+    Finally, please click the link below to confirm your email address and ensure we have your accurate details.<br /><br />
+    <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a>
+</p>    
+<p>
+    Thank you and we hope you enjoy being a member of Build Brighton. <br /><br />
+    Best wishes, <br />
     The Build Brighton Trustees
 </p>
-
 </body>
 </html>
