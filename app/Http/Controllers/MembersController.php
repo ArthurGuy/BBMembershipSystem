@@ -44,6 +44,10 @@ class MembersController extends Controller
             return \Response::make('', 404);
         }
 
+        if (!$user->active) {
+            return \Response::make('', 404);
+        }
+
         $profileData = $this->profileRepo->getUserProfile($id);
         $userSkills = array_intersect_ukey($this->profileSkillsRepository->getAll(), array_flip($profileData->skills), [$this, 'key_compare_func']);
         return \View::make('members.show')->with('user', $user)->with('profileData', $profileData)->with('userSkills', $userSkills);

@@ -23,6 +23,21 @@ class AccountTest extends TestCase
     }
 
     /** @test */
+    public function i_cant_view_an_inactive_member_page()
+    {
+        $user = factory('BB\Entities\User')->create();
+        factory('BB\Entities\ProfileData')->create(['user_id' => $user->id]);
+
+        $user2 = factory('BB\Entities\User')->create(['active' => false]);
+        factory('BB\Entities\ProfileData')->create(['user_id' => $user2->id]);
+
+        $this->actingAs($user);
+
+        $this->get('/members/'.$user2->id)
+            ->seeStatusCode(404);
+    }
+
+    /** @test */
     public function i_cant_view_another_account()
     {
         $user = factory('BB\Entities\User')->create();
