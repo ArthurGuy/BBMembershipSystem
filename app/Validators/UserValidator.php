@@ -43,7 +43,6 @@ class UserValidator extends FormValidator
         'password'          => 'min:8',
         'emergency_contact' => '',
         'phone'             => '',
-        'monthly_subscription'  => 'required|integer|min:5',
     ];
 
 } 
