@@ -56,7 +56,7 @@ class MembershipPayments
         //The time needs to be zeroed so that comparisons with pure dates work
         $refDate->setTime(0, 0, 0);
 
-        $standingOrderCutoff      = $refDate->copy()->subMonth()->subDays(7);
+        $standingOrderCutoff      = $refDate->copy()->subMonths(6);
         $paypalCutoff             = $refDate->copy()->subDays(7);
         $goCardlessCutoff         = $refDate->copy()->subDays(14);
         $goCardlessVariableCutoff = $refDate->copy()->subDays(10);
