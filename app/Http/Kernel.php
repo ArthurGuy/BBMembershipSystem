@@ -22,7 +22,7 @@ class Kernel extends HttpKernel
         //'BB\Http\Middleware\VerifyCsrfToken',
         'BB\Http\Middleware\SSLOnly',
         BrandingHeaders::class,
-        \Clockwork\Support\Laravel\ClockworkMiddleware::class,
+        //\Clockwork\Support\Laravel\ClockworkMiddleware::class,
     ];
 
     /**
