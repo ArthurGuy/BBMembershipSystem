@@ -2,7 +2,7 @@
 
     <header>
         <span class="sidenav-brand">
-            <a href="{{ route('home') }}"><img class="" src="/img/logo.png" height="50" /></a>
+            <a href="{{ route('home') }}"><img class="" src="/img/logo-new.png" height="100" /></a>
             @if (!Auth::guest() && (Auth::user()->status != 'active') )
                 {!! HTML::statusLabel(Auth::user()->status) !!}
             @endif
