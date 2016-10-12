@@ -3,7 +3,8 @@ class SiteInteraction {
     constructor() {
 
 
-        var jQuery = require('jquery');
+        //var jQuery = require('jquery');
+        var jQuery = global.jQuery;
 
 
         console.log("Site Interaction Loading");
@@ -24,10 +25,8 @@ class SiteInteraction {
         });
 
 
-        global.jQuery = jQuery;
-
         //Tooltips
-        require('bootstrap');
+        //require('bootstrap');
         jQuery('[data-toggle=tooltip]').tooltip({});
 
         //Fancy dropdown
@@ -41,7 +40,7 @@ class SiteInteraction {
             jQuery(".modalMask").addClass("display");
         });
 
-        
+
         //Modal window background mask
         jQuery(".modalMask").on('click', function() {
             jQuery(".modalMask").removeClass("display");
@@ -68,19 +67,20 @@ class SiteInteraction {
 
 
         //Input date picker
-        require('bootstrap-datepicker');
+        /*
         jQuery('.js-date-select').datepicker({
             format: "yyyy-mm-dd",
             autoclose: true,
             todayHighlight: true
         });
 
+
         //Activity page - Date picker, auto form submit
         jQuery('#activityDatePicker').find('.js-date-select').datepicker()
             .on('changeDate', function(e) {
                 jQuery('#activityDatePicker').submit();
             });
-
+         */
 
         console.log("Site Interaction Loaded");
 

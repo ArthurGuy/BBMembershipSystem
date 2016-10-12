@@ -94,6 +94,7 @@
 
     @include('partials/js-data')
 
+
     <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
     <script src="/js/bundle.js"></script>
 

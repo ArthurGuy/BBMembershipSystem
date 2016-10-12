@@ -1,4 +1,7 @@
 var React = require('react');
+global.jQuery = global.$ = require('jquery');
+require('bootstrap-datepicker');
+require('bootstrap');
 
 
 
@@ -36,8 +39,6 @@ var FeedbackWidget = require('./FeedbackWidget');
 new FeedbackWidget();
 
 
-global.jQuery = require('jquery');
-require('bootstrap');
 
 
 

@@ -11,7 +11,7 @@
     "backbone": "^1.2.0",
     "backbone-model-file-upload": "^1.0.0",
     "bootstrap": "^3.3.4",
-    "bootstrap-datepicker": "^1.4.0",
+    "bootstrap-datepicker": "^1.6.0",
     "brfs": "^1.4.0",
     "browserify": "^10.2.1",
     "browserify-shim": "^3.8.7",

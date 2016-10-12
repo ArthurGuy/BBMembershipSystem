@@ -3,6 +3,9 @@
 'use strict';
 
 var React = require('react');
+global.jQuery = global.$ = require('jquery');
+require('bootstrap-datepicker');
+require('bootstrap');
 
 //Configure a global private pusher channel
 var userId = document.getElementById('userId');
@@ -33,9 +36,6 @@ new Snackbar();
 
 var FeedbackWidget = require('./FeedbackWidget');
 new FeedbackWidget();
-
-global.jQuery = require('jquery');
-require('bootstrap');
 
 //Site wide notification loading
 if (privateMemberChannel) {
@@ -106,7 +106,7 @@ if (memberExpensesPanel.length) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AdminForms":443,"./FeedbackWidget":444,"./SiteInteraction":445,"./Snackbar":446,"./collections/Expenses":447,"./collections/Notifications":448,"./components/FilterablePaymentTable":449,"./components/PaymentModule":450,"./components/expenses/ExpensesCount":455,"./components/expenses/MemberExpenses":456,"./components/notifications/NotificationCount":459,"./components/notifications/NotificationsTable":461,"bootstrap":22,"jquery":138,"react":414}],2:[function(require,module,exports){
+},{"./AdminForms":443,"./FeedbackWidget":444,"./SiteInteraction":445,"./Snackbar":446,"./collections/Expenses":447,"./collections/Notifications":448,"./components/FilterablePaymentTable":449,"./components/PaymentModule":450,"./components/expenses/ExpensesCount":455,"./components/expenses/MemberExpenses":456,"./components/notifications/NotificationCount":459,"./components/notifications/NotificationsTable":461,"bootstrap":22,"bootstrap-datepicker":20,"jquery":138,"react":414}],2:[function(require,module,exports){
 var asn1 = exports;
 
 asn1.bignum = require('bn.js');
@@ -94353,7 +94353,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var SiteInteraction = function SiteInteraction() {
     _classCallCheck(this, SiteInteraction);
 
-    var jQuery = require('jquery');
+    //var jQuery = require('jquery');
+    var jQuery = global.jQuery;
 
     console.log("Site Interaction Loading");
 
@@ -94371,10 +94372,8 @@ var SiteInteraction = function SiteInteraction() {
         jQuery(".mainSidenav .memberAccountLinks").toggleClass('open');
     });
 
-    global.jQuery = jQuery;
-
     //Tooltips
-    require('bootstrap');
+    //require('bootstrap');
     jQuery('[data-toggle=tooltip]').tooltip({});
 
     //Fancy dropdown
@@ -94411,17 +94410,18 @@ var SiteInteraction = function SiteInteraction() {
     });
 
     //Input date picker
-    require('bootstrap-datepicker');
+    /*
     jQuery('.js-date-select').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true,
         todayHighlight: true
     });
-
-    //Activity page - Date picker, auto form submit
-    jQuery('#activityDatePicker').find('.js-date-select').datepicker().on('changeDate', function (e) {
-        jQuery('#activityDatePicker').submit();
-    });
+      //Activity page - Date picker, auto form submit
+    jQuery('#activityDatePicker').find('.js-date-select').datepicker()
+        .on('changeDate', function(e) {
+            jQuery('#activityDatePicker').submit();
+        });
+     */
 
     console.log("Site Interaction Loaded");
 };
@@ -94430,7 +94430,7 @@ exports["default"] = SiteInteraction;
 module.exports = exports["default"];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"bootstrap":22,"bootstrap-datepicker":20,"jquery":138,"select2":426}],446:[function(require,module,exports){
+},{"select2":426}],446:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
