@@ -1,5 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Entities\Settings;
+
 class ActivityController extends Controller
 {
 
@@ -32,7 +34,14 @@ class ActivityController extends Controller
         }
         $previousDate = $date->copy()->subDay();
 
-        return \View::make('activity.index')->with('logEntries', $logEntries)->with('date', $date)->with('nextDate', $nextDate)->with('previousDate', $previousDate);
+        $doorPin = Settings::get('emergency_door_key_storage_pin');
+
+        return \View::make('activity.index')
+            ->with('logEntries', $logEntries)
+            ->with('date', $date)
+            ->with('nextDate', $nextDate)
+            ->with('previousDate', $previousDate)
+            ->with('doorPin', $doorPin);
     }
 
 

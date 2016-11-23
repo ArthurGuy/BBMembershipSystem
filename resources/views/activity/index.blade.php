@@ -12,7 +12,20 @@ Activity Log
 
 <div class="page-header">
     <h3>Activity in the main space - {{ $date->format('l jS \\of F') }}</h3>
-    Want to know if anyone's there now? Call the number at the space : 01273 603516
+
+
+    <div class="well well-sm">
+        <p>
+            Want to know if anyone's there now? Call the number at the space : 01273 603516
+        </p>
+        @if (Auth::user()->keyholderStatus())
+        <p>
+            If the entry system is offline you can use the pin number <strong>{{ $doorPin }}</strong> to open the lock box holding the spare key.
+            Make sure you return the key once the door has been opened.
+        </p>
+        @endif
+    </div>
+
 
     {!! Form::open(['route'=> 'activity.index', 'method'=>'GET', 'id'=>'activityDatePicker', 'class'=>'form-inline']) !!}
     <div class="input-group date">
