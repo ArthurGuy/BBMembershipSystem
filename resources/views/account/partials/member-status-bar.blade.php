@@ -63,13 +63,20 @@
                 @endif
             </p>
             @if ($user->canMemberChangeSubAmount())
-                {!! Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) !!}
+                {!! Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block; margin-bottom:20px;', 'route' => ['account.update-sub-payment', $user->id])) !!}
                 <div class="input-group">
                     <div class="input-group-addon">&pound;</div>
                     {!! Form::text('monthly_subscription', round($user->monthly_subscription), ['class'=>'form-control']) !!}
                 </div>
-                {!! Form::submit('Update', array('class'=>'btn btn-default')) !!}
+                {!! Form::submit('Update', array('class'=>'btn btn-default')) !!}<br><br>
                 {!! Form::close() !!}
+
+                @if ($user->payment_method == 'gocardless-variable')
+                    {!! Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block; margin-bottom:20px;', 'route' => ['account.update-sub-method', $user->id])) !!}
+                        {!! Form::hidden('payment_method', 'balance') !!}
+                        {!! Form::submit('Change to balance payment', array('class'=>'btn btn-default')) !!}<br><br>
+                    {!! Form::close() !!}
+                @endif
             @endif
         </div>
     </div>

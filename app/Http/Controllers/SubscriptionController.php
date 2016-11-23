@@ -145,4 +145,24 @@ class SubscriptionController extends Controller
         return \View::make('payments.sub-charges')->with('charges', $charges);
     }
 
+    public function updatePaymentMethod($id)
+    {
+        $user = User::findWithPermission($id);
+        $paymentMethod = \Input::get('payment_method');
+
+        if ($paymentMethod === 'balance' && $user->payment_method != $paymentMethod) {
+            $status = $this->goCardless->cancelPreAuth($user->subscription_id);
+            if ($status) {
+                $user->subscription_id = null;
+                $user->payment_method  = 'balance';
+                $user->save();
+
+                // If we don't cancel the sub charge the balance process may pick it up
+                //$this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
+            }
+        }
+
+        \Notification::success('Details Updated');
+        return \Redirect::route('account.show', [$user->id]);
+    }
 }
