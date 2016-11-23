@@ -20,7 +20,8 @@
 </p>
 <p>
     <b>2. Sign up to the Google groups/mailing list</b><br /><br />
-    You can sign up to our 3 Google groups <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">here</a> - please use the email address you used when joining Build Brighton. We have a public group that anyone can see and post to, plus a members only group. A lot of members have transitioned over to Slack, but not everyone has, so it’s a good idea to use both. Our third google group is for discussing proposals before they are voted on. 
+    You can sign up to our 2 Google groups <a href="https://groups.google.com/forum/#!forum/brighton-hackspace-members">here</a> - please use the email address you used when joining Build Brighton. We have a public group that anyone can see and post to, plus a members only group.<br >
+    The mailing lists are useful when your posting a longer form question.
 </p>
 <p>
     <b>3. Read the Code of Conduct and Rules</b><br />
