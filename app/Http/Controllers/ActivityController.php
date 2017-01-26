@@ -1,6 +1,9 @@
 <?php namespace BB\Http\Controllers;
 
+use Auth;
 use BB\Entities\Settings;
+use BB\Events\MemberActivity;
+use Carbon\Carbon;
 
 class ActivityController extends Controller
 {
@@ -25,6 +28,7 @@ class ActivityController extends Controller
         $date = \Input::get('date', \Carbon\Carbon::now()->format('Y-m-d'));
         $date = \Carbon\Carbon::createFromFormat('Y-m-d', $date)->setTime(0, 0, 0);
         $today = \Carbon\Carbon::now()->setTime(0, 0, 0);
+        $doorPin = \Input::get('doorPin');
 
         $logEntries = $this->activityRepository->getForDate($date);
 
@@ -34,7 +38,7 @@ class ActivityController extends Controller
         }
         $previousDate = $date->copy()->subDay();
 
-        $doorPin = Settings::get('emergency_door_key_storage_pin');
+
 
         return \View::make('activity.index')
             ->with('logEntries', $logEntries)
@@ -42,6 +46,16 @@ class ActivityController extends Controller
             ->with('nextDate', $nextDate)
             ->with('previousDate', $previousDate)
             ->with('doorPin', $doorPin);
+    }
+
+    public function create()
+    {
+        $keyFob = Auth::user()->keyFob();
+        event(new MemberActivity($keyFob, 'main-door', Carbon::now(), true));
+
+        $doorPin = Settings::get('emergency_door_key_storage_pin');
+
+        return redirect(route('activity.index', ['doorPin' => $doorPin]));
     }
 
 

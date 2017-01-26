@@ -201,6 +201,7 @@ Route::delete('acs/activity/{sessionId}', ['uses' => 'ACS\ActivityController@des
 
 Route::get('activity', ['uses' => 'ActivityController@index', 'as'=>'activity.index', 'middleware'=>'role:member']);
 Route::get('activity/realtime', ['uses' => 'ActivityController@realtime', 'as'=>'activity.realtime', 'middleware'=>'role:member']);
+Route::post('activity', ['uses' => 'ActivityController@create', 'as'=>'activity.create', 'middleware'=>'role:member']);
 
 
 

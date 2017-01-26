@@ -19,10 +19,22 @@ Activity Log
             Want to know if anyone's there now? Call the number at the space : 01273 603516
         </p>
         @if (Auth::user()->keyholderStatus())
-        <p>
-            If the entry system is offline you can use the pin number <strong>{{ $doorPin }}</strong> to open the lock box holding the spare key.
-            Make sure you return the key once the door has been opened.
-        </p>
+            @if (!$doorPin)
+            <p>
+                If the entry system is offline you can click the button below for the pin number to open the lock box holding the spare key.
+                This will record an activity log entry for yourself.
+
+                {!! Form::open(['route'=> 'activity.create', 'method'=>'POST', 'class'=>'form-inline']) !!}
+                <input type="submit" value="Reveal door key" class="btn btn-link">
+                {!! Form::close() !!}
+            </p>
+        @endif
+        @if ($doorPin)
+            <p>
+                <strong>{{ $doorPin }}</strong><br>
+                Make sure you return the key once the door has been opened.
+            </p>
+        @endif
         @endif
     </div>
 
