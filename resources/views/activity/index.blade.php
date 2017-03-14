@@ -27,6 +27,15 @@ Activity Log
                 {!! Form::open(['route'=> 'activity.create', 'method'=>'POST', 'class'=>'form-inline']) !!}
                 <input type="submit" value="Reveal door key" class="btn btn-link">
                 {!! Form::close() !!}
+
+                @if (Auth::user()->isAdmin())
+                    <br>
+                    {!! Form::open(['route'=> 'settings.update', 'method'=>'POST', 'class'=>'form-inline']) !!}
+                    <input type="number" maxlength="4" name="value" value="" placeholder="New code" class="form-control">
+                    <input type="hidden" name="key" value="emergency_door_key_storage_pin">
+                    <input type="submit" value="Update door key" class="btn btn-info">
+                    {!! Form::close() !!}
+                @endif
             </p>
         @endif
         @if ($doorPin)

@@ -45,5 +45,12 @@ class Settings extends Model
         return $setting->value;
     }
 
+    public static function change($key, $value)
+    {
+        $setting = self::findOrFail($key);
+        $setting->value = $value;
+        $setting->save();
+    }
+
 
 }
