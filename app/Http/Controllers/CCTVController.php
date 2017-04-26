@@ -25,7 +25,7 @@ class CCTVController extends Controller
             \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('New image');
         } else {
             $data = Request::all();
-            Log::debug($data);
+            \Log::debug($data);
         }
     }
 
