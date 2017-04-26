@@ -20,7 +20,7 @@ class CCTVController extends Controller
             $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
 
             $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '/' . str_random() . '.jpg';
-            Storage::put($newFilename, $fileData, 'public');
+            Storage::put($newFilename, (string) $fileData, 'public');
 
             \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('New image');
         } else {
