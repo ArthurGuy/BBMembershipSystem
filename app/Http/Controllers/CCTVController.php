@@ -18,7 +18,7 @@ class CCTVController extends Controller
             $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
             $folder = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '/';
 
-            $path     = Request::file('image')->store($folder);
+            $path     = Request::file('image')->move($folder);
             //$fileData = Image::make($file)->encode('jpg', 80);
 
             //$date = Carbon::now();
