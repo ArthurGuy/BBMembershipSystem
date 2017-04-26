@@ -12,6 +12,9 @@ class CCTVController extends Controller
 
     public function storeSingle()
     {
+        $data = Request::all();
+        \Log::debug($data);
+
         if (Request::hasFile('image')) {
             $fileData     = Request::file('image');
             //$fileData = Image::make($file)->encode('jpg', 80);
@@ -23,9 +26,6 @@ class CCTVController extends Controller
             Storage::put($newFilename, (string) $fileData, 'public');
 
             \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('New image');
-        } else {
-            $data = Request::all();
-            \Log::debug($data);
         }
     }
 
