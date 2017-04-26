@@ -13,8 +13,8 @@ class CCTVController extends Controller
     public function storeSingle()
     {
         if (Request::hasFile('image')) {
-            $file     = Request::file('image');
-            $fileData = Image::make($file)->encode('jpg', 80);
+            $fileData     = Request::file('image');
+            //$fileData = Image::make($file)->encode('jpg', 80);
 
             $date = Carbon::now();
             $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
