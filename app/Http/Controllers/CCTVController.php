@@ -7,6 +7,35 @@ use BB\Http\Controllers\Controller;
 class CCTVController extends Controller
 {
 
+    public function storeSingle()
+    {
+        $s3 = AWS::get('s3');
+        $s3Bucket = 'buildbrighton-bbms';
+        if (Request::hasFile('image')) {
+            $file     = Request::file('image');
+            $fileData = Image::make($file)->encode('jpg', 80);
+
+            $date = Carbon::now()->format('YmdHis');
+            $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
+
+            try {
+                $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '/' . str_random() . '.jpg';
+                $s3->putObject(array(
+                    'Bucket'        => $s3Bucket,
+                    'Key'           => $newFilename,
+                    'Body'          => $fileData,
+                    'ACL'           => 'public-read',
+                    'ContentType'   => 'image/jpg',
+                    'ServerSideEncryption' => 'AES256',
+                ));
+
+                \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('New image');
+            } catch(\Exception $e) {
+                \Log::exception($e);
+            }
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
