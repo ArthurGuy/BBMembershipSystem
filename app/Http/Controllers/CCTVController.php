@@ -2,37 +2,27 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Http\Controllers\Controller;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class CCTVController extends Controller
 {
 
     public function storeSingle()
     {
-        $s3 = AWS::get('s3');
-        $s3Bucket = 'buildbrighton-bbms';
         if (Request::hasFile('image')) {
             $file     = Request::file('image');
             $fileData = Image::make($file)->encode('jpg', 80);
 
-            $date = Carbon::now()->format('YmdHis');
+            $date = Carbon::now();
             $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
 
-            try {
-                $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '/' . str_random() . '.jpg';
-                $s3->putObject(array(
-                    'Bucket'        => $s3Bucket,
-                    'Key'           => $newFilename,
-                    'Body'          => $fileData,
-                    'ACL'           => 'public-read',
-                    'ContentType'   => 'image/jpg',
-                    'ServerSideEncryption' => 'AES256',
-                ));
+            $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '/' . str_random() . '.jpg';
+            Storage::put($newFilename, $fileData, 'public');
 
-                \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('New image');
-            } catch(\Exception $e) {
-                \Log::exception($e);
-            }
+            \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('New image');
         }
     }
 
