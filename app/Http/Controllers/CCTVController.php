@@ -12,16 +12,12 @@ class CCTVController extends Controller
 
     public function storeSingle()
     {
-        $data = Request::all();
-        \Log::debug($data);
-
         if (Request::hasFile('image')) {
             $file     = Request::file('image');
+            $date     = Carbon::now();
+            $fileName = $date->format('H:i:s');
 
-            $date = Carbon::now();
-            $folderName = $date->hour . ':' . $date->minute . ':' . $date->second;
-
-            $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $folderName . '/' . str_random() . '.jpg';
+            $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $fileName . '.jpg';
             Storage::put($newFilename, file_get_contents($file), 'public');
 
             \Slack::to("#cctv")->attach(['image_url'=>'https://s3-eu-west-1.amazonaws.com/buildbrighton-bbms/' . $newFilename, 'color'=>'warning'])->send('New image');
