@@ -202,8 +202,9 @@ class UserRepository extends DBRepository
         if (empty($user->payment_day)) {
             $user->payment_day    = Carbon::now()->day;
         }
-        $user->subscription_id    = $subscriptionId;
-        $user->payment_method     = 'gocardless-variable';
+        $user->subscription_id     = $subscriptionId;
+        $user->gocardless_setup_id = null;
+        $user->payment_method      = 'gocardless-variable';
         $user->save();
     }
 
