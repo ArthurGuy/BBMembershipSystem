@@ -150,16 +150,20 @@ class SubscriptionController extends Controller
         $user = User::findWithPermission($id);
         $paymentMethod = \Input::get('payment_method');
 
-        if ($paymentMethod === 'balance' && $user->payment_method != $paymentMethod) {
-            $status = $this->goCardless->cancelPreAuth($user->subscription_id);
-            if ($status) {
-                $user->subscription_id = null;
-                $user->payment_method  = 'balance';
-                $user->save();
+        if ($paymentMethod === 'balance' && $user->payment_method == 'gocardless-variable') {
+            $user->payment_method  = 'balance';
+            $user->secondary_payment_method = 'gocardless-variable';
+            $user->save();
+        }
 
-                // If we don't cancel the sub charge the balance process may pick it up
-                //$this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
+        if ($paymentMethod === 'gocardless-variable' && $user->payment_method == 'balance') {
+            if (empty($user->subscription_id)) {
+                $user->payment_method = null;
+            } else {
+                $user->payment_method = 'gocardless-variable';
             }
+            $user->secondary_payment_method = null;
+            $user->save();
         }
 
         \Notification::success('Details Updated');
