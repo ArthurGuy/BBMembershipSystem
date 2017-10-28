@@ -79,7 +79,6 @@ Route::group(array('middleware' => 'role:finance'), function() {
 });
 
 Route::post('account/{account}/payment/create', ['as'=>'account.payment.create', 'uses' => 'PaymentController@create']);
-Route::get('account/{account}/payment/confirm-payment', ['as' => 'account.payment.confirm-payment', 'uses' => 'PaymentController@confirmPayment']);
 Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-payment', 'uses'=>'AccountController@updateSubscriptionAmount']);
 Route::post('account/{account}/update-sub-method', ['as'=>'account.update-sub-method', 'uses'=>'SubscriptionController@updatePaymentMethod']);
 
@@ -87,8 +86,6 @@ Route::post('account/{account}/update-sub-method', ['as'=>'account.update-sub-me
 Route::post('account/{account}/payment/stripe', ['as'=>'account.payment.stripe.store', 'uses' => 'StripePaymentController@store']);
 Route::post('account/{account}/payment/gocardless', ['as'=>'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
 Route::post('account/{account}/payment/balance', ['as'=>'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
-//Gocardless return url
-Route::get('account/{account}/payment/gocardless/manual-return', ['as'=>'account.payment.gocardless.manual-return', 'uses' => 'GoCardlessPaymentController@handleManualReturn']);
 
 
 //Cash

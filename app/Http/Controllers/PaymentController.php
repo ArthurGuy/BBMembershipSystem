@@ -115,139 +115,7 @@ class PaymentController extends Controller
      */
     public function create($userId)
     {
-        $user = User::findWithPermission($userId);
-        if (\Input::get('source') == 'gocardless') {
-            $reason = \Input::get('reason');
-            if ($reason == 'subscription') {
-                //must go via the gocardless payment controller
-                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless subscription payment');
-            } elseif ($reason == 'induction') {
-                //Payments must go via the balance
-                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless induction payment');
-            } elseif ($reason == 'door-key') {
-                //Payments must go via the balance
-                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless door payment');
-            } elseif ($reason == 'storage-box') {
-                //Payments must go via the balance
-                throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless storage box payment');
-            } elseif ($reason == 'balance') {
-                $amount = \Input::get('amount') * 1; //convert the users amount into a number
-                if ( ! is_numeric($amount)) {
-                    $exceptionErrors = new \Illuminate\Support\MessageBag(['amount' => 'Invalid amount']);
-                    throw new \BB\Exceptions\FormValidationException('Not a valid amount', $exceptionErrors);
-                }
-                $name        = strtoupper('BBBALANCE' . $user->id);
-                $description = 'BB Credit Payment';
-                $ref         = null;
-            } else {
-                throw new \BB\Exceptions\NotImplementedException();
-            }
-            $payment_details = array(
-                'amount'       => $amount,
-                'name'         => $name,
-                'description'  => $description,
-                'redirect_uri' => route('account.payment.confirm-payment', [$user->id]),
-                'user'         => [
-                    'first_name'       => $user->given_name,
-                    'last_name'        => $user->family_name,
-                    'billing_address1' => $user->address_line_1,
-                    'billing_address2' => $user->address_line_2,
-                    'billing_town'     => $user->address_line_3,
-                    'billing_postcode' => $user->address_postcode,
-                    'country_code'     => 'GB'
-                ],
-                'state'        => $reason . ':' . $ref
-            );
-
-            return \Redirect::to($this->goCardless->newBillUrl($payment_details));
-        } else {
-            //Unsupported for now
-            // perhaps manual payments or maybe they should go straight to store
-            throw new \BB\Exceptions\NotImplementedException();
-        }
-    }
-
-
-    /**
-     * Confirm a gocardless payment and create a payment record
-     *
-     * @depreciated
-     * @param $userId
-     * @return Illuminate\Http\RedirectResponse
-     * @throws \BB\Exceptions\AuthenticationException
-     * @throws \BB\Exceptions\NotImplementedException
-     */
-    public function confirmPayment($userId)
-    {
-        $confirm_params = array(
-            'resource_id'   => $_GET['resource_id'],
-            'resource_type' => $_GET['resource_type'],
-            'resource_uri'  => $_GET['resource_uri'],
-            'signature'     => $_GET['signature']
-        );
-
-        // State is optional
-        if (isset($_GET['state'])) {
-            $confirm_params['state'] = $_GET['state'];
-        }
-
-        $user = User::findWithPermission($userId);
-
-        try {
-            $confirmed_resource = $this->goCardless->confirmResource($confirm_params);
-        } catch (\Exception $e) {
-            $errors = $e->getMessage();
-            \Notification::error($errors);
-
-            return \Redirect::route('account.show', [$user->id]);
-        }
-
-        $details = explode(':', \Input::get('state'));
-        $reason  = $details[0];
-        $ref     = $details[1];
-
-        \Log::debug('Old PaymentController@confirmPayment method used. Reason: ' . $reason);
-
-        $payment = new Payment([
-            'reason'           => $reason,
-            'source'           => 'gocardless',
-            'source_id'        => $confirmed_resource->id,
-            'amount'           => $confirmed_resource->amount,
-            'fee'              => ($confirmed_resource->amount - $confirmed_resource->amount_minus_fees),
-            'amount_minus_fee' => $confirmed_resource->amount_minus_fees,
-            'status'           => $confirmed_resource->status
-        ]);
-        $user->payments()->save($payment);
-
-        if ($reason == 'subscription') {
-            $user->status = 'active';
-            $user->active = true;
-            $user->save();
-        } elseif ($reason == 'induction') {
-            //Payments must go via the balance
-            throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless induction payment');
-        } elseif ($reason == 'door-key') {
-            //Payments must go via the balance
-            throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless dor key payment');
-        } elseif ($reason == 'storage-box') {
-            //Payments must go via the balance
-            throw new \BB\Exceptions\NotImplementedException('Attempted GoCardless storage box payment');
-        } elseif ($reason == 'balance') {
-            $memberCreditService = \App::make('\BB\Services\Credit');
-            $memberCreditService->setUserId($user->id);
-            $memberCreditService->recalculate();
-
-            //This needs to be improved
-            \Notification::success('Payment recorded');
-
-            return \Redirect::route('account.bbcredit.index', $user->id);
-        } else {
-            throw new \BB\Exceptions\NotImplementedException();
-        }
-
-        \Notification::success('Payment made');
-
-        return \Redirect::route('account.show', [$user->id]);
+        throw new \BB\Exceptions\NotImplementedException();
     }
 
 
@@ -489,7 +357,7 @@ class PaymentController extends Controller
 
                 return \Redirect::back();
             }
-        } catch (\GoCardless_ApiException $e) {
+        } catch (\Exception $e) {
 
         }
 
