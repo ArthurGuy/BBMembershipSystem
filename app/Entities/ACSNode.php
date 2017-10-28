@@ -35,7 +35,7 @@ class ACSNode extends Model
      * @var array
      */
     protected $fillable = [
-        'last_heartbeat', 'last_boot'
+        'last_heartbeat', 'last_boot', 'name', 'device_id', 'api_key'
     ];
 
     public function getDates()

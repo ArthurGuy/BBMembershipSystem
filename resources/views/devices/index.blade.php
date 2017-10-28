@@ -8,6 +8,11 @@
     Devices
 @stop
 
+@section('page-action-buttons')
+    @if (!Auth::guest() && Auth::user()->hasRole('acs'))
+        <a class="btn btn-secondary" href="{{ route('devices.create') }}">Setup a new device</a>
+    @endif
+@stop
 
 @section('content')
 
@@ -20,11 +25,16 @@
             <th>API Key</th>
             <th>Last Heartbeat</th>
             <th>Last Boot</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @each('devices.index-row', $devices, 'device')
     </tbody>
 </table>
+
+    <p>
+        <a href="/api-docs">API Docs</a>
+    </p>
 
 @stop
