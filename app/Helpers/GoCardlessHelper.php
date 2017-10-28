@@ -73,14 +73,11 @@ class GoCardlessHelper
         try {
             return $this->client->payments()->create([
                 "params" => [
-                    "amount" => $amount, // 10 GBP in pence
+                    "amount" => $amount, // amount in pence
                     "currency" => "GBP",
                     "links" => [
                         "mandate" => $preauthId
-                        // The mandate ID from last section
                     ],
-                    // Almost all resources in the API let you store custom metadata,
-                    // which you can retrieve later
                     "metadata" => [
                         "description" => $name
                     ]

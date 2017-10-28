@@ -88,7 +88,7 @@ class PaymentRepository extends DBRepository
      * @param int      $userId The users ID
      * @param string   $source gocardless, paypal
      * @param string   $sourceId A reference for the source
-     * @param double   $amount Amount received before a fee
+     * @param double   $amount Amount received before a fee in pounds
      * @param string   $status paid, pending, cancelled, refunded
      * @param double   $fee The fee charged by the payment provider
      * @param string   $ref
@@ -133,7 +133,7 @@ class PaymentRepository extends DBRepository
      * @param int    $userId The users ID
      * @param string $source gocardless, paypal
      * @param string $sourceId A reference for the source
-     * @param double $amount Amount received before a fee
+     * @param double $amount Amount received before a fee in pounds
      * @param string $status paid, pending, cancelled, refunded
      * @param double $fee The fee charged by the payment provider
      * @param string|null   $ref

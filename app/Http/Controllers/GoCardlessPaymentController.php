@@ -78,7 +78,6 @@ class GoCardlessPaymentController extends Controller
             $ref = '';
         }
         $bill = $this->goCardless->newBill($user->subscription_id, $amount * 100, $this->goCardless->getNameFromReason($reason));
-        //dd($bill);
 
         if ($bill) {
             //Store the payment
