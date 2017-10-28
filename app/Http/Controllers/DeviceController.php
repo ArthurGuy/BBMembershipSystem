@@ -20,6 +20,22 @@ class DeviceController extends Controller
         return view('devices.index', ['devices' => $devices]);
     }
 
+    public function create()
+    {
+        return view('devices.create');
+    }
+
+    public function store()
+    {
+        $data = \Request::only([
+            'name', 'device_id', 'api_key'
+        ]);
+
+        ACSNode::create($data);
+
+        return \Redirect::route('devices.index');
+    }
+
     /**
      * Display the specified resource.
      *
@@ -61,6 +77,9 @@ class DeviceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $device = ACSNode::findOrFail($id);
+        $device->delete();
+
+        return \Redirect::route('devices.index');
     }
 }
