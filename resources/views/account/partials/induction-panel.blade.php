@@ -48,7 +48,7 @@
                 @if ($item->userInduction && $item->userInduction->paid && !$item->userInduction->is_trained)
                 {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) !!}
                 {!! Form::hidden('cancel_payment', '1') !!}
-                {!! Form::submit('Refund paymet to balance', array('class'=>'btn btn-default btn-xs')) !!}
+                {!! Form::submit('Refund payment to balance', array('class'=>'btn btn-default btn-xs')) !!}
                 {!! Form::close() !!}
                 @endif
 
