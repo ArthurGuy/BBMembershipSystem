@@ -193,10 +193,11 @@
         <div class="col-xs-12 col-sm-6">
             <div class="row">
                 <div class="col-xs-12">
+                    <h4>Address Change</h4>
+                    <p>Does this look like a real address?</p>
                     {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
 
                     <div class="form-group">
-                        {!! Form::label('approve_new_address', 'New Address', ['class'=>'col-sm-4 control-label']) !!}
                         <div class="col-sm-5">
                             {{ $newAddress->line_1 }}<br />
                             {{ $newAddress->line_2 }}<br />
