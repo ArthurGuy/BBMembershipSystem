@@ -40,7 +40,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('given_name', 'has-error has-feedback') }}">
         {!! Form::label('given_name', 'First Name', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('given_name', null, ['class'=>'form-control', 'autocomplete'=>'given-name']) !!}
+            {!! Form::text('given_name', null, ['class'=>'form-control', 'autocomplete'=>'given-name', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('given_name') !!}
         </div>
     </div>
@@ -48,7 +48,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('family_name', 'has-error has-feedback') }}">
         {!! Form::label('family_name', 'Family Name', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('family_name', null, ['class'=>'form-control', 'autocomplete'=>'family-name']) !!}
+            {!! Form::text('family_name', null, ['class'=>'form-control', 'autocomplete'=>'family-name', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('family_name') !!}
         </div>
     </div>
@@ -57,7 +57,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
         {!! Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::input('email', 'email', null, ['class'=>'form-control', 'autocomplete'=>'email']) !!}
+            {!! Form::input('email', 'email', null, ['class'=>'form-control', 'autocomplete'=>'email', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('email') !!}
         </div>
     </div>
@@ -65,7 +65,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('password', 'has-error has-feedback') }}">
         {!! Form::label('password', 'Password', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::password('password', ['class'=>'form-control']) !!}
+            {!! Form::password('password', ['class'=>'form-control', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('password') !!}
         </div>
     </div>
@@ -98,7 +98,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('address.line_1', 'has-error has-feedback') }}">
         {!! Form::label('address[line_1]', 'Address Line 1', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('address[line_1]', null, ['class'=>'form-control', 'autocomplete'=>'address-line1']) !!}
+            {!! Form::text('address[line_1]', null, ['class'=>'form-control', 'autocomplete'=>'address-line1', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('address.line_1') !!}
         </div>
     </div>
@@ -130,7 +130,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('address.postcode', 'has-error has-feedback') }}">
         {!! Form::label('address[postcode]', 'Post Code', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('address[postcode]', null, ['class'=>'form-control', 'autocomplete'=>'postal-code']) !!}
+            {!! Form::text('address[postcode]', null, ['class'=>'form-control', 'autocomplete'=>'postal-code', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('address.postcode') !!}
         </div>
     </div>
@@ -138,7 +138,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('phone', 'has-error has-feedback') }}">
         {!! Form::label('phone', 'Phone', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::input('tel', 'phone', null, ['class'=>'form-control', 'autocomplete'=>'tel']) !!}
+            {!! Form::input('tel', 'phone', null, ['class'=>'form-control', 'autocomplete'=>'tel', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('phone') !!}
         </div>
     </div>
@@ -146,7 +146,7 @@ Join Build Brighton
     <div class="form-group {{ Notification::hasErrorDetail('emergency_contact', 'has-error has-feedback') }}">
         {!! Form::label('emergency_contact', 'Emergency Contact', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('emergency_contact', null, ['class'=>'form-control']) !!}
+            {!! Form::text('emergency_contact', null, ['class'=>'form-control', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('emergency_contact') !!}
             <span class="help-block">Please give us the name and contact details of someone we can contact if needed.</span>
         </div>
@@ -208,30 +208,23 @@ Join Build Brighton
             <div class="modal-body">
                 <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
 
-                &pound;5 a month:
+                &pound;5 - &pound;15 a month:
                 <ul>
-                    <li>You want to support the hackspace but will only be able to visit very infrequently</li>
-                    <li>You are a new member and want to find out whether the hackspace is right for you</li>
+                    <li>You are on a low income and unable to afford a higher amount.</li>
                 </ul>
 
-                &pound;10 - 15 a month:
+                &pound;20 - &pound;25 a month:
                 <ul>
-                    <li>You are planning to visit the hackspace regularly and are a student, retired, unemployed or on a limited income</li>
-                </ul>
-
-                &pound;20 - 25 a month:
-                <ul>
-                    <li>You are planning to visit the hackspace regularly and are a professional / in full-time employment</li>
+                    <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
                 </ul>
 
                 &pound;30 a month and up:
                 <ul>
-                    <li>You are planning to visit the hackspace regularly and would like to provide a little extra support (thank you!)</li>
-                    <li>You are a professional maker / small business and will be using the hackspace to produce prototypes or products for sale</li>
+                    <li>You are planning to visit the makerspace regularly and would like to provide a little extra support (thank you!)</li>
                 </ul>
 
                 <p>
-                    If you feel that the hackspace is worth more to you then please do adjust your subscription accordingly.
+                    If you feel that the makerspace is worth more to you then please do adjust your subscription accordingly.
                     You can also change your subscription amount at any time!
                 </p>
 
