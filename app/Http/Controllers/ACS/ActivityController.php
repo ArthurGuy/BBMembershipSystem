@@ -2,6 +2,7 @@
 
 namespace BB\Http\Controllers\ACS;
 
+use BB\Entities\ACSNode;
 use BB\Events\MemberActivity;
 use BB\Repo\ACSNodeRepository;
 use BB\Repo\EquipmentLogRepository;
@@ -46,7 +47,7 @@ class ActivityController extends Controller
      * @SWG\Post(
      *     path="/acs/activity",
      *     tags={"activity"},
-     *     description="Record the start of a period of activity, e.g. someone signing into the laser cutter",
+     *     description="Record the start of a period of activity, e.g. someone signing into the laser cutter. If an entry device is specified no equipment access record is started but an activity log is created",
      *     @SWG\Parameter(name="activity", in="body", required=true, @SWG\Schema(ref="#/definitions/Activity")),
      *     @SWG\Response(response="201", description="Activity started, the body will contain the new activityId"),
      *     @SWG\Response(response="404", description="Key fob not found"),
@@ -59,12 +60,20 @@ class ActivityController extends Controller
 
         $keyFob = $this->fobAccess->extendedKeyFobLookup($activityRequest->getTagId());
 
-        $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $activityRequest->getDevice());
+        // lookup the acs node
+        $node = ACSNode::where('device_id', $activityRequest->getDevice())->firstOrFail();
+        if ($node->entry_device) {
+            $this->fobAccess->verifyForEntry($activityRequest->getTagId(), $activityRequest->getDevice(), $activityRequest->getOccurredAt());
+            $this->fobAccess->logSuccess();
+        } else {
+            $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $activityRequest->getDevice());
+            event(new MemberActivity($keyFob, $activityRequest->getDevice()));
+        }
 
-        event(new MemberActivity($keyFob, $activityRequest->getDevice()));
+
 
         return response()->json([
-            'activityId' => $activityId,
+            'activityId' => isset($activityId)? $activityId: null,
             'user'       => [
                 'id'              => $keyFob->user->id,
                 'name'            => $keyFob->user->name,

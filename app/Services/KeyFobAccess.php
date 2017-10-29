@@ -269,6 +269,7 @@ class KeyFobAccess
     {
         if ( ! empty($time)) {
             $this->time = Carbon::createFromTimestamp($time);
+            $this->messageDelayed = true;
         } else {
             $this->time = Carbon::now();
         }

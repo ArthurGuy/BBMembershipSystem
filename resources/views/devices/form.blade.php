@@ -34,3 +34,11 @@
         {!! Notification::getErrorDetail('monitor_heartbeat') !!}
     </div>
 </div>
+<div class="form-group {{ Notification::hasErrorDetail('entry_device', 'has-error has-feedback') }}">
+    {!! Form::label('entry_device', 'Is this a door or other entry device?', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! Form::select('entry_device', [0 => 'No', 1 => 'Yes'], null, ['class'=>'form-control']) !!}
+        <p class="help-block">Entry devices wont start a period of activity</p>
+        {!! Notification::getErrorDetail('entry_device') !!}
+    </div>
+</div>
