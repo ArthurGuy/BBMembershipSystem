@@ -23,6 +23,7 @@
             <th>Name</th>
             <th>Device ID</th>
             <th>API Key</th>
+            <th>Entry Device</th>
             <th>Last Heartbeat</th>
             <th>Last Boot</th>
             <th></th>
