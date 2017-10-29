@@ -12,7 +12,7 @@
     {!! Form::label('device_id', 'Device ID', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         {!! Form::text('device_id', null, ['class'=>'form-control']) !!}
-        <p class="help-block">A device ID - can't remember what this was for!</p>
+        <p class="help-block">A device ID - Used in the api requests to identify the device being controlled</p>
         {!! Notification::getErrorDetail('device_id') !!}
     </div>
 </div>
