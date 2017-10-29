@@ -365,6 +365,14 @@ class AccountController extends Controller
     {
         $user = User::findWithPermission($id);
 
+        // If they never became a member just delete the record
+        if ($user->status == 'setting-up') {
+            $user->delete();
+
+            \Notification::success('Member deleted');
+            return \Redirect::route('account.index');
+        }
+
         //No one will ever leaves the system but we can at least update their status to left.
         $user->setLeaving();
 

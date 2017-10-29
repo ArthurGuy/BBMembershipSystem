@@ -238,6 +238,24 @@
         </div>
     @endif
 
+    @if ($user->status == 'setting-up')
+        <div class="col-xs-12 col-sm-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Delete</h4>
+                    <p>Is this an old record? No sign of {{ $user->name }}?</p>
+                    {!! Form::open(array('method'=>'DELETE', 'class'=>'form-horizontal', 'route' => ['account.destroy', $user->id])) !!}
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            {!! Form::submit('Delete this member', array('class'=>'btn btn-default')) !!}
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    @endif
+
 </div>
 
 @endif
