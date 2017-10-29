@@ -23,7 +23,7 @@ class StatusController extends Controller
      * @SWG\Get(
      *     path="/acs/status/{tagId}",
      *     tags={"acs"},
-     *     description="Get information about a specific tag and its user",
+     *     description="Get information about a specific tag and its user, this doesn't generate any activity",
      *     consumes={"application/json"},
      *     @SWG\Parameter(name="tagId", in="path", type="string"),
      *     @SWG\Response(response="200", description="Tag found"),
