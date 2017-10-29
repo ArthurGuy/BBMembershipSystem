@@ -9,19 +9,19 @@ use Swagger\Annotations as SWG;
 class Activity
 {
     /**
-     * @SWG\Property(description="The RFID Tag ID")
+     * @SWG\Property(description="The RFID Tag ID, required")
      * @var string
      */
     private $tagId;
 
     /**
-     * @SWG\Property(description="The String of the device being controlled")
+     * @SWG\Property(description="The Device ID of the device being controlled, required")
      * @var string
      */
     private $device;
 
     /**
-     * @SWG\Property(description="Date Time of the event, YYYY-MM-DD HH:mm:ss")
+     * @SWG\Property(description="Date Time of the event, UNIX timestamp, optional")
      * @var string
      */
     private $occurredAt;
