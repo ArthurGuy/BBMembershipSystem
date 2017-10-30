@@ -193,10 +193,11 @@
         <div class="col-xs-12 col-sm-6">
             <div class="row">
                 <div class="col-xs-12">
+                    <h4>Address Change</h4>
+                    <p>Does this look like a real address?</p>
                     {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
 
                     <div class="form-group">
-                        {!! Form::label('approve_new_address', 'New Address', ['class'=>'col-sm-4 control-label']) !!}
                         <div class="col-sm-5">
                             {{ $newAddress->line_1 }}<br />
                             {{ $newAddress->line_2 }}<br />
@@ -207,6 +208,47 @@
                         <div class="col-sm-3">
                             {!! Form::submit('Approve', array('class'=>'btn btn-default', 'name'=>'approve_new_address')) !!}
                             {!! Form::submit('Decline', array('class'=>'btn btn-default', 'name'=>'approve_new_address')) !!}
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($user->status == 'setting-up')
+        <div class="col-xs-12 col-sm-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Setup</h4>
+                    <p>Activate this members subscription but have them pay using their balance</p>
+                    {!! Form::open(array('method'=>'POST', 'class'=>'form-horizontal', 'route' => ['account.update-sub-method', $user->id])) !!}
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            @if ($user->cash_balance > ($user->monthly_subscription * 100))
+                            {!! Form::hidden('payment_method', 'balance') !!}
+                            {!! Form::submit('Activate & pay by balance', array('class'=>'btn btn-default')) !!}
+                            @else
+                                <p>The user doesn't have enough money in their balance</p>
+                            @endif
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($user->status == 'setting-up')
+        <div class="col-xs-12 col-sm-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Delete</h4>
+                    <p>Is this an old record? No sign of {{ $user->name }}?</p>
+                    {!! Form::open(array('method'=>'DELETE', 'class'=>'form-horizontal', 'route' => ['account.destroy', $user->id])) !!}
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            {!! Form::submit('Delete this member', array('class'=>'btn btn-default')) !!}
                         </div>
                     </div>
                     {!! Form::close() !!}

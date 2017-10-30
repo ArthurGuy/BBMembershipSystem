@@ -25,7 +25,7 @@ class TestController extends Controller
      * @SWG\Get(
      *     path="/acs/test",
      *     tags={"acs"},
-     *     description="Returns an OK message, useful for verifying the access token works",
+     *     description="Returns an OK message, useful for verifying the api access token works",
      *     @SWG\Response(response="200", description="OK")
      * )
      */

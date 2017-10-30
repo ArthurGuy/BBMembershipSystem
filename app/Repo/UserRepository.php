@@ -127,6 +127,7 @@ class UserRepository extends DBRepository
      */
     public function ensureMembershipActive($userId)
     {
+        /** @var User $user */
         $user = $this->getById($userId);
 
         //user needs to have a recent sub charge and one that was paid or is due
@@ -148,7 +149,12 @@ class UserRepository extends DBRepository
                 $chargeDate = $chargeDate->day(1)->addMonth();
             }
 
-            $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, 'due', $user->subscription_id);
+            if ($user->payment_method == 'gocardless-variable') {
+                $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, 'due', $user->subscription_id);
+            } else {
+                // This will create the monthly sub charge but not take any money, that will happen tomorrow during the normal run
+                $this->subscriptionChargeRepository->createCharge($userId, $chargeDate, $user->monthly_subscription, 'due');
+            }
         }
     }
 

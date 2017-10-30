@@ -28,7 +28,7 @@ class DeviceController extends Controller
     public function store()
     {
         $data = \Request::only([
-            'name', 'device_id', 'api_key'
+            'name', 'device_id', 'api_key', 'entry_device',
         ]);
 
         ACSNode::create($data);

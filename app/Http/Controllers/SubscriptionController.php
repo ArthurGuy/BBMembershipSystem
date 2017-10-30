@@ -1,5 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
+use Carbon\Carbon;
 use BB\Entities\User;
 use BB\Repo\SubscriptionChargeRepository;
 
@@ -151,6 +152,16 @@ class SubscriptionController extends Controller
     {
         $user = User::findWithPermission($id);
         $paymentMethod = \Input::get('payment_method');
+
+        if ($paymentMethod === 'balance' && empty($user->payment_method) && ($user->status == 'setting-up')) {
+            // Activate a users membership with a payment method of balance
+            $user->payment_method  = 'balance';
+            $user->secondary_payment_method = null;
+            $user->payment_day = Carbon::now()->day;
+            $user->save();
+
+            $this->userRepository->ensureMembershipActive($user->id);
+        }
 
         if ($paymentMethod === 'balance' && $user->payment_method == 'gocardless-variable') {
             $user->payment_method  = 'balance';

@@ -30,7 +30,7 @@ class RecordMemberActivity
      */
     public function handle(MemberActivity $event)
     {
-        $activity = $this->activityRepository->recordMemberActivity($event->keyFob->user->id, $event->keyFob->id, $event->service);
+        $activity = $this->activityRepository->recordMemberActivity($event->keyFob->user->id, $event->keyFob->id, $event->service, $event->date);
 
         //The old door entry system may send over historical records, make sure these are marked as such
         if ($event->delayed) {
