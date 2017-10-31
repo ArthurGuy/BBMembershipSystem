@@ -4,11 +4,6 @@ class GoCardlessWebhookParser
 {
 
     /**
-     * @var string
-     */
-    private $rawResponse = null;
-
-    /**
      * @var array
      */
     private $response;
@@ -38,25 +33,12 @@ class GoCardlessWebhookParser
      */
     private $preAuthList = [];
 
-    public function parseResponse($paymentPaidPayload)
+    public function parseResponse(array $response)
     {
-        $this->rawResponse = $paymentPaidPayload;
-        $response = json_decode($this->rawResponse, true);
-        if ( ! is_array($response)) {
-            return;
-        }
         $this->response = $response;
 
-        $this->action = $this->response['payload']['action'];
-        $this->resourceType = $this->response['payload']['resource_type'];
-
-        if ($this->resourceType == 'bill') {
-            $this->setBills($this->response['payload']['bills']);
-        } else if ($this->resourceType == 'subscription') {
-            $this->subscriptions = $this->response['payload']['subscriptions'];
-        } else if ($this->resourceType == 'pre_authorization') {
-            $this->preAuthList = $this->response['payload']['pre_authorizations'];
-        }
+        $this->action = $this->response['action'];
+        $this->resourceType = $this->response['resource_type'];
     }
 
     /**
@@ -97,21 +79,5 @@ class GoCardlessWebhookParser
     public function getPreAuthList()
     {
         return $this->preAuthList;
-    }
-
-    private function setBills($bills)
-    {
-        foreach ($bills as $i=>$bill) {
-            if ( ! isset($bills[$i]['source_type'])) {
-                $bills[$i]['source_type'] = '';
-            }
-            if ( ! isset($bills[$i]['source_id'])) {
-                $bills[$i]['source_id'] = '';
-            }
-            if ( ! isset($bills[$i]['paid_at'])) {
-                $bills[$i]['paid_at'] = '';
-            }
-        }
-        $this->bills = $bills;
     }
 }

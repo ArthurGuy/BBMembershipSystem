@@ -35,19 +35,22 @@ class SubscriptionController extends Controller
     {
         $user = User::findWithPermission($userId);
         $payment_details = array(
-            'redirect_uri'      => route('account.subscription.store', $user->id),
-            'user'              => [
-                'first_name'        =>  $user->given_name,
-                'last_name'         =>  $user->family_name,
-                'billing_address1'  =>  $user->address->line_1,
-                'billing_address2'  =>  $user->address->line_2,
-                'billing_town'      =>  $user->address->line_3,
-                'billing_postcode'  =>  $user->address->postcode,
-                'country_code'      => 'GB'
+            "description"          => "Build Brighton",
+            'success_redirect_url' => route('account.subscription.store', $user->id),
+            "session_token"        => 'user-token-'.$user->id,
+            'prefilled_customer'   => [
+                'given_name'    => $user->given_name,
+                'family_name'   => $user->family_name,
+                'email'         => $user->email,
+                'address_line1' => $user->address->line_1,
+                'address_line2' => $user->address->line_2,
+                'city'          => $user->address->line_3,
+                'postal_code'   => $user->address->postcode,
+                'country_code'  => 'GB'
             ]
         );
 
-        return \Redirect::to($this->goCardless->newPreAuthUrl($payment_details));
+        return \Redirect::to($this->goCardless->newPreAuthUrl($user, $payment_details));
     }
 
     /**
@@ -72,18 +75,19 @@ class SubscriptionController extends Controller
         $user = User::findWithPermission($userId);
 
         try {
-            $confirmed_resource = $this->goCardless->confirmResource($confirm_params);
+            $confirmed_resource = $this->goCardless->confirmResource($user, $confirm_params);
         } catch (\Exception $e) {
             \Notification::error($e->getMessage());
             return \Redirect::route('account.show', $user->id);
         }
 
-        if (strtolower($confirmed_resource->status) != 'active') {
+
+        if (!isset($confirmed_resource->links->mandate) || empty($confirmed_resource->links->mandate)) {
             \Notification::error('Something went wrong, you can try again or get in contact');
             return \Redirect::route('account.show', $user->id);
         }
 
-        $this->userRepository->recordGoCardlessVariableDetails($user->id, $confirmed_resource->id);
+        $this->userRepository->recordGoCardlessVariableDetails($user->id, $confirmed_resource->links->mandate);
 
         //all we need for a valid member is an active dd so make sure the user account is active
         $this->userRepository->ensureMembershipActive($user->id);
@@ -113,12 +117,10 @@ class SubscriptionController extends Controller
                     \Notification::success('Your subscription has been cancelled');
                     return \Redirect::back();
                 }
-            } catch (\GoCardless_ApiException $e) {
-                if ($e->getCode() == 404) {
-                    $user->cancelSubscription();
-                    \Notification::success('Your subscription has been cancelled');
-                    return \Redirect::back();
-                }
+            } catch (\Exception $e) {
+                $user->cancelSubscription();
+                \Notification::success('Your subscription has been cancelled');
+                return \Redirect::back();
             }
         } elseif ($user->payment_method == 'gocardless-variable') {
             $status = $this->goCardless->cancelPreAuth($user->subscription_id);
