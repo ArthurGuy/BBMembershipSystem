@@ -38,7 +38,7 @@ class GoCardlessPaymentController extends Controller
         $returnPath = $requestData['return_path'];
         $ref = $this->getReference($reason);
 
-        if ($user->payment_method == 'gocardless-variable') {
+        if (($user->payment_method == 'gocardless-variable') || ($user->secondary_payment_method == 'gocardless-variable')) {
 
             return $this->handleBill($amount, $reason, $user, $ref, $returnPath);
 
