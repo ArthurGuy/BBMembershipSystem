@@ -38,7 +38,7 @@ class GoCardlessWebhookController extends Controller
         $webhookData = $request->getContent();
         $signature = $request->header('Webhook-Signature');
 
-        $hash = hash_hmac('sha256', $webhookData, 'Z4Zw1Bna_aoHo1Ifg-ZyU3NRVOjcQSuQP10zWHKg');
+        $hash = hash_hmac('sha256', $webhookData, env('NEW_GOCARDLESS_WEBHOOK_SECRET'));
 
         if ($signature != $hash) {
             return \Response::make('', 403);
