@@ -70,6 +70,10 @@ class GoCardlessHelper
      */
     public function newBill($preauthId, $amount, $name = null, $description = null)
     {
+        // If the total is above £50 something probably isn't right
+        if ($amount > (50 * 100)) {
+            throw new \Exception("Attempting a DD charge for over £50");
+        }
         try {
             return $this->client->payments()->create([
                 "params" => [

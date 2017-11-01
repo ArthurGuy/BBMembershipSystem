@@ -54,7 +54,7 @@ class SubscriptionChargeRepository extends DBRepository
     {
         $charge = $this->createCharge($userId, $date, $amount, $status);
 
-        $bill = $this->goCardless->newBill($DDAuthId, $amount, $this->goCardless->getNameFromReason('subscription'));
+        $bill = $this->goCardless->newBill($DDAuthId, $amount * 100, $this->goCardless->getNameFromReason('subscription'));
         if ($bill) {
             $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id,
                 $bill->amount, $bill->status, $bill->gocardless_fees, $charge->id);
