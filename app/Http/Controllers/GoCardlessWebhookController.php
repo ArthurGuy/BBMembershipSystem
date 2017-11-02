@@ -167,17 +167,9 @@ class GoCardlessWebhookController extends Controller
 
         $existingPayment = $this->paymentRepository->getPaymentBySourceId($bill['links']['payment']);
         if ($existingPayment) {
-
-            if (isset($bill['paid_at'])) {
-                $paymentDate = new Carbon($bill['paid_at']);
-            } else {
-                $paymentDate = new Carbon();
-            }
-
-            $this->paymentRepository->markPaymentPaid($existingPayment->id, $paymentDate);
-
+            $this->paymentRepository->markPaymentPaid($existingPayment->id, Carbon::now());
         } else {
-            \Log::info("GoCardless Webhook received for unknown payment: " . $bill['id']);
+            \Log::info("GoCardless Webhook received for unknown payment: " . $bill['links']['payment']);
         }
     }
 
