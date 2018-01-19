@@ -104,11 +104,15 @@ class GoCardlessHelper
         try {
             $mandate = $this->client->mandates()->cancel($preauthId);
 
-            return ($mandate->status == 'cancelled');
+            if ($mandate->status == 'cancelled') {
+                return true;
+            }
+
+            \Log::error('Canceling pre auth failed: ' . json_encode($mandate));
         } catch (\Exception $e) {
             \Log::error($e);
-            return false;
         }
+        return false;
     }
 
     /**
