@@ -78,20 +78,24 @@
                     </div>
                     {!! Form::close() !!}
 
-                    @if ($user->payment_method == 'gocardless-variable')
-                        {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-method', $user->id])) !!}
-                            {!! Form::hidden('payment_method', 'balance') !!}
-                            {!! Form::submit('Change to balance payment', array('class'=>'btn btn-default')) !!}
-                            <p>This will try and take their monthly subscription from the members balance</p>
-                        {!! Form::close() !!}
-                    @endif
+                    @if (Auth::user()->isAdmin())
 
-                    @if ($user->payment_method == 'balance')
-                        {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-method', $user->id])) !!}
-                        {!! Form::hidden('payment_method', 'gocardless-variable') !!}
-                        {!! Form::submit('Change to DD payment', array('class'=>'btn btn-default')) !!}
-                        <p>This switches back to a variable DD or resets the payment method if one doesn't exist</p>
-                        {!! Form::close() !!}
+                        @if ($user->payment_method == 'gocardless-variable')
+                            {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-method', $user->id])) !!}
+                                {!! Form::hidden('payment_method', 'balance') !!}
+                                {!! Form::submit('Change to balance payment', array('class'=>'btn btn-default')) !!}
+                                <p>This will try and take their monthly subscription from the members balance</p>
+                            {!! Form::close() !!}
+                        @endif
+
+                        @if ($user->payment_method == 'balance')
+                            {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-method', $user->id])) !!}
+                            {!! Form::hidden('payment_method', 'gocardless-variable') !!}
+                            {!! Form::submit('Change to DD payment', array('class'=>'btn btn-default')) !!}
+                            <p>This switches back to a variable DD or resets the payment method if one doesn't exist</p>
+                            {!! Form::close() !!}
+                        @endif
+
                     @endif
                 </div>
             @endif
