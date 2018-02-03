@@ -124,8 +124,7 @@ class ACSController extends Controller
                 $this->keyFobAccess->logSuccess();
             } else {
                 $member     = $this->keyFobAccess->verifyForDevice($data['tag'], $data['device'], $data['time']);
-                $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id,
-                    $data['device']);
+                $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $data['device']);
                 event(new MemberActivity($keyFob, $data['device']));
             }
         } catch (ValidationException $e) {
@@ -134,7 +133,7 @@ class ACSController extends Controller
 
         $deviceStatus = 'ok';
 
-        $responseData = ['deviceStatus' => $deviceStatus];
+        $responseData = ['deviceStatus' => $deviceStatus, 'activity_id' => $activityId];
 
         return $this->sendResponse(200, $responseData);
     }
