@@ -187,9 +187,9 @@ class ACSController extends Controller
     {
         $responseData['time'] = time();
         $response             = \Response::json($responseData);
-        $response->headers->set('Content-Length', strlen($response->getContent()));
+        //$response->headers->set('Content-Length', strlen($response->getContent()));
 
-        return $response;
+        return response()->json($responseData, 200);
     }
 
     private function logDetectedDevices($data)
