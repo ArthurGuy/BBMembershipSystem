@@ -1,7 +1,10 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\DetectedDevice;
+use BB\Events\MemberActivity;
+use BB\Exceptions\ValidationException;
 use BB\Repo\ACSNodeRepository;
+use BB\Repo\EquipmentLogRepository;
 use BB\Validators\ACSValidator;
 
 class ACSController extends Controller
@@ -19,15 +22,16 @@ class ACSController extends Controller
      * @var \BB\Services\KeyFobAccess
      */
     private $keyFobAccess;
+    /**
+     * @var EquipmentLogRepository
+     */
+    private $equipmentLogRepository;
 
-    function __construct(
-        ACSNodeRepository $acsNodeRepository,
-        ACSValidator $ACSValidator,
-        \BB\Services\KeyFobAccess $keyFobAccess
-    ) {
+    function __construct(ACSNodeRepository $acsNodeRepository, ACSValidator $ACSValidator, \BB\Services\KeyFobAccess $keyFobAccess, EquipmentLogRepository $equipmentLogRepository) {
         $this->acsNodeRepository = $acsNodeRepository;
         $this->ACSValidator     = $ACSValidator;
         $this->keyFobAccess     = $keyFobAccess;
+        $this->equipmentLogRepository = $equipmentLogRepository;
     }
 
     public function get()
@@ -92,7 +96,6 @@ class ACSController extends Controller
 
         try {
             $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
-
             $this->keyFobAccess->logSuccess();
         } catch (\Exception $e) {
             return $this->sendResponse(404, ['valid' => '0', 'cmd' => null]);
@@ -106,9 +109,23 @@ class ACSController extends Controller
 
     private function handleDevice($data)
     {
-        $device = $this->acsNodeRepository->getByName($data['device']);
+        $keyFob = $this->keyFobAccess->extendedKeyFobLookup($data['tag']);
 
-        $member = $this->keyFobAccess->verifyForDevice($data['tag'], $data['device']);
+        $node = ACSNode::where('device_id', $data['device'])->firstOrFail();
+
+        try {
+            if ($node->entry_device) {
+                $this->keyFobAccess->verifyForEntry($data['tag'], $data['device'], $data['time']);
+                $this->keyFobAccess->logSuccess();
+            } else {
+                $member     = $this->keyFobAccess->verifyForDevice($data['tag'], $data['device'], $data['time']);
+                $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id,
+                    $data['device']);
+                event(new MemberActivity($keyFob, $data['device']));
+            }
+        } catch (ValidationException $e) {
+            return $this->sendResponse(400, ['message' => $e->getMessage()]);
+        }
 
         $deviceStatus = 'ok';
 
