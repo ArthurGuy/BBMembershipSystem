@@ -124,6 +124,9 @@ class ACSController extends Controller
                     $sessionId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $data['device']);
                     event(new MemberActivity($keyFob, $data['device']));
                 } elseif ($data['message'] == 'stop') {
+                    if (empty($data['session_id'])) {
+                        $data['session_id'] = $this->equipmentLogRepository->findActiveUserSession($keyFob->user->id, $data['device']);
+                    }
                     $this->equipmentLogRepository->endSession($data['session_id']);
                 }
             }
