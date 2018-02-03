@@ -51,9 +51,6 @@ class ACSController extends Controller
         $this->ACSValidator->validate($data);
 
 
-
-
-
         //System messages
         if (in_array($data['message'], ['boot', 'heartbeat'])) {
             return $this->handleSystemCheckIn($data['message'], $data['device'], $data['service']);
@@ -75,9 +72,6 @@ class ACSController extends Controller
                 return $this->returnMemberStatus($data);
 
                 break;
-            case 'device-scanner':
-                $this->logDetectedDevices($data);
-                break;
             default:
                 \Log::debug(json_encode($data));
         }
@@ -94,8 +88,6 @@ class ACSController extends Controller
 
     private function handleDoor($data)
     {
-        $error = false;
-
         //Door entry is quite simple - this will just deal with lookups
 
         try {
@@ -103,17 +95,12 @@ class ACSController extends Controller
 
             $this->keyFobAccess->logSuccess();
         } catch (\Exception $e) {
-            $error = true;
+            return $this->sendResponse(404, ['valid' => '0', 'cmd' => null]);
         }
 
         $cmd = $this->acsNodeRepository->popCommand($data['device']);
 
-        if ( ! $error) {
-            $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
-        } else {
-            $responseData = ['valid' => '0', 'cmd' => $cmd];
-        }
-
+        $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
         return $this->sendResponse(200, $responseData);
     }
 
@@ -191,23 +178,6 @@ class ACSController extends Controller
         $response = response()->json($responseData, $statusCode);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
-    }
-
-    private function logDetectedDevices($data)
-    {
-        //this isn't strictly a heartbeat but the updates occur at a regular interval so they will do
-        $this->acsNodeRepository->logHeartbeat($data['device']);
-
-        //See if any devices have been detected, if so log them
-        foreach (array_keys($data['payload']['bluetooth_devices']) as $macAddress) {
-            DetectedDevice::create([
-                'type'         => 'bluetooth',
-                'mac_address'  => $macAddress,
-                'display_name' => $data['payload']['bluetooth_devices'][$macAddress],
-            ]);
-        }
-
-
     }
 
     private function returnMemberStatus($data)
