@@ -211,16 +211,16 @@ class KeyFobAccess
 
         //Validate the device
         try {
-            /** @var Equipment $device */
-            $device = $this->equipmentRepository->findBySlug($device);
+            /** @var Equipment $equipment */
+            $equipment = $this->equipmentRepository->findByDeviceKey($device);
         } catch (ModelNotFoundException $e) {
             throw new ValidationException('Invalid Device Key');
         }
 
         //Make sure the user is allowed to use the device
-        if ($device->requires_induction) {
+        if ($equipment->requires_induction) {
             //Verify the user has training
-            if ( ! $this->inductionRepository->isUserTrained($this->user->id, $device)) {
+            if ( ! $this->inductionRepository->isUserTrained($this->user->id, $equipment->slug)) {
                 throw new ValidationException('User Not Trained');
             }
         }
