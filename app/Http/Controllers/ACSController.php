@@ -108,13 +108,7 @@ class ACSController extends Controller
     {
         $device = $this->acsNodeRepository->getByName($data['device']);
 
-        if ($data['message'] == 'boot') {
-            $this->acsNodeRepository->logBoot($data['device']);
-        } elseif ($data['message'] == 'heartbeat') {
-            $this->acsNodeRepository->logHeartbeat($data['device']);
-        }
-
-        //$member = $this->keyFobAccess->verifyForDevice($data['tag'], 'laser');
+        $member = $this->keyFobAccess->verifyForDevice($data['tag'], $data['device']);
 
         $deviceStatus = 'ok';
 
