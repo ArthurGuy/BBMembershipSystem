@@ -114,7 +114,7 @@ class ACSController extends Controller
             $responseData = ['valid' => '0', 'cmd' => $cmd];
         }
 
-        return $this->sendResponse($responseData);
+        return $this->sendResponse(200, $responseData);
     }
 
     private function handleDevice($data)
@@ -133,7 +133,7 @@ class ACSController extends Controller
 
         $responseData = ['deviceStatus' => $deviceStatus];
 
-        return $this->sendResponse($responseData);
+        return $this->sendResponse(200, $responseData);
     }
 
 
@@ -174,19 +174,21 @@ class ACSController extends Controller
 
         $responseData = ['cmd' => $cmd, 'deviceStatus' => $deviceStatus];
 
-        return $this->sendResponse($responseData);
+        return $this->sendResponse(200, $responseData);
     }
 
     /**
      * Json encode the response data and return
      *
+     * @param int   $statusCode
      * @param array $responseData
+     *
      * @return \Response
      */
-    private function sendResponse(array $responseData)
+    private function sendResponse($statusCode = 200, array $responseData)
     {
         $responseData['time'] = time();
-        $response = response()->json($responseData, 200);
+        $response = response()->json($responseData, $statusCode);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
     }
@@ -214,12 +216,12 @@ class ACSController extends Controller
             $user = $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
         } catch (\Exception $e) {
             $responseData = ['valid' => '0', 'cmd' => ''];
-            return $this->sendResponse($responseData);
+            return $this->sendResponse(404, $responseData);
         }
 
         $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => ''];
 
-        return $this->sendResponse($responseData);
+        return $this->sendResponse(200, $responseData);
     }
 
 } 
