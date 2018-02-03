@@ -1,11 +1,13 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Entities\ACSNode;
 use BB\Entities\DetectedDevice;
 use BB\Events\MemberActivity;
 use BB\Exceptions\ValidationException;
 use BB\Repo\ACSNodeRepository;
 use BB\Repo\EquipmentLogRepository;
 use BB\Validators\ACSValidator;
+use Exception;
 
 class ACSController extends Controller
 {
@@ -109,9 +111,12 @@ class ACSController extends Controller
 
     private function handleDevice($data)
     {
-        $keyFob = $this->keyFobAccess->extendedKeyFobLookup($data['tag']);
-
-        $node = ACSNode::where('device_id', $data['device'])->firstOrFail();
+        try {
+            $keyFob = $this->keyFobAccess->extendedKeyFobLookup($data['tag']);
+            $node = ACSNode::where('device_id', $data['device'])->firstOrFail();
+        } catch (Exception $e) {
+            return $this->sendResponse(404, ['message' => $e->getMessage()]);
+        }
 
         try {
             if ($node->entry_device) {
