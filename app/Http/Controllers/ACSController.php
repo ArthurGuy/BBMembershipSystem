@@ -2,6 +2,7 @@
 
 use BB\Entities\ACSNode;
 use BB\Entities\DetectedDevice;
+use BB\Entities\User;
 use BB\Events\MemberActivity;
 use BB\Exceptions\ValidationException;
 use BB\Repo\ACSNodeRepository;
@@ -36,16 +37,11 @@ class ACSController extends Controller
         $this->equipmentLogRepository = $equipmentLogRepository;
     }
 
-    public function get()
-    {
-
-    }
-
     public function store()
     {
-        $data = \Request::only('device', 'service', 'message', 'tag', 'time', 'payload', 'signature', 'nonce');
+        $data = \Request::only('device', 'service', 'message', 'tag', 'time', 'payload', 'signature', 'nonce', 'session_id');
 
-        //device = the device id from the devices table - unique to each piece of hardware
+        //device = the node id from the acs table - unique to each acs
         //service = what the request is for, entry, usage, consumable
         //message = system message, heartbeat, boot
         //tag = the keyfob id
@@ -53,6 +49,7 @@ class ACSController extends Controller
         //payload = any extra data relavent to the request
         //signature = an encoded value generated using a secret key - oauth style
         //nonce = a unique value suitable to stop replay attacks
+        //session_id = the id of the current session the user is maintaining
 
         $this->ACSValidator->validate($data);
 
@@ -75,21 +72,25 @@ class ACSController extends Controller
 
                 break;
             case 'status':
-                return $this->returnMemberStatus($data);
+                return $this->handleStatus($data);
 
                 break;
             default:
                 \Log::debug(json_encode($data));
         }
 
-        $responseArray = [
-            'time'      => time(),
-            'command'   => null,      //stored command for the device to process
-            'valid'     => true,      //member request
-            'available' => true,      //device status - remote shutdown,
-            'member'    => null,      //member name
-        ];
+    }
 
+    private function handleStatus($data)
+    {
+        try {
+            /** @var User $user */
+            $user = $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
+        } catch (\Exception $e) {
+            return $this->sendResponse(404, []);
+        }
+
+        return $this->sendResponse(200, ['member' => $user->given_name]);
     }
 
     private function handleDoor($data)
@@ -97,47 +98,40 @@ class ACSController extends Controller
         //Door entry is quite simple - this will just deal with lookups
 
         try {
-            $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
+            /** @var User $user */
+            $user = $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
             $this->keyFobAccess->logSuccess();
         } catch (\Exception $e) {
-            return $this->sendResponse(404, ['valid' => '0', 'cmd' => null]);
+            return $this->sendResponse(404, []);
         }
 
-        $cmd = $this->acsNodeRepository->popCommand($data['device']);
-
-        $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => $cmd];
-        return $this->sendResponse(200, $responseData);
+        return $this->sendResponse(200, ['member' => $user->given_name]);
     }
+
 
     private function handleDevice($data)
     {
+        $sessionId = null;
         try {
-            $keyFob = $this->keyFobAccess->extendedKeyFobLookup($data['tag']);
-            $node = ACSNode::where('device_id', $data['device'])->firstOrFail();
-        } catch (Exception $e) {
-            return $this->sendResponse(404, ['message' => $e->getMessage()]);
-        }
-
-        try {
-            if ($node->entry_device) {
-                $this->keyFobAccess->verifyForEntry($data['tag'], $data['device'], $data['time']);
-                $this->keyFobAccess->logSuccess();
+            $device = ACSNode::where('device_id', $data['device'])->firstOrFail();
+            if ($device->entry_device) {
+                return $this->sendResponse(400, ['message' => 'This is an entry device only']);
             } else {
-                $member     = $this->keyFobAccess->verifyForDevice($data['tag'], $data['device'], $data['time']);
-                $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $data['device']);
-                event(new MemberActivity($keyFob, $data['device']));
+                $member = $this->keyFobAccess->verifyForDevice($data['tag'], $data['device'], $data['time']);
+                $keyFob = $this->keyFobAccess->getKeyFob();
+
+                if ($data['message'] == 'start') {
+                    $sessionId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $data['device']);
+                    event(new MemberActivity($keyFob, $data['device']));
+                } elseif ($data['message'] == 'stop') {
+                    $this->equipmentLogRepository->endSession($data['session_id']);
+                }
             }
         } catch (ValidationException $e) {
             return $this->sendResponse(400, ['message' => $e->getMessage()]);
         }
-
-        $deviceStatus = 'ok';
-
-        $responseData = ['deviceStatus' => $deviceStatus, 'activity_id' => $activityId];
-
-        return $this->sendResponse(200, $responseData);
+        return $this->sendResponse(200, ['member' => $member->given_name, 'session_id' => $sessionId]);
     }
-
 
     /**
      * System checkins are common across all devices
@@ -193,20 +187,6 @@ class ACSController extends Controller
         $response = response()->json($responseData, $statusCode);
         $response->headers->set('Content-Length', strlen($response->getContent()));
         return $response;
-    }
-
-    private function returnMemberStatus($data)
-    {
-        try {
-            $user = $this->keyFobAccess->verifyForEntry($data['tag'], 'main-door', $data['time']);
-        } catch (\Exception $e) {
-            $responseData = ['valid' => '0', 'cmd' => ''];
-            return $this->sendResponse(404, $responseData);
-        }
-
-        $responseData = ['member' => $this->keyFobAccess->getMemberName(), 'valid' => '1', 'cmd' => ''];
-
-        return $this->sendResponse(200, $responseData);
     }
 
 } 
