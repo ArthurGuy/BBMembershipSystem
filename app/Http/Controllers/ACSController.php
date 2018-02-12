@@ -127,6 +127,9 @@ class ACSController extends Controller
                     if (empty($data['session_id'])) {
                         $data['session_id'] = $this->equipmentLogRepository->findActiveUserSession($keyFob->user->id, $data['device']);
                     }
+                    if (empty($data['session_id'])) {
+                        return $this->sendResponse(404, ['message' => 'No active session to close']);
+                    }
                     $this->equipmentLogRepository->endSession($data['session_id']);
                 }
             }
