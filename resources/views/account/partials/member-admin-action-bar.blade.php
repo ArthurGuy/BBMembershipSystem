@@ -91,11 +91,11 @@
     <div class="col-xs-12 col-sm-6">
         <h4>Key Fob</h4>
         <p>This is the ID number associated with their RFID tag. They don't need to be a key holder to get an RFID tag</p>
-        @if ($user->keyFob())
-        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $user->keyFob()->id], 'class'=>'form-horizontal')) !!}
+        @foreach ($user->keyFobs()->get() as $fob)
+        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
             <div class="form-group">
                 <div class="col-sm-5">
-                    <p class="form-control-static">{{ $user->keyFob()->key_id }}</p>
+                    <p class="form-control-static">{{ $fob->key_id }}</p>
                 </div>
                 <div class="col-sm-3">
                     {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
@@ -103,19 +103,22 @@
             </div>
         {!! Form::hidden('user_id', $user->id) !!}
         {!! Form::close() !!}
-        @else
-        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-        <div class="form-group">
-            <div class="col-sm-5">
-                {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+        @endforeach
+
+        @if ($user->keyFobs()->count() < 2)
+            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+            <div class="form-group">
+                <div class="col-sm-5">
+                    {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+                </div>
+                <div class="col-sm-3">
+                    {!! Form::submit('Add a new fob', array('class'=>'btn btn-default')) !!}
+                </div>
             </div>
-            <div class="col-sm-3">
-                {!! Form::submit('Add', array('class'=>'btn btn-default')) !!}
-            </div>
-        </div>
-        {!! Form::hidden('user_id', $user->id) !!}
-        {!! Form::close() !!}
+            {!! Form::hidden('user_id', $user->id) !!}
+            {!! Form::close() !!}
         @endif
+
     </div>
 
     <div class="col-xs-12 col-sm-6">

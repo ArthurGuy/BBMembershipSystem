@@ -138,6 +138,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('\BB\Entities\KeyFob')->where('active', true)->first();
     }
 
+    public function keyFobs()
+    {
+        return $this->hasMany('\BB\Entities\KeyFob')->where('active', true);
+    }
+
     public function profile()
     {
         return $this->hasOne('\BB\Entities\ProfileData');
