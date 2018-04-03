@@ -1,5 +1,4 @@
 [![Build Status](http://img.shields.io/travis/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://travis-ci.org/ArthurGuy/BBMembershipSystem)
-[![Code Climate](http://img.shields.io/codeclimate/github/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://codeclimate.com/github/ArthurGuy/BBMembershipSystem)
 [![Code Quality](http://img.shields.io/scrutinizer/g/ArthurGuy/BBMembershipSystem.svg?style=flat-square)](https://scrutinizer-ci.com/g/ArthurGuy/BBMembershipSystem)
 
 BBMS (Build Brighton Member System)
@@ -7,10 +6,10 @@ BBMS (Build Brighton Member System)
 
 The Build Brighton membership management system
 
-New members can join and create accounts, payments are tracked and managed through the system and GoCardless
+New members can join and create accounts, payments are tracked and managed through the system.
 
 
-###Features
+### Features
 * Member signup form which collects full name and address, emergency contact and profile photo.
 * Direct Debit setup and payment collection through GoCardless
 * Regular monthly direct debit payment runs for each user
@@ -34,23 +33,23 @@ New members can join and create accounts, payments are tracked and managed throu
 * Member expense reimbursement
 
 
-###Member Statuses
+### Member Statuses
 There are a variety of member statuses which are used for various scenarios.
 * Setting Up - just signed up, no subscription setup, no access to space
 * Active
-* Suspended - missed payment - dd is still active but the member doesn't have access to the workshop
-* Leaving - The user has said they are leaving or they were in a payment warning state
+* Suspended - missed payment - DD is still active but the member doesn't have access to the workshop
+* Leaving - The user has said they are leaving or they were in a payment warning state, member retains full access
 * Left - Leaving users move here once their last payment expires.
 
 
-###Other Maker spaces
+### Other Maker spaces
 This system can be used with only minor modifications by other spaces.<br />
 The Build Brighton naming is hardcoded into the pages and pieces of text will need to be altered.<br />
 It has been designed to work primarily with GoCardless but the PayPal integration is OK and would be good enough on its own.<br />
-The system also has support for scanning and processing payments from bank statements
+The system also has very basic support for scanning and processing payments from HSBC bank statements
 
 
-###Seting It Up
+### Seting It Up
 The system is build on the Laravel 5 framework so familiarity with that would help.
 
 A .env file needs to be setup, please take a look at the example one for the options that are needed.
@@ -61,8 +60,8 @@ Composer needs to be available and the install command run to load the required 
 The storage directory needs to be writable. 
 
 Some of the config options wont be needed.<br />
-AWS is used for file storage although a lcal option can be specified.<br />
+AWS is used for file storage although a local option can be specified.<br />
 The system is built for a MySQL DB but a similar system will work<br />
-GoCardless as above<br />
-MailGun is completely optional<br />
-The encryption key is essential<br />
+GoCardless for Direct Debit payments<br />
+MailGun for sending email - completely optional<br />
+The encryption key is essential and cannot be changed or lost once set<br />
