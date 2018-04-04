@@ -40,6 +40,8 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property integer $storage_box_payment_id
  * @property ProfileData $profile
  * @property string|null secondary_payment_method
+ * @property string      mandate_id
+ * @property int         monthly_subscription
  * @package BB\Entities
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
