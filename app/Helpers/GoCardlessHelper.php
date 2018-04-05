@@ -128,10 +128,12 @@ class GoCardlessHelper
                 return 'Balance top up';
             case 'equipment-fee':
                 return 'Equipment access fee';
+            case 'induction':
+                return 'Equipment induction';
             case 'door-key':
                 return 'Door key';
         }
 
-        return null;
+        return $reason;
     }
 } 

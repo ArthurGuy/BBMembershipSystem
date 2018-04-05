@@ -97,14 +97,13 @@ class SubscriptionController extends Controller
 
 
     /**
-     * Remove the specified resource from storage.
+     * Cancel a users subscription, used for all DD's
      *
      * @param  int  $id
      * @return Illuminate\Http\RedirectResponse
      */
     public function destroy($userId, $id = null)
     {
-
         /**
          * TODO: Check for and cancel pending sub charges
          */
