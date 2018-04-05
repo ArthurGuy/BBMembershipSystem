@@ -260,33 +260,12 @@
         </div>
     @endif
 
-    @if ($user->mandate_id)
-        <div class="col-xs-12 col-sm-6">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h4>Direct Debit mandate</h4>
-                    <p>GoCardless mandate ID: {{ $user->mandate_id }}</p>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    @if ($user->subscription_id)
-        <div class="col-xs-12 col-sm-6">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h4>Direct Debit subscription</h4>
-                    <p>GoCardless subscription ID: {{ $user->subscription_id }}</p>
-                </div>
-            </div>
-        </div>
-    @endif
-
     <div class="col-xs-12 col-sm-6">
         <div class="row">
             <div class="col-xs-12">
-                <h4>Subscription payment method</h4>
+                <h4>Member subscription and DD info</h4>
                 <p>
+                    <strong>Method</strong>:
                     @if ($user->payment_method == 'gocardless')
                         Old Direct Debit subscription - controlled through GoCardless
                     @elseif ($user->payment_method == 'gocardless-variable')
@@ -299,6 +278,18 @@
                         Other: {{ $user->payment_method }}
                     @endif
                 </p>
+                @if ($user->mandate_id)
+                    <p>
+                        <strong>Direct Debit mandate</strong>:
+                        GoCardless mandate ID: {{ $user->mandate_id }}
+                    </p>
+                @endif
+                @if ($user->subscription_id)
+                    <p>
+                        <strong>Direct Debit subscription</strong>:
+                        GoCardless subscription ID: {{ $user->subscription_id }}
+                    </p>
+                @endif
             </div>
         </div>
     </div>
