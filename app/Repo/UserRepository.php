@@ -196,21 +196,37 @@ class UserRepository extends DBRepository
         $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
     }
 
-    /**
-     * Record the new gocardless preauth id against the user and make sure their payment method reflects this
-     *
-     * @param integer $userId
-     * @param string  $subscriptionId
-     */
-    public function recordGoCardlessVariableDetails($userId, $subscriptionId)
+    public function recordGoCardlessMandateDetails($userId, $subscriptionId)
     {
+        /** @var User $user */
         $user = $this->getById($userId);
-        if (empty($user->payment_day)) {
-            $user->payment_day    = Carbon::now()->day;
-        }
         $user->mandate_id          = $subscriptionId;
         $user->gocardless_setup_id = null;
-        $user->payment_method      = 'gocardless-variable';
+        $user->save();
+    }
+
+    public function updateUserPaymentMethod($userId, $paymentMethod, $paymentDay = null)
+    {
+        /** @var User $user */
+        $user = $this->getById($userId);
+        $user->payment_method = $paymentMethod;
+        if ($paymentDay) {
+            $user->payment_day = $paymentDay;
+        }
+        $user->save();
+    }
+
+    public function recordGoCardlessSubscription($userId, $subscriptionId, $paymentDay = null)
+    {
+        /** @var User $user */
+        $user = $this->getById($userId);
+        if ($paymentDay) {
+            $user->payment_day = $paymentDay;
+        } elseif (empty($user->payment_day)) {
+            $user->payment_day = Carbon::now()->day;
+        }
+        $user->subscription_id = $subscriptionId;
+        $user->payment_method  = 'gocardless';
         $user->save();
     }
 

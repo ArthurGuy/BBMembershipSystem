@@ -42,6 +42,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property string|null secondary_payment_method
  * @property string      mandate_id
  * @property int         monthly_subscription
+ * @property string      gocardless_setup_id
  * @package BB\Entities
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {

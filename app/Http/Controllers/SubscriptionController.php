@@ -87,9 +87,14 @@ class SubscriptionController extends Controller
             return \Redirect::route('account.show', $user->id);
         }
 
-        $this->userRepository->recordGoCardlessVariableDetails($user->id, $confirmed_resource->links->mandate);
+        // Save the mandate and complete the DD setup process
+        $this->userRepository->recordGoCardlessMandateDetails($user->id, $confirmed_resource->links->mandate);
 
-        //all we need for a valid member is an active dd so make sure the user account is active
+        // Setup the user for a variable DD payment on todays date
+        $this->userRepository->updateUserPaymentMethod($user->id, 'gocardless-variable', Carbon::now()->day);
+
+        // All we need for a valid member is an active DD so make sure the user account is active
+        // If paying by variable DD take the first payment now
         $this->userRepository->ensureMembershipActive($user->id);
 
         return \Redirect::route('account.show', [$user->id]);
