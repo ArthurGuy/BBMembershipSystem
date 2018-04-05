@@ -55,6 +55,26 @@ class GoCardlessHelper
         );
     }
 
+
+    public function createSubscription($mandate, $amount, $dayOfMonth, $subscriptionNumber)
+    {
+        $subscription = $this->client->subscriptions()->create([
+            "params" => [
+                "amount"        => $amount, // GBP in pence
+                "currency"      => "GBP",
+                "interval_unit" => "monthly",
+                "day_of_month"  => $dayOfMonth,
+                "links"         => [
+                    "mandate" => $mandate
+                ],
+                "metadata"      => [
+                    "subscription_number" => $subscriptionNumber
+                ]
+            ],
+        ]);
+
+        return $subscription;
+    }
     public function cancelSubscription($id)
     {
         return $this->client->subscriptions()->cancel($id);

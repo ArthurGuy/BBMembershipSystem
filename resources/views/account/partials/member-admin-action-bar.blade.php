@@ -1,5 +1,5 @@
 @if (Auth::user()->isAdmin())
-    
+
 <div class="row well">
 
     <div class="col-xs-12 col-sm-6">
@@ -289,6 +289,32 @@
                         <strong>Direct Debit subscription</strong>:
                         GoCardless subscription ID: {{ $user->subscription_id }}
                     </p>
+                @endif
+
+                @if ($user->mandate_id)
+                    <p>
+                        <strong>Experimental DD subscription</strong><br>
+                        This is a fixed DD subscription based on the users exiting mandate. It does not replace the normal monthly payment, it is for testing only.
+                    </p>
+                    @if ($user->subscription_id)
+                        {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
+                            {!! Form::hidden('cancel_experimental_dd_subscription', true) !!}
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    {!! Form::submit('Cancel monthly payment', array('class'=>'btn btn-default')) !!}
+                                </div>
+                            </div>
+                        {!! Form::close() !!}
+                    @else
+                        {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
+                            {!! Form::hidden('experimental_dd_subscription', true) !!}
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    {!! Form::submit('Setup monthly payment', array('class'=>'btn btn-default')) !!}
+                                </div>
+                            </div>
+                        {!! Form::close() !!}
+                    @endif
                 @endif
             </div>
         </div>

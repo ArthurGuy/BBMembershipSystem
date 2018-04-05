@@ -52,6 +52,11 @@ class AccountController extends Controller
      */
     private $subscriptionChargeRepository;
 
+    /**
+     * @var \BB\Helpers\GoCardlessHelper
+     */
+    private $goCardless;
+
 
     function __construct(
         \BB\Validators\UserValidator $userForm,
@@ -314,6 +319,17 @@ class AccountController extends Controller
             $notificationHash = 'trusted_status';
             Notification::logNew($user->id, $message, 'trusted_status', $notificationHash);
             event(new MemberGivenTrustedStatus($user));
+        }
+
+        if (\Input::has('experimental_dd_subscription')) {
+            $subscription = $this->goCardless->createSubscription($user->mandate_id, $user->monthly_subscription * 100, $user->payment_day, 'NEW-BBSUB' . $user->id);
+
+            $this->userRepository->recordGoCardlessSubscription($user->id,  $subscription->id);
+        }
+        if (\Input::has('cancel_experimental_dd_subscription')) {
+            $this->goCardless->cancelSubscription($user->subscription_id);
+
+            $this->userRepository->recordGoCardlessSubscription($user->id,  null);
         }
 
 

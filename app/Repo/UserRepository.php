@@ -222,11 +222,8 @@ class UserRepository extends DBRepository
         $user = $this->getById($userId);
         if ($paymentDay) {
             $user->payment_day = $paymentDay;
-        } elseif (empty($user->payment_day)) {
-            $user->payment_day = Carbon::now()->day;
         }
         $user->subscription_id = $subscriptionId;
-        $user->payment_method  = 'gocardless';
         $user->save();
     }
 
