@@ -24,12 +24,17 @@ class GoCardlessWebhookController extends Controller
      * @var GoCardlessHelper
      */
     private $goCardless;
+    /**
+     * @var \BB\Repo\UserRepository
+     */
+    private $userRepository;
 
-    public function __construct(GoCardlessHelper $goCardless, PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
+    public function __construct(GoCardlessHelper $goCardless, PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository, \BB\Repo\UserRepository $userRepository)
     {
         $this->goCardless = $goCardless;
         $this->paymentRepository = $paymentRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function receive()
@@ -144,7 +149,7 @@ class GoCardlessWebhookController extends Controller
         try {
 
             //Locate the user through their subscription id
-            $user = User::where('payment_method', 'gocardless')->where('subscription_id', $bill['links']['subscription'])->first();
+            $user = User::where('subscription_id', $bill['links']['subscription'])->first();
 
             if ( ! $user) {
                 \Log::warning("GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['links']['payment']);
@@ -224,7 +229,7 @@ class GoCardlessWebhookController extends Controller
     private function cancelPreAuth($preAuth)
     {
         /** @var User $user */
-        $user = User::where('payment_method', 'gocardless-variable')->where('mandate_id', $preAuth['links']['mandate'])->first();
+        $user = User::where('mandate_id', $preAuth['links']['mandate'])->first();
         if ($user) {
             $user->cancelSubscription();
         }
@@ -235,9 +240,15 @@ class GoCardlessWebhookController extends Controller
     {
         //Make sure our local record is correct
         /** @var User $user */
-        $user = User::where('payment_method', 'gocardless')->where('subscription_id', $subscription['links']['subscription'])->first();
+        $user = User::where('subscription_id', $subscription['links']['subscription'])->first();
         if ($user) {
-            $user->cancelSubscription();
+            if ($user->payment_method == 'gocardless') {
+                $user->cancelSubscription();
+            } else {
+                // The user probably has a new subscription alongside an existing mandate,
+                // we don't want to touch that so just remove the subscription details
+                $this->userRepository->recordGoCardlessSubscription($user->id, null);
+            }
         }
     }
 
