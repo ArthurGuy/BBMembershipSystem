@@ -224,7 +224,7 @@ class GoCardlessWebhookController extends Controller
     private function cancelPreAuth($preAuth)
     {
         /** @var User $user */
-        $user = User::where('payment_method', 'gocardless-variable')->where('subscription_id', $preAuth['links']['mandate'])->first();
+        $user = User::where('payment_method', 'gocardless-variable')->where('mandate_id', $preAuth['links']['mandate'])->first();
         if ($user) {
             $user->cancelSubscription();
         }

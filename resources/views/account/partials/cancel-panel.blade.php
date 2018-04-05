@@ -9,9 +9,9 @@
         </p>
         @if ($user->payment_method == 'gocardless')
 
-        {!! Form::open(array('method'=>'DELETE', 'route' => ['account.subscription.destroy', $user->id, 1])) !!}
-        {!! Form::submit('Cancel Your Monthly Direct Debit', array('class'=>'btn btn-link')) !!}
-        {!! Form::close() !!}
+            {!! Form::open(array('method'=>'DELETE', 'route' => ['account.subscription.destroy', $user->id, 1])) !!}
+            {!! Form::submit('Cancel Your Monthly Direct Debit', array('class'=>'btn btn-link')) !!}
+            {!! Form::close() !!}
 
         @elseif ($user->payment_method == 'gocardless-variable')
 
@@ -21,9 +21,9 @@
 
         @else
 
-        {!! Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) !!}
-        {!! Form::submit('Leave Build Brighton :(', array('class'=>'btn btn-link')) !!}
-        {!! Form::close() !!}
+            {!! Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) !!}
+            {!! Form::submit('Leave Build Brighton :(', array('class'=>'btn btn-link')) !!}
+            {!! Form::close() !!}
 
         @endif
     </div>

@@ -150,7 +150,7 @@ class UserRepository extends DBRepository
             }
 
             if ($user->payment_method == 'gocardless-variable') {
-                $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, 'due', $user->subscription_id);
+                $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, 'due', $user->mandate_id);
             } else {
                 // This will create the monthly sub charge but not take any money, that will happen tomorrow during the normal run
                 $this->subscriptionChargeRepository->createCharge($userId, $chargeDate, $user->monthly_subscription, 'due');
@@ -209,7 +209,6 @@ class UserRepository extends DBRepository
             $user->payment_day    = Carbon::now()->day;
         }
         $user->mandate_id          = $subscriptionId;
-        $user->subscription_id     = $subscriptionId;
         $user->gocardless_setup_id = null;
         $user->payment_method      = 'gocardless-variable';
         $user->save();

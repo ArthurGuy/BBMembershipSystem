@@ -123,9 +123,9 @@ class SubscriptionController extends Controller
                 return \Redirect::back();
             }
         } elseif ($user->payment_method == 'gocardless-variable') {
-            $status = $this->goCardless->cancelPreAuth($user->subscription_id);
+            $status = $this->goCardless->cancelPreAuth($user->mandate_id);
             if ($status) {
-                $user->subscription_id = null;
+                $user->mandate_id = null;
                 $user->payment_method = '';
                 $user->save();
 
@@ -170,7 +170,7 @@ class SubscriptionController extends Controller
         }
 
         if ($paymentMethod === 'gocardless-variable' && $user->payment_method == 'balance') {
-            if (empty($user->subscription_id)) {
+            if (empty($user->mandate_id)) {
                 $user->payment_method = null;
             } else {
                 $user->payment_method = 'gocardless-variable';

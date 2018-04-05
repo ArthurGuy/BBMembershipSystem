@@ -115,7 +115,7 @@ class MemberSubscriptionCharges
         //Charge the gocardless users
         foreach ($goCardlessUsers as $charge) {
             $amount = $charge->user->monthly_subscription;
-            $bill = $this->goCardless->newBill($charge->user->subscription_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
+            $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
             if ($bill) {
                 $status = $bill->status;
                 if ($status == 'pending_submission') {

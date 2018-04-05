@@ -6,7 +6,7 @@
         @if ($user->payment_method == 'gocardless')
             @if (!empty($user->subscription_id))
             <p>
-                Your direct debit payment has failed and we need you to make a manual payment.<br />
+                Your Direct Debit payment has failed and we need you to make a manual payment.<br />
                 Please start by migrating to the new direct debit system.<br />
                 This process wont charge you anything, just setup the new Direct Debit.
             </p>

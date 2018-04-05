@@ -62,13 +62,13 @@ class GoCardlessHelper
 
     /**
      * Create a new payment against a preauth
-     * @param             $preauthId
+     * @param             $mandateId
      * @param             $amount
      * @param null|string $name
      * @param null|string $description
      * @return bool|mixed
      */
-    public function newBill($preauthId, $amount, $name = null, $description = null)
+    public function newBill($mandateId, $amount, $name = null, $description = null)
     {
         // If the total is above £50 something probably isn't right
         if ($amount > (50 * 100)) {
@@ -80,7 +80,7 @@ class GoCardlessHelper
                     "amount" => $amount, // amount in pence
                     "currency" => "GBP",
                     "links" => [
-                        "mandate" => $preauthId
+                        "mandate" => $mandateId
                     ],
                     "metadata" => [
                         "description" => $name

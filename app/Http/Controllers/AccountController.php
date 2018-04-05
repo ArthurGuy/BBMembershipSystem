@@ -328,6 +328,8 @@ class AccountController extends Controller
 
     public function alterSubscription($id)
     {
+        // I don't think this is used any more
+
         $user = User::findWithPermission($id);
         $input = \Input::all();
 

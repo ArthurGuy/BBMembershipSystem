@@ -77,7 +77,7 @@ class GoCardlessPaymentController extends Controller
         if (is_null($ref)) {
             $ref = '';
         }
-        $bill = $this->goCardless->newBill($user->subscription_id, $amount * 100, $this->goCardless->getNameFromReason($reason));
+        $bill = $this->goCardless->newBill($user->mandate_id, $amount * 100, $this->goCardless->getNameFromReason($reason));
 
         if ($bill) {
             //Store the payment
