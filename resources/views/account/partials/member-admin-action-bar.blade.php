@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <h4>Trusted Member</h4>
-                <p>The member will be automatically emailed about being made trusted but not loosing trusted status.</p>
+                <p>The member will be automatically emailed about being made trusted but not if they are loosing trusted status.</p>
                 {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
                 <div class="form-group">
                     <div class="col-sm-5">
@@ -90,7 +90,7 @@
 
     <div class="col-xs-12 col-sm-6">
         <h4>Key Fob</h4>
-        <p>This is the ID number associated with their RFID tag. They don't need to be a key holder to get an RFID tag</p>
+        <p>This is the ID number associated with their RFID tag. They don't need to be a key holder to get an RFID tag.</p>
         @foreach ($user->keyFobs()->get() as $fob)
         {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
             <div class="form-group">
@@ -259,6 +259,49 @@
             </div>
         </div>
     @endif
+
+    @if ($user->mandate_id)
+        <div class="col-xs-12 col-sm-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Direct Debit mandate</h4>
+                    <p>GoCardless mandate ID: {{ $user->mandate_id }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($user->subscription_id)
+        <div class="col-xs-12 col-sm-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Direct Debit subscription</h4>
+                    <p>GoCardless subscription ID: {{ $user->subscription_id }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="col-xs-12 col-sm-6">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Subscription payment method</h4>
+                <p>
+                    @if ($user->payment_method == 'gocardless')
+                        Old Direct Debit subscription - controlled through GoCardless
+                    @elseif ($user->payment_method == 'gocardless-variable')
+                        Flexible Direct Debit subscription - monthly payments controlled via BBMS
+                    @elseif ($user->payment_method == 'balance')
+                        Payments taken from the users balance. Backup: {{ $user->secondary_payment_method }}
+                    @elseif ($user->payment_method == 'paypal')
+                        PayPal subscription - managed entirely through PayPal
+                    @else
+                        Other: {{ $user->payment_method }}
+                    @endif
+                </p>
+            </div>
+        </div>
+    </div>
 
 </div>
 
