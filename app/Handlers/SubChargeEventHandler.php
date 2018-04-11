@@ -71,12 +71,13 @@ class SubChargeEventHandler
     public function onPaymentFailure($chargeId, $userId, Carbon $paymentDate, $amount)
     {
         $paidUntil = MembershipPayments::lastUserPaymentExpires($userId);
+        $user = $this->userRepository->getById($userId);
+        /** @var $user \BB\Entities\User */
         if ($paidUntil) {
-            $user = $this->userRepository->getById($userId);
-            /** @var $user \BB\Entities\User */
             $user->extendMembership(null, $paidUntil);
         } else {
-            \Log::info('Payment cancelled, expiry date rollback failed as there is no previous payment. User ID:' . $userId);
+            $user->extendMembership(null, Carbon::now());
+            //\Log::info('Payment cancelled, expiry date rollback failed as there is no previous payment. User ID:' . $userId);
         }
     }
 
