@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  * @property Carbon $last_heartbeat
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property bool   entry_device
  * @package BB\Entities
  */
 class ACSNode extends Model
