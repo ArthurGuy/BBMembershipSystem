@@ -11,7 +11,7 @@ class CreateTodaysSubCharges extends Command
      *
      * @var string
      */
-    protected $signature = 'bb:create-todays-sub-charges {dayOffset=3}';
+    protected $signature = 'bb:create-todays-sub-charges {dayOffset=7}';
 
     /**
      * The console command description.
