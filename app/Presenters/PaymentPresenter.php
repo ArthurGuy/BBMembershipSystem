@@ -39,7 +39,9 @@ class PaymentPresenter extends Presenter
     {
         switch ($this->entity->status) {
             case 'pending':
-                return 'Pending Confirmation';
+                return 'Pending confirmation';
+            case 'pending_submission':
+                return 'Pending submission to members bank';
             case 'cancelled':
                 return 'Cancelled';
             case 'paid':
