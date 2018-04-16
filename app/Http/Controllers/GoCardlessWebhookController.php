@@ -66,6 +66,8 @@ class GoCardlessWebhookController extends Controller
                             break;
                         case 'submitted':
 
+                            $this->processSubmittedPayment($event);
+
                             break;
                         case 'confirmed':
 
@@ -165,6 +167,18 @@ class GoCardlessWebhookController extends Controller
         }
     }
 
+
+    private function processSubmittedPayment(array $bill)
+    {
+        //When a bill is submitted to the bank update the status on the local record
+
+        $existingPayment = $this->paymentRepository->getPaymentBySourceId($bill['links']['payment']);
+        if ($existingPayment) {
+            $this->paymentRepository->markPaymentPending($existingPayment->id);
+        } else {
+            \Log::info("GoCardless Webhook received for unknown payment: " . $bill['links']['payment']);
+        }
+    }
 
     private function processPaidBills(array $bill)
     {

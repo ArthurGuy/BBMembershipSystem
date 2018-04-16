@@ -162,6 +162,18 @@ class PaymentRepository extends DBRepository
     }
 
     /**
+     * An existing payment has been set to pending/submitted
+     *
+     * @param $paymentId
+     */
+    public function markPaymentPending($paymentId)
+    {
+        $payment = $this->getById($paymentId);
+        $payment->status = 'pending';
+        $payment->save();
+    }
+
+    /**
      * Record a payment failure or cancellation
      *
      * @param int    $paymentId
