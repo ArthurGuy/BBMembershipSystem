@@ -95,7 +95,7 @@
         {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
             <div class="form-group">
                 <div class="col-sm-5">
-                    <p class="form-control-static">{{ $fob->key_id }}</p>
+                    <p class="form-control-static">{{ $fob->key_id }} <small>(added {{ $fob->created_at->toFormattedDateString() }})</small></p>
                 </div>
                 <div class="col-sm-3">
                     {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
