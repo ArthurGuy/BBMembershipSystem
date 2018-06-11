@@ -78,12 +78,12 @@ Tools and Equipment
 
                         @elseif ($userInduction->is_trained)
 
-                            @if ($equipment->slug == 'laser')
+                            @if (in_array($equipment->slug, ['laser', 'ultimaker']))
                             <p>
-                                While the laser access control system is unavailable you can make a payment for your usage of the equipment below.
+                                While the access control systems are unavailable you can make a payment for your usage of the equipment below.
                             </p>
 
-                            <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="laser"></div>
+                            <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
                             @endif
 
                             <span class="label label-success">You have been inducted and can use this equipment</span>
