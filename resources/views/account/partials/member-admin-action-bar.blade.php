@@ -219,7 +219,7 @@
         </div>
     @endif
 
-    @if ($user->status == 'setting-up')
+    @if (in_array($user->status, ['setting-up', 'left', 'leaving']))
         <div class="col-xs-12 col-sm-6">
             <div class="row">
                 <div class="col-xs-12">
