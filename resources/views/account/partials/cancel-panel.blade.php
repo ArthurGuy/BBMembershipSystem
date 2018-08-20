@@ -19,6 +19,13 @@
             {!! Form::submit('Cancel Your Direct Debit and Leave', array('class'=>'btn btn-link')) !!}
             {!! Form::close() !!}
 
+        @elseif ($user->payment_method == 'paypal')
+
+            {!! Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) !!}
+            {!! Form::submit('Leave Build Brighton :(', array('class'=>'btn btn-link')) !!}
+            {!! Form::close() !!}
+            <p>This will <strong>NOT</strong> cancel your PayPal subscription, you need to do this yourself though the PayPal site.</p>
+
         @else
 
             {!! Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) !!}
