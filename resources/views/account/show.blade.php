@@ -55,9 +55,9 @@
                         From that page you can also choose to hide your photo from public view.
                     </p>
                 @elseif (!$user->key_deposit_payment_id)
-                    <p>If you would like a door key you need to pay a £10 deposit.</p>
+                    <p>If you would like a door key you need to pay a £15 deposit.</p>
 
-                    <div class="paymentModule" data-reason="door-key" data-display-reason="Door Key Deposit" data-button-label="Pay Now" data-methods="gocardless,balance,stripe" data-amount="10"></div>
+                    <div class="paymentModule" data-reason="door-key" data-display-reason="Door Key Deposit" data-button-label="Pay Now" data-methods="gocardless,balance,stripe" data-amount="15"></div>
 
                     <small>If you want to pay using cash please find a trustee who can top up your balance.</small>
                 @else

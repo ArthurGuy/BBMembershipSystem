@@ -181,8 +181,8 @@ class PaymentController extends Controller
                 'reason'           => $reason,
                 'source'           => \Input::get('source'),
                 'source_id'        => '',
-                'amount'           => 10,
-                'amount_minus_fee' => 10,
+                'amount'           => 15,
+                'amount_minus_fee' => 15,
                 'status'           => 'paid'
             ]);
             $user->payments()->save($payment);
