@@ -208,12 +208,12 @@ Join Build Brighton
             <div class="modal-body">
                 <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
 
-                &pound;5 - &pound;15 a month:
+                &pound;5 - &pound;20 a month:
                 <ul>
-                    <li>You are on a low income and unable to afford a higher amount.</li>
+                    <li>You are on a low income and unable to afford a higher amount, you will need to contact us and provide some more details.</li>
                 </ul>
 
-                &pound;20 - &pound;25 a month:
+                &pound;20 - &pound;30 a month:
                 <ul>
                     <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
                 </ul>
@@ -229,7 +229,7 @@ Join Build Brighton
                 </p>
 
                 <p>
-                    If you would like to pay less than &pound;15 a month please select an amount over £15 and complete
+                    If you can only pay less than &pound;20 a month please select an amount over £20 and complete
                     this form, on the next page you will be asked to setup a subscription payment.
                     Before you do this please send the trustees an email letting them know how much you would like to
                     pay, they will then override the amount so you can continue to setup a subscription.
