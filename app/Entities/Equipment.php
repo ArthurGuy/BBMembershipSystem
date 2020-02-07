@@ -211,7 +211,11 @@ class Equipment extends Model
 
     public function setUsageCostAttribute($value)
     {
-        $this->attributes['usage_cost'] = $value * 100;
+        if (is_numeric($value)) {
+            $this->attributes['usage_cost'] = $value * 100;
+        } else {
+            $this->attributes['usage_cost'] = $value;
+        }
     }
 
     /**
