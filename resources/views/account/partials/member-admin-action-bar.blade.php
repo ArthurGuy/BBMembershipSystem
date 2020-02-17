@@ -182,7 +182,7 @@
         <div class="form-group">
             <div class="col-sm-5"></div>
             <div class="col-sm-3">
-                {!! Form::submit('Record A &pound;'.round($user->monthly_subscription).' Cash Subscription Payment', array('class'=>'btn btn-default')) !!}
+                {!! Form::submit('Record A &pound;'.number_format($user->monthly_subscription, 2).' Cash Subscription Payment', array('class'=>'btn btn-default')) !!}
             </div>
         </div>
 
