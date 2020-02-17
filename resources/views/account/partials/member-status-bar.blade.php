@@ -69,7 +69,7 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <div class="input-group-addon">&pound;</div>
-                                {!! Form::text('monthly_subscription', round($user->monthly_subscription), ['class'=>'form-control']) !!}
+                                {!! Form::text('monthly_subscription', round($user->monthly_subscription, 2), ['class'=>'form-control']) !!}
                             </div>
                         </div>
                         <div class="col-sm-6">
