@@ -1,5 +1,6 @@
 <?php namespace BB\Services;
 
+use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Events\MemberBalanceChanged;
 use BB\Events\SubscriptionPayment;
@@ -114,6 +115,7 @@ class MemberSubscriptionCharges
 
         //Charge the gocardless users
         foreach ($goCardlessUsers as $charge) {
+            /** @var SubscriptionCharge $charge */
             $amount = $charge->user->monthly_subscription;
             $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
             if ($bill) {
