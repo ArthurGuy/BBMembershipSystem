@@ -311,7 +311,7 @@ class ApiTester extends \Codeception\Actor
      * @param       $url
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
      *
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      *
      * @author samva.ua@gmail.com
      * @see \Codeception\Module\REST::sendLINK()
@@ -328,7 +328,7 @@ class ApiTester extends \Codeception\Actor
      *
      * @param       $url
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      * @author samva.ua@gmail.com
      * @see \Codeception\Module\REST::sendUNLINK()
      */
@@ -551,8 +551,8 @@ class ApiTester extends \Codeception\Actor
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
-     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * Returns data from the current JSON response using [JSONPath](https://goessner.net/articles/JsonPath/) as selector.
+     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](https://jsonpath.curiousconcept.com/).
      * Even for a single value an array is returned.
      *
      * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -676,8 +676,8 @@ class ApiTester extends \Codeception\Actor
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
-     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * Checks if json structure in response matches [JsonPath](https://goessner.net/articles/JsonPath/).
+     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](https://jsonpath.curiousconcept.com/).
      * This assertion allows you to check the structure of response json.
      *
      * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -725,8 +725,8 @@ class ApiTester extends \Codeception\Actor
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
-     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * Checks if json structure in response matches [JsonPath](https://goessner.net/articles/JsonPath/).
+     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](https://jsonpath.curiousconcept.com/).
      * This assertion allows you to check the structure of response json.
      *
      * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -1373,7 +1373,7 @@ class ApiTester extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Return an instance of a class from the IoC Container.
-     * (http://laravel.com/docs/ioc)
+     * (https://laravel.com/docs/ioc)
      *
      * Example
      * ``` php

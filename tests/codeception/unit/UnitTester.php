@@ -719,7 +719,7 @@ class UnitTester extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Return an instance of a class from the IoC Container.
-     * (http://laravel.com/docs/ioc)
+     * (https://laravel.com/docs/ioc)
      *
      * Example
      * ``` php
