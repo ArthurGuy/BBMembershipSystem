@@ -246,4 +246,4 @@ class EquipmentController extends Controller
         \Notification::success("Image deleted");
         return \Redirect::route('equipment.edit', $equipmentId);
     }
-} 
+}
