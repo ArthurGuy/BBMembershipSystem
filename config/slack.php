@@ -94,7 +94,7 @@ return [
   |-------------------------------------------------------------
   |
   | Whether message text should be interpreted in Slack's Markdown-like
-  | language. For formatting options, see Slack's help article: http://goo.gl/r4fsdO
+  | language. For formatting options, see Slack's help article: https://goo.gl/r4fsdO
   |
   */
 
