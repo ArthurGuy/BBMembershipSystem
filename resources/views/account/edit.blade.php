@@ -17,14 +17,14 @@ Edit your details
     <div class="col-xs-12 col-md-4">
         <div class="form-group {{ Notification::hasErrorDetail('given_name', 'has-error has-feedback') }}">
             {!! Form::label('given_name', 'First Name') !!}
-            {!! Form::text('given_name', null, ['class'=>'form-control', 'autocomplete'=>'given-name']) !!}
+            {!! Form::text('given_name', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('given_name') !!}
         </div>
     </div>
     <div class="col-xs-12 col-md-4">
         <div class="form-group {{ Notification::hasErrorDetail('family_name', 'has-error has-feedback') }}">
             {!! Form::label('family_name', 'Family Name') !!}
-            {!! Form::text('family_name', null, ['class'=>'form-control', 'autocomplete'=>'family-name']) !!}
+            {!! Form::text('family_name', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('family_name') !!}
         </div>
     </div>
@@ -34,7 +34,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
             {!! Form::label('email', 'Email') !!}
-            {!! Form::text('email', null, ['class'=>'form-control', 'autocomplete'=>'email']) !!}
+            {!! Form::text('email', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('email') !!}
         </div>
     </div>
@@ -64,7 +64,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_1', 'has-error has-feedback') }}">
             {!! Form::label('address[line_1]', 'Address Line 1') !!}
-            {!! Form::text('address[line_1]', null, ['class'=>'form-control', 'autocomplete'=>'address-line-1']) !!}
+            {!! Form::text('address[line_1]', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('address.line_1') !!}
         </div>
     </div>
@@ -74,7 +74,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_2', 'has-error has-feedback') }}">
             {!! Form::label('address[line_2]', 'Address Line 2') !!}
-            {!! Form::text('address[line_2]', null, ['class'=>'form-control', 'autocomplete'=>'address-line-2']) !!}
+            {!! Form::text('address[line_2]', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('address.line_2') !!}
         </div>
     </div>
@@ -84,7 +84,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_3', 'has-error has-feedback') }}">
             {!! Form::label('address[line_3]', 'Address Line 3') !!}
-            {!! Form::text('address[line_3]', null, ['class'=>'form-control', 'autocomplete'=>'address-locality']) !!}
+            {!! Form::text('address[line_3]', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('address.line_3') !!}
         </div>
     </div>
@@ -95,7 +95,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.line_4', 'has-error has-feedback') }}">
             {!! Form::label('address[line_4]', 'Address Line 4') !!}
-            {!! Form::text('address[line_4]', null, ['class'=>'form-control', 'autocomplete'=>'region']) !!}
+            {!! Form::text('address[line_4]', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('address.line_4') !!}
         </div>
     </div>
@@ -105,7 +105,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('address.postcode', 'has-error has-feedback') }}">
             {!! Form::label('address[postcode]', 'Post Code') !!}
-            {!! Form::text('address[postcode]', null, ['class'=>'form-control', 'autocomplete'=>'postal-code']) !!}
+            {!! Form::text('address[postcode]', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
             {!! Notification::getErrorDetail('address.postcode') !!}
         </div>
     </div>
@@ -115,7 +115,7 @@ Edit your details
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('phone', 'has-error has-feedback') }}">
             {!! Form::label('phone', 'Phone', ['class'=>'control-label']) !!}
-                {!! Form::input('tel', 'phone', $user->present()->phone, ['class'=>'form-control', 'x-autocompletetype'=>'tel']) !!}
+                {!! Form::input('tel', 'phone', $user->present()->phone, ['class'=>'form-control', 'x-autocompletetype'=>'off']) !!}
                 {!! Notification::getErrorDetail('phone') !!}
         </div>
     </div>
