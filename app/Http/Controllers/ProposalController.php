@@ -61,6 +61,10 @@ class ProposalController extends Controller
 
     public function vote($proposalId)
     {
+        if (\Auth::user()->hasRole('storage-box-user')) {
+            throw new \BB\Exceptions\ValidationException("Your account cannot vote on proposals");
+        }
+
         //validation
         $this->proposalVoteValidator->validate(\Request::all());
 
