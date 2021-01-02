@@ -39,7 +39,7 @@
     "laravel-elixir": "~2.1.1",
     "laravel-elixir-codeception": "~0.1.2",
     "material-design-icons": "^2.0.0",
-    "moment": "^2.10.3",
+    "moment": "^2.19.3",
     "npm-utils": "0.0.9",
     "react": "^0.14.0",
     "react-bootstrap": "^0.22.4",
