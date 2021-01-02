@@ -41,7 +41,7 @@
     "material-design-icons": "^2.0.0",
     "moment": "^2.10.3",
     "npm-utils": "0.0.9",
-    "react": "^0.13.3",
+    "react": "^0.14.0",
     "react-bootstrap": "^0.22.4",
     "react-tools": "^0.13.3",
     "react-validation-mixin": "^4.0.4",
