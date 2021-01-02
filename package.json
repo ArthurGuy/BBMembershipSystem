@@ -10,7 +10,7 @@
     "babelify": "^6.1.1",
     "backbone": "^1.2.0",
     "backbone-model-file-upload": "^1.0.0",
-    "bootstrap": "^3.3.4",
+    "bootstrap": "^3.4.1",
     "bootstrap-datepicker": "^1.6.0",
     "brfs": "^1.4.0",
     "browserify": "^10.2.1",
