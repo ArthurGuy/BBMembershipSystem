@@ -44,7 +44,7 @@ Edit your details
         <div class="form-group {{ Notification::hasErrorDetail('secondary_email', 'has-error has-feedback') }}">
             {!! Form::label('secondary_email', 'Alternate Email') !!}
             {!! Form::text('secondary_email', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
-            <span class="help-block">If your paying through PayPal and that account has a different address or your using a different email with google groups please enter it here</span>
+            <span class="help-block">If you're paying through PayPal and that account has a different address or you're using a different email with google groups please enter it here</span>
             {!! Notification::getErrorDetail('secondary_email') !!}
         </div>
     </div>
