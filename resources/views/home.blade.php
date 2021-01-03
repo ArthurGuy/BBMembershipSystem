@@ -20,7 +20,7 @@
                     For more information on Build Brighton please visit <a href="http://www.buildbrighton.com">www.buildbrighton.com</a>
                 </p>
                 <p>
-                Already part of Build Brighton then <a href="{{ route('login') }}" class="">Log in</a>
+                    Already part of Build Brighton then <a href="{{ route('login') }}" class="">Log in</a>
                 </p>
             </div>
         </div>
