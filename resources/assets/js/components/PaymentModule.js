@@ -95,7 +95,7 @@ class PaymentModule extends React.Component {
         this.setState({requestInProgress:true});
 
         // loading indicator
-        // http://madscript.com/halogen/
+        // https://madscript.com/halogen/
 
 
         $.ajax({

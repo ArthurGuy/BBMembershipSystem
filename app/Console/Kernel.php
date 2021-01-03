@@ -33,28 +33,28 @@ class Kernel extends ConsoleKernel
     {
 
         $schedule->command('bb:calculate-proposal-votes')->hourly()
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/U6l211ROnnZR1vI'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/U6l211ROnnZR1vI'); } );
 
         $schedule->command('bb:check-memberships')->dailyAt('06:00')
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/76TWKkWBBpaIyOe'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/76TWKkWBBpaIyOe'); } );
 
         $schedule->command('bb:fix-equipment-log')->hourly()
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/nxi4SJkwZpIAkBv'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/nxi4SJkwZpIAkBv'); } );
 
         $schedule->command('bb:calculate-equipment-fees')->dailyAt('02:00')
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/tFdRdkUoqSa8X66'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/tFdRdkUoqSa8X66'); } );
 
         $schedule->command('bb:update-balances')->dailyAt('03:00')
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/TSmoQANsHU9jbtU'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/TSmoQANsHU9jbtU'); } );
 
         $schedule->command('bb:create-todays-sub-charges')->dailyAt('01:00')
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/wSIUR1E2wjVBzPg'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/wSIUR1E2wjVBzPg'); } );
 
         $schedule->command('bb:bill-members')->dailyAt('01:30')
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/nxAz59P6LXlu2P1'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/nxAz59P6LXlu2P1'); } );
 
         $schedule->command('device:check-online')->everyTenMinutes()
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/WU4zql7LwZs1CzT'); } );
+            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/WU4zql7LwZs1CzT'); } );
     }
 
     protected function pingIfProduction($url)

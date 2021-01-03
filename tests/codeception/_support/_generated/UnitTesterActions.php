@@ -3526,7 +3526,7 @@ trait UnitTesterActions
      *
      * Example:
      * ``` html
-     * <iframe name="another_frame" src="http://example.com">
+     * <iframe name="another_frame" src="https://example.com">
      * ```
      *
      * ``` php
