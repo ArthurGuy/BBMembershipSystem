@@ -53,6 +53,4 @@ class CalculateEquipmentFees extends Command
         $deviceCharging = new EquipmentCharge();
         $deviceCharging->calculatePendingFees();
     }
-
-
 }
