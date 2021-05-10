@@ -27,7 +27,7 @@ class MemberStorageCest
         $I->cantSee($user->name);
 
         //Make sure the message about paying for a box is displayed
-        $I->canSee('5 deposit');
+        $I->canSee('5 payment');
 
     }
 
