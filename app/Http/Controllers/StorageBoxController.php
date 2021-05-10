@@ -171,7 +171,7 @@ class StorageBoxController extends Controller
 
         //Have the paid for a box
         if ($this->memberStorage->getRemainingBoxesPaidFor() <= 0) {
-            throw new \BB\Exceptions\ValidationException("You need to pay the deposit first");
+            throw new \BB\Exceptions\ValidationException("You need to pay the fee first");
         }
 
         $this->storageBoxRepository->update($boxId, ['user_id'=>\Auth::user()->id]);
