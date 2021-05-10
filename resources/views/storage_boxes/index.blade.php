@@ -34,10 +34,10 @@
                 @endif
                 @if ($canPayMore)
                     <p>
-                    If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need pay its &pound;5 deposit
+                    If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need pay &pound;5
                     </p>
 
-                    <div class="paymentModule" data-reason="storage-box" data-display-reason="Storage Box Deposit" data-button-label="Pay Now" data-methods="gocardless,balance" data-amount="5"></div>
+                    <div class="paymentModule" data-reason="storage-box" data-display-reason="Storage Box Payment" data-button-label="Pay Now" data-methods="gocardless,balance" data-amount="5"></div>
 
                 @endif
                 @if ($moneyAvailable > 0)
@@ -49,7 +49,7 @@
         <div class="col-md-6">
             <div class="well">
                 Each member can claim up to 19L of member storage, this can be one 19L box or a combination of 4L and 9L boxes.
-                Each individual box requires a &pound;5 deposit.<br />
+                Each individual box requires a &pound;5 payment.<br />
                 <br />
                 Storage is managed by the <a href="{{ route('groups.show', 'storage') }}">member storage</a> team
             </div>
