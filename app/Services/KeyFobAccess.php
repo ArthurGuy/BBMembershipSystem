@@ -188,8 +188,6 @@ class KeyFobAccess
             throw new ValidationException('Member not trusted');
         }
 
-        throw new ValidationException('Access to the space restricted');
-
         $this->memberName = $this->user->given_name;
 
 
