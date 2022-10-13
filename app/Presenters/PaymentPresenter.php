@@ -17,7 +17,7 @@ class PaymentPresenter extends Presenter
             case 'door-key':
                 return 'Key Deposit';
             case 'storage-box':
-                return 'Storage Box Deposit';
+                return 'Storage Box Payment';
             case 'balance':
                 return 'Balance Top Up';
             case 'equipment-fee':

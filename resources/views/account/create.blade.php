@@ -11,10 +11,8 @@ Join Build Brighton
     <div class="row">
         <div class="col-xs-12">
             <div class="page-header">
-                <h1>Join Build Brighton</h1>
-                <p>
-                    Build Brighton is a fantastic space and community of like minded people.
-                </p>
+                <h1>Apply to Join Build Brighton</h1>
+                <p> Build Brighton is a fantastic space and community of like minded people.We are accepting applications for membership, but before applying to join, please come along to an open evening, to make sure the space meets your needs and to find out more. </p>
             </div>
         </div>
     </div>

@@ -94,7 +94,7 @@ class PaymentController extends Controller
             'induction'     => 'Equipment Access Fee',
             'balance'       => 'Balance',
             'door-key'      => 'Key Deposit',
-            'storage-box'   => 'Storage Box Deposit',
+            'storage-box'   => 'Storage Box Payment',
             'equipment-fee' => 'Equipment Costs'
         ];
 

@@ -32,7 +32,7 @@
 </p>
 <p>
     <b>4. Storage</b><br /><br />
-    There is limited storage space for members, but larger items can be kept in the space for a short time if agreed beforehand. To reserve your storage box go to the Members Storage page in BBMS. Each member can claim up to 19L of member storage, this can be one 19L box or a combination of 4L and 9L boxes. Each individual box requires a £5 deposit.
+    There is limited storage space for members, but larger items can be kept in the space for a short time if agreed beforehand. To reserve your storage box go to the Members Storage page in BBMS. Each member can claim up to 19L of member storage, this can be one 19L box or a combination of 4L and 9L boxes. Each individual box requires a £5 payment.
 </p>
 <p>
     <b>5. Any questions and concerns</b><br /><br />
