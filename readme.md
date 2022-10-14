@@ -49,7 +49,7 @@ It has been designed to work primarily with GoCardless but the PayPal integratio
 The system also has very basic support for scanning and processing payments from HSBC bank statements
 
 
-### Seting It Up
+### Setting It Up
 The system is build on the Laravel 5 framework so familiarity with that would help.
 
 A .env file needs to be setup, please take a look at the example one for the options that are needed.
