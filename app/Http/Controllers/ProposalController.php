@@ -118,5 +118,4 @@ class ProposalController extends Controller
         \Notification::success("Proposal updated");
         return \Redirect::route('proposals.index');
     }
-
-} 
+}

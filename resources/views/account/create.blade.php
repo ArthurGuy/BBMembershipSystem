@@ -50,8 +50,6 @@ Join Build Brighton
             {!! Notification::getErrorDetail('family_name') !!}
         </div>
     </div>
-
-
     <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
         {!! Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">

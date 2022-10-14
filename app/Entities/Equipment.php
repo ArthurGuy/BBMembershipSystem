@@ -238,5 +238,4 @@ class Equipment extends Model
     {
         $this->attributes['ppe'] = json_encode($value);
     }
-
-} 
+}
