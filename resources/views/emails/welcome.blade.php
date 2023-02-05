@@ -15,8 +15,8 @@
     <b>1. Join Slack and Arrange an Induction</b><br /><br />
     The first thing is to join Slack - a collaborative network for group and individual messaging.<br /><br />
     Please use the New Members channel on Slack to arrange your induction. They are normally done every few weeks on a Thursday at 8pm (during our open evening) but can be done on other days if needed.<br /><br />
-    For an invite to <a href="https://slack.com/">Slack</a> please go to <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a><br /><br />
-    Once you’re signed in, you can join any other channels that take your interest such as 3D printing, electronics and photography.
+    For an invite to <a href="https://discord.gg">Discord</a> please install the client on desktop or mobile, and click <a href="https://discord.gg/tzgfE2Q5qh">this link</a><br /><br />
+    Once you’re signed in, please update your nickname to your 'real name' by right clicking yourself in sidebar and selecting "edit server profile". You can join any other channels that take your interest such as 3D printing, electronics and photography.
 </p>
 <p>
     <b>2. Sign up to the Google groups/mailing list</b><br /><br />
