@@ -66,6 +66,7 @@ class ActivityController extends Controller
             $this->fobAccess->verifyForEntry($activityRequest->getTagId(), $activityRequest->getDevice(), $activityRequest->getOccurredAt());
             $this->fobAccess->logSuccess();
         } else {
+            $this->fobAccess->verifyForDevice($activityRequest->getTagId(), $activityRequest->getDevice(), $activityRequest->getOccurredAt());
             $activityId = $this->equipmentLogRepository->recordStartCloseExisting($keyFob->user->id, $keyFob->id, $activityRequest->getDevice());
             event(new MemberActivity($keyFob, $activityRequest->getDevice()));
         }
