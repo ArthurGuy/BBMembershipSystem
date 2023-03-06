@@ -14,33 +14,17 @@ Resources
 
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">General mailing lists</h3></div>
+            <div class="panel-heading"><h3 class="panel-title">Our Online Community</h3></div>
             <div class="panel-body">
-                <p>
-                    There are two main google groups, one public for general discussion of the space that anyone might find interesting, and one private for members only.
-                </p>
-                <ul class="list-unstyled">
-                    <li><a href="https://groups.google.com/d/forum/brightonhackerspace">Public mailing list</a></li>
-                    <li><a href="https://groups.google.com/d/forum/brighton-hackspace-members">Members mailing list</a></li>
-                </ul>
-                <p>
-                    Build Brighton also has a <a href="https://buildbrighton.slack.com/">Slack account</a> and a large number of members spend time over there,
-                    if you would like an invite please use the following site - <a href="https://bb-slack-invite.herokuapp.com/">https://bb-slack-invite.herokuapp.com/</a>
-                </p>
-                <p>If you're using the space at all you should be signed up to the members list or Slack so you hear about announcements or other issues.</p>
+                  <b>1. Join Discord say hello and Arrange an Induction</b><br /><br />
+    The first thing is to Discord - a collaborative network for group and individual messaging.<br /><br />
+    For an invite to <a href="https://discord.gg">Discord</a> please install the client on desktop or mobile, and click <a href="https://discord.gg/tzgfE2Q5qh">this link</a><br /><br />
+    Once you’re signed in, please update your nickname to your 'real name' by right clicking yourself in sidebar and selecting "edit server profile". You can join any other channels that take your interest such as 3D printing, electronics and photography.
+                <p>If you're using the space at all you are required to be signed up to the discord so you hear about announcements or other issues.</p>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">Special interest groups</h3></div>
-            <div class="panel-body">
-                <ul>
-                    <li><a href="https://groups.google.com/d/forum/bb-audio">Audio group</a></li>
-                    <li><a href="https://groups.google.com/d/forum/bb-machinists">Machinists</a></li>
-                </ul>
-            </div>
-        </div>
     </div>
     <div class="col-md-6">
         <div class="panel panel-default">
