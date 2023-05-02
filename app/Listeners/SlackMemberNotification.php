@@ -33,7 +33,7 @@ class SlackMemberNotification implements ShouldQueue
                 return;
             }
 
-            \Slack::to($event->notification->user()->slack_username)->send($event->notification->message);
+            // \Slack::to($event->notification->user()->slack_username)->send($event->notification->message);
 
             $event->notification->update(['notified_method' => 'slack', 'notified_at' => Carbon::now()]);
         }
