@@ -25,7 +25,7 @@ class SlackActivityNotification
     public function handle(MemberActivity $event)
     {
         if (\App::environment('production')) {
-            \Slack::send($event->keyFob->user->name . ' is in the space');
+            // \Slack::send($event->keyFob->user->name . ' is in the space');
         }
     }
 }
