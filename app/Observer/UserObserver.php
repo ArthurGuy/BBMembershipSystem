@@ -76,8 +76,8 @@ class UserObserver
      */
     private function sendSlackNotification($channel, $message)
     {
-        if (\App::environment('production')) {
-            \Slack::to($channel)->send($message);
-        }
+        // if (\App::environment('production')) {
+        //     \Slack::to($channel)->send($message);
+        // }
     }
 } 
