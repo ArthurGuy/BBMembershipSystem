@@ -81,12 +81,16 @@ class UserObserver
         //     \Slack::to($channel)->send($message);
         // }
 
-        $client = new Guzzle();
-        $url = env('DISCORD_WEBHOOK', '');
-        if ($url) {
-            $client->post($url, [
-                GuzzleHttp\RequestOptions::JSON => ['content' => $message]
-            ]);
+        try {
+            $client = new Guzzle();
+            $url = env('DISCORD_WEBHOOK', '');
+            if ($url) {
+                $client->post($url, [
+                    GuzzleHttp\RequestOptions::JSON => ['content' => $message]
+                ]);
+            }
+        } catch (Exception $e) {
+            \Log::warning('Discord #trustees: ' . $message);
         }
     }
 }
