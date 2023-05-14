@@ -89,6 +89,9 @@ class UserObserver
                     GuzzleHttp\RequestOptions::JSON => ['content' => $message]
                 ]);
             }
+            else {
+                throw new Exception('Discord URL has not been set.');
+            }
         } catch (Exception $e) {
             \Log::warning('Discord #trustees: ' . $message);
         }
