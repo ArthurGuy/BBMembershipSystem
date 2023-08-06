@@ -8,7 +8,7 @@
 
 <p>
     Hi {{ $user['given_name'] }},<br />
-    Thanks for joining the BuildBrighton maker space. 
+    Thanks for joining the BuildBrighton maker space
 </p>
 <h3>Next Steps</h3>
 <p>
