@@ -1,6 +1,7 @@
 <?php namespace BB\Observer;
 
 use BB\Mailer\UserMailer;
+use GuzzleHttp\Client as Guzzle;
 
 class UserObserver
 {
@@ -79,5 +80,20 @@ class UserObserver
         // if (\App::environment('production')) {
         //     \Slack::to($channel)->send($message);
         // }
+
+        try {
+            $client = new Guzzle();
+            $url = env('DISCORD_WEBHOOK', '');
+            if ($url) {
+                $client->post($url, [
+                    GuzzleHttp\RequestOptions::JSON => ['content' => $message]
+                ]);
+            }
+            else {
+                throw new Exception('Discord URL has not been set.');
+            }
+        } catch (Exception $e) {
+            \Log::warning('Discord #trustees: ' . $message);
+        }
     }
-} 
+}
