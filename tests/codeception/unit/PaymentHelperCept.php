@@ -25,8 +25,8 @@ Payment::create(
         'reason'           => 'subscription',
         'source'           => 'other',
         'user_id'          => $user->id,
-        'amount'           => 20,
-        'amount_minus_fee' => 20,
+        'amount'           => 25,
+        'amount_minus_fee' => 25,
         'status'           => 'paid',
         'created_at'       => '2014-01-01'
     ]
@@ -42,8 +42,8 @@ Payment::create(
         'reason'           => 'subscription',
         'source'           => 'other',
         'user_id'          => $user->id,
-        'amount'           => 20,
-        'amount_minus_fee' => 20,
+        'amount'           => 25,
+        'amount_minus_fee' => 25,
         'status'           => 'pending',
         'created_at'       => '2014-06-01'
     ]
@@ -59,8 +59,8 @@ Payment::create(
         'reason'           => 'subscription',
         'source'           => 'other',
         'user_id'          => $user->id,
-        'amount'           => 20,
-        'amount_minus_fee' => 20,
+        'amount'           => 25,
+        'amount_minus_fee' => 25,
         'status'           => 'cancelled',
         'created_at'       => '2014-08-01'
     ]
