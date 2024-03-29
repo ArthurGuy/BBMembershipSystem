@@ -206,7 +206,7 @@ class KeyFobAccess
         $this->user = $this->keyFob->user;
         if ( ! $this->user || ! $this->user->active) {
             $this->logFailure();
-            throw new ValidationException('Not a member');
+            throw new ValidationException('Not an active member');
         }
 
         //Validate the device
