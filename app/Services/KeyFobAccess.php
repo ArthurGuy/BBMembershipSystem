@@ -170,22 +170,22 @@ class KeyFobAccess
         $this->user = $this->keyFob->user;
         if ( ! $this->user || ! $this->user->active) {
             $this->logFailure();
-            throw new ValidationException('Not a member');
+            throw new ValidationException('Not an active member');
         }
 
         if ( ! $this->user->trusted) {
             $this->logFailure();
-            throw new ValidationException('Not a keyholder');
+            throw new ValidationException('Member is not marked trusted');
         }
 
         if ( ! $this->user->key_holder) {
             $this->logFailure();
-            throw new ValidationException('Not a keyholder');
+            throw new ValidationException('Member is not a key holder');
         }
 
         if ( ! ($this->user->profile->profile_photo || $this->user->profile->profile_photo_on_wall)) {
             $this->logFailure();
-            throw new ValidationException('Member not trusted');
+            throw new ValidationException('Member photo not uploaded and approved');
         }
 
         $this->memberName = $this->user->given_name;
