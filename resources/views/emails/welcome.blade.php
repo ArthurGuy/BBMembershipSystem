@@ -25,17 +25,18 @@
   individual messaging. This has information on the current state of things and
   we use it to chat between members.<br>
   <br>
-  For an invite to <a href="https://discord.gg">Discord</a> please install the
-  client on desktop or mobile, and click <a href=
-  "https://discord.gg/tzgfE2Q5qh">this link</a><br>
+  Optionally install the <a href="https://discord.gg">Discord</a> app, then
+  click <a href="https://discord.gg/tzgfE2Q5qh">this link</a> to be invited to
+  our server.<br>
   <br>
   Once you are signed in, please update your nickname to your 'real name' by
   right clicking yourself in sidebar and selecting "edit server profile". This
-  is so that the trustees can identify you as a paid-up member on Discord.<br>
-  You will then need to wait for a trustee to update your profile. (The default
+  is so that the trustees can identify you as a paid-up member on Discord. You
+  will then need to wait for a trustee to update your profile. (The default
   profile is restricted as anyone with a link can join our Discord server.)
   Until your profile is updated, you can only post in the #welcome channel. If
   the update does not happen, see (7) below.<br>
+  <br>
   Once your profile is updated, we will let you know and you can join other
   channels of interest, and you can request equipment inductions in the
   #inductions channel.</p>
@@ -47,7 +48,7 @@
   members who are breaking them.<br>
   The main points are: Be safe, keep things tidy and contribute to maintaining
   a positive and happy environment for everyone.</p>
-  <p>Please read and familiarise youself with our <a href=
+  <p>Please read and familiarise yourself with our <a href=
   "https://bbms.buildbrighton.com/resources/policy/code-of-conduct">code of
   conduct</a>. Behave well towards other members and visitors. Do not do things
   or post messages that will offend and do not harass anyone in our space.</p>
