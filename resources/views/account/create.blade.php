@@ -71,7 +71,7 @@ Join Build Brighton
         <div class="col-sm-9 col-lg-7">
             <div class="input-group">
                 <div class="input-group-addon">&pound;</div>
-                {!! Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'5', 'step'=>'1']) !!}
+                {!! Form::input('number', 'monthly_subscription', 25, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'5', 'step'=>'1']) !!}
             </div>
             {!! Notification::getErrorDetail('monthly_subscription') !!}
             <span class="help-block"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#howMuchShouldIPayModal">How much should I pay?</button></span>
@@ -204,17 +204,17 @@ Join Build Brighton
             <div class="modal-body">
                 <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
 
-                &pound;5 - &pound;20 a month:
+                &pound;5 - &pound;25 a month:
                 <ul>
                     <li>You are on a low income and unable to afford a higher amount, you will need to contact us and provide some more details.</li>
                 </ul>
 
-                &pound;20 - &pound;30 a month:
+                &pound;25 - &pound;35 a month:
                 <ul>
                     <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
                 </ul>
 
-                &pound;30 a month and up:
+                &pound;35 a month and up:
                 <ul>
                     <li>You are planning to visit the makerspace regularly and would like to provide a little extra support (thank you!)</li>
                 </ul>
@@ -225,7 +225,7 @@ Join Build Brighton
                 </p>
 
                 <p>
-                    If you can only pay less than &pound;20 a month please select an amount over £20 and complete
+                    If you can only pay less than &pound;25 a month please select an amount over £25 and complete
                     this form, on the next page you will be asked to setup a subscription payment.
                     Before you do this please send the trustees an email letting them know how much you would like to
                     pay, they will then override the amount so you can continue to setup a subscription.
