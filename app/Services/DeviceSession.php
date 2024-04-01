@@ -84,7 +84,7 @@ class DeviceSession extends KeyFobAccess
         //Make sure the user is active
         $this->user = $this->keyFob->user()->first();
         if ( ! $this->user || ! $this->user->active) {
-            throw new ValidationException('User Invalid');
+            throw new ValidationException('User Invalid or not an active member');
         }
 
         //Make sure the user is allowed to use the device
