@@ -10,8 +10,8 @@ $payloadData = '{
         "id": "0QG9YGF008",
         "status": "pending",
         "uri": "https://sandbox.gocardless.com/api/v1/bills/0QG9YGF008",
-        "amount": "25.0",
-        "amount_minus_fees": "24.75",
+        "amount": "20.0",
+        "amount_minus_fees": "19.8",
         "source_type": "subscription",
         "source_id": "0Q0XG97SBN"
       }

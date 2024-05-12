@@ -20,7 +20,7 @@ class UserValidator extends FormValidator
         'address.line_3'        => '',
         'address.line_4'        => '',
         'address.postcode'      => 'required|postcode',
-        'monthly_subscription'  => 'required|integer|min:25',
+        'monthly_subscription'  => 'required|integer|min:20',
         'emergency_contact'     => 'required',
         'profile_private'       => 'boolean',
         'rules_agreed'          => 'accepted',
