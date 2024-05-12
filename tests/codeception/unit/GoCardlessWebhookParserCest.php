@@ -208,8 +208,8 @@ class GoCardlessWebhookParserCest
                     "id": "ABCDEF1234",
                     "status": "pending",
                     "uri": "https://gocardless.com/api/v1/bills/ABCDEF1234",
-                    "amount": "25.0",
-                    "amount_minus_fees": "24.75",
+                    "amount": "20.0",
+                    "amount_minus_fees": "19.8",
                     "source_type": "subscription",
                     "source_id": "1234ABCDEF"
                   }
@@ -241,8 +241,8 @@ class GoCardlessWebhookParserCest
                     "id": "ABCDEF1234",
                     "status": "withdrawn",
                     "uri": "https://gocardless.com/api/v1/bills/ABCDEF1234",
-                    "amount": "25.0",
-                    "amount_minus_fees": "24.75",
+                    "amount": "20.0",
+                    "amount_minus_fees": "19.8",
                     "source_type": "subscription",
                     "source_id": "1234ABCDEF",
                     "payout_id": "PO0000ABCDEFG"
